@@ -16,18 +16,19 @@
 
 package com.perl5.lang.perl.psi.references;
 
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.psi.PsiElement;
+import consulo.application.ApplicationManager;
+import consulo.language.psi.PsiElement;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
 public interface PerlFileContextSubstitutor {
   @Contract("null->null;!null->!null")
-  @Nullable PsiElement computeSubstitutedContext(@Nullable PsiElement originalContext);
+  @Nullable
+  PsiElement computeSubstitutedContext(@Nullable PsiElement originalContext);
 
   @Contract("null->null")
   static @Nullable PsiElement getContext(@Nullable PsiElement originalFileContext) {
-    PerlFileContextSubstitutor service = ApplicationManager.getApplication().getService(PerlFileContextSubstitutor.class);
+    PerlFileContextSubstitutor service = ApplicationManager.getApplication().getInstance(PerlFileContextSubstitutor.class);
     return service == null ? originalFileContext : service.computeSubstitutedContext(originalFileContext);
   }
 }

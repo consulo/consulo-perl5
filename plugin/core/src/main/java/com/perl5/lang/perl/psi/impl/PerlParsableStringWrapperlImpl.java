@@ -16,9 +16,8 @@
 
 package com.perl5.lang.perl.psi.impl;
 
-import com.intellij.lang.ASTNode;
 import com.perl5.lang.perl.psi.IPerlParsableStringWrapper;
-
+import consulo.language.ast.ASTNode;
 
 public class PerlParsableStringWrapperlImpl extends PerlCompositeElementImpl implements IPerlParsableStringWrapper {
   public PerlParsableStringWrapperlImpl(ASTNode node) {

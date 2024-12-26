@@ -16,15 +16,15 @@
 
 package com.perl5.lang.perl.parser.elementTypes;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.impl.source.tree.LeafPsiElement;
-import com.intellij.psi.impl.source.tree.PsiCommentImpl;
-import com.intellij.psi.tree.IElementType;
 import com.perl5.lang.perl.psi.impl.*;
 import com.perl5.lang.perl.psi.stubs.PerlStubElementTypes;
 import com.perl5.lang.perl.psi.stubs.calls.PerlSubCallElementType;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.IElementType;
+import consulo.language.impl.psi.LeafPsiElement;
+import consulo.language.impl.psi.PsiCommentImpl;
+import consulo.language.psi.PsiElement;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import static com.perl5.lang.perl.util.PerlPackageUtil.__PACKAGE__;

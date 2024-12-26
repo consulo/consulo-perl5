@@ -16,10 +16,9 @@
 
 package com.perl5.lang.pod.elementTypes;
 
-import com.intellij.psi.tree.ILeafElementType;
+import consulo.language.ast.ILeafElementType;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-
 
 public abstract class PodTokenTypeEx extends PodTokenType implements ILeafElementType {
   public PodTokenTypeEx(@NotNull @NonNls String debugName) {

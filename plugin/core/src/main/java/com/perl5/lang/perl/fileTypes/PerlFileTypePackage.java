@@ -17,11 +17,11 @@
 package com.perl5.lang.perl.fileTypes;
 
 import com.perl5.PerlIcons;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-
 
 public class PerlFileTypePackage extends PurePerlFileType {
   public static final String EXTENSION = "pm";
@@ -44,7 +44,7 @@ public class PerlFileTypePackage extends PurePerlFileType {
   }
 
   @Override
-  public @Nullable Icon getIcon() {
+  public @Nullable Image getIcon() {
     return PerlIcons.PM_FILE;
   }
 }

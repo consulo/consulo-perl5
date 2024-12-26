@@ -16,10 +16,10 @@
 
 package com.perl5.lang.perl.psi.stubs.variables;
 
-import com.intellij.openapi.util.Pair;
-import com.intellij.psi.stubs.StubIndexExtension;
-import com.intellij.psi.stubs.StubIndexKey;
 import com.perl5.lang.perl.psi.PerlVariableDeclarationElement;
+import consulo.language.psi.stub.StubIndexExtension;
+import consulo.language.psi.stub.StubIndexKey;
+import consulo.util.lang.Pair;
 import org.jetbrains.annotations.NotNull;
 
 import static com.perl5.lang.perl.psi.stubs.variables.PerlHashNamespaceStubIndex.KEY_HASH_IN_NAMESPACE;

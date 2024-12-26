@@ -16,11 +16,10 @@
 
 package com.perl5.lang.perl.psi.impl;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiReference;
 import com.perl5.lang.perl.psi.PerlReferenceOwner;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiReference;
 import org.jetbrains.annotations.NotNull;
-
 
 public abstract class PerlCompositeElementWithReference extends PerlCompositeElementImpl implements PerlReferenceOwner {
   public PerlCompositeElementWithReference(@NotNull ASTNode node) {

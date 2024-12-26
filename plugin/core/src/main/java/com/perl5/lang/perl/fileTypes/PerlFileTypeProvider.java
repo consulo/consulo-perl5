@@ -16,17 +16,17 @@
 
 package com.perl5.lang.perl.fileTypes;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.component.extension.ExtensionPointName;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public interface PerlFileTypeProvider {
-  ExtensionPointName<PerlFileTypeProvider> EP_NAME = ExtensionPointName.create("com.perl5.fileTypeProvider");
+  ExtensionPointName<PerlFileTypeProvider> EP_NAME = ExtensionPointName.create(PerlFileTypeProvider.class);
 
   /**
    * Should pass root and type calculation function for each root with custom types

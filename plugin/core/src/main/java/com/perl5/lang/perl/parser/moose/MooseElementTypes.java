@@ -16,15 +16,14 @@
 
 package com.perl5.lang.perl.parser.moose;
 
-import com.intellij.psi.tree.IElementType;
 import com.perl5.lang.perl.parser.elementTypes.PerlElementTypeEx;
 import com.perl5.lang.perl.parser.elementTypes.PerlTokenTypeEx;
 import com.perl5.lang.perl.parser.moose.psi.impl.*;
 import com.perl5.lang.perl.parser.moose.stubs.PerlMooseOverrideElementType;
 import com.perl5.lang.perl.parser.moose.stubs.augment.PerlMooseAugmentStatementElementType;
+import consulo.language.ast.IElementType;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-
 
 public interface MooseElementTypes {
   IElementType RESERVED_INNER = new PerlTokenTypeEx("inner", PerlMooseKeywordSubNameElementImpl.class);

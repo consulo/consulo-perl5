@@ -16,9 +16,9 @@
 
 package com.perl5.lang.pod.elementTypes;
 
-import com.intellij.psi.stubs.PsiFileStub;
-import com.intellij.psi.tree.IStubFileElementType;
 import com.perl5.lang.pod.PodLanguage;
+import consulo.language.psi.stub.IStubFileElementType;
+import consulo.language.psi.stub.PsiFileStub;
 import org.jetbrains.annotations.NonNls;
 
 public class PodFileElementType extends IStubFileElementType<PsiFileStub<?>> {

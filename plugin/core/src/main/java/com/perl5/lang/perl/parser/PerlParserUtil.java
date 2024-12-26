@@ -16,27 +16,26 @@
 
 package com.perl5.lang.perl.parser;
 
-import com.intellij.lang.PsiBuilder;
-import com.intellij.lang.PsiParser;
-import com.intellij.lang.WhitespacesAndCommentsBinder;
-import com.intellij.lang.parser.GeneratedParserUtilBase;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.TokenType;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
 import com.perl5.lang.perl.PerlParserDefinition;
 import com.perl5.lang.perl.lexer.PerlElementTypes;
 import com.perl5.lang.perl.lexer.PerlTokenSets;
 import com.perl5.lang.perl.parser.builder.PerlBuilder;
 import com.perl5.lang.perl.psi.stubs.PerlStubElementTypes;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
+import consulo.language.ast.TokenType;
+import consulo.language.impl.parser.GeneratedParserUtilBase;
+import consulo.language.parser.PsiBuilder;
+import consulo.language.parser.PsiParser;
+import consulo.language.parser.WhitespacesAndCommentsBinder;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.regex.Pattern;
 
-import static com.intellij.lang.WhitespacesBinders.*;
-
+import static consulo.language.parser.WhitespacesBinders.*;
 
 public final class PerlParserUtil extends GeneratedParserUtilBase implements PerlElementTypes {
   private PerlParserUtil() {

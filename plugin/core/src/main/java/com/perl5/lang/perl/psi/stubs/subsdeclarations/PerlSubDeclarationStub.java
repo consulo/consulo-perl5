@@ -16,11 +16,11 @@
 
 package com.perl5.lang.perl.psi.stubs.subsdeclarations;
 
-import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.psi.stubs.StubElement;
 import com.perl5.lang.perl.psi.PerlSubDeclarationElement;
 import com.perl5.lang.perl.psi.stubs.PerlSubStub;
 import com.perl5.lang.perl.psi.utils.PerlSubAnnotations;
+import consulo.language.psi.stub.IStubElementType;
+import consulo.language.psi.stub.StubElement;
 
 public class PerlSubDeclarationStub extends PerlSubStub<PerlSubDeclarationElement> {
   public PerlSubDeclarationStub(StubElement parent,

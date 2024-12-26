@@ -16,28 +16,25 @@
 
 package com.perl5.lang.perl.util;
 
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
-import com.intellij.ide.plugins.PluginManagerCore;
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.extensions.PluginId;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.io.FileUtil;
 import com.perl5.lang.perl.fileTypes.PerlFileTypeService;
 import com.perl5.lang.perl.idea.project.PerlProjectManager;
+import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginId;
+import consulo.disposer.Disposable;
+import consulo.project.Project;
+import consulo.util.io.FileUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 
-
 public class PerlPluginUtil {
   public static final String PLUGIN_ID = "com.perl5";
   private static final String PERL_DIR = "perl5";
   private static final String REMOTES_DIR = "remote";
 
-  public static @NotNull IdeaPluginDescriptor getPlugin() {
+  public static @NotNull PluginDescriptor getPlugin() {
     return Objects.requireNonNull(PluginManagerCore.getPlugin(PluginId.getId(PLUGIN_ID)));
   }
 
@@ -61,7 +58,7 @@ public class PerlPluginUtil {
   }
 
   public static @NotNull String getPluginRoot() {
-    IdeaPluginDescriptor plugin = PerlPluginUtil.getPlugin();
+    PluginDescriptor plugin = PerlPluginUtil.getPlugin();
     try {
       return FileUtil.toSystemIndependentName(plugin.getPluginPath().toFile().getCanonicalPath());
     }

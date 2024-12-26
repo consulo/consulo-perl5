@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.parser.moose.stubs.augment;
 
-import com.intellij.psi.stubs.StubElement;
 import com.perl5.lang.perl.parser.moose.psi.PerlMooseAugmentStatement;
+import consulo.language.psi.stub.StubElement;
 
 
 public interface PerlMooseAugmentStatementStub extends StubElement<PerlMooseAugmentStatement> {

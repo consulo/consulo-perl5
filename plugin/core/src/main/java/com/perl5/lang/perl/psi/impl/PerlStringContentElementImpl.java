@@ -16,24 +16,23 @@
 
 package com.perl5.lang.perl.psi.impl;
 
-import com.intellij.psi.ElementManipulators;
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.impl.source.resolve.reference.ReferenceProvidersRegistry;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiTreeUtil;
 import com.perl5.lang.perl.extensions.parser.PerlReferencesProvider;
 import com.perl5.lang.perl.psi.PerlString;
 import com.perl5.lang.perl.psi.PerlStringContentElement;
 import com.perl5.lang.perl.psi.PerlVisitor;
 import com.perl5.lang.perl.psi.PsiPerlStatement;
 import com.perl5.lang.perl.psi.references.PerlNamespaceReference;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.ElementManipulators;
+import consulo.language.psi.PsiElementVisitor;
+import consulo.language.psi.PsiReference;
+import consulo.language.psi.ReferenceProvidersRegistry;
+import consulo.language.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 
 public class PerlStringContentElementImpl extends PerlLeafPsiElementWithReferences implements PerlStringContentElement {
   public PerlStringContentElementImpl(@NotNull IElementType type, CharSequence text) {
@@ -41,7 +40,8 @@ public class PerlStringContentElementImpl extends PerlLeafPsiElementWithReferenc
   }
 
   @Override
-  public PsiReference @NotNull [] computeReferences() {
+  @NotNull
+  public PsiReference  [] computeReferences() {
     List<PsiReference> result = new ArrayList<>();
     String valueText = ElementManipulators.getValueText(this);
     if (PerlString.looksLikePackage(valueText)) {

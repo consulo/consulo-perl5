@@ -16,9 +16,6 @@
 
 package com.perl5.lang.perl.parser.Class.Accessor.psi.impl;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.util.Function;
 import com.perl5.lang.perl.extensions.PerlRenameUsagesHelper;
 import com.perl5.lang.perl.psi.impl.PerlSubCallElement;
 import com.perl5.lang.perl.psi.light.PerlDelegatingLightNamedElement;
@@ -26,12 +23,15 @@ import com.perl5.lang.perl.psi.light.PerlLightMethodDefinitionElement;
 import com.perl5.lang.perl.psi.stubs.subsdefinitions.PerlSubDefinitionStub;
 import com.perl5.lang.perl.psi.utils.PerlSubAnnotations;
 import com.perl5.lang.perl.psi.utils.PerlSubArgument;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.stub.IStubElementType;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 
 public class PerlClassAccessorMethod extends PerlLightMethodDefinitionElement<PerlSubCallElement>
   implements PerlRenameUsagesHelper {
@@ -50,7 +50,7 @@ public class PerlClassAccessorMethod extends PerlLightMethodDefinitionElement<Pe
                                  @Nullable String packageName,
                                  @Nullable PerlSubAnnotations annotations) {
     super(delegate,
-          nameComputation.fun(baseName),
+          nameComputation.apply(baseName),
           elementType,
           nameIdentifier,
           packageName,

@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.util;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.perl5.lang.perl.lexer.PerlElementTypes;
+import consulo.logging.Logger;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;

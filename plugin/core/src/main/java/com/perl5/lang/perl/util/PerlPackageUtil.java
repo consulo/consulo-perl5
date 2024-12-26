@@ -16,28 +16,6 @@
 
 package com.perl5.lang.perl.util;
 
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.NlsSafe;
-import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.search.FileTypeIndex;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.util.CachedValueProvider;
-import com.intellij.psi.util.CachedValuesManager;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.util.PairProcessor;
-import com.intellij.util.Processor;
-import com.intellij.util.SmartList;
 import com.perl5.lang.perl.extensions.packageprocessor.PerlLibProvider;
 import com.perl5.lang.perl.extensions.packageprocessor.PerlPackageParentsProvider;
 import com.perl5.lang.perl.extensions.packageprocessor.PerlPackageProcessor;
@@ -65,7 +43,29 @@ import com.perl5.lang.perl.psi.stubs.namespaces.PerlNamespaceIndex;
 import com.perl5.lang.perl.psi.stubs.subsdefinitions.PerlCallableNamesIndex;
 import com.perl5.lang.perl.psi.stubs.subsdefinitions.PerlLightCallableNamesIndex;
 import com.perl5.lang.perl.psi.utils.PerlPsiUtil;
-import org.jetbrains.annotations.*;
+import consulo.application.progress.ProgressManager;
+import consulo.application.util.CachedValueProvider;
+import consulo.application.util.CachedValuesManager;
+import consulo.application.util.function.Processor;
+import consulo.document.util.TextRange;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
+import consulo.language.psi.PsiUtilCore;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.search.FileTypeIndex;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.project.Project;
+import consulo.util.collection.SmartList;
+import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
+import consulo.util.lang.function.PairProcessor;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.*;
@@ -74,7 +74,6 @@ import java.util.function.Function;
 import java.util.regex.Pattern;
 
 import static com.perl5.lang.perl.util.PerlCorePackages.*;
-
 
 public final class PerlPackageUtil implements PerlElementTypes {
   public static final String PROFILER_MODULE = "Devel::NYTProf";
@@ -785,7 +784,7 @@ public final class PerlPackageUtil implements PerlElementTypes {
   public static boolean processCallablesNamespaceNames(@NotNull PerlValueResolver resolver,
                                                        @NotNull String callableName,
                                                        @NotNull Processor<? super PerlCallableElement> processor) {
-    var project = resolver.getProject();
+    Project project = resolver.getProject();
     return
       PerlCallableNamesIndex.getInstance().processElements(project, callableName, resolver.getResolveScope(), processor) &&
       PerlLightCallableNamesIndex.getInstance().processLightElements(project, callableName, resolver.getResolveScope(), processor);

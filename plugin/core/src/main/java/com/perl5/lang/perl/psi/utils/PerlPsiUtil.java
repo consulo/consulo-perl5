@@ -16,28 +16,6 @@
 
 package com.perl5.lang.perl.psi.utils;
 
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.Language;
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.*;
-import com.intellij.psi.impl.source.PsiFileImpl;
-import com.intellij.psi.impl.source.tree.CompositeElement;
-import com.intellij.psi.impl.source.tree.LazyParseableElement;
-import com.intellij.psi.search.PsiElementProcessor;
-import com.intellij.psi.stubs.PsiFileStub;
-import com.intellij.psi.stubs.Stub;
-import com.intellij.psi.stubs.StubBase;
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.util.IncorrectOperationException;
-import com.intellij.util.Processor;
-import com.intellij.util.containers.ContainerUtil;
 import com.perl5.lang.perl.PerlParserDefinition;
 import com.perl5.lang.perl.lexer.PerlElementTypes;
 import com.perl5.lang.perl.psi.*;
@@ -49,6 +27,28 @@ import com.perl5.lang.perl.psi.properties.PerlLoop;
 import com.perl5.lang.perl.psi.properties.PerlStatementsContainer;
 import com.perl5.lang.perl.psi.stubs.PerlPolyNamedElementStub;
 import com.perl5.lang.perl.util.PerlPackageUtil;
+import consulo.application.progress.ProgressManager;
+import consulo.application.util.function.Processor;
+import consulo.document.util.TextRange;
+import consulo.language.Language;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
+import consulo.language.file.FileViewProvider;
+import consulo.language.impl.ast.CompositeElement;
+import consulo.language.impl.ast.LazyParseableElement;
+import consulo.language.impl.psi.ASTWrapperPsiElement;
+import consulo.language.impl.psi.PsiFileImpl;
+import consulo.language.psi.*;
+import consulo.language.psi.resolve.PsiElementProcessor;
+import consulo.language.psi.stub.PsiFileStub;
+import consulo.language.psi.stub.Stub;
+import consulo.language.psi.stub.StubBase;
+import consulo.language.psi.stub.StubElement;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.util.IncorrectOperationException;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -58,10 +58,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import static com.intellij.psi.TokenType.NEW_LINE_INDENT;
-import static com.intellij.psi.TokenType.WHITE_SPACE;
 import static com.perl5.lang.perl.PerlParserDefinition.MEANINGLESS_TOKENS;
 import static com.perl5.lang.perl.lexer.PerlTokenSets.*;
+import static consulo.language.ast.TokenType.NEW_LINE_INDENT;
+import static consulo.language.ast.TokenType.WHITE_SPACE;
 
 public final class PerlPsiUtil implements PerlElementTypes {
   private PerlPsiUtil() {

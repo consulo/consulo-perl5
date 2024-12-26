@@ -16,12 +16,11 @@
 
 package com.perl5.lang.perl.psi.stubs.subsdefinitions;
 
-import com.intellij.psi.stubs.StubIndexExtension;
-import com.intellij.psi.stubs.StubIndexKey;
 import com.perl5.lang.perl.psi.PerlCallableElement;
 import com.perl5.lang.perl.psi.stubs.PerlStubIndexBase;
+import consulo.language.psi.stub.StubIndexExtension;
+import consulo.language.psi.stub.StubIndexKey;
 import org.jetbrains.annotations.NotNull;
-
 
 public class PerlCallableNamesIndex extends PerlStubIndexBase<PerlCallableElement> {
   public static final int VERSION = 0;

@@ -16,8 +16,7 @@
 
 package com.perl5.lang.pod.lexer;
 
-import com.intellij.lexer.FlexAdapter;
-
+import consulo.language.lexer.FlexAdapter;
 
 public class PodLexerAdapter extends FlexAdapter {
   public PodLexerAdapter() {

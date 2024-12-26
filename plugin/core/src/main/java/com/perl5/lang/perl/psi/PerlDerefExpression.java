@@ -16,10 +16,9 @@
 
 package com.perl5.lang.perl.psi;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
-
 
 public interface PerlDerefExpression extends PsiPerlExpr {
   /**

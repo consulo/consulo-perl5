@@ -26,6 +26,8 @@
 
   stubClass("pod_format_index|head1_section|head2_section|head3_section|head4_section|item_section|pod_paragraph|unknown_section")="com.perl5.lang.pod.parser.psi.stubs.PodSectionStub"
 
+  version="3"
+
   mixin("head1_section")="com.perl5.lang.pod.parser.psi.mixin.PodSectionH1"
   mixin("head2_section")="com.perl5.lang.pod.parser.psi.mixin.PodSectionH2"
   mixin("head3_section")="com.perl5.lang.pod.parser.psi.mixin.PodSectionH3"

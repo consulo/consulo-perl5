@@ -16,12 +16,11 @@
 
 package com.perl5.lang.pod.parser;
 
-import com.intellij.lang.PsiBuilder;
-import com.intellij.lang.parser.GeneratedParserUtilBase;
-import com.intellij.openapi.util.NlsContexts.ParsingError;
-import com.intellij.psi.tree.IElementType;
 import com.perl5.lang.pod.PodParserDefinition;
 import com.perl5.lang.pod.lexer.PodElementTypes;
+import consulo.language.ast.IElementType;
+import consulo.language.impl.parser.GeneratedParserUtilBase;
+import consulo.language.parser.PsiBuilder;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -30,7 +29,7 @@ public class PodParserUtil extends GeneratedParserUtilBase implements PodElement
   public static boolean completeOrReport(@NotNull PsiBuilder b,
                                          int ignoredL,
                                          @NotNull IElementType targetElement,
-                                         @NotNull @ParsingError String message) {
+                                         @NotNull String message) {
     if (b.getTokenType() == targetElement) {
       b.advanceLexer();
       return true;

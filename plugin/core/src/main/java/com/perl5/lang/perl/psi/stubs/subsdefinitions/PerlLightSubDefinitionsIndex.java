@@ -16,11 +16,11 @@
 
 package com.perl5.lang.perl.psi.stubs.subsdefinitions;
 
-import com.intellij.psi.stubs.StubIndexExtension;
-import com.intellij.psi.stubs.StubIndexKey;
 import com.perl5.lang.perl.psi.PerlSubDefinitionElement;
 import com.perl5.lang.perl.psi.impl.PerlPolyNamedElement;
 import com.perl5.lang.perl.psi.stubs.PerlLightElementsIndex;
+import consulo.language.psi.stub.StubIndexExtension;
+import consulo.language.psi.stub.StubIndexKey;
 import org.jetbrains.annotations.NotNull;
 
 public class PerlLightSubDefinitionsIndex extends PerlLightElementsIndex<PerlSubDefinitionElement> {

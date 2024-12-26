@@ -16,12 +16,11 @@
 
 package com.perl5.lang.perl.psi.impl;
 
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.tree.IElementType;
 import com.perl5.lang.perl.psi.PerlVariableNameElement;
 import com.perl5.lang.perl.psi.PerlVisitor;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NotNull;
-
 
 public class PerlVariableNameElementImpl extends PerlLeafPsiElementWithReferences implements PerlVariableNameElement {
   public PerlVariableNameElementImpl(@NotNull IElementType type, CharSequence text) {

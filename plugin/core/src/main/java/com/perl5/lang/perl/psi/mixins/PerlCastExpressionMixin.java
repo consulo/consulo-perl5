@@ -16,10 +16,9 @@
 
 package com.perl5.lang.perl.psi.mixins;
 
-import com.intellij.lang.ASTNode;
 import com.perl5.lang.perl.psi.PerlCastExpression;
 import com.perl5.lang.perl.psi.impl.PsiPerlExprImpl;
-
+import consulo.language.ast.ASTNode;
 
 public abstract class PerlCastExpressionMixin extends PsiPerlExprImpl implements PerlCastExpression {
   public PerlCastExpressionMixin(ASTNode node) {

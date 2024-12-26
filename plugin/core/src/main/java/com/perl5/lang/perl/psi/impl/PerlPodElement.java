@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.psi.impl;
 
-import com.intellij.psi.PsiComment;
-import com.intellij.psi.impl.source.tree.LeafPsiElement;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
+import consulo.language.impl.psi.LeafPsiElement;
+import consulo.language.psi.PsiComment;
 import org.jetbrains.annotations.NotNull;
 
 public class PerlPodElement extends LeafPsiElement implements PsiComment {

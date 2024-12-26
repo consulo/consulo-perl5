@@ -16,8 +16,7 @@
 
 package com.perl5.lang.perl.parser;
 
-
-import com.intellij.lang.PsiBuilder;
+import consulo.language.parser.PsiBuilder;
 
 /**
  * Proxy methods for package-private methods of Perl Parser

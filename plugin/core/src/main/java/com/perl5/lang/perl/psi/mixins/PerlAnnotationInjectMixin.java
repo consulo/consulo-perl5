@@ -16,10 +16,10 @@
 
 package com.perl5.lang.perl.psi.mixins;
 
-import com.intellij.lang.ASTNode;
 import com.perl5.lang.perl.psi.PerlAnnotationInject;
 import com.perl5.lang.perl.psi.PsiPerlStringBare;
 import com.perl5.lang.perl.psi.impl.PerlCompositeElementImpl;
+import consulo.language.ast.ASTNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

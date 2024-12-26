@@ -16,11 +16,11 @@
 
 package com.perl5.lang.perl.psi;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.impl.source.resolve.reference.ReferenceProvidersRegistry;
-import com.intellij.psi.util.CachedValueProvider;
-import com.intellij.psi.util.CachedValuesManager;
+import consulo.application.util.CachedValueProvider;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiReference;
+import consulo.language.psi.ReferenceProvidersRegistry;
+import consulo.language.psi.util.LanguageCachedValueUtil;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -30,7 +30,7 @@ public interface PerlReferenceOwner extends PsiElement {
    */
   default PsiReference @NotNull [] getReferencesWithCache() {
     return hasReferences() ?
-           CachedValuesManager.getCachedValue(
+           LanguageCachedValueUtil.getCachedValue(
              this,
              () -> CachedValueProvider.Result.create(computeReferences(),
                                                      getReferencesCacheDependencies())) :

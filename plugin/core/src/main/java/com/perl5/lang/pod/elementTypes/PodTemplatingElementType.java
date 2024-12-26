@@ -16,18 +16,18 @@
 
 package com.perl5.lang.pod.elementTypes;
 
-import com.intellij.lang.Language;
-import com.intellij.lexer.Lexer;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.templateLanguages.TemplateDataElementType;
-import com.intellij.psi.templateLanguages.TemplateLanguageFileViewProvider;
 import com.perl5.lang.perl.PerlLanguage;
 import com.perl5.lang.perl.lexer.PerlElementTypes;
 import com.perl5.lang.perl.lexer.PerlLexer;
 import com.perl5.lang.perl.lexer.adapters.PerlProgressAwareAdapter;
 import com.perl5.lang.pod.PodLanguage;
 import com.perl5.lang.pod.lexer.PodElementTypes;
+import consulo.document.util.TextRange;
+import consulo.language.Language;
+import consulo.language.impl.psi.template.TemplateDataElementType;
+import consulo.language.lexer.Lexer;
+import consulo.language.template.TemplateLanguageFileViewProvider;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 

@@ -16,10 +16,9 @@
 
 package com.perl5.lang.perl.psi.impl;
 
-import com.intellij.psi.tree.IElementType;
 import com.perl5.lang.perl.internals.PerlVersion;
 import com.perl5.lang.perl.psi.PerlVersionElement;
-
+import consulo.language.ast.IElementType;
 
 public class PerlVersionElementImpl extends PerlLeafPsiElement implements PerlVersionElement {
   protected PerlVersion myPerlVersion;

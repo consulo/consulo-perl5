@@ -16,20 +16,20 @@
 
 package com.perl5.lang.perl.idea.configuration.settings;
 
-import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
-import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.components.State;
-import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.ClearableLazyValue;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiManager;
-import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.xmlb.XmlSerializerUtil;
-import com.intellij.util.xmlb.annotations.Tag;
-import com.intellij.util.xmlb.annotations.Transient;
 import com.perl5.lang.perl.idea.PerlPathMacros;
 import com.perl5.lang.perl.internals.PerlVersion;
+import consulo.application.util.ClearableLazyValue;
+import consulo.component.persist.PersistentStateComponent;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
+import consulo.language.editor.DaemonCodeAnalyzer;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiManager;
+import consulo.project.Project;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.xml.serializer.XmlSerializerUtil;
+import consulo.util.xml.serializer.annotation.Tag;
+import consulo.util.xml.serializer.annotation.Transient;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -42,7 +42,6 @@ import java.util.Set;
 import static com.perl5.lang.perl.idea.configuration.settings.PerlStrictWarningsDefaults.*;
 import static com.perl5.lang.perl.util.PerlScalarUtil.DEFAULT_SELF_NAME;
 import static com.perl5.lang.perl.util.PerlUtil.mutableList;
-
 
 @State(
   name = "Perl5Settings",
@@ -149,7 +148,7 @@ public final class PerlSharedSettings implements PersistentStateComponent<PerlSh
   }
 
   public static @NotNull PerlSharedSettings getInstance(@NotNull Project project) {
-    return project.getService(PerlSharedSettings.class);
+    return project.getInstance(PerlSharedSettings.class);
   }
 
   public static @NotNull PerlSharedSettings getInstance(@NotNull PsiElement psiElement) {

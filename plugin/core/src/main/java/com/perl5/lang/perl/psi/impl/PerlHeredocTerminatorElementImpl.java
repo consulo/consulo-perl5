@@ -16,13 +16,13 @@
 
 package com.perl5.lang.perl.psi.impl;
 
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.impl.source.tree.PsiCommentImpl;
-import com.intellij.psi.tree.IElementType;
 import com.perl5.lang.perl.psi.PerlHeredocTerminatorElement;
 import com.perl5.lang.perl.psi.PerlVisitor;
 import com.perl5.lang.perl.psi.references.PerlHeredocReference;
+import consulo.language.ast.IElementType;
+import consulo.language.impl.psi.PsiCommentImpl;
+import consulo.language.psi.PsiElementVisitor;
+import consulo.language.psi.PsiReference;
 import org.jetbrains.annotations.NotNull;
 
 public class PerlHeredocTerminatorElementImpl extends PsiCommentImpl implements PerlHeredocTerminatorElement {

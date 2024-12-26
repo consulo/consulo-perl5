@@ -16,10 +16,10 @@
 
 package com.perl5.lang.perl.lexer;
 
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
 import com.perl5.lang.perl.parser.PerlElementTypesGenerated;
 import com.perl5.lang.perl.psi.utils.PerlAnnotations;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
 
 import static com.perl5.lang.perl.parser.MooseParserExtension.MOOSE_RESERVED_TOKENSET;
 import static com.perl5.lang.perl.parser.PerlElementTypesGenerated.*;

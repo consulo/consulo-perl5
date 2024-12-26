@@ -16,13 +16,13 @@
 
 package com.perl5.lang.perl.parser.builder;
 
-import com.intellij.lang.PsiBuilder;
-import com.intellij.lang.PsiParser;
-import com.intellij.lang.parser.GeneratedParserUtilBase;
-import com.intellij.psi.tree.IElementType;
 import com.perl5.lang.perl.PerlParserDefinition;
 import com.perl5.lang.perl.lexer.PerlElementTypes;
 import com.perl5.lang.perl.parser.PerlParserImpl;
+import consulo.language.ast.IElementType;
+import consulo.language.impl.parser.GeneratedParserUtilBase;
+import consulo.language.parser.PsiBuilder;
+import consulo.language.parser.PsiParser;
 
 /**
  * This wrapper created to be able to store per-parsing data like pragmas, warnings and variables ?

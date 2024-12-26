@@ -16,9 +16,8 @@
 
 package com.perl5.lang.perl.idea.actions;
 
-import com.intellij.openapi.actionSystem.ActionUpdateThread;
-import com.intellij.openapi.project.DumbAwareAction;
-import com.intellij.openapi.util.NlsActions;
+import consulo.ui.ex.action.ActionUpdateThread;
+import consulo.ui.ex.action.DumbAwareAction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,7 +30,7 @@ public abstract class PerlDumbAwareAction extends DumbAwareAction implements Per
     return ActionUpdateThread.BGT;
   }
 
-  public PerlDumbAwareAction(@Nullable @NlsActions.ActionText String text) {
+  public PerlDumbAwareAction(@Nullable String text) {
     super(text);
   }
 }

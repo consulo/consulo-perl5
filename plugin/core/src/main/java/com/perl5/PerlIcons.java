@@ -16,106 +16,102 @@
 
 package com.perl5;
 
-
-import com.intellij.openapi.util.IconLoader;
-import com.intellij.openapi.util.NotNullLazyValue;
-import com.intellij.ui.LayeredIcon;
-import com.intellij.util.IconUtil;
+import consulo.application.util.NotNullLazyValue;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
+public final class PerlImages {
+  public static final Image PERL_LANGUAGE_Image = load("/Images/perl5language.png");
+  public static final Image PERLBREW_Image = load("/Images/perlbrew.png");
+  public static final Image STRAWBERRY_Image = load("/Images/strawberry.png");
+  public static final Image WINDOWS10_Image = load("/Images/windows.svg");
+  public static final Image LINUX_Image = load("/Images/linux.svg");
+  public static final Image PLENV_Image = PERL_LANGUAGE_Image;
+  public static final Image ASDF_Image = PERL_LANGUAGE_Image;
+  public static final Image MAC_Image = load("/Images/mac.svg");
+  public static final Image WINDOWS_Image = WINDOWS10_Image;
+  public static final Image DOCKER_Image = load("/Images/docker.svg");
+  public static final Image FREEBSD_Image = LINUX_Image;
+  public static final Image SOLARIS_Image = LINUX_Image;
+  public static final Image UNIX_Image = LINUX_Image;
+  public static final Image PERL_OPTION = load("/Images/option.png");
+  public static final Image PERL_OPTIONS = load("/Images/options.png");
+  public static final Image TEMPLATE_ROOT = load("/Images/templateRoot.png");
+  public static final Image PM_FILE = load("/Images/perl5.png");
+  public static final Image PERL_SCRIPT_FILE_Image = load("/Images/perl5classic.png");
+  public static final Image CAMEL_MODIFIER = load("/Images/camel_modifier.png");
+  public static final Image POD_FILE = PERL_LANGUAGE_Image;
+  public static final Image TEST_FILE = load("/Images/file-test.png");
+  public static final Image XS_FILE = load("/Images/xsImage.png");
+  public static final Image LIB_ROOT = load("/Images/library_root.png");
+  public static final Image METACPAN = load("/Images/metacpan.png");
+  public static final Image PACKAGE_GUTTER_Image = load("/Images/package_gutter_Image.png");
+  public static final Image PRAGMA_GUTTER_Image = load("/Images/pragmaImage.png");
+  public static final Image ATTRIBUTE_GUTTER_Image = load("/Images/attributes_gutter_Image.png");
+  public static final Image ATTRIBUTE_GROUP_Image = load("/Images/attributes_group_Image.png");
+  public static final Image XSUB_GUTTER_Image = load("/Images/xsub_gutter_Image.png");
+  public static final Image SUB_DECLARATION_GUTTER_Image = load("/Images/sub_declaration_gutter_Image.png");
+  public static final Image METHOD_GUTTER_Image = load("/Images/method_gutter_Image.png");
+  public static final Image SUB_GUTTER_Image = load("/Images/subroutine_gutter_Image.png");
+  public static final Image CONSTANT_GUTTER_Image = load("/Images/constant_gutter_Image.png");
+  public static final Image BEFORE_MODIFIER_GUTTER_Image = METHOD_GUTTER_Image;
+  public static final Image AFTER_MODIFIER_GUTTER_Image = METHOD_GUTTER_Image;
+  public static final Image AROUND_MODIFIER_GUTTER_Image = METHOD_GUTTER_Image;
+  public static final Image AUGMENT_MODIFIER_GUTTER_Image = METHOD_GUTTER_Image;
+  public static final Image ANNOTATION_GUTTER_Image = load("/Images/annotation_gutter_Image.png");
+  public static final Image REGEX_GUTTER_Image = load("/Images/re_gutter_Image.png");
+  public static final Image ANON_SUB_Image = SUB_GUTTER_Image;
+  public static final Image FORMAT_GUTTER_Image = load("/Images/format_gutter_Image.png");
+  public static final Image HANDLE_GUTTER_Image = load("/Images/handle_gutter_Image.png");
+  public static final Image ARGS_GUTTER_Image = load("/Images/args_gutter_Image.png");
+  public static final Image MAIN_GUTTER_Image = load("/Images/main_gutter_Image.png");
+  public static final Image MY_GUTTER_Image = load("/Images/my_gutter_Image.png");
+  public static final Image OUR_GUTTER_Image = load("/Images/our_gutter_Image.png");
+  public static final Image SCALAR_GUTTER_Image = load("/Images/scalar_gutter_Image.png");
+  public static final Image UTF_SCALAR_GUTTER_Image = load("/Images/scalar_utf_gutter_Image.png");
+  public static final Image ARRAY_GUTTER_Image = load("/Images/array_gutter_Image.png");
+  public static final Image HASH_GUTTER_Image = load("/Images/hash_gutter_Image.png");
+  public static final Image GLOB_GUTTER_Image = load("/Images/glob_gutter_Image.png");
 
-public final class PerlIcons {
-  public static final Icon PERL_LANGUAGE_ICON = load("/icons/perl5language.png");
-  public static final Icon PERLBREW_ICON = load("/icons/perlbrew.png");
-  public static final Icon STRAWBERRY_ICON = load("/icons/strawberry.png");
-  public static final Icon WINDOWS10_ICON = load("/icons/windows.svg");
-  public static final Icon LINUX_ICON = load("/icons/linux.svg");
-  public static final Icon PLENV_ICON = PERL_LANGUAGE_ICON;
-  public static final Icon ASDF_ICON = PERL_LANGUAGE_ICON;
-  public static final Icon MAC_ICON = load("/icons/mac.svg");
-  public static final Icon WINDOWS_ICON = WINDOWS10_ICON;
-  public static final Icon DOCKER_ICON = load("/icons/docker.svg");
-  public static final Icon FREEBSD_ICON = LINUX_ICON;
-  public static final Icon SOLARIS_ICON = LINUX_ICON;
-  public static final Icon UNIX_ICON = LINUX_ICON;
-  public static final Icon PERL_OPTION = load("/icons/option.png");
-  public static final Icon PERL_OPTIONS = load("/icons/options.png");
-  public static final Icon TEMPLATE_ROOT = load("/icons/templateRoot.png");
-  public static final Icon PM_FILE = load("/icons/perl5.png");
-  public static final Icon PERL_SCRIPT_FILE_ICON = load("/icons/perl5classic.png");
-  public static final Icon CAMEL_MODIFIER = load("/icons/camel_modifier.png");
-  public static final Icon POD_FILE = PERL_LANGUAGE_ICON;
-  public static final Icon TEST_FILE = load("/icons/file-test.png");
-  public static final Icon XS_FILE = load("/icons/xsicon.png");
-  public static final Icon LIB_ROOT = load("/icons/library_root.png");
-  public static final Icon METACPAN = load("/icons/metacpan.png");
-  public static final Icon PACKAGE_GUTTER_ICON = load("/icons/package_gutter_icon.png");
-  public static final Icon PRAGMA_GUTTER_ICON = load("/icons/pragmaicon.png");
-  public static final Icon ATTRIBUTE_GUTTER_ICON = load("/icons/attributes_gutter_icon.png");
-  public static final Icon ATTRIBUTE_GROUP_ICON = load("/icons/attributes_group_icon.png");
-  public static final Icon XSUB_GUTTER_ICON = load("/icons/xsub_gutter_icon.png");
-  public static final Icon SUB_DECLARATION_GUTTER_ICON = load("/icons/sub_declaration_gutter_icon.png");
-  public static final Icon METHOD_GUTTER_ICON = load("/icons/method_gutter_icon.png");
-  public static final Icon SUB_GUTTER_ICON = load("/icons/subroutine_gutter_icon.png");
-  public static final Icon CONSTANT_GUTTER_ICON = load("/icons/constant_gutter_icon.png");
-  public static final Icon BEFORE_MODIFIER_GUTTER_ICON = METHOD_GUTTER_ICON;
-  public static final Icon AFTER_MODIFIER_GUTTER_ICON = METHOD_GUTTER_ICON;
-  public static final Icon AROUND_MODIFIER_GUTTER_ICON = METHOD_GUTTER_ICON;
-  public static final Icon AUGMENT_MODIFIER_GUTTER_ICON = METHOD_GUTTER_ICON;
-  public static final Icon ANNOTATION_GUTTER_ICON = load("/icons/annotation_gutter_icon.png");
-  public static final Icon REGEX_GUTTER_ICON = load("/icons/re_gutter_icon.png");
-  public static final Icon ANON_SUB_ICON = SUB_GUTTER_ICON;
-  public static final Icon FORMAT_GUTTER_ICON = load("/icons/format_gutter_icon.png");
-  public static final Icon HANDLE_GUTTER_ICON = load("/icons/handle_gutter_icon.png");
-  public static final Icon ARGS_GUTTER_ICON = load("/icons/args_gutter_icon.png");
-  public static final Icon MAIN_GUTTER_ICON = load("/icons/main_gutter_icon.png");
-  public static final Icon MY_GUTTER_ICON = load("/icons/my_gutter_icon.png");
-  public static final Icon OUR_GUTTER_ICON = load("/icons/our_gutter_icon.png");
-  public static final Icon SCALAR_GUTTER_ICON = load("/icons/scalar_gutter_icon.png");
-  public static final Icon UTF_SCALAR_GUTTER_ICON = load("/icons/scalar_utf_gutter_icon.png");
-  public static final Icon ARRAY_GUTTER_ICON = load("/icons/array_gutter_icon.png");
-  public static final Icon HASH_GUTTER_ICON = load("/icons/hash_gutter_icon.png");
-  public static final Icon GLOB_GUTTER_ICON = load("/icons/glob_gutter_icon.png");
-
-  private PerlIcons() {
+  private PerlImages() {
   }
 
-  private static @NotNull Icon load(@NotNull String resourcePath) {
-    return IconLoader.getIcon(resourcePath, PerlIcons.class);
+  private static @NotNull Image load(@NotNull String resourcePath) {
+    // TODO
+      throw new UnsupportedOperationException();
   }
 
-  public static final Icon PERL_TEST_CONFIGURATION = TEST_FILE;
+  public static final Image PERL_TEST_CONFIGURATION = TEST_FILE;
 
   /**
-   * @see #createIconWithModifier(Icon, Icon)
+   * @see #createImageWithModifier(Image, Image)
    */
-  public static @NotNull NotNullLazyValue<Icon> createLazyIconWithModifier(@NotNull Icon baseIcon, @NotNull Icon modifierIcon) {
-    return NotNullLazyValue.createValue(() -> createIconWithModifier(baseIcon, modifierIcon));
+  public static @NotNull NotNullLazyValue<Image> createLazyImageWithModifier(@NotNull Image baseImage, @NotNull Image modifierImage) {
+    return NotNullLazyValue.createValue(() -> createImageWithModifier(baseImage, modifierImage));
   }
 
-  public static @NotNull NotNullLazyValue<Icon> createLazyIconWithModifier(@NotNull Icon baseIcon,
-                                                                           @NotNull Icon modifierIcon,
+  public static @NotNull NotNullLazyValue<Image> createLazyImageWithModifier(@NotNull Image baseImage,
+                                                                           @NotNull Image modifierImage,
                                                                            float modifierScale) {
-    return NotNullLazyValue.createValue(() -> createIconWithModifier(baseIcon, modifierIcon, modifierScale));
+    return NotNullLazyValue.createValue(() -> createImageWithModifier(baseImage, modifierImage, modifierScale));
   }
 
-  public static @NotNull Icon createIconWithModifier(@NotNull Icon baseIcon, @NotNull Icon modifierIcon) {
-    return createIconWithModifier(baseIcon, modifierIcon, 0.5f);
+  public static @NotNull Image createImageWithModifier(@NotNull Image baseImage, @NotNull Image modifierImage) {
+    return createImageWithModifier(baseImage, modifierImage, 0.5f);
   }
 
   /**
-   * Creates an icon by combining {@code baseIcon} and scaled {@code modifierIcon}
+   * Creates an Image by combining {@code baseImage} and scaled {@code modifierImage}
    *
-   * @apiNote modifier icon is scaled in {@code modifierScale} and put into right bottom corner of the base icon
+   * @apiNote modifier Image is scaled in {@code modifierScale} and put into right bottom corner of the base Image
    */
-  private static @NotNull Icon createIconWithModifier(@NotNull Icon baseIcon,
-                                                      @NotNull Icon modifierIcon,
+  private static @NotNull Image createImageWithModifier(@NotNull Image baseImage,
+                                                      @NotNull Image modifierImage,
                                                       float modifierScale) {
-    LayeredIcon result = new LayeredIcon(2);
-    result.setIcon(baseIcon, 0);
-    Icon modifier = IconUtil.scale(modifierIcon, null, modifierScale);
-    result.setIcon(modifier, 1, baseIcon.getIconHeight() - modifier.getIconHeight(), baseIcon.getIconWidth() - modifier.getIconWidth());
+    LayeredImage result = new LayeredImage(2);
+    result.setImage(baseImage, 0);
+    Image modifier = ImageUtil.scale(modifierImage, null, modifierScale);
+    result.setImage(modifier, 1, baseImage.getImageHeight() - modifier.getImageHeight(), baseImage.getImageWidth() - modifier.getImageWidth());
     return result;
   }
 }

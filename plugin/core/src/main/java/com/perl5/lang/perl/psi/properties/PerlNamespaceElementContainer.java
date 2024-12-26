@@ -16,10 +16,9 @@
 
 package com.perl5.lang.perl.psi.properties;
 
-import com.intellij.psi.PsiElement;
 import com.perl5.lang.perl.psi.PerlNamespaceElement;
+import consulo.language.psi.PsiElement;
 import org.jetbrains.annotations.Nullable;
-
 
 public interface PerlNamespaceElementContainer extends PsiElement {
   /**

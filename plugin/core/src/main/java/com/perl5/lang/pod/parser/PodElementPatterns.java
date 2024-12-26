@@ -16,13 +16,12 @@
 
 package com.perl5.lang.pod.parser;
 
-import com.intellij.patterns.PsiElementPattern;
-import com.intellij.psi.PsiElement;
 import com.perl5.lang.pod.lexer.PodElementTypes;
 import com.perl5.lang.pod.parser.psi.PodSectionTitle;
+import consulo.language.pattern.PsiElementPattern;
+import consulo.language.psi.PsiElement;
 
-import static com.intellij.patterns.PlatformPatterns.psiElement;
-
+import static consulo.language.pattern.PlatformPatterns.psiElement;
 
 public interface PodElementPatterns extends PodElementTypes {
   PsiElementPattern.Capture<PsiElement> LINK_IDENTIFIER =

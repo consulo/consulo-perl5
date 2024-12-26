@@ -16,17 +16,17 @@
 
 package com.perl5.lang.perl.psi.references;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiManager;
-import com.intellij.util.Processor;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlValue;
 import com.perl5.lang.perl.psi.PerlSubDefinitionElement;
 import com.perl5.lang.perl.psi.PerlVariableDeclarationElement;
 import com.perl5.lang.perl.psi.impl.PerlImplicitSubDefinition;
 import com.perl5.lang.perl.psi.impl.PerlImplicitVariableDeclaration;
 import com.perl5.lang.perl.psi.properties.PerlPackageMember;
+import consulo.application.progress.ProgressManager;
+import consulo.application.util.function.Processor;
+import consulo.language.psi.PsiManager;
+import consulo.logging.Logger;
+import consulo.project.Project;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -191,6 +191,6 @@ public class PerlImplicitDeclarationsService {
   }
 
   public static @NotNull PerlImplicitDeclarationsService getInstance(@NotNull Project project) {
-    return project.getService(PerlImplicitDeclarationsService.class);
+    return project.getInstance(PerlImplicitDeclarationsService.class);
   }
 }

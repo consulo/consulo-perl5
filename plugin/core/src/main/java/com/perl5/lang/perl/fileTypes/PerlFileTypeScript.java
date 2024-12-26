@@ -23,7 +23,6 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
-
 public class PerlFileTypeScript extends PurePerlFileType {
   public static final PerlFileType INSTANCE = new PerlFileTypeScript();
 

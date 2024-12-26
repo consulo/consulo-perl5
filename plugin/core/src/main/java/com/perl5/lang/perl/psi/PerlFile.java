@@ -16,12 +16,6 @@
 
 package com.perl5.lang.perl.psi;
 
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.util.CachedValueProvider;
-import com.intellij.psi.util.CachedValuesManager;
 import com.perl5.lang.perl.extensions.PerlCodeGenerator;
 import com.perl5.lang.perl.psi.impl.PerlBuiltInNamespaceDefinition;
 import com.perl5.lang.perl.psi.impl.PerlImplicitNamespaceDefinition;
@@ -31,6 +25,13 @@ import com.perl5.lang.perl.psi.properties.PerlLexicalScope;
 import com.perl5.lang.perl.psi.references.PerlBuiltInNamespacesService;
 import com.perl5.lang.perl.util.PerlPackageUtil;
 import com.perl5.lang.pod.parser.psi.PodLinkTarget;
+import consulo.application.util.CachedValueProvider;
+import consulo.application.util.CachedValuesManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.util.LanguageCachedValueUtil;
+import consulo.navigation.ItemPresentation;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.Nullable;
 
 
@@ -50,7 +51,7 @@ public interface PerlFile
     if (namespaceDefinition != null) {
       return namespaceDefinition;
     }
-    return CachedValuesManager.getCachedValue(this, () -> CachedValueProvider.Result.create(
+    return LanguageCachedValueUtil.getCachedValue(this, () -> CachedValueProvider.Result.create(
       new PerlImplicitNamespaceDefinition(getManager(), PerlPackageUtil.getCanonicalNamespaceName(packageName), this),
       this));
   }
@@ -67,7 +68,7 @@ public interface PerlFile
    *
    * @return bytes for external analysis/formatting
    */
-  byte @Nullable [] getPerlContentInBytes();
+  byte[] getPerlContentInBytes();
 
   /**
    * Overrides file context; if null - using default context resoving implementation

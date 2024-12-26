@@ -17,14 +17,12 @@
 package com.perl5.lang.xs;
 
 
-import com.intellij.lang.Language;
-import com.intellij.openapi.util.NlsSafe;
-
+import consulo.language.Language;
 
 public class XSLanguage extends Language {
 
   public static final XSLanguage INSTANCE = new XSLanguage();
-  public static final @NlsSafe String NAME = "Perl5 XS";
+  public static final String NAME = "Perl5 XS";
 
   public XSLanguage() {
     super(NAME);

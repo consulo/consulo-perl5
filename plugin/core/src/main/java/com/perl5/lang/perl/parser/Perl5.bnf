@@ -35,6 +35,8 @@
 
   parserUtilClass="com.perl5.lang.perl.parser.PerlParserUtil"
 
+  version="3"
+
   tokens=[
     COMMENT_LINE='COMMENT_LINE'
     COMMENT_BLOCK='COMMENT_BLOCK'

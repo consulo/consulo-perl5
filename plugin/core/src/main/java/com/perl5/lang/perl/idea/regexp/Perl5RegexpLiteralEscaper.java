@@ -16,11 +16,10 @@
 
 package com.perl5.lang.perl.idea.regexp;
 
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.LiteralTextEscaper;
 import com.perl5.lang.perl.psi.mixins.Perl5RegexpMixin;
+import consulo.document.util.TextRange;
+import consulo.language.psi.LiteralTextEscaper;
 import org.jetbrains.annotations.NotNull;
-
 
 public class Perl5RegexpLiteralEscaper extends LiteralTextEscaper<Perl5RegexpMixin> {
   public Perl5RegexpLiteralEscaper(@NotNull Perl5RegexpMixin host) {

@@ -16,17 +16,6 @@
 
 package com.perl5.lang.pod.idea.completion;
 
-import com.intellij.codeInsight.completion.CompletionParameters;
-import com.intellij.codeInsight.completion.CompletionProvider;
-import com.intellij.codeInsight.completion.CompletionResultSet;
-import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.ResolveResult;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.util.ProcessingContext;
 import com.perl5.lang.perl.idea.completion.providers.processors.PerlSimpleCompletionProcessor;
 import com.perl5.lang.perl.psi.PerlSubElement;
 import com.perl5.lang.perl.psi.utils.PerlPsiUtil;
@@ -36,11 +25,21 @@ import com.perl5.lang.pod.parser.psi.PodSectionTitle;
 import com.perl5.lang.pod.parser.psi.PodTitledSection;
 import com.perl5.lang.pod.parser.psi.references.PodSubReference;
 import com.perl5.lang.pod.parser.psi.util.PodFileUtil;
+import consulo.language.ast.IElementType;
+import consulo.language.editor.completion.CompletionParameters;
+import consulo.language.editor.completion.CompletionProvider;
+import consulo.language.editor.completion.CompletionResultSet;
+import consulo.language.editor.completion.lookup.LookupElementBuilder;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiUtilCore;
+import consulo.language.util.ProcessingContext;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-public class PodTitleCompletionProvider extends CompletionProvider<CompletionParameters> implements PodElementPatterns {
+public class PodTitleCompletionProvider implements CompletionProvider, PodElementPatterns {
   public static final String COPYRIGHT_AND_LICENSE = "COPYRIGHT AND LICENSE";
   public static final List<String> DEFAULT_POD_SECTIONS = Collections.unmodifiableList(Arrays.asList(
     "VERSION",
@@ -58,7 +57,7 @@ public class PodTitleCompletionProvider extends CompletionProvider<CompletionPar
   ));
 
   @Override
-  protected void addCompletions(@NotNull CompletionParameters parameters,
+  public void addCompletions(@NotNull CompletionParameters parameters,
                                 @NotNull ProcessingContext context,
                                 @NotNull CompletionResultSet result) {
     PsiElement element = parameters.getPosition();

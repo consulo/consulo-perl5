@@ -16,10 +16,10 @@
 
 package com.perl5.lang.pod.elementTypes;
 
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.stubs.StubElement;
 import com.perl5.lang.pod.parser.psi.mixin.PodStubBasedTitledSection;
 import com.perl5.lang.pod.parser.psi.stubs.PodSectionStub;
+import consulo.language.psi.stub.StubElement;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;

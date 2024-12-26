@@ -16,13 +16,13 @@
 
 package com.perl5.lang.pod.parser.psi;
 
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.util.PsiTreeUtil;
 import com.perl5.lang.perl.psi.PerlReferenceOwner;
 import com.perl5.lang.pod.parser.psi.mixin.PodFormatterX;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.navigation.ItemPresentation;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;

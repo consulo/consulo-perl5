@@ -16,12 +16,11 @@
 
 package com.perl5.lang.perl.psi.impl;
 
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.impl.source.tree.LeafPsiElement;
-import com.intellij.psi.tree.IElementType;
 import com.perl5.lang.perl.psi.PerlReferenceOwner;
+import consulo.language.ast.IElementType;
+import consulo.language.impl.psi.LeafPsiElement;
+import consulo.language.psi.PsiReference;
 import org.jetbrains.annotations.NotNull;
-
 
 public class PerlLeafPsiElement extends LeafPsiElement implements PerlReferenceOwner {
   public PerlLeafPsiElement(@NotNull IElementType type, CharSequence text) {

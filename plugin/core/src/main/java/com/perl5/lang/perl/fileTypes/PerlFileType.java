@@ -16,9 +16,8 @@
 
 package com.perl5.lang.perl.fileTypes;
 
-import com.intellij.lang.Language;
 import com.perl5.lang.perl.PerlLanguage;
-
+import consulo.language.Language;
 
 public abstract class PerlFileType extends PerlPluginBaseFileType {
   public PerlFileType() {

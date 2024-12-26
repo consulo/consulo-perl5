@@ -16,21 +16,18 @@
 
 package com.perl5.lang.perl.fileTypes;
 
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ReadAction;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.util.NotNullLazyValue;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.newvfs.impl.FakeVirtualFile;
-import com.intellij.util.indexing.LightDirectoryIndex;
+import consulo.application.ApplicationManager;
+import consulo.application.ReadAction;
+import consulo.application.util.NotNullLazyValue;
+import consulo.disposer.Disposable;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.project.ProjectManager;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
-
 
 public class PerlFileTypeService implements Disposable {
   private static final Logger LOG = Logger.getInstance(PerlFileTypeService.class);

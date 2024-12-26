@@ -16,16 +16,15 @@
 
 package com.perl5.lang.perl.parser.elementTypes;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
 import com.perl5.lang.perl.psi.impl.PerlCompositeElementImpl;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiElement;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.function.Function;
-
 
 public class PerlElementTypeEx extends PerlElementType implements PsiElementProvider {
   private final Function<ASTNode, PsiElement> myInstanceFactory;

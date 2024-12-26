@@ -16,9 +16,8 @@
 
 package com.perl5.lang.perl.psi.properties;
 
-import com.intellij.psi.PsiNameIdentifierOwner;
+import consulo.language.psi.PsiNameIdentifierOwner;
 import org.jetbrains.annotations.Nullable;
-
 
 public interface PerlIdentifierOwner extends PsiNameIdentifierOwner {
   /**

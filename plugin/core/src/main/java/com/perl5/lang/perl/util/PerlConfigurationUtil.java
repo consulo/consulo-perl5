@@ -16,16 +16,16 @@
 
 package com.perl5.lang.perl.util;
 
-import com.intellij.openapi.fileTypes.*;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.ui.popup.PopupStep;
-import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
-import com.intellij.ui.AnActionButton;
-import com.intellij.ui.AnActionButtonRunnable;
-import com.intellij.ui.CollectionListModel;
-import com.intellij.ui.ToolbarDecorator;
-import com.intellij.ui.components.JBList;
-import com.intellij.util.ui.JBUI;
+import consulo.language.file.FileTypeManager;
+import consulo.language.file.LanguageFileType;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.popup.BaseListPopupStep;
+import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.ui.ex.popup.PopupStep;
+import consulo.ui.image.Image;
+import consulo.virtualFileSystem.fileType.FileNameMatcher;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.fileType.matcher.ExtensionFileNameMatcher;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -48,7 +48,7 @@ public class PerlConfigurationUtil {
           FileTypeManager fileTypeManager = FileTypeManager.getInstance();
           final List<String> currentItems = substitutedExtensionsModel.getItems();
           List<FileNameMatcher> possibleItems = new ArrayList<>();
-          List<Icon> itemsIcons = new ArrayList<>();
+          List<Image> itemsIcons = new ArrayList<>();
 
           for (FileType fileType : fileTypeManager.getRegisteredFileTypes()) {
             if (fileType instanceof LanguageFileType) {
@@ -65,7 +65,7 @@ public class PerlConfigurationUtil {
           }
 
           BaseListPopupStep<FileNameMatcher> fileNameMatcherBaseListPopupStep =
-            new BaseListPopupStep<>("Select Extension", possibleItems, itemsIcons) {
+            new BaseListPopupStep<FileNameMatcher>("Select Extension", possibleItems, itemsIcons) {
               @Override
               public PopupStep<?> onChosen(FileNameMatcher selectedValue, boolean finalChoice) {
                 substitutedExtensionsModel.add(selectedValue.getPresentableString());

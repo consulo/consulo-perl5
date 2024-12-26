@@ -16,11 +16,11 @@
 
 package com.perl5.lang.perl.idea.codeInsight.typeInference.value;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.util.ObjectUtils;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.project.Project;
+import consulo.util.lang.ObjectUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -37,7 +37,7 @@ public abstract class PerlValueResolver {
   public PerlValueResolver(@NotNull PsiElement contextElement) {
     myResolveScope = contextElement.getResolveScope();
     myCacheService = PerlValuesCacheService.getInstance(contextElement.getProject());
-    myContextFile = ObjectUtils.doIfNotNull(contextElement.getContainingFile(), PsiFile::getOriginalFile);
+    myContextFile = ObjectUtil.doIfNotNull(contextElement.getContainingFile(), PsiFile::getOriginalFile);
   }
 
   public @NotNull PerlValue resolve(@NotNull PerlValue unresolvedValue) {

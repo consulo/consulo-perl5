@@ -16,25 +16,23 @@
 
 package com.perl5.lang.perl.parser;
 
-import com.intellij.lang.PsiBuilder;
-import com.intellij.lang.parser.GeneratedParserUtilBase;
-import com.intellij.openapi.util.AtomicNotNullLazyValue;
-import com.intellij.openapi.util.NotNullLazyValue;
-import com.intellij.openapi.util.Pair;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
 import com.perl5.lang.perl.extensions.parser.PerlParserExtension;
 import com.perl5.lang.perl.lexer.PerlElementTypes;
 import com.perl5.lang.perl.parser.builder.PerlBuilder;
 import com.perl5.lang.perl.parser.moose.MooseElementTypes;
+import consulo.application.util.AtomicNotNullLazyValue;
+import consulo.application.util.NotNullLazyValue;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
+import consulo.language.impl.parser.GeneratedParserUtilBase;
+import consulo.language.parser.PsiBuilder;
+import consulo.util.lang.Pair;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static com.intellij.lang.parser.GeneratedParserUtilBase.consumeToken;
 
 
 public class MooseParserExtension extends PerlParserExtension implements MooseElementTypes, PerlElementTypes {
@@ -90,8 +88,8 @@ public class MooseParserExtension extends PerlParserExtension implements MooseEl
       return result;
     }
   );
-  static final GeneratedParserUtilBase.Parser SUPER_PARSER = (builder_, level_) -> consumeToken(builder_, RESERVED_SUPER);
-  static final GeneratedParserUtilBase.Parser INNER_PARSER = (builder_, level_) -> consumeToken(builder_, RESERVED_INNER);
+  static final GeneratedParserUtilBase.Parser SUPER_PARSER = (builder_, level_) -> GeneratedParserUtilBase.consumeToken(builder_, RESERVED_SUPER);
+  static final GeneratedParserUtilBase.Parser INNER_PARSER = (builder_, level_) -> GeneratedParserUtilBase.consumeToken(builder_, RESERVED_INNER);
   protected static final NotNullLazyValue<TokenSet> PARSER_TOKEN_SET = NotNullLazyValue.createValue(
     () -> TokenSet.create(RESERVED_TO_STATEMENT_MAP.get().keySet().toArray(IElementType.EMPTY_ARRAY))
   );
@@ -134,7 +132,7 @@ public class MooseParserExtension extends PerlParserExtension implements MooseEl
     }
     PerlBuilder.Marker m = b.mark();
     PsiBuilder.Marker sm = b.mark();
-    consumeToken(b, RESERVED_HAS);
+    GeneratedParserUtilBase.consumeToken(b, RESERVED_HAS);
     sm.collapse(SUB_NAME);
     sm.precede().done(METHOD);
 
@@ -149,7 +147,7 @@ public class MooseParserExtension extends PerlParserExtension implements MooseEl
   private static boolean parseAnnotatedSimpleStatement(PerlBuilder b, int l, IElementType keywordToken, IElementType statementToken) {
     PerlBuilder.Marker m = b.mark();
 
-    if (consumeToken(b, keywordToken)) {
+    if (GeneratedParserUtilBase.consumeToken(b, keywordToken)) {
       if (PerlParserGenerated.expr(b, l, -1)) {
         PerlParserUtil.parseStatementModifier(b, l);
         m.done(statementToken);

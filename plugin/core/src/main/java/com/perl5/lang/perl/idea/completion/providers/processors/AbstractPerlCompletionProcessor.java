@@ -16,10 +16,10 @@
 
 package com.perl5.lang.perl.idea.completion.providers.processors;
 
-import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.application.progress.ProgressManager;
+import consulo.language.editor.completion.lookup.LookupElementBuilder;
+import consulo.logging.Logger;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

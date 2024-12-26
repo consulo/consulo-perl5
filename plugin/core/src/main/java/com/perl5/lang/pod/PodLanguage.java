@@ -16,14 +16,12 @@
 
 package com.perl5.lang.pod;
 
-import com.intellij.lang.Language;
-import com.intellij.openapi.util.NlsSafe;
-
+import consulo.language.Language;
 
 public class PodLanguage extends Language {
   public static final PodLanguage INSTANCE = new PodLanguage();
   public static final Language[] ARRAY = new Language[]{INSTANCE};
-  public static final @NlsSafe String NAME = "Perl5 POD";
+  public static final String NAME = "Perl5 POD";
 
   public PodLanguage() {
     super(NAME);

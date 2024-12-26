@@ -16,13 +16,13 @@
 
 package com.perl5.lang.perl.idea.codeInsight.typeInference.value;
 
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.RecursionManager;
-import com.intellij.psi.util.PsiModificationTracker;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.application.util.RecursionManager;
+import consulo.disposer.Disposable;
+import consulo.language.psi.PsiModificationTrackerListener;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.Pair;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -30,7 +30,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import static com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlValues.UNKNOWN_VALUE;
 
-public class PerlValuesCacheService implements PsiModificationTracker.Listener, Disposable {
+public class PerlValuesCacheService implements PsiModificationTrackerListener, Disposable {
   private static final Logger LOG = Logger.getInstance(PerlValuesCacheService.class);
   private final @NotNull Map<Pair<PerlValue, PerlValueResolver>, PerlValue> myResolveMap = ContainerUtil.createConcurrentWeakMap();
 
@@ -38,7 +38,7 @@ public class PerlValuesCacheService implements PsiModificationTracker.Listener, 
   private final AtomicLong myResolveBuilds = new AtomicLong();
 
   public PerlValuesCacheService(@NotNull Project project) {
-    project.getMessageBus().connect(this).subscribe(PsiModificationTracker.TOPIC, this);
+    project.getMessageBus().connect(this).subscribe(PsiModificationTrackerListener.class, this);
   }
 
   @Override
@@ -77,6 +77,6 @@ public class PerlValuesCacheService implements PsiModificationTracker.Listener, 
   }
 
   public static @NotNull PerlValuesCacheService getInstance(@NotNull Project project) {
-    return project.getService(PerlValuesCacheService.class);
+    return project.getInstance(PerlValuesCacheService.class);
   }
 }

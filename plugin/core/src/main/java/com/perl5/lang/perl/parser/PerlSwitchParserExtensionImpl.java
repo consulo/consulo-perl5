@@ -16,13 +16,12 @@
 
 package com.perl5.lang.perl.parser;
 
-import com.intellij.psi.tree.TokenSet;
 import com.perl5.lang.perl.extensions.parser.PerlParserExtension;
 import com.perl5.lang.perl.idea.highlighter.PerlSyntaxHighlighter;
+import consulo.language.ast.TokenSet;
 
 import static com.perl5.lang.perl.parser.PerlElementTypesGenerated.RESERVED_CASE;
 import static com.perl5.lang.perl.parser.PerlElementTypesGenerated.RESERVED_SWITCH;
-
 
 public class PerlSwitchParserExtensionImpl extends PerlParserExtension {
   protected static TokenSet TOKENS_SET = TokenSet.create(

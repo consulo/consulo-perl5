@@ -16,11 +16,11 @@
 
 package com.perl5.lang.pod.lexer;
 
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.IFileElementType;
 import com.perl5.lang.pod.elementTypes.PodFileElementType;
 import com.perl5.lang.pod.elementTypes.PodOuterTokenType;
 import com.perl5.lang.pod.parser.PodElementTypesGenerated;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.IFileElementType;
 
 public interface PodElementTypes extends PodElementTypesGenerated {
   IElementType POD_OUTER = new PodOuterTokenType();

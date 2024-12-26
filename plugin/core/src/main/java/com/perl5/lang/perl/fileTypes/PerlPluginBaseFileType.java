@@ -16,14 +16,13 @@
 
 package com.perl5.lang.perl.fileTypes;
 
-import com.intellij.lang.Language;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.LanguageFileType;
-import com.intellij.psi.PsiElement;
-import org.jetbrains.annotations.Nls;
+import consulo.language.Language;
+import consulo.language.file.LanguageFileType;
+import consulo.language.psi.PsiElement;
+import consulo.virtualFileSystem.fileType.FileType;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 
 public abstract class PerlPluginBaseFileType extends LanguageFileType {
   public PerlPluginBaseFileType(@NotNull Language language) {
@@ -35,8 +34,9 @@ public abstract class PerlPluginBaseFileType extends LanguageFileType {
            element.getContainingFile().getViewProvider().getVirtualFile().getFileType() == fileType;
   }
 
+  @Nonnull
   @Override
-  public @Nls @NotNull String getDisplayName() {
-    return getName();
+  public String getDisplayName() {
+    return getId();
   }
 }

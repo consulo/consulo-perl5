@@ -16,14 +16,12 @@
 
 package com.perl5.lang.perl;
 
-
-import com.intellij.lang.Language;
-import com.intellij.openapi.util.NlsSafe;
+import consulo.language.Language;
 
 public class PerlLanguage extends Language {
   public static final PerlLanguage INSTANCE = new PerlLanguage();
   public static final Language[] ARRAY = new Language[]{INSTANCE};
-  public static final @NlsSafe String NAME = "Perl5";
+  public static final String NAME = "Perl5";
 
   public PerlLanguage() {
     super(NAME);

@@ -16,12 +16,11 @@
 
 package com.perl5.lang.pod.parser;
 
-import com.intellij.psi.impl.source.tree.CompositeElement;
-import com.intellij.psi.impl.source.tree.FileElement;
-import com.intellij.psi.impl.source.tree.TreeElement;
-import com.intellij.psi.templateLanguages.OuterLanguageElement;
-import com.intellij.psi.templateLanguages.SimpleTreePatcher;
 import com.perl5.lang.pod.lexer.PodElementTypes;
+import consulo.language.impl.ast.CompositeElement;
+import consulo.language.impl.ast.FileElement;
+import consulo.language.impl.ast.TreeElement;
+import consulo.language.psi.OuterLanguageElement;
 import org.jetbrains.annotations.NotNull;
 
 

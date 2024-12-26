@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.parser.elementTypes;
 
-import com.intellij.lang.Language;
-import com.intellij.psi.tree.IElementType;
 import com.perl5.lang.perl.PerlLanguage;
+import consulo.language.Language;
+import consulo.language.ast.IElementType;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

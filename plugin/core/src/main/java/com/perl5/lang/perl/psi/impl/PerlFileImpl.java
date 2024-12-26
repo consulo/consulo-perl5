@@ -16,22 +16,6 @@
 
 package com.perl5.lang.perl.psi.impl;
 
-import com.intellij.codeInsight.controlflow.Instruction;
-import com.intellij.extapi.psi.PsiFileBase;
-import com.intellij.lang.Language;
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.roots.ProjectFileIndex;
-import com.intellij.openapi.util.ClearableLazyValue;
-import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.ResolveState;
-import com.intellij.psi.impl.source.PsiFileImpl;
-import com.intellij.psi.scope.PsiScopeProcessor;
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.util.PsiUtilCore;
 import com.perl5.lang.perl.PerlLanguage;
 import com.perl5.lang.perl.extensions.PerlCodeGenerator;
 import com.perl5.lang.perl.extensions.generation.PerlCodeGeneratorImpl;
@@ -45,6 +29,21 @@ import com.perl5.lang.perl.psi.stubs.PerlFileStub;
 import com.perl5.lang.perl.psi.utils.PerlNamespaceAnnotations;
 import com.perl5.lang.perl.psi.utils.PerlResolveUtil;
 import com.perl5.lang.perl.util.PerlPackageUtil;
+import consulo.application.util.ClearableLazyValue;
+import consulo.language.Language;
+import consulo.language.file.FileViewProvider;
+import consulo.language.impl.psi.PsiFileBase;
+import consulo.language.impl.psi.PsiFileImpl;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiUtilCore;
+import consulo.language.psi.resolve.PsiScopeProcessor;
+import consulo.language.psi.resolve.ResolveState;
+import consulo.language.psi.stub.StubElement;
+import consulo.module.content.ProjectFileIndex;
+import consulo.navigation.ItemPresentation;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -95,7 +94,7 @@ public class PerlFileImpl extends PsiFileBase implements PerlFile {
     if (containingFile != null && containingFile.getFileType() == PerlFileTypePackage.INSTANCE) {
       VirtualFile innermostSourceRoot = PerlPackageUtil.getClosestIncRoot(getProject(), containingFile);
       if (innermostSourceRoot != null) {
-        String relativePath = VfsUtilCore.getRelativePath(containingFile, innermostSourceRoot);
+        String relativePath = VirtualFileUtil.getRelativePath(containingFile, innermostSourceRoot);
         return PerlPackageUtil.getPackageNameByPath(relativePath);
       }
     }
@@ -162,7 +161,7 @@ public class PerlFileImpl extends PsiFileBase implements PerlFile {
       fileRoot = fileIndex.getSourceRootForFile(virtualFile);
     }
 
-    return fileRoot == null ? parentFile.getPresentableUrl() : VfsUtilCore.getRelativePath(parentFile, fileRoot);
+    return fileRoot == null ? parentFile.getPresentableUrl() : VirtualFileUtil.getRelativePath(parentFile, fileRoot);
   }
 
   @Override
@@ -182,7 +181,7 @@ public class PerlFileImpl extends PsiFileBase implements PerlFile {
 
 
   @Override
-  public byte @Nullable [] getPerlContentInBytes() {
+  public byte[] getPerlContentInBytes() {
     return getText().getBytes(getVirtualFile().getCharset());
   }
 

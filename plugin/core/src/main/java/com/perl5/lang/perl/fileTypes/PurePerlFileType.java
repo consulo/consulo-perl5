@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.fileTypes;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 
 /**
  * This filetype represents file with pure perl syntax.

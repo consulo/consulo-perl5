@@ -16,8 +16,8 @@
 
 package com.perl5.lang.pod.elementTypes;
 
-import com.intellij.psi.tree.IElementType;
 import com.perl5.lang.pod.PodLanguage;
+import consulo.language.ast.IElementType;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
