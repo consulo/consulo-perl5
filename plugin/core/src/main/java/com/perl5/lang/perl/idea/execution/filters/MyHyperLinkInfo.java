@@ -16,10 +16,10 @@
 
 package com.perl5.lang.perl.idea.execution.filters;
 
-import com.intellij.execution.filters.FileHyperlinkInfoBase;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.execution.ui.console.FileHyperlinkInfoBase;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,7 +38,7 @@ class MyHyperLinkInfo extends FileHyperlinkInfoBase {
 
   @Override
   protected @Nullable VirtualFile getVirtualFile() {
-    return VfsUtil.findFileByIoFile(new File(myFilePath), false);
+    return VirtualFileUtil.findFileByIoFile(new File(myFilePath), false);
   }
 
   @Override

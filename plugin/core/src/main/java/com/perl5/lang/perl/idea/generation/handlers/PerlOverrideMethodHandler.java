@@ -16,15 +16,14 @@
 
 package com.perl5.lang.perl.idea.generation.handlers;
 
-import com.intellij.lang.LanguageCodeInsightActionHandler;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
 import com.perl5.lang.perl.psi.PerlFile;
 import com.perl5.lang.perl.psi.impl.PerlFileImpl;
+import consulo.codeEditor.Editor;
+import consulo.language.editor.action.LanguageCodeInsightActionHandler;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.project.Project;
 import org.jetbrains.annotations.NotNull;
-
 
 public class PerlOverrideMethodHandler extends GeneratePerlClassMemberHandlerBase implements LanguageCodeInsightActionHandler {
   @Override

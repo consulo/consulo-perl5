@@ -16,18 +16,6 @@
 
 package com.perl5.lang.perl.psi.mixins;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.impl.source.tree.LeafPsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.util.ObjectUtils;
-import com.intellij.util.Processor;
 import com.perl5.lang.perl.lexer.PerlElementTypes;
 import com.perl5.lang.perl.psi.PerlGlobVariableElement;
 import com.perl5.lang.perl.psi.PerlVariable;
@@ -38,6 +26,18 @@ import com.perl5.lang.perl.psi.impl.PerlCompositeElementImpl;
 import com.perl5.lang.perl.psi.utils.PerlResolveUtil;
 import com.perl5.lang.perl.psi.utils.PerlVariableType;
 import com.perl5.lang.perl.util.*;
+import consulo.application.util.function.Processor;
+import consulo.document.Document;
+import consulo.document.util.TextRange;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.IElementType;
+import consulo.language.impl.psi.LeafPsiElement;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiUtilCore;
+import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.Pair;
+import consulo.util.lang.ref.Ref;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -195,7 +195,7 @@ public abstract class PerlVariableMixin extends PerlCompositeElementImpl impleme
     PerlVariableType myType = getActualType();
 
     PsiElement parent = getParent(); // wrapper if any
-    String namespaceName = ObjectUtils.notNull(getExplicitNamespaceName(), PerlPackageUtil.getContextNamespaceName(this));
+    String namespaceName = ObjectUtil.notNull(getExplicitNamespaceName(), PerlPackageUtil.getContextNamespaceName(this));
     String fullQualifiedName = PerlPackageUtil.join(namespaceName, variableName);
 
     Processor<PerlVariableDeclarationElement> variableProcessor = it -> {
@@ -223,7 +223,7 @@ public abstract class PerlVariableMixin extends PerlCompositeElementImpl impleme
     if (variableName == null) {
       return Collections.emptyList();
     }
-    String namespaceName = ObjectUtils.notNull(getExplicitNamespaceName(), PerlPackageUtil.getContextNamespaceName(this));
+    String namespaceName = ObjectUtil.notNull(getExplicitNamespaceName(), PerlPackageUtil.getContextNamespaceName(this));
     String fullQualifiedName = PerlPackageUtil.join(namespaceName, variableName);
 
     List<PerlGlobVariableElement> result = new ArrayList<>();

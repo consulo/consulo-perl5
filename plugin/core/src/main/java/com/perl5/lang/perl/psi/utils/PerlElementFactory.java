@@ -16,17 +16,17 @@
 
 package com.perl5.lang.perl.psi.utils;
 
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFileFactory;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.util.PsiUtilCore;
 import com.perl5.lang.perl.fileTypes.PerlFileTypePackage;
 import com.perl5.lang.perl.psi.*;
 import com.perl5.lang.perl.psi.impl.*;
 import com.perl5.lang.perl.psi.mixins.PerlNamespaceDefinitionMixin;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFileFactory;
+import consulo.language.psi.PsiUtilCore;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.project.Project;
+import consulo.virtualFileSystem.fileType.FileType;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -190,6 +190,6 @@ public class PerlElementFactory {
 
   public static PerlFileImpl createFile(@NotNull Project project, @NotNull String text, @NotNull FileType fileType) {
     return (PerlFileImpl)PsiFileFactory.getInstance(project).
-      createFileFromText("file.dummy", fileType, text);
+                                       createFileFromText("file.dummy", fileType, text);
   }
 }

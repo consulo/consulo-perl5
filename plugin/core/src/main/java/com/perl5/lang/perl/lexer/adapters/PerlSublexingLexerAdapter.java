@@ -22,16 +22,16 @@ package com.perl5.lang.perl.lexer.adapters;
  * @see com.perl5.lang.perl.lexer.adapters.PerlMergingLexerAdapter
  */
 
-import com.intellij.lexer.FlexAdapter;
-import com.intellij.lexer.Lexer;
-import com.intellij.lexer.LexerBase;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.psi.tree.IElementType;
 import com.perl5.lang.perl.lexer.PerlElementTypes;
 import com.perl5.lang.perl.lexer.PerlLexer;
 import com.perl5.lang.perl.lexer.PerlLexingContext;
 import com.perl5.lang.perl.lexer.PerlProtoLexer;
+import consulo.application.progress.ProgressManager;
+import consulo.language.ast.IElementType;
+import consulo.language.lexer.FlexAdapter;
+import consulo.language.lexer.Lexer;
+import consulo.language.lexer.LexerBase;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

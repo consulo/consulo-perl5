@@ -16,12 +16,12 @@
 
 package com.perl5.lang.perl.idea.run.prove;
 
-import com.intellij.execution.configurations.ConfigurationTypeBase;
-import com.intellij.execution.configurations.RunConfiguration;
-import com.intellij.openapi.project.Project;
 import com.perl5.PerlBundle;
 import com.perl5.PerlIcons;
 import com.perl5.lang.perl.idea.run.PerlRunConfigurationFactory;
+import consulo.execution.configuration.ConfigurationTypeBase;
+import consulo.execution.configuration.RunConfiguration;
+import consulo.project.Project;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;

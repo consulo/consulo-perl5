@@ -16,15 +16,12 @@
 
 package com.perl5.lang.perl.idea.run.prove;
 
-import com.intellij.execution.actions.ConfigurationContext;
-import com.intellij.execution.configurations.ConfigurationFactory;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.roots.ProjectFileIndex;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.containers.SmartHashSet;
 import com.perl5.lang.perl.buildSystem.PerlBuildSystemHandler;
-import com.perl5.lang.perl.fileTypes.PerlFileTypeTest;
-import com.perl5.lang.perl.idea.run.GenericPerlRunConfigurationProducer;
+import consulo.execution.action.ConfigurationContext;
+import consulo.execution.configuration.ConfigurationFactory;
+import consulo.module.content.ProjectFileIndex;
+import consulo.util.collection.SmartHashSet;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;

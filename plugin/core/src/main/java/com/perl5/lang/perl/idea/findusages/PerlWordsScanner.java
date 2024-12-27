@@ -16,20 +16,20 @@
 
 package com.perl5.lang.perl.idea.findusages;
 
-import com.intellij.lang.cacheBuilder.DefaultWordsScanner;
-import com.intellij.lang.cacheBuilder.WordOccurrence;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.impl.source.tree.TreeUtil;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
-import com.intellij.util.Processor;
 import com.perl5.lang.perl.PerlParserDefinition;
 import com.perl5.lang.perl.lexer.PerlLexingContext;
 import com.perl5.lang.perl.lexer.adapters.PerlMergingLexerAdapter;
+import consulo.application.util.function.Processor;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
+import consulo.language.cacheBuilder.DefaultWordsScanner;
+import consulo.language.cacheBuilder.WordOccurrence;
+import consulo.language.impl.ast.TreeUtil;
+import consulo.language.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
 
-import static com.perl5.lang.perl.parser.PerlElementTypesGenerated.*;
 import static com.perl5.lang.perl.lexer.PerlTokenSets.*;
+import static com.perl5.lang.perl.parser.PerlElementTypesGenerated.*;
 
 
 public class PerlWordsScanner extends DefaultWordsScanner implements PsiBasedWordScanner {
@@ -62,7 +62,7 @@ public class PerlWordsScanner extends DefaultWordsScanner implements PsiBasedWor
   }
 
   @Override
-  public void processWordsUsingPsi(@NotNull PsiFile psiFile, @NotNull Processor<? super WordOccurrence> processor) {
+  public void processWordsUsingPsi(@NotNull PsiFile psiFile, @NotNull Processor<WordOccurrence> processor) {
     var fileNode = psiFile.getNode();
     var run = TreeUtil.findFirstLeaf(fileNode);
     if (run == null) {
@@ -80,7 +80,7 @@ public class PerlWordsScanner extends DefaultWordsScanner implements PsiBasedWor
   }
 
   @Override
-  public void processWords(final @NotNull CharSequence fileText, final @NotNull Processor<? super WordOccurrence> processor) {
+  public void processWords(final @NotNull CharSequence fileText, final @NotNull Processor<WordOccurrence> processor) {
     var lexer = createLexer();
     lexer.start(fileText);
     WordOccurrence occurrence = new WordOccurrence(fileText, 0, 0, WordOccurrence.Kind.CODE); // shared occurrence
@@ -95,7 +95,7 @@ public class PerlWordsScanner extends DefaultWordsScanner implements PsiBasedWor
 
   @SuppressWarnings("BooleanMethodIsAlwaysInverted")
   protected static boolean processToken(@NotNull CharSequence fileText,
-                                        @NotNull Processor<? super WordOccurrence> processor,
+                                        @NotNull Processor<WordOccurrence> processor,
                                         @NotNull IElementType type,
                                         int start,
                                         int end,

@@ -16,10 +16,10 @@
 
 package com.perl5.lang.perl.idea.run.run;
 
-import com.intellij.openapi.project.Project;
 import com.perl5.lang.perl.idea.run.GenericPerlRunConfigurationEditor;
 import com.perl5.lang.perl.idea.run.GenericPerlRunConfigurationEditorPanel;
 import com.perl5.lang.perl.idea.run.GenericPerlRunConfigurationProducer;
+import consulo.project.Project;
 import org.jetbrains.annotations.NotNull;
 
 class PerlRunConfigurationEditor extends GenericPerlRunConfigurationEditor<PerlRunConfiguration> {

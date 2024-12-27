@@ -16,41 +16,39 @@
 
 package com.perl5.lang.perl.idea.formatter.settings;
 
-import com.intellij.application.options.CodeStyleAbstractPanel;
-import com.intellij.application.options.IndentOptionsEditor;
-import com.intellij.application.options.SmartIndentOptionsEditor;
-import com.intellij.lang.Language;
-import com.intellij.openapi.application.ApplicationBundle;
-import com.intellij.openapi.util.NlsContexts.Label;
-import com.intellij.psi.codeStyle.CodeStyleSettingsCustomizable;
-import com.intellij.psi.codeStyle.CodeStyleSettingsCustomizableOptions;
-import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
-import com.intellij.psi.codeStyle.LanguageCodeStyleSettingsProvider;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.PerlLanguage;
+import consulo.application.ApplicationBundle;
+import consulo.language.codeStyle.CommonCodeStyleSettings;
+import consulo.language.codeStyle.setting.CodeStyleSettingsCustomizable;
+import consulo.language.codeStyle.setting.IndentOptionsEditor;
+import consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider;
+import consulo.language.codeStyle.ui.setting.CodeStyleAbstractPanel;
+import consulo.language.codeStyle.ui.setting.SmartIndentOptionsEditor;
+import jdk.jfr.Label;
 import org.jetbrains.annotations.NotNull;
 
-import static com.intellij.psi.codeStyle.CodeStyleSettingsCustomizable.OptionAnchor.AFTER;
-import static com.intellij.psi.codeStyle.CodeStyleSettingsCustomizable.WRAP_VALUES;
-import static com.intellij.psi.codeStyle.LanguageCodeStyleSettingsProvider.SettingsType.*;
 import static com.perl5.lang.perl.idea.formatter.settings.PerlCodeStyleSettings.OptionalConstructions.*;
+import static consulo.language.codeStyle.setting.CodeStyleSettingsCustomizable.OptionAnchor.AFTER;
+import static consulo.language.codeStyle.setting.CodeStyleSettingsCustomizable.WRAP_VALUES;
+import static consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider.SettingsType.*;
 
 
 public class PerlLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSettingsProvider {
   private static class Localization {
-    @SuppressWarnings("DialogTitleCapitalization") private final @Label String GROUP_QW = PerlBundle.message("perl.qw.list");
-    private final @Label String GROUP_QUOTATION = PerlBundle.message("perl.formatting.group.optional.quotation");
-    private final @Label String GROUP_DEREFERENCE = PerlBundle.message("perl.formatting.group.dereferencing");
-    private final @Label String GROUP_PARENTHESES = PerlBundle.message("perl.formatting.group.optional.parentheses");
-    private final @Label String GROUP_COMPOUND = PerlBundle.message("perl.formatting.group.compound");
-    private final @Label String GROUP_NAMESPACE = PerlBundle.message("perl.formatting.brace.style.namespace");
-    private final @Label String GROUP_SUB = PerlBundle.message("perl.formatting.brace.style.sub");
-    private final @Label String GROUP_VARIABLE_DECLARATION = PerlBundle.message("perl.formatting.wrap.variable.declarations");
-    private final @Label String GROUP_COMMENT = CodeStyleSettingsCustomizableOptions.getInstance().WRAPPING_COMMENTS;
-    private final @Label String GROUP_ANNOTATIONS = PerlBundle.message("perl.formatting.group.annotations");
-    private final @Label String GROUP_LIST = CodeStyleSettingsCustomizableOptions.getInstance().WRAPPING_ARRAY_INITIALIZER;
-    private final @Label String GROUP_ATTRIBUTES_WRAP = PerlBundle.message("perl.formatting.wrap.attributes");
-    private final @Label String GROUP_COMMA = PerlBundle.message("perl.formatting.comma.after.hash.value");
+    @SuppressWarnings("DialogTitleCapitalization") private final String GROUP_QW = PerlBundle.message("perl.qw.list");
+    private final String GROUP_QUOTATION = PerlBundle.message("perl.formatting.group.optional.quotation");
+    private final String GROUP_DEREFERENCE = PerlBundle.message("perl.formatting.group.dereferencing");
+    private final String GROUP_PARENTHESES = PerlBundle.message("perl.formatting.group.optional.parentheses");
+    private final String GROUP_COMPOUND = PerlBundle.message("perl.formatting.group.compound");
+    private final String GROUP_NAMESPACE = PerlBundle.message("perl.formatting.brace.style.namespace");
+    private final String GROUP_SUB = PerlBundle.message("perl.formatting.brace.style.sub");
+    private final String GROUP_VARIABLE_DECLARATION = PerlBundle.message("perl.formatting.wrap.variable.declarations");
+    private final String GROUP_COMMENT = CodeStyleSettingsCustomizableOptions.getInstance().WRAPPING_COMMENTS;
+    private final String GROUP_ANNOTATIONS = PerlBundle.message("perl.formatting.group.annotations");
+    private final String GROUP_LIST = CodeStyleSettingsCustomizableOptions.getInstance().WRAPPING_ARRAY_INITIALIZER;
+    private final String GROUP_ATTRIBUTES_WRAP = PerlBundle.message("perl.formatting.wrap.attributes");
+    private final String GROUP_COMMA = PerlBundle.message("perl.formatting.comma.after.hash.value");
   }
 
   static final String SPACING_CODE_SAMPLE = readCodeSample("spaces");

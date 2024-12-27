@@ -16,17 +16,15 @@
 
 package com.perl5.lang.perl.idea.actions;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.Presentation;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.impl.PerlModuleExtension;
-import com.intellij.openapi.roots.ui.configuration.ModuleSourceRootEditHandler;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.perl5.lang.perl.idea.modules.PerlSourceRootType;
 import com.perl5.lang.perl.idea.project.PerlProjectManager;
+import consulo.language.util.ModuleUtilCore;
+import consulo.project.Project;
+import consulo.project.ProjectBundle;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

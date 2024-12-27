@@ -16,11 +16,11 @@
 
 package com.perl5.lang.perl.idea.codeInsight.controlFlow;
 
-import com.intellij.codeInsight.controlflow.ControlFlowBuilder;
-import com.intellij.psi.PsiElement;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlPushValue;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlValue;
 import com.perl5.lang.perl.psi.PsiPerlArrayPushExpr;
+import consulo.language.controlFlow.ControlFlowBuilder;
+import consulo.language.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

@@ -16,23 +16,22 @@
 
 package com.perl5.lang.perl.idea.inspections;
 
-import com.intellij.codeInsight.controlflow.ControlFlowUtil;
-import com.intellij.codeInsight.controlflow.Instruction;
-import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.TokenType;
-import com.intellij.psi.tree.TokenSet;
-import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.util.containers.ContainerUtil;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.idea.codeInsight.controlFlow.PerlControlFlowBuilder;
 import com.perl5.lang.perl.psi.PerlMethodModifier;
 import com.perl5.lang.perl.psi.PerlSubDefinitionElement;
 import com.perl5.lang.perl.psi.PerlVisitor;
 import com.perl5.lang.perl.psi.PsiPerlSubExpr;
+import consulo.document.util.TextRange;
+import consulo.language.ast.TokenSet;
+import consulo.language.ast.TokenType;
+import consulo.language.controlFlow.ControlFlowUtil;
+import consulo.language.editor.inspection.ProblemsHolder;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiElementVisitor;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiUtilCore;
+import consulo.util.collection.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;

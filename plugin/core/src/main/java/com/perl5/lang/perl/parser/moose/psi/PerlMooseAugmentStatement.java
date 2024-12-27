@@ -16,17 +16,17 @@
 
 package com.perl5.lang.perl.parser.moose.psi;
 
-import com.intellij.psi.PsiNameIdentifierOwner;
-import com.intellij.psi.StubBasedPsiElement;
 import com.perl5.lang.perl.parser.moose.stubs.augment.PerlMooseAugmentStatementStub;
 import com.perl5.lang.perl.psi.PsiPerlStatement;
+import consulo.language.psi.PsiNameIdentifierOwner;
+import consulo.language.psi.StubBasedPsiElement;
 import org.jetbrains.annotations.Nullable;
 
 
 public interface PerlMooseAugmentStatement extends
-                                           StubBasedPsiElement<PerlMooseAugmentStatementStub>,
+  StubBasedPsiElement<PerlMooseAugmentStatementStub>,
                                            PsiPerlStatement,
-                                           PsiNameIdentifierOwner {
+  PsiNameIdentifierOwner {
   @Nullable
   String getSubName();
 }

@@ -16,23 +16,22 @@
 
 package com.perl5.lang.perl.idea.sdk.host.os;
 
-import com.intellij.openapi.projectRoots.Sdk;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostData;
+import consulo.content.bundle.Sdk;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import javax.swing.*;
 
 public abstract class PerlOsHandler {
   private final @NotNull String myName;
 
-  private final @Nullable Icon myIcon;
+  private final @Nullable Image myIcon;
 
   public PerlOsHandler(@NotNull String name) {
     this(name, null);
   }
 
-  public PerlOsHandler(@NotNull String name, @Nullable Icon icon) {
+  public PerlOsHandler(@NotNull String name, @Nullable Image icon) {
     myName = name;
     myIcon = icon;
   }
@@ -52,7 +51,7 @@ public abstract class PerlOsHandler {
   public abstract boolean isMsWindows();
 
 
-  public final @Nullable Icon getIcon() {
+  public final @Nullable Image getIcon() {
     return myIcon;
   }
 

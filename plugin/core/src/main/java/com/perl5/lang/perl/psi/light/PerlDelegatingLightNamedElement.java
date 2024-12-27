@@ -16,21 +16,21 @@
 
 package com.perl5.lang.perl.psi.light;
 
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.*;
-import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.util.Function;
-import com.intellij.util.IncorrectOperationException;
 import com.perl5.lang.perl.idea.presentations.PerlItemPresentationSimple;
 import com.perl5.lang.perl.parser.PerlIdentifierRangeProvider;
 import com.perl5.lang.perl.psi.PerlVisitor;
 import com.perl5.lang.perl.psi.impl.PerlPolyNamedElement;
+import consulo.document.util.TextRange;
+import consulo.language.psi.*;
+import consulo.language.psi.stub.IStubElementType;
+import consulo.language.util.IncorrectOperationException;
+import consulo.navigation.ItemPresentation;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
+import java.util.function.Function;
 
 /**
  * Represents one of the declarations of {@link PerlPolyNamedElement}
@@ -107,7 +107,7 @@ public class PerlDelegatingLightNamedElement<Delegate extends PerlPolyNamedEleme
                                 ? ((PerlIdentifierRangeProvider)this).getRangeInIdentifier()
                                 : ElementManipulators.getValueTextRange(nameIdentifier);
     myNameIdentifier = manipulator.handleContentChange(nameIdentifier, identifierRange, newBaseName);
-    myName = getNameComputation().fun(newBaseName);
+    myName = getNameComputation().apply(newBaseName);
     return this;
   }
 

@@ -16,11 +16,10 @@
 
 package com.perl5.lang.perl.idea.execution.filters;
 
-
-import com.intellij.execution.filters.Filter;
-import com.intellij.openapi.project.Project;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostData;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostDataProvider;
+import consulo.execution.ui.console.Filter;
+import consulo.project.Project;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -49,7 +48,7 @@ public class PerlAbsolutePathConsoleFilter implements Filter {
   }
 
   @Override
-  public @Nullable Result applyFilter(String line, int entireLength) {
+  public @Nullable Filter.Result applyFilter(String line, int entireLength) {
     int startOffset = entireLength - line.length();
     List<ResultItem> resultList = new ArrayList<>();
     Matcher matcher = PATTERN.matcher(line);

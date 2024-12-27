@@ -16,12 +16,12 @@
 
 package com.perl5.lang.perl.idea.inspections;
 
-import com.intellij.codeInspection.ProblemHighlightType;
-import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.psi.search.searches.ReferencesSearch;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.psi.PerlVariable;
 import com.perl5.lang.perl.psi.PerlVariableDeclarationElement;
+import consulo.language.editor.inspection.ProblemHighlightType;
+import consulo.language.editor.inspection.ProblemsHolder;
+import consulo.language.psi.search.ReferencesSearch;
 
 
 public class PerlUnusedLexicalVariableInspection extends PerlVariableInspectionBase {

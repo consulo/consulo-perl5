@@ -16,12 +16,12 @@
 
 package com.perl5.lang.perl.idea.codeInsight.controlFlow;
 
-import com.intellij.codeInsight.controlflow.ControlFlowBuilder;
-import com.intellij.psi.PsiElement;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.*;
 import com.perl5.lang.perl.psi.PerlVariable;
 import com.perl5.lang.perl.psi.PerlVariableDeclarationElement;
 import com.perl5.lang.perl.psi.utils.PerlContextType;
+import consulo.language.controlFlow.ControlFlowBuilder;
+import consulo.language.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

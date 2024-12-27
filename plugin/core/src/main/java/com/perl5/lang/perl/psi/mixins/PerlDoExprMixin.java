@@ -16,14 +16,14 @@
 
 package com.perl5.lang.perl.psi.mixins;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.ElementManipulators;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.stubs.IStubElementType;
 import com.perl5.lang.perl.psi.PerlDoExpr;
 import com.perl5.lang.perl.psi.PerlString;
 import com.perl5.lang.perl.psi.PerlStubBasedPsiElementBase;
 import com.perl5.lang.perl.psi.stubs.imports.runtime.PerlRuntimeImportStub;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.ElementManipulators;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.stub.IStubElementType;
 import org.jetbrains.annotations.Nullable;
 
 

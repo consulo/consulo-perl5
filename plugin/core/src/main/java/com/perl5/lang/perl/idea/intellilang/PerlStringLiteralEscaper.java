@@ -16,15 +16,15 @@
 
 package com.perl5.lang.perl.idea.intellilang;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.ElementManipulators;
-import com.intellij.psi.LiteralTextEscaper;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiUtilCore;
 import com.perl5.lang.perl.psi.PerlCharSubstitution;
 import com.perl5.lang.perl.psi.mixins.PerlStringMixin;
+import consulo.document.util.TextRange;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.ElementManipulators;
+import consulo.language.psi.LiteralTextEscaper;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiUtilCore;
+import consulo.logging.Logger;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import org.jetbrains.annotations.NotNull;
 

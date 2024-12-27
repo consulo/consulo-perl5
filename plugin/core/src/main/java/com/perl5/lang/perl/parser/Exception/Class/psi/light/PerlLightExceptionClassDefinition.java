@@ -16,14 +16,14 @@
 
 package com.perl5.lang.perl.parser.Exception.Class.psi.light;
 
-import com.intellij.icons.AllIcons;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.stubs.IStubElementType;
 import com.perl5.lang.perl.psi.impl.PerlPolyNamedElement;
 import com.perl5.lang.perl.psi.light.PerlLightNamespaceDefinitionElement;
 import com.perl5.lang.perl.psi.mro.PerlMroType;
 import com.perl5.lang.perl.psi.stubs.namespaces.PerlNamespaceDefinitionStub;
 import com.perl5.lang.perl.psi.utils.PerlNamespaceAnnotations;
+import consulo.application.AllIcons;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.stub.IStubElementType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

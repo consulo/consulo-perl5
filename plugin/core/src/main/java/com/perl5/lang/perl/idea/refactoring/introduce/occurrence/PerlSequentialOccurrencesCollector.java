@@ -16,10 +16,10 @@
 
 package com.perl5.lang.perl.idea.refactoring.introduce.occurrence;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiUtilCore;
 import com.perl5.lang.perl.idea.refactoring.introduce.PerlIntroduceTarget;
 import com.perl5.lang.perl.psi.utils.PerlPsiUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiUtilCore;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;

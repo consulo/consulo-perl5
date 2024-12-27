@@ -16,19 +16,24 @@
 
 package com.perl5.lang.perl.idea.completion;
 
-import com.intellij.codeInsight.completion.*;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiUtilCore;
+import com.perl5.lang.perl.PerlLanguage;
 import com.perl5.lang.perl.idea.completion.providers.*;
 import com.perl5.lang.perl.lexer.PerlElementTypes;
 import com.perl5.lang.perl.lexer.PerlTokenSets;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.Language;
+import consulo.language.ast.IElementType;
+import consulo.language.editor.completion.*;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiUtilCore;
+import consulo.logging.Logger;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
 import static com.perl5.lang.perl.idea.PerlElementPatterns.*;
 
 
+@ExtensionImpl
 public class PerlCompletionContributor extends CompletionContributor implements PerlElementTypes {
   private static final Logger LOG = Logger.getInstance(PerlCompletionContributor.class);
 
@@ -165,5 +170,11 @@ public class PerlCompletionContributor extends CompletionContributor implements 
     else if (elementType == STRING_CHAR_NAME) {
       context.setReplacementOffset(elementAtCaret.getTextRange().getEndOffset());
     }
+  }
+
+  @Nonnull
+  @Override
+  public Language getLanguage() {
+    return PerlLanguage.INSTANCE;
   }
 }

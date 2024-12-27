@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.parser.elementTypes;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiUtilCore;
 import org.jetbrains.annotations.NotNull;
 
 import static com.perl5.lang.perl.parser.PerlElementTypesGenerated.HEREDOC_OPENER;

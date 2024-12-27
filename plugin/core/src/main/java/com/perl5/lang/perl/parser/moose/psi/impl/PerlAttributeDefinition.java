@@ -16,13 +16,6 @@
 
 package com.perl5.lang.perl.parser.moose.psi.impl;
 
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.ElementManipulator;
-import com.intellij.psi.ElementManipulators;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.util.Function;
 import com.perl5.lang.perl.parser.PerlIdentifierRangeProvider;
 import com.perl5.lang.perl.psi.impl.PerlSubCallElement;
 import com.perl5.lang.perl.psi.light.PerlLightMethodDefinitionElement;
@@ -30,10 +23,17 @@ import com.perl5.lang.perl.psi.properties.PerlPodAwareElement;
 import com.perl5.lang.perl.psi.stubs.subsdefinitions.PerlSubDefinitionStub;
 import com.perl5.lang.perl.psi.utils.PerlSubAnnotations;
 import com.perl5.lang.perl.psi.utils.PerlSubArgument;
+import consulo.document.util.TextRange;
+import consulo.language.psi.ElementManipulator;
+import consulo.language.psi.ElementManipulators;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.stub.IStubElementType;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.Function;
 
 public class PerlAttributeDefinition extends PerlLightMethodDefinitionElement<PerlSubCallElement>
   implements PerlIdentifierRangeProvider, PerlPodAwareElement {

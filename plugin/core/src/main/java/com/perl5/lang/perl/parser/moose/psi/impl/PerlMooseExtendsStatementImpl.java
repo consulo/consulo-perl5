@@ -16,10 +16,6 @@
 
 package com.perl5.lang.perl.parser.moose.psi.impl;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.ElementManipulators;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReference;
 import com.perl5.lang.perl.parser.moose.psi.PerlMooseExtendsStatement;
 import com.perl5.lang.perl.psi.PerlString;
 import com.perl5.lang.perl.psi.PsiPerlCommaSequenceExpr;
@@ -27,6 +23,10 @@ import com.perl5.lang.perl.psi.PsiPerlStringList;
 import com.perl5.lang.perl.psi.impl.PsiPerlStatementImpl;
 import com.perl5.lang.perl.psi.references.PerlNamespaceReference;
 import com.perl5.lang.perl.psi.utils.PerlPsiUtil;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.ElementManipulators;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiReference;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

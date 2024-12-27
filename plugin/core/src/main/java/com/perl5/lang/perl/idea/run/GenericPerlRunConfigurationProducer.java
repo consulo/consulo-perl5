@@ -16,25 +16,23 @@
 
 package com.perl5.lang.perl.idea.run;
 
-import com.intellij.execution.Location;
-import com.intellij.execution.actions.ConfigurationContext;
-import com.intellij.execution.actions.LazyRunConfigurationProducer;
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.LangDataKeys;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.util.Consumer;
 import com.perl5.lang.perl.idea.project.PerlProjectManager;
+import consulo.dataContext.DataContext;
+import consulo.execution.action.ConfigurationContext;
+import consulo.execution.action.Location;
+import consulo.language.editor.LangDataKeys;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiUtilCore;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.ref.Ref;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 public abstract class GenericPerlRunConfigurationProducer<Configuration extends GenericPerlRunConfiguration>
   extends LazyRunConfigurationProducer<Configuration> {

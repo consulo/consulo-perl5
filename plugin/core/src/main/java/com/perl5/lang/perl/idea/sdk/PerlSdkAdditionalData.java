@@ -16,12 +16,6 @@
 
 package com.perl5.lang.perl.idea.sdk;
 
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.SdkAdditionalData;
-import com.intellij.openapi.projectRoots.SdkModificator;
-import com.intellij.openapi.projectRoots.impl.SdkAdditionalDataBase;
-import com.intellij.openapi.util.JDOMUtil;
-import com.intellij.util.ObjectUtils;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostData;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostHandler;
 import com.perl5.lang.perl.idea.sdk.implementation.PerlImplementationData;
@@ -29,6 +23,10 @@ import com.perl5.lang.perl.idea.sdk.implementation.PerlImplementationHandler;
 import com.perl5.lang.perl.idea.sdk.versionManager.PerlVersionManagerAdapter;
 import com.perl5.lang.perl.idea.sdk.versionManager.PerlVersionManagerData;
 import com.perl5.lang.perl.idea.sdk.versionManager.PerlVersionManagerHandler;
+import consulo.content.bundle.Sdk;
+import consulo.content.bundle.SdkAdditionalData;
+import consulo.content.bundle.SdkModificator;
+import consulo.util.jdom.JDOMUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -37,7 +35,7 @@ import org.jetbrains.annotations.TestOnly;
 
 import java.util.Objects;
 
-public class PerlSdkAdditionalData extends SdkAdditionalDataBase implements SaveAwareSdkAdditionalData {
+public class PerlSdkAdditionalData implements SaveAwareSdkAdditionalData {
   private final @NotNull PerlHostData<?, ?> myHostData;
   private final @NotNull PerlVersionManagerData<?, ?> myVersionManagerData;
   private final @NotNull PerlImplementationData<?, ?> myImplementationData;

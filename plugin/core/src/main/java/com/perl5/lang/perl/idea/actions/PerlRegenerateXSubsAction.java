@@ -16,10 +16,10 @@
 
 package com.perl5.lang.perl.idea.actions;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.project.Project;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.xsubs.PerlXSubsState;
+import consulo.project.Project;
+import consulo.ui.ex.action.AnActionEvent;
 import org.jetbrains.annotations.NotNull;
 
 public class PerlRegenerateXSubsAction extends PerlActionBase {
@@ -30,12 +30,12 @@ public class PerlRegenerateXSubsAction extends PerlActionBase {
 
   @Override
   protected boolean isEnabled(@NotNull AnActionEvent event) {
-    return super.isEnabled(event) && event.getProject() != null;
+    return super.isEnabled(event) && event.getData(Project.KEY) != null;
   }
 
   @Override
   public void actionPerformed(@NotNull AnActionEvent e) {
-    Project project = e.getProject();
+    Project project = e.getData(Project.KEY);
     if (project == null) {
       return;
     }

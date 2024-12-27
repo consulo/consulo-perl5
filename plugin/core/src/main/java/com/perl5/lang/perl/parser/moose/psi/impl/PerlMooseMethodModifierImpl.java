@@ -16,14 +16,14 @@
 
 package com.perl5.lang.perl.parser.moose.psi.impl;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.util.PsiTreeUtil;
 import com.perl5.lang.perl.parser.moose.psi.PerlMooseMethodModifier;
 import com.perl5.lang.perl.parser.moose.psi.PerlMoosePsiUtil;
 import com.perl5.lang.perl.psi.PsiPerlExpr;
 import com.perl5.lang.perl.psi.impl.PsiPerlExprImpl;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiReference;
+import consulo.language.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.Nullable;
 
 

@@ -16,20 +16,20 @@
 
 package com.perl5.lang.perl.idea.execution;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.configurations.GeneralCommandLine;
-import com.intellij.execution.configurations.ParametersList;
-import com.intellij.execution.configurations.PtyCommandLine;
-import com.intellij.execution.process.ProcessListener;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.util.ObjectUtils;
-import com.intellij.util.containers.ContainerUtil;
 import com.perl5.lang.perl.idea.project.PerlProjectManager;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostData;
 import com.perl5.lang.perl.idea.sdk.versionManager.PerlVersionManagerData;
+import consulo.content.bundle.Sdk;
+import consulo.logging.Logger;
+import consulo.module.Module;
+import consulo.process.ExecutionException;
+import consulo.process.cmd.GeneralCommandLine;
+import consulo.process.cmd.ParametersList;
+import consulo.process.event.ProcessListener;
+import consulo.project.Project;
+import consulo.ui.image.Image;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.ObjectUtil;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -57,7 +57,7 @@ public class PerlCommandLine extends GeneralCommandLine {
 
   private @Nullable @Nls String myConsoleTitle;
 
-  private @Nullable Icon myConsoleIcon;
+  private @Nullable Image myConsoleIcon;
 
   private @NotNull List<ProcessListener> myProcessListeners = Collections.emptyList();
 
@@ -225,7 +225,7 @@ public class PerlCommandLine extends GeneralCommandLine {
   }
 
   public @Nullable Project getEffectiveProject() {
-    return myProject != null ? myProject : ObjectUtils.doIfNotNull(getModule(), Module::getProject);
+    return myProject != null ? myProject : ObjectUtil.doIfNotNull(getModule(), Module::getProject);
   }
 
   public @NotNull Project getNonNullEffectiveProject() {
@@ -246,11 +246,11 @@ public class PerlCommandLine extends GeneralCommandLine {
     return this;
   }
 
-  public @Nullable Icon getConsoleIcon() {
+  public @Nullable Image getConsoleIcon() {
     return myConsoleIcon;
   }
 
-  public @NotNull PerlCommandLine withConsoleIcon(@Nullable Icon consoleIcon) {
+  public @NotNull PerlCommandLine withConsoleIcon(@Nullable Image consoleIcon) {
     myConsoleIcon = consoleIcon;
     return this;
   }
@@ -263,7 +263,7 @@ public class PerlCommandLine extends GeneralCommandLine {
    * Appends mappings of ports
    */
   public @NotNull PerlCommandLine withPortMappings(PortMapping... mappings) {
-    Set<PortMapping> newMappings = ContainerUtil.newHashSet(mappings);
+    Set<PortMapping> newMappings = new HashSet<>(Set.of(mappings));
     newMappings.addAll(myPortMappings);
     myPortMappings = newMappings;
     return this;

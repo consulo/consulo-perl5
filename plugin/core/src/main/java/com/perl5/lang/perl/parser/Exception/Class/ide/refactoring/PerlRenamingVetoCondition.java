@@ -16,21 +16,21 @@
 
 package com.perl5.lang.perl.parser.Exception.Class.ide.refactoring;
 
-import com.intellij.openapi.util.Condition;
-import com.intellij.psi.PsiElement;
 import com.perl5.lang.perl.extensions.packageprocessor.PerlPackageProcessor;
 import com.perl5.lang.perl.extensions.packageprocessor.impl.ExceptionClassProcessor;
 import com.perl5.lang.perl.psi.impl.PerlImplicitElement;
 import com.perl5.lang.perl.psi.impl.PerlUseStatementElement;
 import com.perl5.lang.perl.psi.light.PerlLightMethodDefinitionElement;
+import consulo.language.editor.refactoring.rename.VetoRenameCondition;
+import consulo.language.psi.PsiElement;
 
-public class PerlRenamingVetoCondition implements Condition<PsiElement> {
+public class PerlRenamingVetoCondition implements VetoRenameCondition {
   @Override
-  public boolean value(PsiElement element) {
-    return isVetoed(element);
+  public boolean isVetoed(PsiElement element) {
+    return isVetoedImpl(element);
   }
 
-  public static boolean isVetoed(PsiElement element) {
+  public static boolean isVetoedImpl(PsiElement element) {
     if (element instanceof PerlImplicitElement) {
       return true;
     }

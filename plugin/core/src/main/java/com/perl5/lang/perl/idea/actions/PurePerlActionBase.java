@@ -16,10 +16,10 @@
 
 package com.perl5.lang.perl.idea.actions;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.psi.PsiFile;
 import com.perl5.lang.perl.fileTypes.PurePerlFileType;
+import consulo.language.psi.PsiFile;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.virtualFileSystem.fileType.FileType;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;

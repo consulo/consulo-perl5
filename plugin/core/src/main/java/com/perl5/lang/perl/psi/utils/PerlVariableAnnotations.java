@@ -16,17 +16,21 @@
 
 package com.perl5.lang.perl.psi.utils;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.stubs.StubInputStream;
-import com.intellij.psi.stubs.StubOutputStream;
-import com.intellij.psi.util.*;
-import com.intellij.util.Processor;
-import com.intellij.util.containers.ContainerUtil;
 import com.perl5.lang.perl.PerlParserDefinition;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlValue;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlValuesManager;
 import com.perl5.lang.perl.parser.PerlElementTypesGenerated;
 import com.perl5.lang.perl.psi.*;
+import consulo.application.util.CachedValueProvider;
+import consulo.application.util.function.Processor;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiModificationTracker;
+import consulo.language.psi.PsiUtilCore;
+import consulo.language.psi.stub.StubInputStream;
+import consulo.language.psi.stub.StubOutputStream;
+import consulo.language.psi.util.LanguageCachedValueUtil;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.util.collection.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -121,7 +125,7 @@ public class PerlVariableAnnotations {
   }
 
   private static @NotNull List<PerlAnnotation> collectAnnotationsInScope(@NotNull PerlVariableDeclarationElement variableDeclarationElement) {
-    return CachedValuesManager.getCachedValue(variableDeclarationElement, () -> {
+    return LanguageCachedValueUtil.getCachedValue(variableDeclarationElement, () -> {
       List<PerlAnnotation> perlAnnotations = PerlAnnotations.collectAnnotations(variableDeclarationElement);
       var declarationExpression = variableDeclarationElement.getDeclarationExpression();
       if (perlAnnotations.isEmpty() && declarationExpression != null) {

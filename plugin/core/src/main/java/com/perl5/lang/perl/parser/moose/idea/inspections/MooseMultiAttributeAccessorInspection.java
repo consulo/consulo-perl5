@@ -16,9 +16,6 @@
 
 package com.perl5.lang.perl.parser.moose.idea.inspections;
 
-import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.idea.inspections.PerlInspection;
 import com.perl5.lang.perl.parser.moose.psi.impl.PerlAttributeDefinition;
@@ -27,6 +24,9 @@ import com.perl5.lang.perl.psi.PerlVisitor;
 import com.perl5.lang.perl.psi.PsiPerlSubCall;
 import com.perl5.lang.perl.psi.impl.PerlSubCallElement;
 import com.perl5.lang.perl.psi.light.PerlDelegatingLightNamedElement;
+import consulo.language.editor.inspection.ProblemsHolder;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -63,8 +63,8 @@ public class MooseMultiAttributeAccessorInspection extends PerlInspection {
         }
         accessors.forEach(it -> registerProblem(holder, it.getNameIdentifier(), PerlBundle.message("perl.inspection.multiattr.accessor")));
         List<PsiElement> attributesIdentifiers = attributes.stream()
-          .map(PerlDelegatingLightNamedElement::getNameIdentifier)
-          .distinct().collect(Collectors.toList());
+                                                           .map(PerlDelegatingLightNamedElement::getNameIdentifier)
+                                                           .distinct().collect(Collectors.toList());
         if (attributesIdentifiers.size() == 1) {
           // same identifier looks like an accessor
           registerProblem(holder, attributesIdentifiers.getFirst(), PerlBundle.message("perl.inspection.multiattr.accessor"));

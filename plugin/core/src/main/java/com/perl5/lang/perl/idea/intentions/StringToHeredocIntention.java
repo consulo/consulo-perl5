@@ -16,19 +16,16 @@
 
 package com.perl5.lang.perl.idea.intentions;
 
-import com.intellij.codeInsight.intention.FileModifier;
-import com.intellij.openapi.application.WriteAction;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.ui.TestDialog;
-import com.intellij.openapi.ui.TestDialogManager;
-import com.intellij.openapi.util.NlsSafe;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.util.IncorrectOperationException;
 import com.perl5.PerlBundle;
+import consulo.application.WriteAction;
+import consulo.codeEditor.Editor;
+import consulo.language.editor.inspection.FileModifier;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.util.IncorrectOperationException;
+import consulo.project.Project;
+import consulo.ui.ex.awt.Messages;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
@@ -95,10 +92,10 @@ public class StringToHeredocIntention extends StringToLastHeredocIntention {
   }
 
   @TestOnly
-  public static void doWithMarker(@NlsSafe @NotNull String marker, @NotNull Runnable runnable) {
+  public static void doWithMarker(@NotNull String marker, @NotNull Runnable runnable) {
     var currentMarker = ourMarker;
-    TestDialogManager.setTestInputDialog(message -> marker);
-    TestDialogManager.setTestDialog(TestDialog.YES);
+    //TestDialogManager.setTestInputDialog(message -> marker);
+    //TestDialogManager.setTestDialog(TestDialog.YES);
     try {
       runnable.run();
     }

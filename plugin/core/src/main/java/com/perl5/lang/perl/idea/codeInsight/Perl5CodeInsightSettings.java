@@ -16,12 +16,12 @@
 
 package com.perl5.lang.perl.idea.codeInsight;
 
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.components.State;
-import com.intellij.openapi.components.Storage;
-import com.intellij.util.xmlb.XmlSerializerUtil;
 import com.perl5.lang.perl.idea.PerlPathMacros;
+import consulo.application.ApplicationManager;
+import consulo.component.persist.PersistentStateComponent;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
+import consulo.util.xml.serializer.XmlSerializerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
@@ -32,7 +32,6 @@ import org.jetbrains.annotations.TestOnly;
   storages = @Storage(PerlPathMacros.APP_OTHER_SETTINGS_FILE)
 
 )
-
 public class Perl5CodeInsightSettings implements PersistentStateComponent<Perl5CodeInsightSettings>, Cloneable {
   public boolean HEREDOC_AUTO_INSERTION = true;
   public boolean AUTO_INSERT_COLON = true;
@@ -51,7 +50,7 @@ public class Perl5CodeInsightSettings implements PersistentStateComponent<Perl5C
   }
 
   public static Perl5CodeInsightSettings getInstance() {
-    return ApplicationManager.getApplication().getService(Perl5CodeInsightSettings.class);
+    return ApplicationManager.getApplication().getInstance(Perl5CodeInsightSettings.class);
   }
 
   @TestOnly

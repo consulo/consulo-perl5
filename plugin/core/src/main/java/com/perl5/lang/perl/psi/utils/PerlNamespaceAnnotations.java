@@ -16,11 +16,11 @@
 
 package com.perl5.lang.perl.psi.utils;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.stubs.StubInputStream;
-import com.intellij.psi.stubs.StubOutputStream;
 import com.perl5.lang.perl.psi.PerlAnnotation;
 import com.perl5.lang.perl.psi.PsiPerlAnnotationDeprecated;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.stub.StubInputStream;
+import consulo.language.psi.stub.StubOutputStream;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

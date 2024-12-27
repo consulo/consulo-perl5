@@ -16,11 +16,11 @@
 
 package com.perl5.lang.perl.psi.stubs.namespaces;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.stubs.StubIndexKey;
-import com.intellij.util.IncorrectOperationException;
 import com.perl5.lang.perl.psi.PerlNamespaceDefinitionElement;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.stub.StubElement;
+import consulo.language.psi.stub.StubIndexKey;
+import consulo.language.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

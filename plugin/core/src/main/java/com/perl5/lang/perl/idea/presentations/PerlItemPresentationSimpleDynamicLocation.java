@@ -16,13 +16,13 @@
 
 package com.perl5.lang.perl.idea.presentations;
 
-import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
-import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
 import com.perl5.lang.perl.fileTypes.PerlFileTypePackage;
 import com.perl5.lang.perl.util.PerlPackageUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.module.content.internal.ProjectRootManagerEx;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jetbrains.annotations.Nullable;
 
 public class PerlItemPresentationSimpleDynamicLocation extends PerlItemPresentationSimple {
@@ -50,7 +50,7 @@ public class PerlItemPresentationSimpleDynamicLocation extends PerlItemPresentat
       VirtualFile innerMostClassRoot = PerlPackageUtil.getClosestIncRoot(containingFile.getProject(), virtualFile);
 
       if (innerMostClassRoot != null) {
-        String relativePath = VfsUtilCore.getRelativePath(virtualFile, innerMostClassRoot);
+        String relativePath = VirtualFileUtil.getRelativePath(virtualFile, innerMostClassRoot);
         return PerlPackageUtil.getPackageNameByPath(relativePath);
       }
     }
@@ -58,7 +58,7 @@ public class PerlItemPresentationSimpleDynamicLocation extends PerlItemPresentat
     // trying to get project's root directory
     VirtualFile innerMostSourceRoot = ProjectRootManagerEx.getInstanceEx(containingFile.getProject()).getFileIndex().getContentRootForFile(virtualFile);
     if (innerMostSourceRoot != null) {
-      return VfsUtilCore.getRelativePath(virtualFile, innerMostSourceRoot);
+      return VirtualFileUtil.getRelativePath(virtualFile, innerMostSourceRoot);
     } else {
       return virtualFile.getPath();
     }

@@ -16,16 +16,16 @@
 
 package com.perl5.lang.perl.idea.refactoring.introduce.occurrence;
 
-import com.intellij.openapi.util.Pair;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.util.PsiUtilCore;
 import com.perl5.lang.perl.idea.refactoring.introduce.PerlIntroduceTarget;
 import com.perl5.lang.perl.psi.PerlString;
 import com.perl5.lang.perl.psi.PerlStringList;
 import com.perl5.lang.perl.psi.PsiPerlStringBare;
 import com.perl5.lang.perl.psi.PsiPerlStringXq;
 import com.perl5.lang.perl.psi.utils.PerlPsiUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiUtilCore;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.util.lang.Pair;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;

@@ -16,14 +16,13 @@
 
 package com.perl5.lang.perl.idea.refactoring.move;
 
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.refactoring.move.moveFilesOrDirectories.MoveFilesOrDirectoriesProcessor;
-import com.intellij.refactoring.rename.RenamePsiFileProcessor;
 import com.perl5.lang.perl.util.PerlPackageUtil;
+import consulo.application.ApplicationManager;
+import consulo.language.editor.refactoring.move.fileOrDirectory.MoveFilesOrDirectoriesProcessor;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.project.Project;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;

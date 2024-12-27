@@ -16,15 +16,15 @@
 
 package com.perl5.lang.perl.idea.ui;
 
-import com.intellij.ide.IconProvider;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiUtilCore;
 import com.perl5.PerlIcons;
 import com.perl5.lang.perl.psi.PerlSubExpr;
 import com.perl5.lang.perl.psi.PerlVariable;
 import com.perl5.lang.perl.psi.PerlVariableDeclarationElement;
 import com.perl5.lang.perl.psi.utils.PerlVariableType;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiUtilCore;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,7 +38,7 @@ public class PerlIconProvider extends IconProvider {
     return getIcon(element);
   }
 
-  public static @Nullable Icon getIcon(@Nullable PsiElement element) {
+  public static @Nullable Image getIcon(@Nullable PsiElement element) {
     if (element instanceof PerlSubExpr) {
       return PerlIcons.ANON_SUB_ICON;
     }

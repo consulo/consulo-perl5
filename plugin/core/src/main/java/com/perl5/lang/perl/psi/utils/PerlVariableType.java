@@ -17,10 +17,9 @@
 package com.perl5.lang.perl.psi.utils;
 
 import com.perl5.PerlIcons;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import javax.swing.*;
 
 
 public enum PerlVariableType {
@@ -31,9 +30,9 @@ public enum PerlVariableType {
   CODE('&', PerlIcons.SUB_GUTTER_ICON);
 
   private final char mySigil;
-  private final @NotNull Icon myIcon;
+  private final @NotNull Image myIcon;
 
-  PerlVariableType(char sigil, @NotNull Icon icon) {
+  PerlVariableType(char sigil, @NotNull Image icon) {
     mySigil = sigil;
     myIcon = icon;
   }
@@ -46,7 +45,7 @@ public enum PerlVariableType {
     return getSigil() + variableName;
   }
 
-  public @NotNull Icon getIcon() {
+  public @NotNull Image getIcon() {
     return myIcon;
   }
 

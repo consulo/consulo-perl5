@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.idea.findusages;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.usages.impl.FileStructureGroupRuleProvider;
-import com.intellij.usages.rules.UsageGroupingRule;
+import consulo.project.Project;
+import consulo.usage.rule.FileStructureGroupRuleProvider;
+import consulo.usage.rule.UsageGroupingRule;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

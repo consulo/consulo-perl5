@@ -16,12 +16,11 @@
 
 package com.perl5.lang.perl.idea.sdk.host.local;
 
-import com.intellij.openapi.util.NlsActions.ActionText;
-import com.intellij.openapi.util.SystemInfo;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.idea.sdk.PerlHandlerBean;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostHandler;
 import com.perl5.lang.perl.idea.sdk.host.os.PerlOsHandler;
+import consulo.application.util.SystemInfo;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,7 +37,7 @@ class PerlLocalHostHandler extends PerlHostHandler<PerlLocalHostData, PerlLocalH
   }
 
   @Override
-  public @NotNull @ActionText String getMenuItemTitle() {
+  public @NotNull  String getMenuItemTitle() {
     return PerlBundle.message("perl.host.handler.localhost.menu.title");
   }
 
@@ -79,7 +78,6 @@ class PerlLocalHostHandler extends PerlHostHandler<PerlLocalHostData, PerlLocalH
            SystemInfo.isMac ? MACOS :
            SystemInfo.isLinux ? LINUX :
            SystemInfo.isFreeBSD ? FREEBSD :
-           SystemInfo.isSolaris ? SOLARIS :
            UNIX;
   }
 

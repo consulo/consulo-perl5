@@ -16,9 +16,8 @@
 
 package com.perl5.lang.perl.idea.formatter.operations;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.impl.source.tree.LeafPsiElement;
-
+import consulo.language.impl.psi.LeafPsiElement;
+import consulo.language.psi.PsiElement;
 
 public class PerlFormattingReplaceWithText implements PerlFormattingOperation {
   private final PsiElement myElementToChange;

@@ -16,11 +16,6 @@
 
 package com.perl5.lang.perl.psi.references;
 
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiManager;
-import com.intellij.util.Processor;
 import com.perl5.lang.perl.psi.PerlVariableDeclarationElement;
 import com.perl5.lang.perl.psi.impl.PerlBuiltInVariable;
 import com.perl5.lang.perl.psi.utils.PerlVariableType;
@@ -28,6 +23,11 @@ import com.perl5.lang.perl.util.PerlArrayUtil;
 import com.perl5.lang.perl.util.PerlBuiltInScalars;
 import com.perl5.lang.perl.util.PerlGlobUtil;
 import com.perl5.lang.perl.util.PerlHashUtil;
+import consulo.application.progress.ProgressManager;
+import consulo.application.util.function.Processor;
+import consulo.language.psi.PsiManager;
+import consulo.project.Project;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

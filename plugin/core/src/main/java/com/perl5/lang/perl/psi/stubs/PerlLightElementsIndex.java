@@ -18,6 +18,7 @@ package com.perl5.lang.perl.psi.stubs;
 
 import com.perl5.lang.perl.psi.impl.PerlPolyNamedElement;
 import com.perl5.lang.perl.psi.light.PerlDelegatingLightNamedElement;
+import consulo.application.util.function.Processor;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.project.Project;

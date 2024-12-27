@@ -16,14 +16,13 @@
 
 package com.perl5.lang.perl.fileTypes;
 
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.psi.PsiElement;
 import com.perl5.PerlIcons;
+import consulo.language.psi.PsiElement;
+import consulo.virtualFileSystem.fileType.FileType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-
 
 public class PerlFileTypeTest extends PurePerlFileType {
   public static final FileType INSTANCE = new PerlFileTypeTest();

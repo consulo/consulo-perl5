@@ -16,10 +16,10 @@
 
 package com.perl5.lang.perl.idea.structureView.filters;
 
-import com.intellij.ide.util.treeView.smartTree.ActionPresentation;
-import com.intellij.ide.util.treeView.smartTree.ActionPresentationData;
 import com.perl5.PerlIcons;
 import com.perl5.lang.pod.idea.structureView.PodStructureViewElement;
+import consulo.fileEditor.structureView.tree.ActionPresentation;
+import consulo.fileEditor.structureView.tree.ActionPresentationData;
 import org.jetbrains.annotations.NotNull;
 
 public class PerlPodFilter extends PerlFilter {

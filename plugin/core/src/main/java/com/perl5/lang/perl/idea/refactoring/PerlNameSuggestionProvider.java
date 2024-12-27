@@ -16,22 +16,6 @@
 
 package com.perl5.lang.perl.idea.refactoring;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.NotNullLazyValue;
-import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.ElementManipulator;
-import com.intellij.psi.ElementManipulators;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.codeStyle.SuggestedNameInfo;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.refactoring.rename.NameSuggestionProvider;
-import com.intellij.util.ObjectUtils;
-import com.intellij.util.containers.ContainerUtil;
 import com.perl5.lang.perl.PerlLanguage;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlCallValue;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlValue;
@@ -48,6 +32,22 @@ import com.perl5.lang.perl.psi.properties.PerlLexicalScope;
 import com.perl5.lang.perl.psi.utils.PerlResolveUtil;
 import com.perl5.lang.perl.psi.utils.PerlVariableType;
 import com.perl5.lang.perl.util.PerlPackageUtil;
+import consulo.application.util.NotNullLazyValue;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
+import consulo.language.editor.refactoring.rename.NameSuggestionProvider;
+import consulo.language.editor.refactoring.rename.SuggestedNameInfo;
+import consulo.language.psi.ElementManipulator;
+import consulo.language.psi.ElementManipulators;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiUtilCore;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.logging.Logger;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.StringUtil;
+import consulo.util.lang.ref.Ref;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -468,7 +468,7 @@ public class PerlNameSuggestionProvider implements NameSuggestionProvider {
     }
 
     if (StringUtil.isNotEmpty(baseExprName)) {
-      singularName = ObjectUtils.notNull(StringUtil.unpluralize(baseExprName), baseExprName);
+      singularName = ObjectUtil.notNull(StringUtil.unpluralize(baseExprName), baseExprName);
       String variableNameElement = join(singularName, ELEMENT);
       if (StringUtil.isNotEmpty(variableNameElement)) {
         result.add(variableNameElement);
@@ -579,7 +579,7 @@ public class PerlNameSuggestionProvider implements NameSuggestionProvider {
   }
 
   @Contract("null->null")
-  private static @Nullable String join(@Nullable String @Nullable ... source) {
+  private static @Nullable String join(@Nullable String... source) {
     return source == null ? null : join(Arrays.asList(source));
   }
 

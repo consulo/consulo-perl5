@@ -16,15 +16,16 @@
 
 package com.perl5.lang.perl.idea;
 
-import com.intellij.codeInsight.completion.CompletionLocation;
-import com.intellij.codeInsight.completion.CompletionWeigher;
-import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.openapi.util.Key;
-import com.intellij.psi.util.PsiUtilCore;
 import com.perl5.lang.perl.PerlLanguage;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.editor.completion.CompletionLocation;
+import consulo.language.editor.completion.CompletionWeigher;
+import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.psi.PsiUtilCore;
+import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NotNull;
 
-
+@ExtensionImpl
 public class PerlCompletionWeighter extends CompletionWeigher {
   public static final Key<Integer> WEIGHT = new Key<>("WEIGHT");
 

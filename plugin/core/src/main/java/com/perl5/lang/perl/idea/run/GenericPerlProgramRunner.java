@@ -16,29 +16,28 @@
 
 package com.perl5.lang.perl.idea.run;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.ExecutionResult;
-import com.intellij.execution.configurations.RunProfileState;
-import com.intellij.execution.configurations.RunnerSettings;
-import com.intellij.execution.runners.AsyncProgramRunner;
-import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.execution.runners.RunContentBuilder;
-import com.intellij.execution.ui.RunContentDescriptor;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.ui.Messages;
-import com.intellij.util.concurrency.AppExecutorUtil;
-import com.intellij.util.containers.ContainerUtil;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.adapters.PackageManagerAdapterFactory;
 import com.perl5.lang.perl.idea.project.PerlProjectManager;
 import com.perl5.lang.perl.util.PerlPackageUtil;
+import consulo.application.ApplicationManager;
+import consulo.application.util.concurrent.AppExecutorUtil;
+import consulo.document.FileDocumentManager;
+import consulo.execution.ExecutionResult;
+import consulo.execution.configuration.RunProfileState;
+import consulo.execution.configuration.RunnerSettings;
+import consulo.execution.runner.AsyncProgramRunner;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.execution.runner.RunContentBuilder;
+import consulo.execution.ui.RunContentDescriptor;
+import consulo.logging.Logger;
+import consulo.process.ExecutionException;
+import consulo.ui.ModalityState;
+import consulo.ui.ex.awt.Messages;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.concurrent.AsyncResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.concurrency.AsyncPromise;
-import org.jetbrains.concurrency.Promise;
 
 import java.util.HashSet;
 import java.util.List;
@@ -52,13 +51,13 @@ public abstract class GenericPerlProgramRunner extends AsyncProgramRunner<Runner
                                                                                                                    ExecutionException;
 
   @Override
-  protected @NotNull Promise<RunContentDescriptor> execute(@NotNull ExecutionEnvironment environment, @NotNull RunProfileState state)
+  protected @NotNull AsyncResult<RunContentDescriptor> execute(@NotNull ExecutionEnvironment environment, @NotNull RunProfileState state)
     throws ExecutionException {
     FileDocumentManager.getInstance().saveAllDocuments();
-    AsyncPromise<RunContentDescriptor> result = new AsyncPromise<>();
+    AsyncResult<RunContentDescriptor> result = AsyncResult.undefined();
     var missingModules = getMissingModules(environment);
     if (!missingModules.isEmpty() && handleMissingModules(environment, missingModules)) {
-      result.setResult(null);
+      result.setDone(null);
     }
     else {
       AppExecutorUtil.getAppExecutorService().execute(() -> {
@@ -66,7 +65,7 @@ public abstract class GenericPerlProgramRunner extends AsyncProgramRunner<Runner
           doExecute(state, environment, result);
         }
         catch (ExecutionException e) {
-          result.setError(e);
+          result.rejectWithThrowable(e);
         }
       });
     }
@@ -138,18 +137,18 @@ public abstract class GenericPerlProgramRunner extends AsyncProgramRunner<Runner
 
   protected static void createAndSetContentDescriptor(@NotNull ExecutionEnvironment environment,
                                                       @Nullable ExecutionResult executionResult,
-                                                      @NotNull AsyncPromise<? super RunContentDescriptor> result) {
+                                                      @NotNull AsyncResult<? super RunContentDescriptor> result) {
     if (executionResult == null) {
-      result.setResult(null);
+      result.setDone(null);
     }
     else {
       ApplicationManager.getApplication().invokeLater(
-        () -> result.setResult(new RunContentBuilder(executionResult, environment).showRunContent(environment.getContentToReuse())),
+        () -> result.setDone(new RunContentBuilder(executionResult, environment).showRunContent(environment.getContentToReuse())),
         ModalityState.any());
     }
   }
 
   protected abstract void doExecute(@NotNull RunProfileState state,
                                     @NotNull ExecutionEnvironment environment,
-                                    @NotNull AsyncPromise<RunContentDescriptor> result) throws ExecutionException;
+                                    @NotNull AsyncResult<RunContentDescriptor> result) throws ExecutionException;
 }

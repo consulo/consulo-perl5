@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.psi.stubs.imports;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
 import com.perl5.lang.perl.psi.impl.PerlNoStatementElement;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 
 

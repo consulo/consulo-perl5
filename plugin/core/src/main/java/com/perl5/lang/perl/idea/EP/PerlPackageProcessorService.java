@@ -16,13 +16,9 @@
 
 package com.perl5.lang.perl.idea.EP;
 
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.Service;
-import com.intellij.openapi.util.ClearableLazyValue;
-import com.intellij.openapi.util.KeyedExtensionCollector;
-import com.intellij.util.KeyedLazyInstance;
 import com.perl5.lang.perl.extensions.packageprocessor.PerlPackageProcessor;
+import consulo.application.ApplicationManager;
+import consulo.disposer.Disposable;
 
 import java.util.Objects;
 

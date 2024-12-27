@@ -16,12 +16,12 @@
 
 package com.perl5.lang.perl.psi.utils;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.Processor;
 import com.perl5.lang.perl.psi.*;
 import com.perl5.lang.perl.psi.impl.PsiPerlCallArgumentsImpl;
 import com.perl5.lang.perl.util.PerlArrayUtil;
+import consulo.application.util.function.Processor;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.util.PsiTreeUtil;
 
 import java.util.ArrayList;
 import java.util.List;

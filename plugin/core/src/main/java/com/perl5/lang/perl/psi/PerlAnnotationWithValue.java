@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.psi;
 
-import com.intellij.psi.PsiElement;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlValue;
 import com.perl5.lang.perl.psi.utils.PerlAnnotations;
+import consulo.language.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 
 

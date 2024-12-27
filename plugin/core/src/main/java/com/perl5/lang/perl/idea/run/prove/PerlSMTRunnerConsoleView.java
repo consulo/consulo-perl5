@@ -16,14 +16,12 @@
 
 package com.perl5.lang.perl.idea.run.prove;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.intellij.execution.testframework.sm.runner.ui.SMTRunnerConsoleView;
 import com.perl5.lang.perl.idea.sdk.host.PerlConsoleView;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostData;
+import consulo.execution.test.sm.ui.SMTRunnerConsoleView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@VisibleForTesting
 public class PerlSMTRunnerConsoleView extends SMTRunnerConsoleView implements PerlConsoleView {
   private PerlHostData<?, ?> myHostData;
 

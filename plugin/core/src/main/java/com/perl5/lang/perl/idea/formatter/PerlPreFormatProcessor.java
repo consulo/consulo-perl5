@@ -16,13 +16,13 @@
 
 package com.perl5.lang.perl.idea.formatter;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.impl.source.codeStyle.PreFormatProcessor;
 import com.perl5.lang.perl.PerlLanguage;
+import consulo.document.util.TextRange;
+import consulo.language.ast.ASTNode;
+import consulo.language.codeStyle.PreFormatProcessor;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.project.Project;
 import org.jetbrains.annotations.NotNull;
 
 

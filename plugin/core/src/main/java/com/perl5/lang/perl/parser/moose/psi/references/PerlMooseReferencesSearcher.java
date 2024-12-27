@@ -16,15 +16,14 @@
 
 package com.perl5.lang.perl.parser.moose.psi.references;
 
-import com.intellij.openapi.application.QueryExecutorBase;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.search.searches.ReferencesSearch;
-import com.intellij.util.Processor;
 import com.perl5.lang.perl.parser.moose.psi.PerlMooseAugmentStatement;
 import com.perl5.lang.perl.psi.PerlSubDefinitionElement;
+import consulo.application.util.function.Processor;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiReference;
+import consulo.language.psi.search.ReferencesSearch;
+import consulo.project.util.query.QueryExecutorBase;
 import org.jetbrains.annotations.NotNull;
-
 
 public class PerlMooseReferencesSearcher extends QueryExecutorBase<PsiReference, ReferencesSearch.SearchParameters> {
   public PerlMooseReferencesSearcher() {

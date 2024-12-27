@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.idea.refactoring.introduce.occurrence;
 
-import com.intellij.openapi.util.Pair;
-import com.intellij.psi.PsiElement;
 import com.perl5.lang.perl.idea.refactoring.introduce.PerlIntroduceTarget;
+import consulo.language.psi.PsiElement;
+import consulo.util.lang.Pair;
 import org.jetbrains.annotations.NotNull;
 
 import static com.perl5.lang.perl.idea.refactoring.introduce.target.PerlIntroduceTargetsHandler.isTargetableHeredocElement;

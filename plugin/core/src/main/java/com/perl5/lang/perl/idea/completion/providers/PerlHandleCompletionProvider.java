@@ -16,13 +16,6 @@
 
 package com.perl5.lang.perl.idea.completion.providers;
 
-import com.intellij.codeInsight.completion.CompletionParameters;
-import com.intellij.codeInsight.completion.CompletionResultSet;
-import com.intellij.openapi.util.registry.Registry;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.ProcessingContext;
-import com.intellij.util.containers.ContainerUtil;
 import com.perl5.lang.perl.idea.completion.providers.processors.PerlSimpleCompletionProcessor;
 import com.perl5.lang.perl.idea.completion.providers.processors.PerlVariableCompletionProcessor;
 import com.perl5.lang.perl.idea.completion.providers.processors.PerlVariableCompletionProcessorImpl;
@@ -33,18 +26,24 @@ import com.perl5.lang.perl.psi.PerlSubNameElement;
 import com.perl5.lang.perl.psi.PsiPerlMethod;
 import com.perl5.lang.perl.psi.impl.PerlSubCallElement;
 import com.perl5.lang.perl.util.PerlTimeLogger;
+import consulo.application.util.registry.Registry;
+import consulo.language.editor.completion.CompletionParameters;
+import consulo.language.editor.completion.CompletionResultSet;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.util.ProcessingContext;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
 public class PerlHandleCompletionProvider extends PerlCompletionProvider {
   // fixme this could be in CORE.xml file as a flag
-  private static final Set<String> AUTO_VIVIFICATION_SUBS = ContainerUtil.newHashSet(
+  private static final Set<String> AUTO_VIVIFICATION_SUBS = Set.of(
     "open", "opendir"
   );
 
   @Override
-  protected void addCompletions(@NotNull CompletionParameters parameters,
+  public void addCompletions(@NotNull CompletionParameters parameters,
                                 @NotNull ProcessingContext context,
                                 @NotNull CompletionResultSet result) {
     PsiElement position = parameters.getPosition();

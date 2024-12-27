@@ -16,13 +16,13 @@
 
 package com.perl5.lang.perl.idea.formatter.settings;
 
-import com.intellij.application.options.TabbedLanguageCodeStylePanel;
-import com.intellij.application.options.codeStyle.WrappingAndBracesPanel;
-import com.intellij.lang.Language;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
-import com.intellij.psi.codeStyle.LanguageCodeStyleSettingsProvider;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.PerlLanguage;
+import consulo.language.Language;
+import consulo.language.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider;
+import consulo.language.codeStyle.ui.setting.TabbedLanguageCodeStylePanel;
+import consulo.language.codeStyle.ui.setting.WrappingAndBracesPanel;
 import org.jetbrains.annotations.NotNull;
 
 

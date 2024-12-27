@@ -16,18 +16,18 @@
 
 package com.perl5.lang.perl.idea.generation.handlers;
 
-import com.intellij.codeInsight.CodeInsightActionHandler;
-import com.intellij.openapi.editor.Caret;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiComment;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
 import com.perl5.lang.perl.lexer.PerlElementTypes;
 import com.perl5.lang.perl.psi.PerlNamespaceDefinitionWithIdentifier;
 import com.perl5.lang.perl.psi.PsiPerlBlock;
 import com.perl5.lang.perl.psi.PsiPerlNamespaceContent;
 import com.perl5.lang.perl.psi.impl.PerlHeredocElementImpl;
+import consulo.codeEditor.Caret;
+import consulo.codeEditor.Editor;
+import consulo.language.editor.action.CodeInsightActionHandler;
+import consulo.language.psi.PsiComment;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.project.Project;
 import org.jetbrains.annotations.NotNull;
 
 

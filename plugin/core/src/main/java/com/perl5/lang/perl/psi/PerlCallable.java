@@ -16,7 +16,6 @@
 
 package com.perl5.lang.perl.psi;
 
-import com.intellij.openapi.util.NlsSafe;
 import com.perl5.lang.perl.psi.properties.PerlPackageMember;
 import com.perl5.lang.perl.util.PerlPackageUtil;
 
@@ -27,7 +26,7 @@ public interface PerlCallable extends PerlDeprecatable, PerlPackageMember {
    * @return name
    */
   @Override
-  default @NlsSafe String getCanonicalName() {
+  default String getCanonicalName() {
     String packageName = getNamespaceName();
     if (packageName == null) {
       return null;
@@ -39,5 +38,5 @@ public interface PerlCallable extends PerlDeprecatable, PerlPackageMember {
   /**
    * @return a callable name. Sub or typeglob.
    */
-  @NlsSafe String getCallableName();
+  String getCallableName();
 }

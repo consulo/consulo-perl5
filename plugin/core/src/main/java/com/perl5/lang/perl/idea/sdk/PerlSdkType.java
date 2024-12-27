@@ -16,25 +16,7 @@
 
 package com.perl5.lang.perl.idea.sdk;
 
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationType;
-import com.intellij.notification.Notifications;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.WriteAction;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.*;
 import com.intellij.openapi.projectRoots.impl.PerlSdkTable;
-import com.intellij.openapi.projectRoots.impl.ProjectJdkImpl;
-import com.intellij.openapi.projectRoots.impl.SdkConfigurationUtil;
-import com.intellij.openapi.roots.OrderRootType;
-import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.ObjectUtils;
-import com.intellij.util.containers.ContainerUtil;
 import com.perl5.PerlBundle;
 import com.perl5.PerlIcons;
 import com.perl5.lang.perl.idea.project.PerlProjectManager;
@@ -44,6 +26,22 @@ import com.perl5.lang.perl.idea.sdk.implementation.PerlImplementationData;
 import com.perl5.lang.perl.idea.sdk.implementation.PerlImplementationHandler;
 import com.perl5.lang.perl.idea.sdk.versionManager.PerlVersionManagerData;
 import com.perl5.lang.perl.util.PerlRunUtil;
+import consulo.application.ApplicationManager;
+import consulo.application.WriteAction;
+import consulo.application.util.SystemInfo;
+import consulo.content.OrderRootType;
+import consulo.content.bundle.*;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.notification.Notifications;
+import consulo.ui.ex.awt.Messages;
+import consulo.ui.image.Image;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jdom.Element;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -75,7 +73,7 @@ public class PerlSdkType extends SdkType {
   }
 
   @Override
-  public @NotNull SdkAdditionalData loadAdditionalData(@NotNull Element additional) {
+  public @NotNull SdkAdditionalData loadAdditionalData(Sdk currentSdk, @NotNull Element additional) {
     return PerlSdkAdditionalData.load(additional);
   }
 
@@ -107,9 +105,9 @@ public class PerlSdkType extends SdkType {
       binStubber.accept(interpreterPath.getParentFile());
 
       List<VirtualFile> filesToRefresh = pathsToRefresh.stream()
-        .map(it -> VfsUtil.findFileByIoFile(new File(it), true))
-        .filter(Objects::nonNull)
-        .collect(Collectors.toList());
+                                                       .map(it -> VfsUtil.findFileByIoFile(new File(it), true))
+                                                       .filter(Objects::nonNull)
+                                                       .collect(Collectors.toList());
 
       if (!filesToRefresh.isEmpty()) {
         PerlRunUtil.setProgressText(PerlBundle.message("perl.progress.refreshing.filesystem"));
@@ -213,7 +211,7 @@ public class PerlSdkType extends SdkType {
 
   @Override
   public @Nullable String getVersionString(@NotNull Sdk sdk) {
-    return ObjectUtils.doIfNotNull(
+    return ObjectUtil.doIfNotNull(
       getPerlVersionDescriptor(PerlProjectManager.getInterpreterPath(sdk),
                                PerlHostData.notNullFrom(sdk),
                                PerlVersionManagerData.notNullFrom(sdk)),
@@ -244,7 +242,7 @@ public class PerlSdkType extends SdkType {
   }
 
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return PerlIcons.PERL_LANGUAGE_ICON;
   }
 

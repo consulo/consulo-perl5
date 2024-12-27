@@ -16,8 +16,6 @@
 
 package com.perl5.lang.perl.idea.inspections;
 
-import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.psi.PsiElement;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.psi.PerlVariable;
 import com.perl5.lang.perl.psi.PerlVariableDeclarationElement;
@@ -25,6 +23,8 @@ import com.perl5.lang.perl.psi.PsiPerlVariableDeclarationLocal;
 import com.perl5.lang.perl.psi.impl.PerlBuiltInVariable;
 import com.perl5.lang.perl.psi.impl.PerlImplicitVariableDeclaration;
 import com.perl5.lang.perl.psi.utils.PerlResolveUtil;
+import consulo.language.editor.inspection.ProblemsHolder;
+import consulo.language.psi.PsiElement;
 
 
 public class PerlVariableShadowingInspection extends PerlVariableInspectionBase {

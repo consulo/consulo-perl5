@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.parser.elementTypes;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
+import consulo.language.ast.ASTNode;
 import org.jetbrains.annotations.NotNull;
 
 public class PerlReparseableCommentTokenType extends PerlReparseableTokenType {

@@ -16,14 +16,11 @@
 
 package com.perl5.lang.perl.idea.refactoring.introduce;
 
-import com.intellij.openapi.application.ReadAction;
-import com.intellij.openapi.util.Segment;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.refactoring.IntroduceTargetChooser;
-import com.intellij.refactoring.introduce.PsiIntroduceTarget;
 import com.perl5.lang.perl.psi.utils.PerlPsiUtil;
+import consulo.application.ReadAction;
+import consulo.document.util.TextRange;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;

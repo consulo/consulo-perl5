@@ -16,15 +16,15 @@
 
 package com.perl5.lang.perl.idea.refactoring.introduce;
 
-import com.intellij.openapi.application.ReadAction;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiNamedElement;
-import com.intellij.refactoring.introduce.inplace.InplaceVariableIntroducer;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.idea.refactoring.PerlNameSuggestionProvider;
 import com.perl5.lang.perl.psi.PerlVariableDeclaration;
 import com.perl5.lang.perl.psi.PerlVariableDeclarationElement;
+import consulo.application.ReadAction;
+import consulo.codeEditor.Editor;
+import consulo.language.editor.refactoring.introduce.inplace.InplaceVariableIntroducer;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiNamedElement;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedHashSet;

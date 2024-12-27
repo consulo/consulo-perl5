@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.idea.highlighter;
 
-import com.intellij.openapi.fileTypes.SyntaxHighlighter;
-import com.intellij.openapi.project.Project;
+import consulo.language.editor.highlight.SyntaxHighlighter;
+import consulo.project.Project;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

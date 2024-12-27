@@ -16,20 +16,23 @@
 
 package com.perl5.lang.perl.idea.actions;
 
-import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
 import com.perl5.lang.perl.idea.project.PerlProjectManager;
+import consulo.codeEditor.Editor;
+import consulo.dataContext.DataContext;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
+import consulo.project.Project;
+import consulo.ui.ex.action.ActionPlaces;
+import consulo.ui.ex.action.ActionUpdateThread;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.image.Image;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import javax.swing.*;
-
 
 public abstract class PerlActionBase extends AnAction implements PerlAction {
   public PerlActionBase() {
@@ -37,12 +40,12 @@ public abstract class PerlActionBase extends AnAction implements PerlAction {
 
   public PerlActionBase(@Nls(capitalization = Nls.Capitalization.Title) @Nullable String text,
                         @Nls(capitalization = Nls.Capitalization.Sentence) @Nullable String description,
-                        @Nullable Icon icon) {
+                        @Nullable Image icon) {
     super(text, description, icon);
   }
 
   public PerlActionBase(@Nls(capitalization = Nls.Capitalization.Title) @Nullable String text,
-                        @Nullable Icon icon) {
+                        @Nullable Image icon) {
     this(text, null, icon);
   }
 
@@ -78,12 +81,12 @@ public abstract class PerlActionBase extends AnAction implements PerlAction {
 
   protected static @Nullable PsiFile getPsiFile(@NotNull AnActionEvent event) {
     final DataContext context = event.getDataContext();
-    final Project project = CommonDataKeys.PROJECT.getData(context);
+    final Project project = context.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       return null;
     }
 
-    final Editor editor = CommonDataKeys.EDITOR.getData(context);
+    final Editor editor = context.getData(CommonDataKeys.EDITOR);
     if (editor != null) {
       return PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
     }
@@ -97,6 +100,6 @@ public abstract class PerlActionBase extends AnAction implements PerlAction {
   }
 
   protected static @Nullable VirtualFile getVirtualFile(@NotNull AnActionEvent event) {
-    return CommonDataKeys.VIRTUAL_FILE.getData(event.getDataContext());
+    return event.getData(CommonDataKeys.VIRTUAL_FILE);
   }
 }

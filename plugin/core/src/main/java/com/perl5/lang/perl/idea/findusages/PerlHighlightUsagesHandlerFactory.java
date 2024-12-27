@@ -16,28 +16,26 @@
 
 package com.perl5.lang.perl.idea.findusages;
 
-import com.intellij.codeInsight.TargetElementUtil;
-import com.intellij.codeInsight.highlighting.HighlightUsagesHandlerBase;
-import com.intellij.codeInsight.highlighting.HighlightUsagesHandlerFactory;
-import com.intellij.codeInsight.highlighting.ReadWriteAccessDetector;
-import com.intellij.lang.injection.InjectedLanguageManager;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.*;
-import com.intellij.psi.impl.source.tree.injected.InjectedLanguageEditorUtil;
-import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
-import com.intellij.psi.search.LocalSearchScope;
-import com.intellij.psi.search.searches.ReferencesSearch;
-import com.intellij.util.Consumer;
 import com.perl5.lang.perl.PerlLanguage;
 import com.perl5.lang.perl.parser.PerlIdentifierRangeProvider;
+import consulo.codeEditor.Editor;
+import consulo.document.util.TextRange;
+import consulo.language.editor.TargetElementUtil;
+import consulo.language.editor.highlight.ReadWriteAccessDetector;
+import consulo.language.editor.highlight.usage.HighlightUsagesHandlerBase;
+import consulo.language.editor.highlight.usage.HighlightUsagesHandlerFactory;
+import consulo.language.inject.InjectedLanguageManager;
+import consulo.language.psi.*;
+import consulo.language.psi.scope.LocalSearchScope;
+import consulo.language.psi.search.ReferencesSearch;
+import consulo.project.Project;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
 
 public class PerlHighlightUsagesHandlerFactory implements HighlightUsagesHandlerFactory {

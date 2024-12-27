@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.psi;
 
-import com.intellij.codeInsight.controlflow.Instruction;
-import com.intellij.psi.PsiElement;
+import consulo.language.controlFlow.Instruction;
+import consulo.language.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 
 /**

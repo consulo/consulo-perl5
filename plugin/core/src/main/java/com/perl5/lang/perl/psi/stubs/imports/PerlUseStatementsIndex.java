@@ -16,10 +16,10 @@
 
 package com.perl5.lang.perl.psi.stubs.imports;
 
-import com.intellij.psi.stubs.StubIndexExtension;
-import com.intellij.psi.stubs.StubIndexKey;
 import com.perl5.lang.perl.psi.impl.PerlUseStatementElement;
 import com.perl5.lang.perl.psi.stubs.PerlStubIndexBase;
+import consulo.language.psi.stub.StubIndexExtension;
+import consulo.language.psi.stub.StubIndexKey;
 import org.jetbrains.annotations.NotNull;
 
 /**

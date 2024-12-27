@@ -16,17 +16,17 @@
 
 package com.perl5.lang.perl.psi.utils;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
-import com.intellij.psi.util.PsiUtilCore;
 import com.perl5.lang.perl.psi.PerlVariableDeclarationExpr;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiUtilCore;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import static com.perl5.lang.perl.parser.PerlElementTypesGenerated.*;
 import static com.perl5.lang.perl.lexer.PerlTokenSets.VARIABLE_DECLARATIONS;
+import static com.perl5.lang.perl.parser.PerlElementTypesGenerated.*;
 
 
 public enum PerlContextType {

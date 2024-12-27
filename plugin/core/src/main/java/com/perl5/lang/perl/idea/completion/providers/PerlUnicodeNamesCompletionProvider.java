@@ -16,14 +16,14 @@
 
 package com.perl5.lang.perl.idea.completion.providers;
 
-import com.intellij.codeInsight.completion.CompletionParameters;
-import com.intellij.codeInsight.completion.CompletionResultSet;
-import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.ProcessingContext;
 import com.perl5.lang.perl.idea.completion.providers.processors.PerlSimpleCompletionProcessor;
 import com.perl5.lang.perl.util.PerlTimeLogger;
+import consulo.application.progress.ProgressManager;
+import consulo.language.editor.completion.CompletionParameters;
+import consulo.language.editor.completion.CompletionResultSet;
+import consulo.language.editor.completion.lookup.LookupElementBuilder;
+import consulo.language.util.ProcessingContext;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.ref.SoftReference;
@@ -37,7 +37,7 @@ public class PerlUnicodeNamesCompletionProvider extends PerlCompletionProvider {
   private SoftReference<Map<String, String>> myNamesCacheRef = new SoftReference<>(new HashMap<>());
 
   @Override
-  protected void addCompletions(@NotNull CompletionParameters parameters,
+  public void addCompletions(@NotNull CompletionParameters parameters,
                                 @NotNull ProcessingContext context,
                                 @NotNull CompletionResultSet result) {
     PerlSimpleCompletionProcessor completionProcessor = new PerlSimpleCompletionProcessor(

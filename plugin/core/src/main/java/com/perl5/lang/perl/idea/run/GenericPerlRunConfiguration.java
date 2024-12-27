@@ -16,31 +16,7 @@
 
 package com.perl5.lang.perl.idea.run;
 
-import com.intellij.execution.CommonProgramRunConfigurationParameters;
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.Executor;
-import com.intellij.execution.configurations.*;
-import com.intellij.execution.process.ProcessHandler;
-import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.execution.runners.RunConfigurationWithSuppressedDefaultRunAction;
-import com.intellij.execution.ui.ConsoleView;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ReadAction;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.impl.PerlSdkTable;
-import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.WriteExternalException;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.Function;
-import com.intellij.util.concurrency.annotations.RequiresReadLock;
-import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.execution.ParametersListUtil;
-import com.intellij.util.net.NetUtils;
-import com.intellij.util.xmlb.XmlSerializer;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.idea.execution.PerlCommandLine;
 import com.perl5.lang.perl.idea.execution.PerlTerminalExecutionConsole;
@@ -50,6 +26,30 @@ import com.perl5.lang.perl.idea.sdk.host.PerlConsoleView;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostData;
 import com.perl5.lang.perl.util.PerlFileUtil;
 import com.perl5.lang.perl.util.PerlRunUtil;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.ApplicationManager;
+import consulo.application.ReadAction;
+import consulo.content.bundle.Sdk;
+import consulo.execution.CommonProgramRunConfigurationParameters;
+import consulo.execution.RuntimeConfigurationException;
+import consulo.execution.configuration.ConfigurationFactory;
+import consulo.execution.configuration.LocatableConfigurationBase;
+import consulo.execution.configuration.RunConfigurationWithSuppressedDefaultRunAction;
+import consulo.execution.configuration.RunProfile;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.execution.ui.console.ConsoleView;
+import consulo.logging.Logger;
+import consulo.process.ExecutionException;
+import consulo.process.ProcessHandler;
+import consulo.process.cmd.ParametersListUtil;
+import consulo.project.Project;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.StringUtil;
+import consulo.util.xml.serializer.WriteExternalException;
+import consulo.util.xml.serializer.XmlSerializer;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import org.apache.http.util.NetUtils;
 import org.jdom.Element;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -59,14 +59,15 @@ import java.io.File;
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static com.intellij.execution.configurations.GeneralCommandLine.ParentEnvironmentType.CONSOLE;
-import static com.intellij.execution.configurations.GeneralCommandLine.ParentEnvironmentType.NONE;
+import static consulo.process.cmd.GeneralCommandLine.ParentEnvironmentType.CONSOLE;
+import static consulo.process.cmd.GeneralCommandLine.ParentEnvironmentType.NONE;
 
-public abstract class GenericPerlRunConfiguration extends LocatableConfigurationBase<LocatableRunConfigurationOptions>
+public abstract class GenericPerlRunConfiguration extends LocatableConfigurationBase
   implements CommonProgramRunConfigurationParameters,
-             RunConfigurationWithSuppressedDefaultRunAction,
+  RunConfigurationWithSuppressedDefaultRunAction,
              PerlDebugOptions {
   public static final Function<String, List<String>> FILES_PARSER = text -> StringUtil.split(text.trim(), "||");
   public static final Function<List<String>, String> FILES_JOINER = strings ->
@@ -185,11 +186,11 @@ public abstract class GenericPerlRunConfiguration extends LocatableConfiguration
   }
 
   public @NotNull List<String> getRequiredModulesList() {
-    return PREREQUISITES_PARSER.fun(myRequiredModules);
+    return PREREQUISITES_PARSER.apply(myRequiredModules);
   }
 
   public void setRequiredModules(@NotNull String requiredModules) {
-    myRequiredModules = PREREQUISITES_JOINER.fun(PREREQUISITES_PARSER.fun(requiredModules));
+    myRequiredModules = PREREQUISITES_JOINER.apply(PREREQUISITES_PARSER.apply(requiredModules));
   }
 
   public String getConsoleCharset() {
@@ -247,7 +248,7 @@ public abstract class GenericPerlRunConfiguration extends LocatableConfiguration
     if (StringUtil.isEmpty(workingDirectory)) {
       return null;
     }
-    return VfsUtil.findFileByIoFile(new File(workingDirectory), true);
+    return VirtualFileUtil.findFileByIoFile(new File(workingDirectory), true);
   }
 
   @Override
@@ -414,7 +415,7 @@ public abstract class GenericPerlRunConfiguration extends LocatableConfiguration
     return commandLine;
   }
 
-  @RequiresReadLock
+  @RequiredReadAction
   protected static @Nullable String computeWorkingDirectory(@NotNull Project project, @NotNull VirtualFile virtualFile) {
     var fileContentRoot = PerlFileUtil.getContentRoot(project, virtualFile);
     if (fileContentRoot != null) {
@@ -454,7 +455,7 @@ public abstract class GenericPerlRunConfiguration extends LocatableConfiguration
       if (StringUtil.isEmpty(pathName)) {
         continue;
       }
-      ContainerUtil.addIfNotNull(virtualFiles, VfsUtil.findFileByIoFile(new File(pathName), false));
+      ContainerUtil.addIfNotNull(virtualFiles, VirtualFileUtil.findFileByIoFile(new File(pathName), false));
     }
     return virtualFiles;
   }

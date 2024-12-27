@@ -16,21 +16,6 @@
 
 package com.perl5.lang.perl.idea.run.prove;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.configurations.ConfigurationFactory;
-import com.intellij.execution.configurations.RunConfiguration;
-import com.intellij.execution.testframework.sm.SMTestRunnerConnectionUtil;
-import com.intellij.execution.testframework.sm.runner.ui.SMTRunnerConsoleView;
-import com.intellij.execution.ui.ConsoleView;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.options.SettingsEditor;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.xmlb.annotations.Tag;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.idea.execution.PerlCommandLine;
 import com.perl5.lang.perl.idea.execution.PerlTerminalExecutionConsole;
@@ -39,6 +24,19 @@ import com.perl5.lang.perl.idea.run.PerlRunProfileState;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostData;
 import com.perl5.lang.perl.util.PerlPackageUtil;
 import com.perl5.lang.perl.util.PerlRunUtil;
+import consulo.application.ApplicationManager;
+import consulo.execution.configuration.ConfigurationFactory;
+import consulo.execution.configuration.RunConfiguration;
+import consulo.execution.configuration.ui.SettingsEditor;
+import consulo.execution.test.sm.SMTestRunnerConnectionUtil;
+import consulo.execution.test.sm.ui.SMTRunnerConsoleView;
+import consulo.execution.ui.console.ConsoleView;
+import consulo.process.ExecutionException;
+import consulo.project.Project;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.StringUtil;
+import consulo.util.xml.serializer.annotation.Tag;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

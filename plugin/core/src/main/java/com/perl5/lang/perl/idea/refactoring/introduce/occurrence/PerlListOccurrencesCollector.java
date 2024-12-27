@@ -16,12 +16,12 @@
 
 package com.perl5.lang.perl.idea.refactoring.introduce.occurrence;
 
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiElement;
-import com.intellij.util.containers.ContainerUtil;
 import com.perl5.lang.perl.idea.refactoring.introduce.PerlIntroduceTarget;
 import com.perl5.lang.perl.psi.utils.PerlPsiUtil;
 import com.perl5.lang.perl.util.PerlArrayUtil;
+import consulo.document.util.TextRange;
+import consulo.language.psi.PsiElement;
+import consulo.util.collection.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;

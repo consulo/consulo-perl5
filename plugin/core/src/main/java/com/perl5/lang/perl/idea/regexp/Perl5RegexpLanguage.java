@@ -16,14 +16,12 @@
 
 package com.perl5.lang.perl.idea.regexp;
 
-import com.intellij.lang.Language;
-import com.intellij.openapi.util.NlsSafe;
+import consulo.language.Language;
 import org.intellij.lang.regexp.RegExpLanguage;
-
 
 public class Perl5RegexpLanguage extends Language {
   public static final Perl5RegexpLanguage INSTANCE = new Perl5RegexpLanguage();
-  public static final @NlsSafe String NAME = "Perl5Regexp";
+  public static final  String NAME = "Perl5Regexp";
 
   private Perl5RegexpLanguage() {
     super(RegExpLanguage.INSTANCE, NAME);

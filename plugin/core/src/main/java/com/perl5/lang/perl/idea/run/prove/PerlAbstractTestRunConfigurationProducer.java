@@ -16,10 +16,9 @@
 
 package com.perl5.lang.perl.idea.run.prove;
 
-import com.intellij.openapi.vfs.VirtualFile;
 import com.perl5.lang.perl.fileTypes.PerlFileTypeTest;
-import com.perl5.lang.perl.idea.run.GenericPerlRunConfiguration;
 import com.perl5.lang.perl.idea.run.GenericPerlRunConfigurationProducer;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class PerlAbstractTestRunConfigurationProducer<Configuration extends PerlAbstractTestRunConfiguration> extends GenericPerlRunConfigurationProducer<Configuration> {

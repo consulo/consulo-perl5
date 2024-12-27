@@ -16,12 +16,12 @@
 
 package com.perl5.lang.perl.idea.formatter;
 
-import com.intellij.psi.tree.TokenSet;
 import com.perl5.lang.perl.lexer.PerlTokenSets;
 import com.perl5.lang.perl.psi.stubs.PerlStubElementTypes;
+import consulo.language.ast.TokenSet;
 
-import static com.perl5.lang.perl.parser.PerlElementTypesGenerated.*;
 import static com.perl5.lang.perl.lexer.PerlTokenSets.*;
+import static com.perl5.lang.perl.parser.PerlElementTypesGenerated.*;
 
 
 public final class PerlFormattingTokenSets {

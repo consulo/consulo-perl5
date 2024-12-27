@@ -16,12 +16,12 @@
 
 package com.perl5.lang.perl.idea.formatter.settings;
 
-import com.intellij.lang.Language;
-import com.intellij.psi.codeStyle.CodeStyleConfigurable;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
-import com.intellij.psi.codeStyle.CodeStyleSettingsProvider;
-import com.intellij.psi.codeStyle.CustomCodeStyleSettings;
 import com.perl5.lang.perl.PerlLanguage;
+import consulo.configurable.Configurable;
+import consulo.language.Language;
+import consulo.language.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.CustomCodeStyleSettings;
+import consulo.language.codeStyle.setting.CodeStyleSettingsProvider;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
 public class PerlCodeStyleSettingsProvider extends CodeStyleSettingsProvider {
 
   @Override
-  public @NotNull CodeStyleConfigurable createConfigurable(@NotNull CodeStyleSettings settings, @NotNull CodeStyleSettings modelSettings) {
+  public @NotNull Configurable createSettingsPage(@NotNull CodeStyleSettings settings, @NotNull CodeStyleSettings modelSettings) {
     return new PerlCodeStyleConfigurable(settings, modelSettings);
   }
 

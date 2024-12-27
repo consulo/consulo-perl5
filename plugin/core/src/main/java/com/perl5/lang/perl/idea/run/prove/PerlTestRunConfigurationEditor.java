@@ -16,22 +16,21 @@
 
 package com.perl5.lang.perl.idea.run.prove;
 
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.fileChooser.FileChooserDialog;
-import com.intellij.openapi.fileChooser.FileChooserFactory;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.LabeledComponent;
-import com.intellij.openapi.ui.TextFieldWithBrowseButton;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.ui.RawCommandLineEditor;
-import com.intellij.ui.components.fields.ExpandableTextField;
-import com.intellij.util.containers.ContainerUtil;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.idea.run.GenericPerlRunConfiguration;
 import com.perl5.lang.perl.idea.run.GenericPerlRunConfigurationEditor;
 import com.perl5.lang.perl.idea.run.GenericPerlRunConfigurationEditorPanel;
 import com.perl5.lang.perl.idea.run.GenericPerlRunConfigurationProducer;
+import consulo.execution.ui.awt.RawCommandLineEditor;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDialog;
+import consulo.fileChooser.FileChooserFactory;
+import consulo.project.Project;
+import consulo.ui.ex.awt.LabeledComponent;
+import consulo.ui.ex.awt.TextFieldWithBrowseButton;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

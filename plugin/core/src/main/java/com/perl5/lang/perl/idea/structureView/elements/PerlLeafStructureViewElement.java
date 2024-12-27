@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.idea.structureView.elements;
 
-import com.intellij.ide.structureView.StructureViewTreeElement;
-import com.intellij.psi.PsiElement;
+import consulo.fileEditor.structureView.StructureViewTreeElement;
+import consulo.language.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;

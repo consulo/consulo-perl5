@@ -16,19 +16,19 @@
 
 package com.perl5.lang.perl.parser.moose.psi.references;
 
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementResolveResult;
-import com.intellij.psi.ResolveResult;
-import com.intellij.psi.util.CachedValueProvider;
-import com.intellij.psi.util.CachedValuesManager;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.IncorrectOperationException;
 import com.perl5.lang.perl.parser.moose.psi.PerlMooseAugmentStatement;
 import com.perl5.lang.perl.psi.PerlNamespaceDefinitionElement;
 import com.perl5.lang.perl.psi.PerlSubDefinitionElement;
 import com.perl5.lang.perl.psi.references.PerlCachingReference;
 import com.perl5.lang.perl.psi.utils.PerlPsiUtil;
+import consulo.application.util.CachedValueProvider;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiElementResolveResult;
+import consulo.language.psi.ResolveResult;
+import consulo.language.psi.util.LanguageCachedValueUtil;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.util.IncorrectOperationException;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -103,8 +103,8 @@ public class PerlMooseInnerReference extends PerlCachingReference<PsiElement> {
   }
 
   private static List<PsiElement> getAugmentStatements(final @NotNull PsiElement childNamespace) {
-    return CachedValuesManager.getCachedValue(childNamespace,
-                                              () -> CachedValueProvider.Result.create(PerlPsiUtil.collectNamespaceMembers(childNamespace,
+    return LanguageCachedValueUtil.getCachedValue(childNamespace,
+                                                  () -> CachedValueProvider.Result.create(PerlPsiUtil.collectNamespaceMembers(childNamespace,
                                                                                                                           PerlMooseAugmentStatement.class),
                                                                                       childNamespace));
   }

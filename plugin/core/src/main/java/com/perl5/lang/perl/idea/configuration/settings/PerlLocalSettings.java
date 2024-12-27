@@ -16,12 +16,12 @@
 
 package com.perl5.lang.perl.idea.configuration.settings;
 
-import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.components.State;
-import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.project.Project;
-import com.intellij.util.xmlb.XmlSerializerUtil;
 import com.perl5.lang.perl.idea.PerlPathMacros;
+import consulo.component.persist.PersistentStateComponent;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
+import consulo.project.Project;
+import consulo.util.xml.serializer.XmlSerializerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

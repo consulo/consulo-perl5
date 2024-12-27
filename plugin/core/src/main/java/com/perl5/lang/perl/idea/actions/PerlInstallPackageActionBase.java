@@ -16,11 +16,12 @@
 
 package com.perl5.lang.perl.idea.actions;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.text.StringUtil;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.adapters.PackageManagerAdapter;
+import consulo.project.Project;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.awt.Messages;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -52,7 +53,7 @@ public abstract class PerlInstallPackageActionBase extends PerlActionBase {
     }
 
     String packageNames = Messages.showInputDialog(
-      e.getProject(),
+      e.getData(Project.KEY),
       "Enter packages names",
       getTemplatePresentation().getText(),
       null

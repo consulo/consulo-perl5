@@ -16,21 +16,21 @@
 
 package com.perl5.lang.perl.idea.formatter;
 
-import com.intellij.formatting.ASTBlock;
-import com.intellij.formatting.Block;
-import com.intellij.formatting.Indent;
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.formatter.FormatterUtil;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
-import com.intellij.psi.util.PsiUtilCore;
 import com.perl5.lang.perl.idea.formatter.blocks.PerlAstBlock;
 import com.perl5.lang.perl.idea.formatter.blocks.PerlSyntheticBlock;
 import com.perl5.lang.perl.lexer.PerlElementTypes;
 import com.perl5.lang.perl.psi.impl.PerlHeredocElementImpl;
 import com.perl5.lang.perl.psi.impl.PerlSubCallElement;
 import com.perl5.lang.perl.psi.stubs.PerlPolyNamedElementType;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
+import consulo.language.codeStyle.ASTBlock;
+import consulo.language.codeStyle.Block;
+import consulo.language.codeStyle.FormatterUtil;
+import consulo.language.codeStyle.Indent;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiUtilCore;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

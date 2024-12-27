@@ -16,18 +16,18 @@
 
 package com.perl5.lang.perl.parser.moose.psi.impl;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.ElementManipulators;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.util.IncorrectOperationException;
 import com.perl5.lang.perl.parser.moose.psi.PerlMooseAugmentStatement;
 import com.perl5.lang.perl.parser.moose.psi.PerlMooseMethodModifier;
 import com.perl5.lang.perl.parser.moose.psi.PerlMoosePsiUtil;
 import com.perl5.lang.perl.parser.moose.stubs.augment.PerlMooseAugmentStatementStub;
 import com.perl5.lang.perl.psi.*;
 import com.perl5.lang.perl.psi.utils.PerlPsiUtil;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.ElementManipulators;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiReference;
+import consulo.language.psi.stub.IStubElementType;
+import consulo.language.util.IncorrectOperationException;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

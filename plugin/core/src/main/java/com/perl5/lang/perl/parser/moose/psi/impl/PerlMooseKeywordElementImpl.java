@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.parser.moose.psi.impl;
 
-import com.intellij.psi.tree.IElementType;
 import com.perl5.lang.perl.parser.moose.psi.PerlMooseKeywordElement;
 import com.perl5.lang.perl.psi.impl.PerlSubNameElementImpl;
+import consulo.language.ast.IElementType;
 import org.jetbrains.annotations.NotNull;
 
 

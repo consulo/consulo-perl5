@@ -32,6 +32,7 @@ import consulo.language.psi.StubBasedPsiElement;
 import consulo.language.psi.resolve.PsiScopeProcessor;
 import consulo.language.psi.resolve.ResolveState;
 import consulo.language.psi.stub.IStubElementType;
+import consulo.language.psi.util.LanguageCachedValueUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -51,7 +52,7 @@ public abstract class PerlPolyNamedElement<Stub extends PerlPolyNamedElementStub
   }
 
   public final @NotNull List<? extends PerlDelegatingLightNamedElement<?>> getLightElements() {
-    return CachedValuesManager.getCachedValue(this, () -> CachedValueProvider.Result.create(computeLightElements(), this)
+    return LanguageCachedValueUtil.getCachedValue(this, () -> CachedValueProvider.Result.create(computeLightElements(), this)
     );
   }
 

@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.psi.mixins;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 
 import static com.perl5.lang.perl.parser.PerlElementTypesGenerated.NUMBER_OCT;

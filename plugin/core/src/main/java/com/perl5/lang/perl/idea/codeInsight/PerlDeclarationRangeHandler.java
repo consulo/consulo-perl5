@@ -16,13 +16,13 @@
 
 package com.perl5.lang.perl.idea.codeInsight;
 
-import com.intellij.codeInsight.hint.DeclarationRangeHandler;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiElement;
 import com.perl5.lang.perl.psi.PerlNamespaceDefinitionWithIdentifier;
 import com.perl5.lang.perl.psi.PerlSubDefinitionElement;
 import com.perl5.lang.perl.psi.PsiPerlBlock;
 import com.perl5.lang.perl.psi.PsiPerlNamespaceContent;
+import consulo.document.util.TextRange;
+import consulo.language.editor.hint.DeclarationRangeHandler;
+import consulo.language.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 
 public class PerlDeclarationRangeHandler implements DeclarationRangeHandler<PsiElement> {

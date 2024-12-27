@@ -18,7 +18,6 @@ package com.perl5.lang.perl.idea.structureView.elements;
 
 import com.perl5.lang.perl.psi.PerlVariableDeclarationElement;
 
-
 public class PerlVariableDeclarationStructureViewElement extends PerlLeafStructureViewElement {
   public PerlVariableDeclarationStructureViewElement(PerlVariableDeclarationElement element) {
     super(element);

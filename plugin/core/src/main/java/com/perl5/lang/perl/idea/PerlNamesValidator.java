@@ -16,12 +16,16 @@
 
 package com.perl5.lang.perl.idea;
 
-import com.intellij.lang.refactoring.NamesValidator;
-import com.intellij.openapi.project.Project;
+import com.perl5.lang.perl.PerlLanguage;
 import com.perl5.lang.perl.parser.PerlParserUtil;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.Language;
+import consulo.language.editor.refactoring.NamesValidator;
+import consulo.project.Project;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 
-
+@ExtensionImpl
 public class PerlNamesValidator implements NamesValidator {
 
   @Override
@@ -32,5 +36,11 @@ public class PerlNamesValidator implements NamesValidator {
   @Override
   public boolean isIdentifier(@NotNull String name, Project project) {
     return PerlParserUtil.isIdentifier(name) || PerlParserUtil.isAmbiguousPackage(name);
+  }
+
+  @Nonnull
+  @Override
+  public Language getLanguage() {
+    return PerlLanguage.INSTANCE;
   }
 }

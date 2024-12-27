@@ -16,12 +16,6 @@
 
 package com.perl5.lang.perl.idea.navigation;
 
-import com.intellij.codeInsight.daemon.RelatedItemLineMarkerInfo;
-import com.intellij.codeInsight.daemon.RelatedItemLineMarkerProvider;
-import com.intellij.codeInsight.navigation.NavigationGutterIconBuilder;
-import com.intellij.icons.AllIcons;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiTreeUtil;
 import com.perl5.lang.perl.lexer.PerlElementTypes;
 import com.perl5.lang.perl.psi.PerlNamespaceDefinitionElement;
 import com.perl5.lang.perl.psi.PerlNamespaceDefinitionWithIdentifier;
@@ -29,6 +23,12 @@ import com.perl5.lang.perl.psi.PerlSubDefinitionElement;
 import com.perl5.lang.perl.psi.PerlSubElement;
 import com.perl5.lang.perl.psi.impl.PerlPolyNamedElement;
 import com.perl5.lang.perl.psi.light.PerlDelegatingLightNamedElement;
+import consulo.application.AllIcons;
+import consulo.language.editor.gutter.RelatedItemLineMarkerInfo;
+import consulo.language.editor.gutter.RelatedItemLineMarkerProvider;
+import consulo.language.editor.ui.navigation.NavigationGutterIconBuilder;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ import java.util.List;
 
 public class PerlLineMarkerProvider extends RelatedItemLineMarkerProvider implements PerlElementTypes {
   @Override
-  protected void collectNavigationMarkers(@NotNull PsiElement element, @NotNull Collection<? super RelatedItemLineMarkerInfo<?>> result) {
+  protected void collectNavigationMarkers(@NotNull PsiElement element, @NotNull Collection<RelatedItemLineMarkerInfo> result) {
     switch (element) {
       case PerlNamespaceDefinitionWithIdentifier namespaceDefinition -> addNamespaceMarkers(namespaceDefinition, result);
       case PerlSubDefinitionElement subDefinition when subDefinition.isMethod() -> addSubDefinitionsMarkers(subDefinition, result);

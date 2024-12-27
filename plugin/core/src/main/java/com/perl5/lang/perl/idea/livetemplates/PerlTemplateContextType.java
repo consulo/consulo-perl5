@@ -16,14 +16,6 @@
 
 package com.perl5.lang.perl.idea.livetemplates;
 
-import com.intellij.codeInsight.template.TemplateActionContext;
-import com.intellij.codeInsight.template.TemplateContextType;
-import com.intellij.psi.PsiComment;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiWhiteSpace;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.util.PsiUtilCore;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.PerlLanguage;
 import com.perl5.lang.perl.fileTypes.PerlFileTypeTest;
@@ -33,10 +25,18 @@ import com.perl5.lang.perl.psi.PsiPerlStatement;
 import com.perl5.lang.perl.psi.impl.PerlStringContentElementImpl;
 import com.perl5.lang.perl.psi.properties.PerlLoop;
 import com.perl5.lang.perl.psi.utils.PerlPsiUtil;
+import consulo.language.ast.IElementType;
+import consulo.language.editor.template.context.BaseTemplateContextType;
+import consulo.language.editor.template.context.TemplateActionContext;
+import consulo.language.psi.PsiComment;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiUtilCore;
+import consulo.language.psi.PsiWhiteSpace;
+import consulo.language.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 
 
-public abstract class PerlTemplateContextType extends TemplateContextType {
+public abstract class PerlTemplateContextType extends BaseTemplateContextType {
   protected PerlTemplateContextType(@NotNull String presentableName) {
     super(presentableName);
   }

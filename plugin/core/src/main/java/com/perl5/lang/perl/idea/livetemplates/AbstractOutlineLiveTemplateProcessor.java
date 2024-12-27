@@ -16,17 +16,17 @@
 
 package com.perl5.lang.perl.idea.livetemplates;
 
-import com.intellij.codeInsight.template.Template;
-import com.intellij.codeInsight.template.impl.TemplateContext;
-import com.intellij.codeInsight.template.impl.TemplateOptionalProcessor;
-import com.intellij.lang.Language;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.RangeMarker;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.util.PsiUtilBase;
+import consulo.codeEditor.Editor;
+import consulo.document.Document;
+import consulo.document.RangeMarker;
+import consulo.language.Language;
+import consulo.language.editor.template.Template;
+import consulo.language.editor.template.TemplateOptionalProcessor;
+import consulo.language.editor.template.context.TemplateContext;
+import consulo.language.editor.util.PsiUtilBase;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.project.Project;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

@@ -16,12 +16,12 @@
 
 package com.perl5.lang.perl.idea.structureView.filters;
 
-import com.intellij.ide.util.treeView.smartTree.Filter;
-import com.intellij.ide.util.treeView.smartTree.TreeElement;
 import com.perl5.lang.perl.idea.structureView.elements.PerlNamespaceStructureViewElement;
 import com.perl5.lang.perl.idea.structureView.elements.PerlStructureViewElement;
 import com.perl5.lang.perl.idea.structureView.elements.PerlSubStructureViewElement;
 import com.perl5.lang.pod.idea.structureView.PodStructureViewElement;
+import consulo.fileEditor.structureView.tree.Filter;
+import consulo.fileEditor.structureView.tree.TreeElement;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class PerlFilter implements Filter {

@@ -16,13 +16,13 @@
 
 package com.perl5.lang.perl.parser.elementTypes;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
 import com.perl5.lang.perl.lexer.PerlTemplatingLexer;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 
-import static com.perl5.lang.perl.parser.PerlElementTypesGenerated.LEFT_BRACKET;
 import static com.perl5.lang.perl.lexer.PerlLexer.AFTER_VALUE;
+import static com.perl5.lang.perl.parser.PerlElementTypesGenerated.LEFT_BRACKET;
 
 public class PerlAnonArrayElementType extends PerlBracedBlockElementType {
   public PerlAnonArrayElementType(@NotNull String debugName,

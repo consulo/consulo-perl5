@@ -16,26 +16,22 @@
 
 package com.perl5.lang.perl.idea.formatter;
 
-import com.intellij.formatting.Block;
-import com.intellij.formatting.FormattingModelWithShiftIndentInsideDocumentRange;
-import com.intellij.lang.ASTNode;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
-import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
-import com.intellij.psi.formatter.DocumentBasedFormattingModel;
-import com.intellij.psi.util.PsiUtilCore;
 import com.perl5.lang.perl.PerlLanguage;
 import com.perl5.lang.perl.psi.impl.PerlHeredocElementImpl;
+import consulo.document.Document;
+import consulo.document.util.TextRange;
+import consulo.language.ast.ASTNode;
+import consulo.language.codeStyle.*;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiUtilCore;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NotNull;
 
 import static com.perl5.lang.perl.lexer.PerlTokenSets.HEREDOC_BODIES_TOKENSET;
 
 
 public class PerlDocumentBasedFormattingModel extends DocumentBasedFormattingModel implements
-                                                                                   FormattingModelWithShiftIndentInsideDocumentRange {
+  FormattingModelWithShiftIndentInsideDocumentRange {
   private final CommonCodeStyleSettings.IndentOptions myIndentOptions;
 
   public PerlDocumentBasedFormattingModel(@NotNull Block rootBlock,

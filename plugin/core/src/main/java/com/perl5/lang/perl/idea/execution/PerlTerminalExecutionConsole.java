@@ -16,17 +16,15 @@
 
 package com.perl5.lang.perl.idea.execution;
 
-import com.intellij.execution.impl.ConsoleViewImpl;
-import com.intellij.execution.impl.ConsoleViewUtil;
-import com.intellij.execution.ui.ConsoleView;
-import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.ReadAction;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.terminal.TerminalExecutionConsole;
-import com.intellij.util.concurrency.AppExecutorUtil;
 import com.perl5.lang.perl.idea.sdk.host.PerlConsoleView;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostData;
+import consulo.application.ReadAction;
+import consulo.application.util.concurrent.AppExecutorUtil;
+import consulo.execution.ui.console.ConsoleView;
+import consulo.execution.ui.console.ConsoleViewUtil;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.project.Project;
+import consulo.ui.ModalityState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

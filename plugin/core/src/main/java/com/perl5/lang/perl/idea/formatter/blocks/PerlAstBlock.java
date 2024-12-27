@@ -16,12 +16,12 @@
 
 package com.perl5.lang.perl.idea.formatter.blocks;
 
-import com.intellij.formatting.ASTBlock;
-import com.intellij.formatting.Block;
-import com.intellij.formatting.Indent;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.language.ast.IElementType;
+import consulo.language.codeStyle.ASTBlock;
+import consulo.language.codeStyle.Block;
+import consulo.language.codeStyle.Indent;
+import consulo.language.psi.PsiUtilCore;
+import consulo.util.collection.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

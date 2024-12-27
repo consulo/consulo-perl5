@@ -16,9 +16,6 @@
 
 package com.perl5.lang.perl.psi.light;
 
-import com.intellij.openapi.util.AtomicNotNullLazyValue;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.stubs.IStubElementType;
 import com.perl5.PerlIcons;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlValue;
 import com.perl5.lang.perl.psi.PerlSubExpr;
@@ -27,6 +24,9 @@ import com.perl5.lang.perl.psi.impl.PerlPolyNamedElement;
 import com.perl5.lang.perl.psi.stubs.subsdefinitions.PerlSubDefinitionStub;
 import com.perl5.lang.perl.psi.utils.PerlSubAnnotations;
 import com.perl5.lang.perl.psi.utils.PerlSubArgument;
+import consulo.application.util.AtomicNotNullLazyValue;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.stub.IStubElementType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

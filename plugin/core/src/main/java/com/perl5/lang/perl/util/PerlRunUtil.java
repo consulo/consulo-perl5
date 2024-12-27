@@ -35,6 +35,7 @@ import consulo.application.WriteAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
+import consulo.application.util.Semaphore;
 import consulo.content.bundle.Sdk;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -46,18 +47,24 @@ import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.logging.Logger;
 import consulo.module.content.internal.ProjectRootManagerEx;
+import consulo.process.ExecutionException;
+import consulo.process.ProcessHandler;
 import consulo.process.event.ProcessAdapter;
 import consulo.process.event.ProcessEvent;
 import consulo.process.event.ProcessListener;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.Notifications;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.dataholder.Key;
 import consulo.util.lang.EmptyRunnable;
+import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jetbrains.annotations.*;
 
 import java.io.File;
@@ -80,7 +87,7 @@ public final class PerlRunUtil {
   private static Semaphore ourTestSdkRefreshSemaphore;
   private static Disposable ourTestDisposable;
   // should be synchronized with https://github.com/Camelcade/Bundle-Camelcade/blob/master/dist.ini
-  private static final Set<String> BUNDLED_MODULE_PARTS = Collections.unmodifiableSet(ContainerUtil.newHashSet(
+  private static final Set<String> BUNDLED_MODULE_PARTS = Collections.unmodifiableSet(Set.of(
     "App::cpanminus",
     "App::Prove::Plugin::PassEnv",
     "B::Deparse",
@@ -119,7 +126,7 @@ public final class PerlRunUtil {
     if (perlSdk == null) {
       perlSdk = PerlProjectManager.getSdk(project, scriptFile);
     }
-    return getPerlCommandLine(project, perlSdk, ObjectUtils.doIfNotNull(scriptFile, VirtualFile::getPath), perlParameters,
+    return getPerlCommandLine(project, perlSdk, ObjectUtil.doIfNotNull(scriptFile, VirtualFile::getPath), perlParameters,
                               scriptParameters);
   }
 
@@ -196,7 +203,7 @@ public final class PerlRunUtil {
   public static @Nullable VirtualFile findLibraryScriptWithNotification(@NotNull Project project,
                                                                         @NotNull String scriptName,
                                                                         @Nullable String libraryName) {
-    return ObjectUtils.doIfNotNull(
+    return ObjectUtil.doIfNotNull(
       PerlProjectManager.getSdkWithNotification(project),
       it -> findLibraryScriptWithNotification(it, project, scriptName, libraryName));
   }
@@ -329,10 +336,10 @@ public final class PerlRunUtil {
       File localSdkBinDir = hostData.getLocalPath(new File(
         StringUtil.notNullize(PerlProjectManager.getInterpreterPath(sdk))).getParentFile());
       if (localSdkBinDir != null) {
-        files.add(VfsUtil.findFileByIoFile(localSdkBinDir, false));
+        files.add(VirtualFileUtil.findFileByIoFile(localSdkBinDir, false));
       }
       PerlVersionManagerData.notNullFrom(sdk).getBinDirsPath().forEach(
-        it -> ObjectUtils.doIfNotNull(hostData.getLocalPath(it), localPath -> files.add(VfsUtil.findFileByIoFile(localPath, false))));
+        it -> ObjectUtil.doIfNotNull(hostData.getLocalPath(it), localPath -> files.add(VirtualFileUtil.findFileByIoFile(localPath, false))));
     }
     return files.stream().filter(Objects::nonNull).distinct();
   }
@@ -437,11 +444,11 @@ public final class PerlRunUtil {
       consoleView,
       processHandler,
       consoleView.getComponent(),
-      ObjectUtils.notNull(perlCommandLine.getConsoleTitle(), perlCommandLine.getCommandLineString()),
-      ObjectUtils.notNull(perlCommandLine.getConsoleIcon(), PerlIcons.PERL_LANGUAGE_ICON)
+      ObjectUtil.notNull(perlCommandLine.getConsoleTitle(), perlCommandLine.getCommandLineString()),
+      ObjectUtil.notNull(perlCommandLine.getConsoleIcon(), PerlIcons.PERL_LANGUAGE_ICON)
     );
 
-    RunContentManager.getInstance(project).showRunContent(runExecutor, runContentDescriptor);
+    project.getInstance(RunContentManager.class).showRunContent(runExecutor, runContentDescriptor);
     if (processHandler != null) {
       consoleView.attachToProcess(processHandler);
       processHandler.startNotify();

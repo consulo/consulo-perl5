@@ -16,12 +16,12 @@
 
 package com.perl5.lang.perl.idea.findusages;
 
-import com.intellij.lang.cacheBuilder.WordOccurrence;
-import com.intellij.lang.cacheBuilder.WordsScanner;
-import com.intellij.psi.PsiFile;
-import com.intellij.util.Processor;
+import consulo.application.util.function.Processor;
+import consulo.language.cacheBuilder.WordOccurrence;
+import consulo.language.cacheBuilder.WordsScanner;
+import consulo.language.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
 
 public interface PsiBasedWordScanner extends WordsScanner {
-  void processWordsUsingPsi(@NotNull PsiFile psiFile, @NotNull Processor<? super WordOccurrence> processor);
+  void processWordsUsingPsi(@NotNull PsiFile psiFile, @NotNull Processor<WordOccurrence> processor);
 }

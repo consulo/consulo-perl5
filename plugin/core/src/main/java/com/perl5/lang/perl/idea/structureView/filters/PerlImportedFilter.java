@@ -16,10 +16,10 @@
 
 package com.perl5.lang.perl.idea.structureView.filters;
 
-import com.intellij.icons.AllIcons;
-import com.intellij.ide.util.treeView.smartTree.ActionPresentation;
-import com.intellij.ide.util.treeView.smartTree.ActionPresentationData;
 import com.perl5.lang.perl.idea.structureView.elements.PerlStructureViewElement;
+import consulo.fileEditor.structureView.tree.ActionPresentation;
+import consulo.fileEditor.structureView.tree.ActionPresentationData;
+import consulo.platform.base.icon.PlatformIconGroup;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -34,7 +34,7 @@ public class PerlImportedFilter extends PerlFilter {
 
   @Override
   public @NotNull ActionPresentation getPresentation() {
-    return new ActionPresentationData("Show imported", null, AllIcons.ToolbarDecorator.Import);
+    return new ActionPresentationData("Show imported", null, PlatformIconGroup.actionsShowimportstatements());
   }
 
   @Override

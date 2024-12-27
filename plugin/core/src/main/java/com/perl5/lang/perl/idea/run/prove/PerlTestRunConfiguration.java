@@ -16,22 +16,21 @@
 
 package com.perl5.lang.perl.idea.run.prove;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.configurations.ConfigurationFactory;
-import com.intellij.execution.configurations.RuntimeConfigurationException;
-import com.intellij.execution.process.ProcessAdapter;
-import com.intellij.execution.process.ProcessEvent;
-import com.intellij.execution.process.ProcessHandler;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.util.PerlPackageUtil;
 import com.perl5.lang.perl.util.PerlRunUtil;
+import consulo.content.bundle.Sdk;
+import consulo.execution.RuntimeConfigurationException;
+import consulo.execution.configuration.ConfigurationFactory;
+import consulo.logging.Logger;
+import consulo.process.ExecutionException;
+import consulo.process.ProcessHandler;
+import consulo.process.event.ProcessAdapter;
+import consulo.process.event.ProcessEvent;
+import consulo.project.Project;
+import consulo.util.dataholder.Key;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,7 +38,6 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@VisibleForTesting
 public class PerlTestRunConfiguration extends PerlAbstractTestRunConfiguration {
   private static final Logger LOG = Logger.getInstance(PerlTestRunConfiguration.class);
   private static final String PROVE = "prove";

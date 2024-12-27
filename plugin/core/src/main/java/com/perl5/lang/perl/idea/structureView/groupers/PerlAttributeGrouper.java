@@ -16,22 +16,21 @@
 
 package com.perl5.lang.perl.idea.structureView.groupers;
 
-import com.intellij.ide.util.treeView.AbstractTreeNode;
-import com.intellij.ide.util.treeView.smartTree.*;
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.navigation.PsiElementNavigationItem;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.SmartPointerManager;
-import com.intellij.psi.SmartPsiElementPointer;
-import com.intellij.util.containers.FactoryMap;
 import com.perl5.PerlBundle;
 import com.perl5.PerlIcons;
 import com.perl5.lang.perl.idea.structureView.elements.PerlStructureViewElement;
 import com.perl5.lang.perl.parser.moose.psi.impl.PerlMooseAttributeHandler;
 import com.perl5.lang.perl.psi.impl.PerlSubCallElement;
 import com.perl5.lang.perl.psi.light.PerlLightMethodDefinitionElement;
+import consulo.fileEditor.structureView.tree.ActionPresentation;
+import consulo.fileEditor.structureView.tree.Group;
+import consulo.fileEditor.structureView.tree.Grouper;
+import consulo.fileEditor.structureView.tree.TreeElement;
+import consulo.language.psi.*;
+import consulo.navigation.ItemPresentation;
+import consulo.project.ui.view.tree.AbstractTreeNode;
+import consulo.util.collection.FactoryMap;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

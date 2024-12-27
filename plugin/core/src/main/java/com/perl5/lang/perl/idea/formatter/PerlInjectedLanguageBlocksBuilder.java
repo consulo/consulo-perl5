@@ -16,16 +16,14 @@
 
 package com.perl5.lang.perl.idea.formatter;
 
-import com.intellij.formatting.*;
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.LanguageFormatting;
-import com.intellij.lang.injection.InjectedLanguageManager;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiLanguageInjectionHost;
-import com.intellij.psi.PsiLanguageInjectionHost.Shred;
+import consulo.document.util.TextRange;
+import consulo.language.ast.ASTNode;
+import consulo.language.codeStyle.*;
+import consulo.language.inject.InjectedLanguageManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiLanguageInjectionHost;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -148,9 +146,9 @@ public class PerlInjectedLanguageBlocksBuilder implements PsiLanguageInjectionHo
 
 
   @Override
-  public void visit(@NotNull PsiFile injectedPsi, @NotNull List<? extends Shred> places) {
+  public void visit(@NotNull PsiFile injectedPsi, @NotNull List<? extends PsiLanguageInjectionHost.Shred> places) {
     PsiElement hostPsi = getHostPsi();
-    for (Shred shred : places) {
+    for (PsiLanguageInjectionHost.Shred shred : places) {
       if (hostPsi != shred.getHost()) {
         return;
       }

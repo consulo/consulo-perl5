@@ -16,14 +16,12 @@
 
 package com.perl5.lang.perl.idea.run.run;
 
-import com.intellij.execution.actions.ConfigurationFromContext;
-import com.intellij.execution.configurations.ConfigurationFactory;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.perl5.lang.perl.fileTypes.PerlFileTypeScript;
-import com.perl5.lang.perl.fileTypes.PerlFileTypeTest;
 import com.perl5.lang.perl.idea.run.GenericPerlRunConfigurationProducer;
 import com.perl5.lang.perl.idea.run.prove.PerlTestRunConfigurationType;
+import consulo.execution.action.ConfigurationFromContext;
+import consulo.execution.configuration.ConfigurationFactory;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
 public class PerlRunConfigurationProducer extends GenericPerlRunConfigurationProducer<PerlRunConfiguration> {

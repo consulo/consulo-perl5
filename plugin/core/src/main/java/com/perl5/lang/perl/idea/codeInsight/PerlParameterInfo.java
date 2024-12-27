@@ -16,13 +16,12 @@
 
 package com.perl5.lang.perl.idea.codeInsight;
 
-import com.intellij.lang.parameterInfo.ParameterInfoUIContext;
-import com.intellij.util.containers.ContainerUtil;
 import com.perl5.lang.perl.psi.utils.PerlSubArgument;
+import consulo.language.editor.parameterInfo.ParameterInfoUIContext;
+import consulo.util.collection.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-
 
 public class PerlParameterInfo {
   public static final PerlParameterInfo[] EMPTY_ARRAY = {};

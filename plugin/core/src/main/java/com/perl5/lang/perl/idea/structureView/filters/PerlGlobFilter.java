@@ -16,11 +16,11 @@
 
 package com.perl5.lang.perl.idea.structureView.filters;
 
-import com.intellij.ide.util.treeView.smartTree.ActionPresentation;
-import com.intellij.ide.util.treeView.smartTree.ActionPresentationData;
 import com.perl5.PerlIcons;
 import com.perl5.lang.perl.idea.structureView.elements.PerlGlobStructureViewElement;
 import com.perl5.lang.perl.idea.structureView.elements.PerlStructureViewElement;
+import consulo.fileEditor.structureView.tree.ActionPresentation;
+import consulo.fileEditor.structureView.tree.ActionPresentationData;
 import org.jetbrains.annotations.NotNull;
 
 

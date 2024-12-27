@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.idea.sdk.host;
 
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.perl5.lang.perl.idea.sdk.PerlHandlerBean;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.virtualFileSystem.VirtualFileSystem;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;

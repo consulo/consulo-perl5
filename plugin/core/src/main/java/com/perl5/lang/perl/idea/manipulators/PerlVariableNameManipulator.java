@@ -16,13 +16,13 @@
 
 package com.perl5.lang.perl.idea.manipulators;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.AbstractElementManipulator;
-import com.intellij.psi.impl.source.tree.LeafPsiElement;
-import com.intellij.util.IncorrectOperationException;
 import com.perl5.lang.perl.psi.PerlVariableNameElement;
+import consulo.document.util.TextRange;
+import consulo.language.impl.psi.LeafPsiElement;
+import consulo.language.psi.AbstractElementManipulator;
+import consulo.language.util.IncorrectOperationException;
+import consulo.logging.Logger;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NotNull;
 
 

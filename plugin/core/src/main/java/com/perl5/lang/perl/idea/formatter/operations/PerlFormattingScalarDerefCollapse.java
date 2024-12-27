@@ -16,12 +16,12 @@
 
 package com.perl5.lang.perl.idea.formatter.operations;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiTreeUtil;
 import com.perl5.lang.perl.psi.PsiPerlScalarVariable;
 import com.perl5.lang.perl.psi.PsiPerlStatement;
 import com.perl5.lang.perl.psi.impl.PerlFileImpl;
 import com.perl5.lang.perl.psi.utils.PerlElementFactory;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.util.PsiTreeUtil;
 
 /**
  * Converts $var->{key} to $$var{key}

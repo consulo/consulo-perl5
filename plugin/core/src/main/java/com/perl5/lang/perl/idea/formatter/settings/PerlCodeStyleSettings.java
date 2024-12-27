@@ -16,16 +16,17 @@
 
 package com.perl5.lang.perl.idea.formatter.settings;
 
-import com.intellij.openapi.application.ApplicationBundle;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
-import com.intellij.psi.codeStyle.CustomCodeStyleSettings;
 import com.perl5.PerlBundle;
+import consulo.application.ApplicationBundle;
+import consulo.language.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.CommonCodeStyleSettings;
+import consulo.language.codeStyle.CustomCodeStyleSettings;
 
-import static com.intellij.psi.codeStyle.CommonCodeStyleSettings.DO_NOT_WRAP;
 import static com.perl5.lang.perl.idea.formatter.settings.PerlCodeStyleSettings.OptionalConstructions.SAME_LINE;
 import static com.perl5.lang.perl.idea.formatter.settings.PerlCodeStyleSettings.OptionalConstructions.WHATEVER;
 import static com.perl5.lang.perl.util.PerlPackageUtil.MAIN_NAMESPACE_FULL;
 import static com.perl5.lang.perl.util.PerlPackageUtil.NAMESPACE_SEPARATOR;
+import static consulo.language.codeStyle.CommonCodeStyleSettings.DO_NOT_WRAP;
 
 
 public class PerlCodeStyleSettings extends CustomCodeStyleSettings {
@@ -58,7 +59,7 @@ public class PerlCodeStyleSettings extends CustomCodeStyleSettings {
   public boolean METHOD_CALL_CHAIN_SIGN_NEXT_LINE = true;
 
   public boolean SPACE_BEFORE_ATTRIBUTE = true;
-  public int ATTRIBUTES_WRAP = DO_NOT_WRAP;
+  public int ATTRIBUTES_WRAP = CommonCodeStyleSettings.DO_NOT_WRAP;
   public boolean ALIGN_ATTRIBUTES = false;
   public int ALIGN_CONSECUTIVE_ASSIGNMENTS = 0;
 

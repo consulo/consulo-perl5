@@ -16,13 +16,6 @@
 
 package com.perl5.lang.perl.idea.refactoring;
 
-import com.intellij.lang.refactoring.RefactoringSupportProvider;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiNameIdentifierOwner;
-import com.intellij.psi.search.LocalSearchScope;
-import com.intellij.psi.search.SearchScope;
-import com.intellij.refactoring.RefactoringActionHandler;
 import com.perl5.lang.perl.PerlLanguage;
 import com.perl5.lang.perl.extensions.PerlRenameUsagesHelper;
 import com.perl5.lang.perl.idea.refactoring.introduce.PerlIntroduceVariableHandler;
@@ -30,6 +23,13 @@ import com.perl5.lang.perl.parser.Exception.Class.ide.refactoring.PerlRenamingVe
 import com.perl5.lang.perl.psi.PerlNamespaceDefinition;
 import com.perl5.lang.perl.psi.PerlNamespaceElement;
 import com.perl5.lang.perl.psi.PerlStringContentElement;
+import consulo.content.scope.SearchScope;
+import consulo.language.editor.refactoring.RefactoringSupportProvider;
+import consulo.language.editor.refactoring.action.RefactoringActionHandler;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiNameIdentifierOwner;
+import consulo.language.psi.scope.LocalSearchScope;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -65,7 +65,7 @@ public class PerlRefactoringSupportProvider extends RefactoringSupportProvider {
    * Common logic for any inplace, platform or ours
    */
   private static boolean isInplaceAllowed(@NotNull PsiElement element, PsiElement context) {
-    if (PerlRenamingVetoCondition.isVetoed(element)) {
+    if (PerlRenamingVetoCondition.isVetoedImpl(element)) {
       return false;
     }
     else {

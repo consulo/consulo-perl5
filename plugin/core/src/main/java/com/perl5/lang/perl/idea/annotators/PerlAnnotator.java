@@ -17,17 +17,6 @@
 package com.perl5.lang.perl.idea.annotators;
 
 
-import com.intellij.lang.annotation.AnnotationHolder;
-import com.intellij.lang.annotation.HighlightSeverity;
-import com.intellij.openapi.editor.colors.CodeInsightColors;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
-import com.intellij.openapi.util.NotNullLazyValue;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.ElementManipulators;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiUtilCore;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.extensions.packageprocessor.impl.ConstantProcessor;
 import com.perl5.lang.perl.idea.highlighter.PerlSyntaxHighlighter;
@@ -36,6 +25,17 @@ import com.perl5.lang.perl.psi.impl.*;
 import com.perl5.lang.perl.psi.light.PerlDelegatingLightNamedElement;
 import com.perl5.lang.perl.psi.references.PerlSubReference;
 import com.perl5.lang.perl.util.PerlSubUtil;
+import consulo.application.util.NotNullLazyValue;
+import consulo.codeEditor.CodeInsightColors;
+import consulo.colorScheme.TextAttributesKey;
+import consulo.language.ast.IElementType;
+import consulo.language.editor.annotation.AnnotationHolder;
+import consulo.language.editor.annotation.HighlightSeverity;
+import consulo.language.psi.ElementManipulators;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiReference;
+import consulo.language.psi.PsiUtilCore;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 

@@ -16,16 +16,15 @@
 
 package com.perl5.lang.perl.parser.elementTypes;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.Language;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.TokenType;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.util.text.CharArrayUtil;
-import org.jetbrains.annotations.ApiStatus;
+import consulo.language.Language;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenType;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiUtilCore;
+import consulo.project.Project;
+import consulo.util.lang.CharArrayUtil;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
@@ -45,7 +44,6 @@ public class PerlHeredocElementType extends PerlReparseableElementType {
   /**
    * @implSpec this is low-performance heuristic reparsing detection. See #2243
    */
-  @ApiStatus.ScheduledForRemoval(inVersion = "2020.3")
   @Deprecated
   @Override
   protected boolean isReparseableOld(@NotNull ASTNode parent,

@@ -16,10 +16,10 @@
 
 package com.perl5.lang.perl.idea.gotosearch;
 
-import com.intellij.navigation.NavigationItem;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.search.GlobalSearchScope;
 import com.perl5.lang.perl.util.PerlSubUtil;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.navigation.NavigationItem;
+import consulo.project.Project;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;

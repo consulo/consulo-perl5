@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.parser.elementTypes;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.Language;
-import com.intellij.openapi.project.Project;
+import consulo.language.Language;
+import consulo.language.ast.ASTNode;
+import consulo.project.Project;
 import org.jetbrains.annotations.NotNull;
 
 public class PerlUseVarsStringElementType extends PerlReparseableElementType {

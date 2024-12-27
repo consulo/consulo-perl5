@@ -16,21 +16,20 @@
 
 package com.perl5.lang.perl.idea.intentions;
 
-import com.intellij.codeInsight.intention.IntentionAction;
-import com.intellij.codeInsight.intention.PsiElementBaseIntentionAction;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.NlsSafe;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.ElementManipulators;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.util.IncorrectOperationException;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.psi.*;
 import com.perl5.lang.perl.psi.utils.PerlElementFactory;
+import consulo.codeEditor.Editor;
+import consulo.document.Document;
+import consulo.language.editor.intention.IntentionAction;
+import consulo.language.editor.intention.PsiElementBaseIntentionAction;
+import consulo.language.psi.ElementManipulators;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.util.IncorrectOperationException;
+import consulo.project.Project;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 
@@ -98,11 +97,6 @@ public class StringToLastHeredocIntention extends PsiElementBaseIntentionAction 
     PsiElement grandParent = parent == null ? null : parent.getParent();
     return !(grandParent instanceof PerlHeredocOpener) &&
            (parent instanceof PsiPerlStringDq || parent instanceof PsiPerlStringSq || parent instanceof PsiPerlStringXq);
-  }
-
-  @Override
-  public @Nls @NotNull String getFamilyName() {
-    return getText();
   }
 
   @Override

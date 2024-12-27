@@ -16,18 +16,18 @@
 
 package com.perl5.lang.perl.psi.stubs.imports;
 
-import com.intellij.psi.stubs.StubElement;
 import com.perl5.lang.perl.psi.PerlUseStatement;
 import com.perl5.lang.perl.psi.impl.PerlUseStatementElement;
 import com.perl5.lang.perl.psi.stubs.PerlPolyNamedElementStub;
 import com.perl5.lang.perl.psi.stubs.PerlStubElementTypes;
+import consulo.language.psi.stub.StubElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public class PerlUseStatementStub extends PerlPolyNamedElementStub<PerlUseStatementElement> implements StubElement<PerlUseStatementElement>,
-                                                                                                       PerlUseStatement {
+  PerlUseStatement {
   private final @NotNull String myPackageName;
   private final @NotNull String myNamespaceName;
   private final @Nullable List<String> myImportOptions;

@@ -16,19 +16,6 @@
 
 package com.perl5.lang.perl.idea.inspections;
 
-import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
-import com.intellij.codeInsight.intention.FileModifier;
-import com.intellij.codeInsight.intention.HighPriorityAction;
-import com.intellij.codeInsight.intention.preview.IntentionPreviewInfo;
-import com.intellij.codeInspection.LocalQuickFix;
-import com.intellij.codeInspection.ProblemDescriptor;
-import com.intellij.codeInspection.ProblemHighlightType;
-import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.*;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.util.ArrayUtil;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.idea.configuration.settings.PerlSharedSettings;
 import com.perl5.lang.perl.idea.configuration.settings.sdk.Perl5SettingsConfigurable;
@@ -40,6 +27,13 @@ import com.perl5.lang.perl.psi.impl.PsiPerlSubDefinitionImpl;
 import com.perl5.lang.perl.psi.impl.PsiPerlSubExprImpl;
 import com.perl5.lang.perl.psi.utils.PerlElementFactory;
 import com.perl5.lang.perl.psi.utils.PerlPsiUtil;
+import consulo.language.editor.DaemonCodeAnalyzer;
+import consulo.language.editor.inspection.*;
+import consulo.language.editor.intention.HighPriorityAction;
+import consulo.language.psi.*;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.project.Project;
+import consulo.util.collection.ArrayUtil;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -335,11 +329,6 @@ public class PerlSyntaxInspection extends PerlInspection {
           @Override
           public @Nls @NotNull String getFamilyName() {
             return PerlBundle.message("perl.quickfix.change.language.level");
-          }
-
-          @Override
-          public @NotNull IntentionPreviewInfo generatePreview(@NotNull Project project, @NotNull ProblemDescriptor previewDescriptor) {
-            return IntentionPreviewInfo.EMPTY;
           }
 
           @Override

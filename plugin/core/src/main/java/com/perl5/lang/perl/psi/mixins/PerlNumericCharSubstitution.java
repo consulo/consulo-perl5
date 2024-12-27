@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.psi.mixins;
 
-import com.intellij.lang.ASTNode;
 import com.perl5.lang.perl.psi.PerlCharSubstitution;
 import com.perl5.lang.perl.psi.impl.PerlCompositeElementImpl;
+import consulo.language.ast.ASTNode;
 import org.jetbrains.annotations.NotNull;
 
 abstract class PerlNumericCharSubstitution extends PerlCompositeElementImpl implements PerlCharSubstitution {

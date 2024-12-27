@@ -16,18 +16,22 @@
 
 package com.perl5.lang.perl.idea.structureView;
 
-import com.intellij.ide.structureView.StructureViewBuilder;
-import com.intellij.ide.structureView.StructureViewModel;
-import com.intellij.ide.structureView.TreeBasedStructureViewBuilder;
-import com.intellij.lang.PsiStructureViewFactory;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.PsiFile;
+import com.perl5.lang.perl.PerlLanguage;
 import com.perl5.lang.perl.psi.PerlNamespaceDefinitionWithIdentifier;
 import com.perl5.lang.perl.psi.PerlSubDefinitionElement;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.codeEditor.Editor;
+import consulo.fileEditor.structureView.StructureViewBuilder;
+import consulo.fileEditor.structureView.StructureViewModel;
+import consulo.fileEditor.structureView.TreeBasedStructureViewBuilder;
+import consulo.language.Language;
+import consulo.language.editor.structureView.PsiStructureViewFactory;
+import consulo.language.psi.PsiFile;
+import jakarta.annotation.Nonnull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-
+@ExtensionImpl
 public class PerlStructureViewFactory implements PsiStructureViewFactory {
 
 
@@ -47,5 +51,11 @@ public class PerlStructureViewFactory implements PsiStructureViewFactory {
         return false;
       }
     };
+  }
+
+  @Nonnull
+  @Override
+  public Language getLanguage() {
+    return PerlLanguage.INSTANCE;
   }
 }

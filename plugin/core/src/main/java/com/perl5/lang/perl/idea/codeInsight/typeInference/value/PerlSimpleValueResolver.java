@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.idea.codeInsight.typeInference.value;
 
-import com.intellij.psi.PsiElement;
 import com.perl5.lang.perl.util.PerlPackageUtil;
+import consulo.language.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 
 public class PerlSimpleValueResolver extends PerlValueResolver {

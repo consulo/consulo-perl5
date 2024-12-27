@@ -16,14 +16,14 @@
 
 package com.perl5.lang.perl.psi.stubs;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.stubs.*;
-import com.intellij.util.containers.ContainerUtil;
 import com.perl5.lang.perl.PerlLanguage;
 import com.perl5.lang.perl.parser.elementTypes.PsiElementProvider;
 import com.perl5.lang.perl.psi.impl.PerlPolyNamedElement;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.stub.*;
+import consulo.logging.Logger;
+import consulo.util.collection.ContainerUtil;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import org.jetbrains.annotations.NotNull;
@@ -58,7 +58,7 @@ public abstract class PerlPolyNamedElementType<Stub extends PerlPolyNamedElement
   }
 
   @Override
-  public @NotNull Stub createStub(@NotNull Psi psi, StubElement<?> parentStub) {
+  public @NotNull Stub createStub(@NotNull Psi psi, StubElement parentStub) {
     List<StubElement<?>> lightNamedElements = new ArrayList<>();
     Stub result = createStub(psi, parentStub, lightNamedElements);
 

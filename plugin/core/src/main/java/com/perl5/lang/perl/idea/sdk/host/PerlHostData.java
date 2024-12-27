@@ -42,6 +42,7 @@ import consulo.process.util.CapturingProcessAdapter;
 import consulo.process.util.ProcessOutput;
 import consulo.project.Project;
 import consulo.util.io.FileUtil;
+import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFileSystem;
 import org.jetbrains.annotations.Contract;
@@ -133,7 +134,7 @@ public abstract class PerlHostData<Data extends PerlHostData<Data, Handler>, Han
   /**
    * Creates a process and process handler to be run in background.
    */
-  protected @NotNull BaseProcessHandler<?> doCreateProcessHandler(@NotNull PerlCommandLine commandLine) throws ExecutionException {
+  protected @NotNull ProcessHandler doCreateProcessHandler(@NotNull PerlCommandLine commandLine) throws ExecutionException {
     return new KillableProcessHandler(createProcess(commandLine), commandLine.getCommandLineString(), commandLine.getCharset());
   }
 
@@ -263,7 +264,7 @@ public abstract class PerlHostData<Data extends PerlHostData<Data, Handler>, Han
     return adapter.getOutput();
   }
 
-  public static @NotNull BaseProcessHandler<?> createProcessHandler(@NotNull PerlCommandLine commandLine) throws ExecutionException {
+  public static @NotNull ProcessHandler createProcessHandler(@NotNull PerlCommandLine commandLine) throws ExecutionException {
     PerlConfig.init(commandLine.getEffectiveSdk());
 
     PerlVersionManagerData<?, ?> versionManagerData = commandLine.getEffectiveVersionManagerData();
@@ -275,7 +276,7 @@ public abstract class PerlHostData<Data extends PerlHostData<Data, Handler>, Han
     if (perlHostData == null) {
       throw new ExecutionException(PerlBundle.message("dialog.message.no.host.data.in", commandLine));
     }
-    BaseProcessHandler<?> processHandler = perlHostData.doCreateProcessHandler(commandLine);
+    ProcessHandler processHandler = perlHostData.doCreateProcessHandler(commandLine);
     commandLine.getProcessListeners().forEach(processHandler::addProcessListener);
     PerlRunUtil.addMissingPackageListener(processHandler, commandLine);
     return processHandler;
@@ -290,7 +291,7 @@ public abstract class PerlHostData<Data extends PerlHostData<Data, Handler>, Han
 
   @Contract("null->null")
   public static @Nullable PerlHostData<?, ?> from(@Nullable Sdk sdk) {
-    return ObjectUtils.doIfNotNull(PerlSdkAdditionalData.from(sdk), PerlSdkAdditionalData::getHostData);
+    return ObjectUtil.doIfNotNull(PerlSdkAdditionalData.from(sdk), PerlSdkAdditionalData::getHostData);
   }
 
   public static @NotNull PerlHostData<?, ?> notNullFrom(@NotNull Sdk sdk) {

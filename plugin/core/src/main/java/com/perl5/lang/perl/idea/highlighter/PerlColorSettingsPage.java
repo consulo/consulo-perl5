@@ -16,16 +16,16 @@
 
 package com.perl5.lang.perl.idea.highlighter;
 
-import com.intellij.openapi.editor.colors.TextAttributesKey;
-import com.intellij.openapi.fileTypes.SyntaxHighlighter;
-import com.intellij.openapi.options.colors.AttributesDescriptor;
-import com.intellij.openapi.options.colors.ColorDescriptor;
-import com.intellij.openapi.options.colors.ColorSettingsPage;
 import com.perl5.PerlBundle;
 import com.perl5.PerlIcons;
 import com.perl5.lang.perl.PerlLanguage;
 import com.perl5.lang.perl.psi.utils.PerlPsiUtil;
-import org.apache.groovy.util.Maps;
+import consulo.colorScheme.TextAttributesKey;
+import consulo.colorScheme.setting.AttributesDescriptor;
+import consulo.colorScheme.setting.ColorDescriptor;
+import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
+import consulo.language.editor.highlight.SyntaxHighlighter;
+import consulo.util.collection.Maps;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,12 +34,6 @@ import java.util.Map;
 
 
 public class PerlColorSettingsPage implements ColorSettingsPage {
-
-  @Override
-  public @Nullable Icon getIcon() {
-    return PerlIcons.PERL_LANGUAGE_ICON;
-  }
-
   @Override
   public @NotNull SyntaxHighlighter getHighlighter() {
     return new PerlSyntaxHighlighter(null);
@@ -88,7 +82,7 @@ public class PerlColorSettingsPage implements ColorSettingsPage {
 
   @Override
   public @Nullable Map<String, TextAttributesKey> getAdditionalHighlightingTagToDescriptorMap() {
-    return Maps.of(
+    return Map.of(
       "package", PerlSyntaxHighlighter.PERL_PACKAGE,
       "package_core", PerlSyntaxHighlighter.PERL_PACKAGE_CORE,
       "pragma", PerlSyntaxHighlighter.PERL_PACKAGE_PRAGMA,

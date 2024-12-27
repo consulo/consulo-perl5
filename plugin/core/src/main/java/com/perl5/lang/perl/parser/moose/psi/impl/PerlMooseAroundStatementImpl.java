@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.parser.moose.psi.impl;
 
-import com.intellij.lang.ASTNode;
 import com.perl5.lang.perl.parser.moose.psi.PerlMooseAroundStatement;
+import consulo.language.ast.ASTNode;
 
 
 public class PerlMooseAroundStatementImpl extends PerlMooseMethodModifierImpl implements PerlMooseAroundStatement {

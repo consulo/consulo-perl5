@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.idea.codeInsight.typeInference.value;
 
-import com.intellij.openapi.util.AtomicNotNullLazyValue;
+import consulo.application.util.AtomicNotNullLazyValue;
 
 public class PerlValues {
   public static final PerlValue FIRST_ELEMENT_INDEX_VALUE = PerlScalarValue.create(0);

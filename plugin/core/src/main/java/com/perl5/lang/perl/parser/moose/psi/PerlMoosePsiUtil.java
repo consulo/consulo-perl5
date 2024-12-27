@@ -16,12 +16,12 @@
 
 package com.perl5.lang.perl.parser.moose.psi;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.util.PsiTreeUtil;
 import com.perl5.lang.perl.psi.PsiPerlCommaSequenceExpr;
 import com.perl5.lang.perl.psi.PsiPerlParenthesisedExpr;
 import com.perl5.lang.perl.psi.references.PerlSubReferenceSuper;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiReference;
+import consulo.language.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.Nullable;
 
 

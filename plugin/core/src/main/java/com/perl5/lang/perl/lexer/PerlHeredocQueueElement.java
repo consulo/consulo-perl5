@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.lexer;
 
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 import org.jetbrains.annotations.NotNull;
 
 import static com.perl5.lang.perl.parser.PerlElementTypesGenerated.HEREDOC_END;

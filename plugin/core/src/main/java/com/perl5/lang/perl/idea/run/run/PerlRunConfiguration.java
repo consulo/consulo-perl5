@@ -16,11 +16,11 @@
 
 package com.perl5.lang.perl.idea.run.run;
 
-import com.intellij.execution.configurations.ConfigurationFactory;
-import com.intellij.execution.configurations.RunConfiguration;
-import com.intellij.openapi.options.SettingsEditor;
-import com.intellij.openapi.project.Project;
 import com.perl5.lang.perl.idea.run.GenericPerlRunConfiguration;
+import consulo.execution.configuration.ConfigurationFactory;
+import consulo.execution.configuration.RunConfiguration;
+import consulo.execution.configuration.ui.SettingsEditor;
+import consulo.project.Project;
 import org.jetbrains.annotations.NotNull;
 
 class PerlRunConfiguration extends GenericPerlRunConfiguration {

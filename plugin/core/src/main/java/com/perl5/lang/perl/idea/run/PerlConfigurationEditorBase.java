@@ -16,24 +16,19 @@
 
 package com.perl5.lang.perl.idea.run;
 
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.options.SettingsEditor;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.ComboBox;
-import com.intellij.openapi.ui.LabeledComponent;
-import com.intellij.openapi.ui.VerticalFlowLayout;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiFileFactory;
-import com.intellij.ui.CollectionComboBoxModel;
-import com.intellij.ui.ColoredListCellRenderer;
-import com.intellij.ui.EditorTextField;
-import com.intellij.ui.components.JBTabbedPane;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.fileTypes.PerlFileTypeScript;
 import com.perl5.lang.perl.idea.run.debugger.PerlDebugOptions;
 import com.perl5.lang.perl.idea.run.debugger.PerlDebugOptionsSets;
+import consulo.configurable.ConfigurationException;
+import consulo.document.Document;
+import consulo.execution.configuration.ui.SettingsEditor;
+import consulo.language.editor.ui.awt.EditorTextField;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiFileFactory;
+import consulo.project.Project;
+import consulo.ui.ex.awt.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

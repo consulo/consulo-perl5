@@ -16,15 +16,16 @@
 
 package com.perl5.lang.perl.idea.run.run;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.configurations.RunProfile;
-import com.intellij.execution.configurations.RunProfileState;
-import com.intellij.execution.executors.DefaultRunExecutor;
-import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.execution.ui.RunContentDescriptor;
 import com.perl5.lang.perl.idea.run.GenericPerlProgramRunner;
 import com.perl5.lang.perl.idea.run.GenericPerlRunConfiguration;
 import com.perl5.lang.perl.idea.run.PerlRunProfileState;
+import consulo.execution.configuration.RunProfile;
+import consulo.execution.configuration.RunProfileState;
+import consulo.execution.executor.DefaultRunExecutor;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.execution.ui.RunContentDescriptor;
+import consulo.process.ExecutionException;
+import consulo.util.concurrent.AsyncResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.concurrency.AsyncPromise;
@@ -44,7 +45,7 @@ public class PerlRunProgramRunner extends GenericPerlProgramRunner {
   @Override
   protected void doExecute(@NotNull RunProfileState state,
                            @NotNull ExecutionEnvironment environment,
-                           @NotNull AsyncPromise<RunContentDescriptor> result) throws ExecutionException {
+                           @NotNull AsyncResult<RunContentDescriptor> result) throws ExecutionException {
     createAndSetContentDescriptor(environment, state.execute(environment.getExecutor(), this), result);
   }
 

@@ -16,12 +16,12 @@
 
 package com.perl5.lang.perl.parser.elementTypes;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiUtilCore;
 import com.perl5.lang.perl.lexer.PerlLexer;
 import com.perl5.lang.perl.lexer.PerlTemplatingLexer;
 import com.perl5.lang.perl.psi.impl.PsiPerlAnonHashImpl;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.PsiUtilCore;
 import org.jetbrains.annotations.NotNull;
 
 import static com.perl5.lang.perl.parser.PerlElementTypesGenerated.*;

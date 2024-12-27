@@ -16,14 +16,14 @@
 
 package com.perl5.lang.perl.idea.formatter.blocks;
 
-import com.intellij.formatting.Block;
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.injection.InjectedLanguageManager;
-import com.intellij.openapi.util.TextRange;
 import com.perl5.lang.perl.idea.formatter.PerlInjectedLanguageBlocksBuilder;
 import com.perl5.lang.perl.idea.formatter.PurePerlFormattingContext;
 import com.perl5.lang.perl.psi.PerlHeredocTerminatorElement;
 import com.perl5.lang.perl.psi.impl.PerlHeredocElementImpl;
+import consulo.document.util.TextRange;
+import consulo.language.ast.ASTNode;
+import consulo.language.codeStyle.Block;
+import consulo.language.inject.InjectedLanguageManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;

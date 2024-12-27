@@ -16,14 +16,6 @@
 
 package com.perl5.lang.perl.idea.intentions;
 
-import com.intellij.codeInsight.intention.PsiElementBaseIntentionAction;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.impl.source.tree.LeafPsiElement;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.IncorrectOperationException;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.psi.*;
 import com.perl5.lang.perl.psi.impl.PerlFileImpl;
@@ -32,6 +24,14 @@ import com.perl5.lang.perl.psi.properties.PerlConvertableCompound;
 import com.perl5.lang.perl.psi.properties.PerlConvertableCompoundSimple;
 import com.perl5.lang.perl.psi.utils.PerlElementFactory;
 import com.perl5.lang.perl.util.PerlVariableUtil;
+import consulo.codeEditor.Editor;
+import consulo.document.util.TextRange;
+import consulo.language.editor.intention.PsiElementBaseIntentionAction;
+import consulo.language.impl.psi.LeafPsiElement;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.util.IncorrectOperationException;
+import consulo.project.Project;
 import org.jetbrains.annotations.*;
 
 import java.util.ArrayList;
@@ -57,11 +57,6 @@ public class CompoundToStatementIntention extends PsiElementBaseIntentionAction 
   @Override
   public @NotNull String getText() {
     return PerlBundle.message("perl.intention.convert.to.statement");
-  }
-
-  @Override
-  public @Nls @NotNull String getFamilyName() {
-    return getText();
   }
 
   /**

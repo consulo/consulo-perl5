@@ -16,12 +16,12 @@
 
 package com.perl5.lang.perl.idea.regexp;
 
-import com.intellij.lang.PsiParser;
-import com.intellij.lexer.Lexer;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.tree.IFileElementType;
+import consulo.language.ast.IFileElementType;
+import consulo.language.file.FileViewProvider;
+import consulo.language.lexer.Lexer;
+import consulo.language.parser.PsiParser;
+import consulo.language.psi.PsiFile;
+import consulo.project.Project;
 import org.intellij.lang.regexp.*;
 import org.jetbrains.annotations.NotNull;
 

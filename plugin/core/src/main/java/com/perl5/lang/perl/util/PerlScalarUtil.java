@@ -21,6 +21,7 @@ import com.perl5.lang.perl.psi.PerlString;
 import com.perl5.lang.perl.psi.PerlStringContentElement;
 import com.perl5.lang.perl.psi.PerlVariableDeclarationElement;
 import com.perl5.lang.perl.psi.references.PerlImplicitDeclarationsService;
+import consulo.application.util.function.Processor;
 import consulo.language.psi.ElementManipulators;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.scope.GlobalSearchScope;

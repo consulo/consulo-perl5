@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.parser.moose.psi.impl;
 
-import com.intellij.lang.ASTNode;
 import com.perl5.lang.perl.parser.moose.psi.PerlMooseMetaStatement;
 import com.perl5.lang.perl.psi.impl.PsiPerlStatementImpl;
+import consulo.language.ast.ASTNode;
 
 
 public class PerlMooseMetaStatementImpl extends PsiPerlStatementImpl implements PerlMooseMetaStatement {

@@ -16,17 +16,13 @@
 
 package com.perl5.lang.perl.idea.highlighter;
 
-import com.intellij.openapi.editor.colors.EditorColorsScheme;
-import com.intellij.openapi.editor.ex.util.LayerDescriptor;
-import com.intellij.openapi.editor.ex.util.LayeredLexerEditorHighlighter;
-import com.intellij.openapi.editor.highlighter.EditorHighlighter;
-import com.intellij.openapi.fileTypes.EditorHighlighterProvider;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.SyntaxHighlighter;
-import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.perl5.lang.pod.filetypes.PodFileType;
+import consulo.codeEditor.EditorHighlighter;
+import consulo.colorScheme.EditorColorsScheme;
+import consulo.language.editor.highlight.*;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

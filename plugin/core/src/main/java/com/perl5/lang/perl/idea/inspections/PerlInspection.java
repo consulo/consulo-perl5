@@ -16,46 +16,45 @@
 
 package com.perl5.lang.perl.idea.inspections;
 
-import com.intellij.codeInspection.LocalInspectionTool;
-import com.intellij.codeInspection.LocalQuickFix;
-import com.intellij.codeInspection.ProblemHighlightType;
-import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.codeInspection.util.InspectionMessage;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.ElementManipulators;
-import com.intellij.psi.PsiElement;
+import consulo.document.util.TextRange;
+import consulo.language.editor.inspection.LocalInspectionTool;
+import consulo.language.editor.inspection.LocalQuickFix;
+import consulo.language.editor.inspection.ProblemHighlightType;
+import consulo.language.editor.inspection.ProblemsHolder;
+import consulo.language.psi.ElementManipulators;
+import consulo.language.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import static com.intellij.codeInspection.ProblemHighlightType.*;
+import static consulo.language.editor.inspection.ProblemHighlightType.*;
 
 
 public abstract class PerlInspection extends LocalInspectionTool {
 
   protected void registerProblem(@NotNull ProblemsHolder holder,
                                  @Nullable PsiElement element,
-                                 @NotNull @InspectionMessage String message,
+                                 @NotNull  String message,
                                  LocalQuickFix... quickFixes) {
     doRegisterProblem(holder, element, message, GENERIC_ERROR_OR_WARNING, quickFixes);
   }
 
   protected void registerError(@NotNull ProblemsHolder holder,
                                @Nullable PsiElement element,
-                               @NotNull @InspectionMessage String message,
+                               @NotNull  String message,
                                LocalQuickFix... quickFixes) {
     doRegisterProblem(holder, element, message, GENERIC_ERROR, quickFixes);
   }
 
   protected void markDeprecated(@NotNull ProblemsHolder holder,
                                 @Nullable PsiElement element,
-                                @NotNull @InspectionMessage String message,
+                                @NotNull  String message,
                                 LocalQuickFix... quickFixes) {
     doRegisterProblem(holder, element, message, LIKE_DEPRECATED, quickFixes);
   }
 
   private void doRegisterProblem(@NotNull ProblemsHolder holder,
                                  @Nullable PsiElement element,
-                                 @NotNull @InspectionMessage String message,
+                                 @NotNull  String message,
                                  @NotNull ProblemHighlightType highlightType,
                                  @NotNull LocalQuickFix... quickFixes) {
     if (element == null) {
@@ -65,5 +64,10 @@ public abstract class PerlInspection extends LocalInspectionTool {
     if (!range.isEmpty()) {
       holder.registerProblem(element, message, highlightType, range, quickFixes);
     }
+  }
+
+  @Override
+  public boolean isEnabledByDefault() {
+    return true;
   }
 }

@@ -16,12 +16,12 @@
 
 package com.perl5.lang.perl.idea.formatter.blocks;
 
-import com.intellij.formatting.*;
-import com.intellij.lang.ASTNode;
-import com.intellij.openapi.util.AtomicNotNullLazyValue;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.util.containers.ContainerUtil;
 import com.perl5.lang.perl.idea.formatter.PurePerlFormattingContext;
+import consulo.application.util.AtomicNotNullLazyValue;
+import consulo.document.util.TextRange;
+import consulo.language.ast.ASTNode;
+import consulo.language.codeStyle.*;
+import consulo.util.collection.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

@@ -16,17 +16,17 @@
 
 package com.perl5.lang.perl.idea.run;
 
-import com.intellij.execution.DefaultExecutionResult;
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.ExecutionResult;
-import com.intellij.execution.Executor;
-import com.intellij.execution.configurations.CommandLineState;
-import com.intellij.execution.process.ProcessHandler;
-import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.execution.runners.ProgramRunner;
-import com.intellij.execution.ui.ConsoleView;
 import com.perl5.lang.perl.idea.execution.PerlCommandLine;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostData;
+import consulo.execution.DefaultExecutionResult;
+import consulo.execution.ExecutionResult;
+import consulo.execution.configuration.CommandLineState;
+import consulo.execution.executor.Executor;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.execution.runner.ProgramRunner;
+import consulo.execution.ui.console.ConsoleView;
+import consulo.process.ExecutionException;
+import consulo.process.ProcessHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

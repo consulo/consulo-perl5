@@ -16,17 +16,6 @@
 
 package com.perl5.lang.perl.idea.completion.util;
 
-import com.intellij.codeInsight.completion.CompletionUtil;
-import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.scope.PsiScopeProcessor;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.Processor;
-import com.intellij.util.containers.ContainerUtil;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.extensions.packageprocessor.PerlExportDescriptor;
 import com.perl5.lang.perl.idea.PerlCompletionWeighter;
@@ -45,10 +34,21 @@ import com.perl5.lang.perl.psi.utils.PerlResolveUtil;
 import com.perl5.lang.perl.psi.utils.PerlVariableType;
 import com.perl5.lang.perl.util.*;
 import com.perl5.lang.perl.util.processors.PerlNamespaceEntityProcessor;
+import consulo.application.util.function.Processor;
+import consulo.language.editor.completion.CompletionUtilCore;
+import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.editor.completion.lookup.LookupElementBuilder;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.resolve.PsiScopeProcessor;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.project.Project;
+import consulo.ui.image.Image;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -111,7 +111,7 @@ public class PerlVariableCompletionUtil {
       }
     }
 
-    Icon icon;
+    Image icon;
     if (sigilToPrepend != '_') {
       lookupString = sigilToPrepend + lookupString;
       icon = PerlVariableType.bySigil(sigilToPrepend).getIcon();
@@ -353,7 +353,7 @@ public class PerlVariableCompletionUtil {
     return !PerlSharedSettings.getInstance(psiElement).getTargetPerlVersion().lesserThan(PerlVersion.V5_20);
   }
 
-  private static final Set<String> VARIABLES_AVAILABLE_ONLY_WITH_FQN = ContainerUtil.newHashSet(
+  private static final Set<String> VARIABLES_AVAILABLE_ONLY_WITH_FQN = Set.of(
     "ISA", "EXPORT", "EXPORT_OK", "EXPORT_TAGS", "EXPORT_FAIL", "VERSION"
   );
 
@@ -432,7 +432,7 @@ public class PerlVariableCompletionUtil {
       return;
     }
 
-    namespaceContainer = CompletionUtil.getOriginalOrSelf(namespaceContainer);
+    namespaceContainer = CompletionUtilCore.getOriginalOrSelf(namespaceContainer);
 
     String packageName = namespaceContainer.getNamespaceName();
 

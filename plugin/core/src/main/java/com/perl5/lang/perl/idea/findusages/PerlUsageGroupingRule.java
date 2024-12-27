@@ -16,18 +16,18 @@
 
 package com.perl5.lang.perl.idea.findusages;
 
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.usages.*;
-import com.intellij.usages.rules.PsiElementUsage;
-import com.intellij.usages.rules.SingleParentUsageGroupingRule;
 import com.perl5.lang.perl.PerlLanguage;
 import com.perl5.lang.perl.idea.ui.breadcrumbs.PerlBreadcrumbsProvider;
 import com.perl5.lang.perl.psi.PerlFile;
 import com.perl5.lang.perl.psi.PerlMethodModifier;
 import com.perl5.lang.perl.psi.PerlNamespaceDefinitionElement;
 import com.perl5.lang.perl.psi.PerlSubDefinitionElement;
+import consulo.language.psi.PsiElement;
+import consulo.navigation.ItemPresentation;
+import consulo.usage.*;
+import consulo.usage.rule.PsiElementUsage;
+import consulo.usage.rule.SingleParentUsageGroupingRule;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

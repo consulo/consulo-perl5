@@ -16,11 +16,11 @@
 
 package com.perl5.lang.perl.idea.findusages;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.usages.impl.rules.UsageType;
-import com.intellij.usages.impl.rules.UsageTypeProvider;
 import com.perl5.PerlBundle;
 import com.perl5.lang.pod.PodLanguage;
+import consulo.language.psi.PsiElement;
+import consulo.usage.UsageType;
+import consulo.usage.UsageTypeProvider;
 import org.jetbrains.annotations.Nullable;
 
 

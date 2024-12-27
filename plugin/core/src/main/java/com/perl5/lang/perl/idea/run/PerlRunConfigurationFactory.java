@@ -16,10 +16,10 @@
 
 package com.perl5.lang.perl.idea.run;
 
-import com.intellij.execution.configurations.ConfigurationFactory;
-import com.intellij.execution.configurations.ConfigurationType;
-import com.intellij.openapi.project.Project;
 import com.perl5.lang.perl.idea.project.PerlProjectManager;
+import consulo.execution.configuration.ConfigurationFactory;
+import consulo.execution.configuration.ConfigurationType;
+import consulo.project.Project;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class PerlRunConfigurationFactory extends ConfigurationFactory {

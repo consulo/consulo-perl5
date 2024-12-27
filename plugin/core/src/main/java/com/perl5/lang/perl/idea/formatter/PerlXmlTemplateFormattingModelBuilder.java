@@ -16,17 +16,13 @@
 
 package com.perl5.lang.perl.idea.formatter;
 
-import com.intellij.formatting.*;
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.xml.XMLLanguage;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
-import com.intellij.psi.formatter.xml.XmlFormattingPolicy;
-import com.intellij.psi.templateLanguages.SimpleTemplateLanguageFormattingModelBuilder;
-import com.intellij.psi.templateLanguages.TemplateLanguageFileViewProvider;
-import com.intellij.xml.template.formatter.AbstractXmlTemplateFormattingModelBuilder;
+import consulo.language.ast.ASTNode;
+import consulo.language.codeStyle.*;
+import consulo.language.codeStyle.template.SimpleTemplateLanguageFormattingModelBuilder;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.PsiElement;
+import consulo.language.template.TemplateLanguageFileViewProvider;
+import consulo.logging.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

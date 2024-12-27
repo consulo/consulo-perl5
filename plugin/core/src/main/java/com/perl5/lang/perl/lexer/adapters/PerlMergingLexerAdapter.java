@@ -16,11 +16,11 @@
 
 package com.perl5.lang.perl.lexer.adapters;
 
-import com.intellij.lexer.MergingLexerAdapter;
-import com.intellij.psi.TokenType;
-import com.intellij.psi.tree.TokenSet;
 import com.perl5.lang.perl.lexer.PerlElementTypes;
 import com.perl5.lang.perl.lexer.PerlLexingContext;
+import consulo.language.ast.TokenSet;
+import consulo.language.ast.TokenType;
+import consulo.language.lexer.MergingLexerAdapter;
 import org.jetbrains.annotations.NotNull;
 
 /**

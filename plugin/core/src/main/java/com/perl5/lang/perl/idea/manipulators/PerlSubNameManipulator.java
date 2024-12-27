@@ -16,11 +16,11 @@
 
 package com.perl5.lang.perl.idea.manipulators;
 
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.AbstractElementManipulator;
-import com.intellij.psi.impl.source.tree.LeafPsiElement;
-import com.intellij.util.IncorrectOperationException;
 import com.perl5.lang.perl.psi.PerlSubNameElement;
+import consulo.document.util.TextRange;
+import consulo.language.impl.psi.LeafPsiElement;
+import consulo.language.psi.AbstractElementManipulator;
+import consulo.language.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
 
 

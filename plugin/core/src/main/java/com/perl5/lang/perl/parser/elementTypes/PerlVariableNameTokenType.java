@@ -16,11 +16,11 @@
 
 package com.perl5.lang.perl.parser.elementTypes;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.util.PsiUtilCore;
 import com.perl5.lang.perl.lexer.PerlTokenSets;
 import com.perl5.lang.perl.psi.impl.PerlVariableNameElementImpl;
+import consulo.document.util.TextRange;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiUtilCore;
 import org.jetbrains.annotations.NotNull;
 
 public class PerlVariableNameTokenType extends PerlReparseableTokenType {

@@ -16,12 +16,12 @@
 
 package com.perl5.lang.perl.idea.codeInsight.controlFlow;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.util.ObjectUtils;
 import com.perl5.lang.perl.psi.PerlRecursiveVisitor;
 import com.perl5.lang.perl.psi.PsiPerlHeredocOpener;
 import com.perl5.lang.perl.psi.impl.PerlHeredocElementImpl;
 import com.perl5.lang.perl.psi.impl.PerlHeredocTerminatorElementImpl;
+import consulo.language.psi.PsiElement;
+import consulo.util.lang.ObjectUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -62,6 +62,6 @@ class HeredocCollector extends PerlRecursiveVisitor {
     if (openerIndex == -1 || myBodies.size() <= openerIndex) {
       return null;
     }
-    return ObjectUtils.tryCast(myBodies.get(openerIndex), PerlHeredocElementImpl.class);
+    return ObjectUtil.tryCast(myBodies.get(openerIndex), PerlHeredocElementImpl.class);
   }
 }

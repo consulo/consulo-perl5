@@ -16,31 +16,30 @@
 
 package com.perl5.lang.perl.idea.sdk.host;
 
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.fileChooser.FileChooser;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.options.UnnamedConfigurable;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.ui.InputValidator;
-import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.NlsActions.ActionText;
-import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileSystem;
 import com.perl5.lang.perl.idea.sdk.AbstractPerlHandler;
 import com.perl5.lang.perl.idea.sdk.PerlHandlerBean;
 import com.perl5.lang.perl.idea.sdk.PerlHandlerCollector;
 import com.perl5.lang.perl.idea.sdk.host.os.PerlOsHandler;
+import consulo.application.ApplicationManager;
+import consulo.configurable.UnnamedConfigurable;
+import consulo.content.bundle.Sdk;
+import consulo.disposer.Disposable;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.IdeaFileChooser;
+import consulo.project.Project;
+import consulo.ui.ex.InputValidator;
+import consulo.ui.ex.awt.Messages;
+import consulo.ui.image.Image;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.StringUtil;
+import consulo.util.lang.ref.Ref;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileSystem;
 import org.jdom.Element;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
 import java.io.File;
 import java.util.List;
 import java.util.Objects;
@@ -170,7 +169,7 @@ public abstract class PerlHostHandler<Data extends PerlHostData<Data, Handler>, 
     descriptor.setTitle(dialogTitle);
     customizeFileChooser(descriptor, fileSystem);
     Ref<String> pathRef = Ref.create();
-    ApplicationManager.getApplication().invokeAndWait(() -> FileChooser.chooseFiles(descriptor, null, defaultFile, chosen -> {
+    ApplicationManager.getApplication().invokeAndWait(() -> IdeaFileChooser.chooseFiles(descriptor, null, defaultFile, chosen -> {
       String selectedPath = chosen.getFirst().getPath();
       if (StringUtil.isEmpty(pathValidator.apply(selectedPath))) {
         pathRef.set(selectedPath);
@@ -202,7 +201,7 @@ public abstract class PerlHostHandler<Data extends PerlHostData<Data, Handler>, 
   /**
    * @return a menu item title for this handler, used in UI. E.g. new interpreter menu item
    */
-  public abstract @NotNull @ActionText String getMenuItemTitle();
+  public abstract @NotNull String getMenuItemTitle();
 
   /**
    * @return short lowercased name, for interpreters list
@@ -236,7 +235,7 @@ public abstract class PerlHostHandler<Data extends PerlHostData<Data, Handler>, 
     return null;
   }
 
-  public abstract @Nullable Icon getIcon();
+  public abstract @Nullable Image getIcon();
 
   public static @NotNull List<? extends PerlHostHandler<?, ?>> all() {
     return EP.getExtensionsList();

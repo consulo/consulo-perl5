@@ -16,21 +16,20 @@
 
 package com.perl5.lang.perl.parser.elementTypes;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.Language;
-import com.intellij.lang.PsiBuilderUtil;
-import com.intellij.lexer.Lexer;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
 import com.perl5.lang.perl.idea.editor.PerlBraceMatcher;
 import com.perl5.lang.perl.lexer.PerlTemplatingLexer;
+import consulo.language.Language;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.IElementType;
+import consulo.language.lexer.Lexer;
+import consulo.language.psi.PsiElement;
+import consulo.project.Project;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Stack;
 
-import static com.perl5.lang.perl.parser.PerlElementTypesGenerated.*;
 import static com.perl5.lang.perl.lexer.PerlLexer.AFTER_VARIABLE;
+import static com.perl5.lang.perl.parser.PerlElementTypesGenerated.*;
 
 public abstract class PerlDereferenceElementType extends PerlReparseableElementType {
   public PerlDereferenceElementType(@NotNull String debugName,

@@ -16,36 +16,42 @@
 
 package com.perl5.lang.perl.psi.mro;
 
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.components.Service;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.util.PsiModificationTracker;
-import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.Interner;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
+import consulo.disposer.Disposable;
+import consulo.language.psi.PsiModificationTrackerListener;
+import consulo.project.Project;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.interner.Interner;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-@Service(Service.Level.PROJECT)
-final class PerlIsaCache implements PsiModificationTracker.Listener, Disposable {
+@ServiceAPI(ComponentScope.PROJECT)
+@ServiceImpl
+final class PerlIsaCache implements PsiModificationTrackerListener, Disposable {
   private final Map<String, List<String>> myCache = ContainerUtil.createConcurrentWeakMap();
   private static final Interner<List<String>> INTERNER = Interner.createWeakInterner();
 
   public PerlIsaCache(@NotNull Project project) {
-    project.getMessageBus().connect(this).subscribe(PsiModificationTracker.TOPIC, this);
+    project.getMessageBus().connect(this).subscribe(PsiModificationTrackerListener.class, this);
   }
 
-  @Nullable List<String> get(@Nullable String namespaceName) {
+  @Nullable
+  List<String> get(@Nullable String namespaceName) {
     var cachedValue = myCache.get(namespaceName);
-    return cachedValue == null ? null : ContainerUtil.immutableList(cachedValue);
+    return cachedValue == null ? null : List.of(cachedValue);
   }
 
-  @NotNull List<String> put(@Nullable String namespaceName, @NotNull List<String> linearIsa) {
+  @NotNull
+  List<String> put(@Nullable String namespaceName, @NotNull List<String> linearIsa) {
     var internedValue = INTERNER.intern(linearIsa);
     myCache.put(namespaceName, internedValue);
-    return ContainerUtil.immutableList(internedValue);
+    return List.of(internedValue);
   }
 
   @Override
@@ -58,6 +64,6 @@ final class PerlIsaCache implements PsiModificationTracker.Listener, Disposable 
   }
 
   static @NotNull PerlIsaCache getInstance(@NotNull Project project) {
-    return project.getService(PerlIsaCache.class);
+    return project.getInstance(PerlIsaCache.class);
   }
 }

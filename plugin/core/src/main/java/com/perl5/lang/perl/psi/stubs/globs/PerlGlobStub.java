@@ -16,11 +16,11 @@
 
 package com.perl5.lang.perl.psi.stubs.globs;
 
-import com.intellij.psi.stubs.StubBase;
-import com.intellij.psi.stubs.StubElement;
 import com.perl5.lang.perl.psi.PerlGlobVariable;
 import com.perl5.lang.perl.psi.PsiPerlGlobVariable;
 import com.perl5.lang.perl.psi.stubs.PerlStubElementTypes;
+import consulo.language.psi.stub.StubBase;
+import consulo.language.psi.stub.StubElement;
 import org.jetbrains.annotations.Nullable;
 
 public class PerlGlobStub extends StubBase<PsiPerlGlobVariable> implements StubElement<PsiPerlGlobVariable>, PerlGlobVariable {

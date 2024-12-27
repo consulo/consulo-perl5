@@ -16,11 +16,6 @@
 
 package com.perl5.lang.perl.psi.mixins;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.StubBasedPsiElement;
-import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.util.IncorrectOperationException;
 import com.perl5.PerlIcons;
 import com.perl5.lang.perl.psi.PerlDeprecatable;
 import com.perl5.lang.perl.psi.PerlNamespaceElement;
@@ -33,6 +28,11 @@ import com.perl5.lang.perl.psi.utils.PerlAnnotations;
 import com.perl5.lang.perl.psi.utils.PerlPsiUtil;
 import com.perl5.lang.perl.psi.utils.PerlSubAnnotations;
 import com.perl5.lang.perl.util.PerlPackageUtil;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.StubBasedPsiElement;
+import consulo.language.psi.stub.IStubElementType;
+import consulo.language.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -43,7 +43,7 @@ import static com.perl5.lang.perl.parser.PerlElementTypesGenerated.SUB_NAME;
 
 public abstract class PerlSubBase<Stub extends PerlSubStub<?>> extends PerlStubBasedPsiElementBase<Stub>
   implements PerlSubElement,
-             StubBasedPsiElement<Stub>,
+  StubBasedPsiElement<Stub>,
              PerlNamespaceElementContainer,
              PerlDeprecatable,
              PerlLabelScope {

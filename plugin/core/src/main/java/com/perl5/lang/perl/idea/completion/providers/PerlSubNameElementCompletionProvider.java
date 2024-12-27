@@ -16,15 +16,15 @@
 
 package com.perl5.lang.perl.idea.completion.providers;
 
-import com.intellij.codeInsight.completion.CompletionParameters;
-import com.intellij.codeInsight.completion.CompletionResultSet;
-import com.intellij.psi.PsiElement;
-import com.intellij.util.ProcessingContext;
 import com.perl5.lang.perl.idea.completion.providers.processors.PerlCompletionProcessor;
 import com.perl5.lang.perl.idea.completion.providers.processors.PerlSimpleCompletionProcessor;
 import com.perl5.lang.perl.idea.completion.util.PerlSubCompletionUtil;
 import com.perl5.lang.perl.psi.PerlSubElement;
 import com.perl5.lang.perl.util.PerlTimeLogger;
+import consulo.language.editor.completion.CompletionParameters;
+import consulo.language.editor.completion.CompletionResultSet;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.ProcessingContext;
 import org.jetbrains.annotations.NotNull;
 
 public class PerlSubNameElementCompletionProvider extends PerlCompletionProvider {

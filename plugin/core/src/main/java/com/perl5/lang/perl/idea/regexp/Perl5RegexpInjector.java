@@ -16,13 +16,13 @@
 
 package com.perl5.lang.perl.idea.regexp;
 
-import com.intellij.lang.injection.MultiHostInjector;
-import com.intellij.lang.injection.MultiHostRegistrar;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.util.PsiUtilCore;
 import com.perl5.lang.perl.psi.impl.PsiPerlPerlRegexImpl;
+import consulo.document.util.TextRange;
+import consulo.language.inject.MultiHostInjector;
+import consulo.language.inject.MultiHostRegistrar;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiElementVisitor;
+import consulo.language.psi.PsiUtilCore;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
@@ -36,7 +36,7 @@ public class Perl5RegexpInjector implements MultiHostInjector {
     Collections.singletonList(PsiPerlPerlRegexImpl.class);
 
   @Override
-  public void getLanguagesToInject(@NotNull MultiHostRegistrar registrar, @NotNull PsiElement context) {
+  public void injectLanguages(@NotNull MultiHostRegistrar registrar, @NotNull PsiElement context) {
     assert context instanceof PsiPerlPerlRegexImpl : "Got " + context;
     if (!((PsiPerlPerlRegexImpl)context).isValidHost() || context.getTextLength() == 0) {
       return;

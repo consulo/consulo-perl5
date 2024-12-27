@@ -16,12 +16,12 @@
 
 package com.perl5.lang.perl.psi.mixins;
 
-import com.intellij.codeInsight.controlflow.Instruction;
-import com.intellij.lang.ASTNode;
-import com.intellij.openapi.util.ClearableLazyValue;
 import com.perl5.lang.perl.idea.codeInsight.controlFlow.PerlControlFlowBuilder;
 import com.perl5.lang.perl.psi.PerlSubExpr;
 import com.perl5.lang.perl.psi.impl.PsiPerlExprImpl;
+import consulo.application.util.ClearableLazyValue;
+import consulo.language.ast.ASTNode;
+import consulo.language.controlFlow.Instruction;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class PerlSubExpression extends PsiPerlExprImpl implements PerlSubExpr {

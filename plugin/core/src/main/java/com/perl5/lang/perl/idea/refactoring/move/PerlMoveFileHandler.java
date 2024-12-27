@@ -16,27 +16,27 @@
 
 package com.perl5.lang.perl.idea.refactoring.move;
 
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
-import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.search.searches.ReferencesSearch;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.refactoring.RefactoringFactory;
-import com.intellij.refactoring.RenameRefactoring;
-import com.intellij.refactoring.move.moveFilesOrDirectories.MoveFileHandler;
-import com.intellij.usageView.UsageInfo;
-import com.intellij.util.IncorrectOperationException;
 import com.perl5.lang.perl.fileTypes.PerlFileTypePackage;
 import com.perl5.lang.perl.psi.PerlNamespaceDefinitionElement;
 import com.perl5.lang.perl.psi.impl.PerlFileImpl;
 import com.perl5.lang.perl.psi.utils.PerlPsiUtil;
 import com.perl5.lang.perl.util.PerlPackageUtil;
+import consulo.application.ApplicationManager;
+import consulo.language.editor.refactoring.RefactoringFactory;
+import consulo.language.editor.refactoring.RenameRefactoring;
+import consulo.language.editor.refactoring.move.MoveFileHandler;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiReference;
+import consulo.language.psi.search.ReferencesSearch;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.util.IncorrectOperationException;
+import consulo.project.Project;
+import consulo.usage.UsageInfo;
+import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -77,7 +77,7 @@ public class PerlMoveFileHandler extends MoveFileHandler {
     VirtualFile newInnermostRoot = PerlPackageUtil.getClosestIncRoot(project, virtualFile);
 
     if (newInnermostRoot != null && originalPackageName != null) {
-      String newRelativePath = VfsUtilCore.getRelativePath(virtualFile, newInnermostRoot);
+      String newRelativePath = VirtualFileUtil.getRelativePath(virtualFile, newInnermostRoot);
       String newPackageName = PerlPackageUtil.getPackageNameByPath(newRelativePath);
 
       final RenameRefactoring[] refactoring = {null};

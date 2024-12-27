@@ -16,11 +16,10 @@
 
 package com.perl5.lang.perl.idea.formatter.operations;
 
-import com.intellij.psi.util.PsiTreeUtil;
 import com.perl5.lang.perl.psi.PsiPerlExpr;
 import com.perl5.lang.perl.psi.PsiPerlParenthesisedExpr;
 import com.perl5.lang.perl.psi.PsiPerlStatementModifier;
-
+import consulo.language.psi.util.PsiTreeUtil;
 
 public class PerlFormattingStatementModifierUnwrap extends PerlFormattingStatementModifierWrap {
   public PerlFormattingStatementModifierUnwrap(PsiPerlStatementModifier container) {

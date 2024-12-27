@@ -16,27 +16,22 @@
 
 package com.perl5.lang.perl.idea.run;
 
-import com.intellij.execution.CommonProgramRunConfigurationParameters;
-import com.intellij.execution.ui.CommonProgramParametersPanel;
-import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.projectRoots.impl.PerlSdkTable;
-import com.intellij.openapi.ui.*;
-import com.intellij.openapi.util.NlsContexts;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.ui.*;
-import com.intellij.ui.components.JBCheckBox;
-import com.intellij.ui.components.fields.ExpandableTextField;
-import com.intellij.util.ObjectUtils;
-import com.intellij.util.ui.UIUtil;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.idea.configuration.settings.sdk.Perl5SdkConfigurable;
 import com.perl5.lang.perl.idea.configuration.settings.sdk.Perl5SdkManipulator;
 import com.perl5.lang.perl.idea.configuration.settings.sdk.wrappers.Perl5RealSdkWrapper;
 import com.perl5.lang.perl.idea.configuration.settings.sdk.wrappers.Perl5SdkWrapper;
+import consulo.content.bundle.Sdk;
+import consulo.execution.CommonProgramRunConfigurationParameters;
+import consulo.execution.ui.awt.CommonProgramParametersPanel;
+import consulo.execution.ui.awt.RawCommandLineEditor;
+import consulo.fileChooser.FileChooserDescriptorFactory;
+import consulo.project.Project;
+import consulo.ui.ex.awt.*;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.virtualFileSystem.VirtualFile;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

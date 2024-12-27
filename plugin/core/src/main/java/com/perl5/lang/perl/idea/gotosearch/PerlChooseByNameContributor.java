@@ -16,13 +16,13 @@
 
 package com.perl5.lang.perl.idea.gotosearch;
 
-import com.intellij.navigation.ChooseByNameContributor;
-import com.intellij.navigation.NavigationItem;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Condition;
-import com.intellij.util.ArrayUtilRt;
-import com.intellij.util.containers.ContainerUtil;
 import com.perl5.lang.perl.psi.impl.PerlImplicitElement;
+import consulo.ide.navigation.ChooseByNameContributor;
+import consulo.navigation.NavigationItem;
+import consulo.project.Project;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.function.Condition;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -32,7 +32,7 @@ abstract class PerlChooseByNameContributor implements ChooseByNameContributor {
 
   @Override
   public final String @NotNull [] getNames(Project project, boolean includeNonProjectItems) {
-    return ArrayUtilRt.toStringArray(getNamesCollection(project, includeNonProjectItems));
+    return ArrayUtil.toStringArray(getNamesCollection(project, includeNonProjectItems));
   }
 
   protected abstract @NotNull Collection<String> getNamesCollection(Project project, boolean includeNonProjectItems);
@@ -40,7 +40,7 @@ abstract class PerlChooseByNameContributor implements ChooseByNameContributor {
   @Override
   public final NavigationItem @NotNull [] getItemsByName(String name, String pattern, Project project, boolean includeNonProjectItems) {
     return ContainerUtil.filter(getItemsCollectionByName(name, pattern, project, includeNonProjectItems), FILTER)
-      .toArray(NavigationItem.EMPTY_NAVIGATION_ITEM_ARRAY);
+                        .toArray(NavigationItem.EMPTY_NAVIGATION_ITEM_ARRAY);
   }
 
   protected abstract @NotNull Collection<? extends NavigationItem> getItemsCollectionByName(String name,

@@ -16,21 +16,6 @@
 
 package com.perl5.lang.perl.idea.structureView.elements;
 
-import com.intellij.ide.structureView.StructureViewTreeElement;
-import com.intellij.ide.structureView.impl.common.PsiTreeElementBase;
-import com.intellij.ide.util.treeView.smartTree.SortableTreeElement;
-import com.intellij.lang.Language;
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.navigation.NavigationItem;
-import com.intellij.openapi.editor.colors.CodeInsightColors;
-import com.intellij.openapi.project.DumbService;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiNamedElement;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.util.PsiTreeUtil;
 import com.perl5.lang.perl.PerlLanguage;
 import com.perl5.lang.perl.extensions.packageprocessor.PerlExportDescriptor;
 import com.perl5.lang.perl.idea.highlighter.PerlSyntaxHighlighter;
@@ -43,6 +28,20 @@ import com.perl5.lang.perl.psi.properties.PerlIdentifierOwner;
 import com.perl5.lang.perl.util.*;
 import com.perl5.lang.pod.PodLanguage;
 import com.perl5.lang.pod.idea.structureView.PodStructureViewElement;
+import consulo.codeEditor.CodeInsightColors;
+import consulo.fileEditor.structureView.StructureViewTreeElement;
+import consulo.fileEditor.structureView.tree.SortableTreeElement;
+import consulo.language.editor.structureView.PsiTreeElementBase;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiNamedElement;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.navigation.ItemPresentation;
+import consulo.navigation.NavigationItem;
+import consulo.project.DumbService;
+import consulo.project.Project;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.idea.refactoring.introduce.occurrence;
 
-import com.intellij.psi.PsiElement;
 import com.perl5.lang.perl.idea.refactoring.introduce.PerlIntroduceTarget;
 import com.perl5.lang.perl.psi.utils.PerlPsiUtil;
+import consulo.language.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 
 class PerlGenericOccurrencesCollector extends PerlIntroduceTargetOccurrencesCollector {

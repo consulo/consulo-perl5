@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.parser.moose.psi.impl;
 
-import com.intellij.lang.ASTNode;
 import com.perl5.lang.perl.parser.moose.psi.PerlMooseAfterStatement;
+import consulo.language.ast.ASTNode;
 
 
 public class PerlMooseAfterStatementImpl extends PerlMooseMethodModifierImpl implements PerlMooseAfterStatement {

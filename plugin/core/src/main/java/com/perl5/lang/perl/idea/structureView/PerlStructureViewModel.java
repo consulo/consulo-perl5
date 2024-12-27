@@ -16,18 +16,18 @@
 
 package com.perl5.lang.perl.idea.structureView;
 
-import com.intellij.ide.structureView.StructureViewModel;
-import com.intellij.ide.structureView.StructureViewModelBase;
-import com.intellij.ide.structureView.StructureViewTreeElement;
-import com.intellij.ide.util.treeView.smartTree.Filter;
-import com.intellij.ide.util.treeView.smartTree.Grouper;
-import com.intellij.ide.util.treeView.smartTree.Sorter;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.PsiFile;
 import com.perl5.lang.perl.idea.structureView.elements.PerlLeafStructureViewElement;
 import com.perl5.lang.perl.idea.structureView.elements.PerlStructureViewElement;
 import com.perl5.lang.perl.idea.structureView.filters.*;
 import com.perl5.lang.perl.idea.structureView.groupers.PerlAttributeGrouper;
+import consulo.codeEditor.Editor;
+import consulo.fileEditor.structureView.StructureViewModel;
+import consulo.fileEditor.structureView.StructureViewTreeElement;
+import consulo.fileEditor.structureView.tree.Filter;
+import consulo.fileEditor.structureView.tree.Grouper;
+import consulo.fileEditor.structureView.tree.Sorter;
+import consulo.language.editor.structureView.StructureViewModelBase;
+import consulo.language.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
 
 

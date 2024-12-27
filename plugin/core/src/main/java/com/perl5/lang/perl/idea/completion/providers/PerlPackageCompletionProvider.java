@@ -16,18 +16,18 @@
 
 package com.perl5.lang.perl.idea.completion.providers;
 
-import com.intellij.codeInsight.completion.CompletionParameters;
-import com.intellij.codeInsight.completion.CompletionResultSet;
-import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import com.intellij.openapi.util.registry.Registry;
-import com.intellij.psi.PsiElement;
-import com.intellij.util.ProcessingContext;
 import com.perl5.lang.perl.idea.completion.PerlInsertHandlers;
 import com.perl5.lang.perl.idea.completion.providers.processors.PerlSimpleCompletionProcessor;
 import com.perl5.lang.perl.idea.completion.providers.processors.PerlVariableCompletionProcessor;
 import com.perl5.lang.perl.idea.completion.util.PerlPackageCompletionUtil;
 import com.perl5.lang.perl.psi.PerlAnnotationType;
 import com.perl5.lang.perl.util.PerlTimeLogger;
+import consulo.application.util.registry.Registry;
+import consulo.language.editor.completion.CompletionParameters;
+import consulo.language.editor.completion.CompletionResultSet;
+import consulo.language.editor.completion.lookup.LookupElementBuilder;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.ProcessingContext;
 import org.jetbrains.annotations.NotNull;
 
 import static com.perl5.lang.perl.idea.PerlElementPatterns.*;
@@ -35,7 +35,7 @@ import static com.perl5.lang.perl.idea.PerlElementPatterns.*;
 
 public class PerlPackageCompletionProvider extends PerlCompletionProvider {
   @Override
-  protected void addCompletions(@NotNull CompletionParameters parameters,
+  public void addCompletions(@NotNull CompletionParameters parameters,
                                 @NotNull ProcessingContext context,
                                 @NotNull CompletionResultSet result) {
     PsiElement element = parameters.getPosition();
@@ -54,8 +54,8 @@ public class PerlPackageCompletionProvider extends PerlCompletionProvider {
     }
     else if (NAMESPACE_IN_ANNOTATION_PATTERN.accepts(element)) { // #@returns / #@type
       completionProcessor.processSingle(LookupElementBuilder.create("ArrayRef")
-                                          .withInsertHandler(PerlInsertHandlers.ARRAY_ELEMENT_INSERT_HANDLER)
-                                          .withTailText("[]"));
+                                                            .withInsertHandler(PerlInsertHandlers.ARRAY_ELEMENT_INSERT_HANDLER)
+                                                            .withTailText("[]"));
       completionProcessor.processSingle(LookupElementBuilder.create("HashRef")
                                           .withInsertHandler(PerlInsertHandlers.ARRAY_ELEMENT_INSERT_HANDLER)
                                           .withTailText("[]"));

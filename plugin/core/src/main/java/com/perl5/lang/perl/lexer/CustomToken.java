@@ -16,8 +16,7 @@
 
 package com.perl5.lang.perl.lexer;
 
-
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 
 /**
  * Class for parsed token type, stores start, end and token type

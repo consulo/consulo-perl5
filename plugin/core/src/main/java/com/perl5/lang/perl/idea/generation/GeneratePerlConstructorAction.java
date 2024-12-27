@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.idea.generation;
 
-import com.intellij.codeInsight.CodeInsightActionHandler;
 import com.perl5.lang.perl.idea.generation.handlers.GeneratePerlConstructorActionHandler;
+import consulo.language.editor.action.CodeInsightActionHandler;
 import org.jetbrains.annotations.NotNull;
 
 

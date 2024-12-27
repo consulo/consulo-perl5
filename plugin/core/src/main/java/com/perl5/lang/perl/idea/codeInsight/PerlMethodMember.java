@@ -16,15 +16,16 @@
 
 package com.perl5.lang.perl.idea.codeInsight;
 
-import com.intellij.codeInsight.generation.ClassMember;
-import com.intellij.codeInsight.generation.MemberChooserObject;
-import com.intellij.codeInsight.generation.PsiElementMemberChooserObject;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
 import com.perl5.lang.perl.psi.PerlNamespaceDefinitionElement;
 import com.perl5.lang.perl.psi.properties.PerlIdentifierOwner;
 import com.perl5.lang.perl.psi.stubs.namespaces.PerlNamespaceDefinitionStub;
 import com.perl5.lang.perl.psi.utils.PerlPsiUtil;
+import consulo.language.editor.generation.ClassMember;
+import consulo.language.editor.generation.MemberChooserObject;
+import consulo.language.editor.generation.PsiElementMemberChooserObject;
+import consulo.language.icon.IconDescriptorUpdaters;
+import consulo.language.psi.PsiElement;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -32,7 +33,7 @@ public class PerlMethodMember extends PsiElementMemberChooserObject implements C
   public static final PerlMethodMember[] EMPTY_ARRAY = {};
 
   public PerlMethodMember(@NotNull PsiElement psiElement) {
-    super(psiElement, ((PerlIdentifierOwner)psiElement).getPresentableName(), psiElement.getIcon(0));
+    super(psiElement, ((PerlIdentifierOwner)psiElement).getPresentableName(), IconDescriptorUpdaters.getIcon(psiElement, 0));
   }
 
   @Override

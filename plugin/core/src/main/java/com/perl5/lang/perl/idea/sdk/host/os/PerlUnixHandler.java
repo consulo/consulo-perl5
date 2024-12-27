@@ -16,6 +16,7 @@
 
 package com.perl5.lang.perl.idea.sdk.host.os;
 
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,7 +27,7 @@ class PerlUnixHandler extends PerlOsHandler {
     super(name);
   }
 
-  public PerlUnixHandler(@NotNull String name, @Nullable Icon icon) {
+  public PerlUnixHandler(@NotNull String name, @Nullable Image icon) {
     super(name, icon);
   }
 

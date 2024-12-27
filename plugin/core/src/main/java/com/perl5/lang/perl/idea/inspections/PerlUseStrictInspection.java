@@ -16,19 +16,19 @@
 
 package com.perl5.lang.perl.idea.inspections;
 
-import com.intellij.codeInspection.ProblemHighlightType;
-import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.lang.injection.InjectedLanguageManager;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.testFramework.LightVirtualFile;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.fileTypes.PerlFileType;
 import com.perl5.lang.perl.idea.quickfixes.PerlUsePackageQuickFix;
 import com.perl5.lang.perl.psi.PerlVisitor;
 import com.perl5.lang.perl.psi.impl.PerlUseStatementElement;
+import consulo.language.editor.inspection.ProblemHighlightType;
+import consulo.language.editor.inspection.ProblemsHolder;
+import consulo.language.file.light.LightVirtualFile;
+import consulo.language.inject.InjectedLanguageManager;
+import consulo.language.psi.PsiElementVisitor;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.virtualFileSystem.fileType.FileType;
 import org.jetbrains.annotations.NotNull;
 
 

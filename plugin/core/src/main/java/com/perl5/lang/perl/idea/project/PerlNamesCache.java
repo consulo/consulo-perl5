@@ -16,23 +16,6 @@
 
 package com.perl5.lang.perl.idea.project;
 
-import com.intellij.ProjectTopics;
-import com.intellij.ide.lightEdit.LightEdit;
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ReadAction;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.project.DumbService;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ModuleRootEvent;
-import com.intellij.openapi.roots.ModuleRootListener;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.PsiTreeChangeAdapter;
-import com.intellij.psi.PsiTreeChangeEvent;
-import com.intellij.util.messages.MessageBusConnection;
-import com.intellij.util.ui.update.MergingUpdateQueue;
-import com.intellij.util.ui.update.Update;
 import com.perl5.lang.perl.psi.stubs.namespaces.PerlLightNamespaceIndex;
 import com.perl5.lang.perl.psi.stubs.namespaces.PerlNamespaceIndex;
 import com.perl5.lang.perl.psi.stubs.subsdeclarations.PerlSubDeclarationIndex;
@@ -40,6 +23,22 @@ import com.perl5.lang.perl.psi.stubs.subsdefinitions.PerlLightSubDefinitionsInde
 import com.perl5.lang.perl.psi.stubs.subsdefinitions.PerlSubDefinitionsIndex;
 import com.perl5.lang.perl.util.PerlPackageUtil;
 import com.perl5.lang.perl.util.PerlTimeLogger;
+import consulo.application.ReadAction;
+import consulo.application.progress.ProgressManager;
+import consulo.component.messagebus.MessageBusConnection;
+import consulo.disposer.Disposable;
+import consulo.language.psi.PsiManager;
+import consulo.language.psi.event.PsiTreeChangeAdapter;
+import consulo.language.psi.event.PsiTreeChangeEvent;
+import consulo.logging.Logger;
+import consulo.module.content.layer.event.ModuleRootEvent;
+import consulo.module.content.layer.event.ModuleRootListener;
+import consulo.project.DumbService;
+import consulo.project.Project;
+import consulo.project.event.DumbModeListener;
+import consulo.ui.UIAccess;
+import consulo.ui.ex.awt.util.MergingUpdateQueue;
+import consulo.ui.ex.awt.util.Update;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
 
@@ -60,17 +59,17 @@ public class PerlNamesCache implements Disposable {
 
   public PerlNamesCache(Project project) {
     myProject = project;
-    if (LightEdit.owns(myProject) || project.isDefault()) {
+    if (project.isDefault()) {
       return;
     }
     MessageBusConnection connection = project.getMessageBus().connect(this);
-    connection.subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootListener() {
+    connection.subscribe(ModuleRootListener.class, new ModuleRootListener() {
       @Override
       public void rootsChanged(@NotNull ModuleRootEvent event) {
         queueUpdate();
       }
     });
-    connection.subscribe(DumbService.DUMB_MODE, new DumbService.DumbModeListener() {
+    connection.subscribe(DumbModeListener.class, new DumbModeListener() {
       @Override
       public void exitDumbMode() {
         queueUpdate();
@@ -130,9 +129,6 @@ public class PerlNamesCache implements Disposable {
   }
 
   private void doUpdateCache() {
-    if (LightEdit.owns(myProject)) {
-      return;
-    }
     ReadAction.nonBlocking(() -> {
       PerlTimeLogger logger = PerlTimeLogger.create(LOG);
       logger.debug("Starting to update names cache at");
@@ -176,8 +172,7 @@ public class PerlNamesCache implements Disposable {
   }
 
   public void forceCacheUpdate() {
-    var application = ApplicationManager.getApplication();
-    application.assertIsNonDispatchThread();
+    UIAccess.assetIsNotUIThread();
     doUpdateCache();
   }
 
@@ -200,6 +195,6 @@ public class PerlNamesCache implements Disposable {
   }
 
   public static @NotNull PerlNamesCache getInstance(@NotNull Project project) {
-    return project.getService(PerlNamesCache.class);
+    return project.getInstance(PerlNamesCache.class);
   }
 }

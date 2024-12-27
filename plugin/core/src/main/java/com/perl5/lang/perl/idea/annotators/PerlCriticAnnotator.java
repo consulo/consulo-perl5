@@ -16,23 +16,6 @@
 
 package com.perl5.lang.perl.idea.annotators;
 
-import com.intellij.execution.process.BaseProcessHandler;
-import com.intellij.lang.annotation.AnnotationHolder;
-import com.intellij.lang.annotation.ExternalAnnotator;
-import com.intellij.lang.annotation.HighlightSeverity;
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationType;
-import com.intellij.notification.Notifications;
-import com.intellij.openapi.application.ReadAction;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.util.concurrency.annotations.RequiresReadLock;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.idea.configuration.settings.PerlSharedSettings;
 import com.perl5.lang.perl.idea.execution.PerlCommandLine;
@@ -40,6 +23,23 @@ import com.perl5.lang.perl.idea.sdk.host.PerlHostData;
 import com.perl5.lang.perl.psi.PerlFile;
 import com.perl5.lang.perl.util.PerlFileUtil;
 import com.perl5.lang.perl.util.PerlRunUtil;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.ReadAction;
+import consulo.document.Document;
+import consulo.document.util.TextRange;
+import consulo.language.editor.annotation.AnnotationHolder;
+import consulo.language.editor.annotation.ExternalAnnotator;
+import consulo.language.editor.annotation.HighlightSeverity;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiUtilCore;
+import consulo.logging.Logger;
+import consulo.process.ProcessHandler;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.notification.Notifications;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -60,7 +60,7 @@ public class PerlCriticAnnotator extends ExternalAnnotator<PerlFile, List<PerlCr
            ? (PerlFile)file : null;
   }
 
-  @RequiresReadLock
+  @RequiredReadAction
   protected @Nullable PerlCommandLine getPerlCriticCommandLine(@NotNull PsiFile fileToLint) {
     var project = fileToLint.getProject();
     PerlSharedSettings sharedSettings = PerlSharedSettings.getInstance(project);
@@ -113,7 +113,7 @@ public class PerlCriticAnnotator extends ExternalAnnotator<PerlFile, List<PerlCr
         return null;
       }
 
-      BaseProcessHandler<?> processHandler = PerlHostData.createProcessHandler(
+      ProcessHandler processHandler = PerlHostData.createProcessHandler(
         criticCommandLine.withCharset(virtualFile.getCharset())
       );
 

@@ -13,21 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.perl5.lang.perl.psi
+package com.perl5.lang.perl.psi;
 
-interface PerlUseStatement {
+import java.util.List;
+
+public interface PerlUseStatement {
   /**
    * @return package name used in the statement
    */
-  val packageName: String?
+  String getPackageName();
 
   /**
    * @return a name of containing namespace
    */
-  val namespaceName: String?
+  String getNamespaceName();
 
   /**
    * @return mutable list of used import parameters or null if no parameters been specified.
    */
-  val importParameters: MutableList<String>?
+  List<String> getImportParameters();
 }

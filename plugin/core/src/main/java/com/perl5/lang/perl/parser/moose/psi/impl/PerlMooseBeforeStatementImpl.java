@@ -16,9 +16,8 @@
 
 package com.perl5.lang.perl.parser.moose.psi.impl;
 
-import com.intellij.lang.ASTNode;
 import com.perl5.lang.perl.parser.moose.psi.PerlMooseBeforeStatement;
-
+import consulo.language.ast.ASTNode;
 
 public class PerlMooseBeforeStatementImpl extends PerlMooseMethodModifierImpl implements PerlMooseBeforeStatement {
   public PerlMooseBeforeStatementImpl(ASTNode node) {

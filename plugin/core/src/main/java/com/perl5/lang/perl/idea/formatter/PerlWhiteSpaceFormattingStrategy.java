@@ -16,11 +16,11 @@
 
 package com.perl5.lang.perl.idea.formatter;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
-import com.intellij.psi.formatter.AbstractWhiteSpaceFormattingStrategy;
 import com.perl5.lang.perl.psi.impl.PerlHeredocElementImpl;
+import consulo.language.ast.ASTNode;
+import consulo.language.codeStyle.AbstractWhiteSpaceFormattingStrategy;
+import consulo.language.codeStyle.CodeStyleSettings;
+import consulo.language.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 
 
