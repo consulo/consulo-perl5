@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.idea.codeInsight.typeInference.value;
 
-import com.intellij.util.ObjectUtils;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.psi.utils.PerlContextType;
+import consulo.util.lang.ObjectUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -73,7 +73,7 @@ public final class PerlBlessedValue extends PerlParametrizedOperationValue {
 
   private static @NotNull PerlValue computeStrictResolve(@NotNull PerlValue resolvedValue,
                                                          @NotNull PerlValue resolvedBless) {
-    return ObjectUtils.notNull(computeResolve(resolvedValue, resolvedBless), UNKNOWN_VALUE);
+    return ObjectUtil.notNull(computeResolve(resolvedValue, resolvedBless), UNKNOWN_VALUE);
   }
 
   private static @Nullable PerlValue computeResolve(@NotNull PerlValue resolvedValue,

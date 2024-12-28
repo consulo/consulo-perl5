@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.extensions;
 
-import com.intellij.psi.PsiElement;
 import com.perl5.lang.perl.psi.PerlVariableDeclarationElement;
+import consulo.language.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;

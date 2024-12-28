@@ -16,12 +16,12 @@
 
 package com.perl5.lang.perl.idea.folding;
 
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.components.State;
-import com.intellij.openapi.components.Storage;
-import com.intellij.util.xmlb.XmlSerializerUtil;
 import com.perl5.lang.perl.idea.PerlPathMacros;
+import consulo.application.ApplicationManager;
+import consulo.component.persist.PersistentStateComponent;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
+import consulo.util.xml.serializer.XmlSerializerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -52,6 +52,6 @@ public class PerlFoldingSettingsImpl implements PersistentStateComponent<PerlFol
   }
 
   public static PerlFoldingSettingsImpl getInstance() {
-    return ApplicationManager.getApplication().getService(PerlFoldingSettingsImpl.class);
+    return ApplicationManager.getApplication().getInstance(PerlFoldingSettingsImpl.class);
   }
 }

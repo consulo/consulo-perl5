@@ -16,11 +16,11 @@
 
 package com.perl5.lang.perl.parser.perlswitch.idea.liveTemplates;
 
-import com.intellij.psi.PsiElement;
+
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.idea.livetemplates.PerlTemplateContextType;
 import com.perl5.lang.perl.parser.perlswitch.PerlSwitchElementPatterns;
-
+import consulo.language.psi.PsiElement;
 
 public class PerlSwitchTemplateContextType extends PerlTemplateContextType.Prefix {
   public PerlSwitchTemplateContextType() {

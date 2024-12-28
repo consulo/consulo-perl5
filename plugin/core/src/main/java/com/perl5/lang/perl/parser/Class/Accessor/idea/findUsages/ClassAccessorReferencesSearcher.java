@@ -16,12 +16,12 @@
 
 package com.perl5.lang.perl.parser.Class.Accessor.idea.findUsages;
 
-import com.intellij.openapi.application.QueryExecutorBase;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.search.searches.ReferencesSearch;
-import com.intellij.util.Processor;
 import com.perl5.lang.perl.parser.Class.Accessor.psi.impl.PerlClassAccessorMethod;
+import consulo.application.util.function.Processor;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiReference;
+import consulo.language.psi.search.ReferencesSearch;
+import consulo.project.util.query.QueryExecutorBase;
 import org.jetbrains.annotations.NotNull;
 
 

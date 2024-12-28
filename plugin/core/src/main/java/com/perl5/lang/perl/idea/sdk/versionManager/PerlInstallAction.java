@@ -16,13 +16,13 @@
 
 package com.perl5.lang.perl.idea.sdk.versionManager;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.projectRoots.Sdk;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.idea.actions.PerlActionBase;
 import com.perl5.lang.perl.idea.project.PerlProjectManager;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostData;
+import consulo.application.dumb.DumbAware;
+import consulo.content.bundle.Sdk;
+import consulo.ui.ex.action.AnActionEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;

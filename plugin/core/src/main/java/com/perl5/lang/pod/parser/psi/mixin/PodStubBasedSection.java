@@ -16,11 +16,11 @@
 
 package com.perl5.lang.pod.parser.psi.mixin;
 
-import com.intellij.extapi.psi.StubBasedPsiElementBase;
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.stubs.IStubElementType;
 import com.perl5.lang.pod.parser.psi.PodSection;
 import com.perl5.lang.pod.parser.psi.stubs.PodSectionStub;
+import consulo.language.ast.ASTNode;
+import consulo.language.impl.psi.stub.StubBasedPsiElementBase;
+import consulo.language.psi.stub.IStubElementType;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class PodStubBasedSection extends StubBasedPsiElementBase<PodSectionStub> implements PodSection {

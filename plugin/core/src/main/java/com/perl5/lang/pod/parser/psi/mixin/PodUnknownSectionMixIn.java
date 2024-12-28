@@ -16,10 +16,10 @@
 
 package com.perl5.lang.pod.parser.psi.mixin;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.stubs.IStubElementType;
 import com.perl5.lang.pod.parser.psi.PodRenderingContext;
 import com.perl5.lang.pod.parser.psi.stubs.PodSectionStub;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.stub.IStubElementType;
 import org.jetbrains.annotations.NotNull;
 
 import static com.perl5.lang.pod.parser.psi.util.PodRenderUtil.PARAGRAPH_PREFIX;

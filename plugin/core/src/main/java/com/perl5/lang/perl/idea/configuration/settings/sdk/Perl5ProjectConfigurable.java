@@ -16,27 +16,6 @@
 
 package com.perl5.lang.perl.idea.configuration.settings.sdk;
 
-import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
-import com.intellij.openapi.fileChooser.FileChooserFactory;
-import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.options.UnnamedConfigurable;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.ui.ComboBox;
-import com.intellij.openapi.ui.LabeledComponent;
-import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.ui.VerticalFlowLayout;
-import com.intellij.openapi.util.NlsContexts.DialogTitle;
-import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.ui.*;
-import com.intellij.ui.components.JBList;
-import com.intellij.util.FileContentUtil;
-import com.intellij.util.ui.FormBuilder;
 import com.perl5.PerlBundle;
 import com.perl5.PerlIcons;
 import com.perl5.lang.perl.idea.configuration.settings.PerlLocalSettings;
@@ -46,6 +25,18 @@ import com.perl5.lang.perl.idea.configuration.settings.sdk.wrappers.Perl5SdkWrap
 import com.perl5.lang.perl.idea.project.PerlProjectManager;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostHandler;
 import com.perl5.lang.perl.internals.PerlVersion;
+import consulo.configurable.UnnamedConfigurable;
+import consulo.content.bundle.Sdk;
+import consulo.execution.ui.awt.RawCommandLineEditor;
+import consulo.fileChooser.FileChooserDescriptorFactory;
+import consulo.fileChooser.FileChooserFactory;
+import consulo.language.util.ModuleUtilCore;
+import consulo.project.Project;
+import consulo.ui.ex.awt.*;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.StringUtil;
+import consulo.util.lang.ref.Ref;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

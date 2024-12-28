@@ -16,18 +16,18 @@
 
 package com.perl5.lang.perl.parser.trycatch.idea.completion;
 
-import com.intellij.codeInsight.completion.CompletionParameters;
-import com.intellij.codeInsight.completion.CompletionProvider;
-import com.intellij.codeInsight.completion.CompletionResultSet;
-import com.intellij.util.ProcessingContext;
 import com.perl5.lang.perl.idea.completion.providers.processors.PerlSimpleCompletionProcessor;
 import com.perl5.lang.perl.idea.completion.util.PerlPackageCompletionUtil;
+import consulo.language.editor.completion.CompletionParameters;
+import consulo.language.editor.completion.CompletionProvider;
+import consulo.language.editor.completion.CompletionResultSet;
+import consulo.language.util.ProcessingContext;
 import org.jetbrains.annotations.NotNull;
 
 
-public class TryCatchPackageCompletionProvider extends CompletionProvider<CompletionParameters> {
+public class TryCatchPackageCompletionProvider implements CompletionProvider {
   @Override
-  protected void addCompletions(@NotNull CompletionParameters parameters,
+  public void addCompletions(@NotNull CompletionParameters parameters,
                                 @NotNull ProcessingContext context,
                                 @NotNull CompletionResultSet result) {
     PerlPackageCompletionUtil.processAllNamespacesNames(new PerlSimpleCompletionProcessor(parameters, result, parameters.getPosition()));

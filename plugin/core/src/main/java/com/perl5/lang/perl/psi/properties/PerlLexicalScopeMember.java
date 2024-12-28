@@ -16,8 +16,7 @@
 
 package com.perl5.lang.perl.psi.properties;
 
-import com.intellij.psi.PsiElement;
-
+import consulo.language.psi.PsiElement;
 
 public interface PerlLexicalScopeMember extends PsiElement {
 }

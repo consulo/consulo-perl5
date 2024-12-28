@@ -16,19 +16,19 @@
 
 package com.perl5.lang.pod.idea.inspections;
 
-import com.intellij.codeInspection.LocalInspectionTool;
-import com.intellij.codeInspection.ProblemHighlightType;
-import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiUtilCore;
 import com.perl5.PerlBundle;
 import com.perl5.lang.pod.parser.psi.PodVisitor;
 import com.perl5.lang.pod.parser.psi.mixin.PodFormatterL;
 import com.perl5.lang.pod.parser.psi.util.PodRenderUtil;
 import com.perl5.lang.pod.psi.PsiLinkSection;
 import com.perl5.lang.pod.psi.PsiPodFormatLink;
+import consulo.language.ast.IElementType;
+import consulo.language.editor.inspection.LocalInspectionTool;
+import consulo.language.editor.inspection.ProblemHighlightType;
+import consulo.language.editor.inspection.ProblemsHolder;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiElementVisitor;
+import consulo.language.psi.PsiUtilCore;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

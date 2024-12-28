@@ -16,11 +16,9 @@
 
 package com.perl5.lang.perl.idea.sdk;
 
-import com.esotericsoftware.kryo.kryo5.util.Null;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Base class for all sub-elements for {@link PerlSdkAdditionalData}

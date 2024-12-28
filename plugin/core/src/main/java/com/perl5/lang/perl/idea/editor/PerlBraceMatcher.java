@@ -16,20 +16,20 @@
 
 package com.perl5.lang.perl.idea.editor;
 
-import com.intellij.lang.BracePair;
-import com.intellij.lang.PairedBraceMatcher;
-import com.intellij.psi.PsiComment;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiWhiteSpace;
-import com.intellij.psi.tree.IElementType;
 import com.perl5.lang.perl.lexer.PerlElementTypes;
 import com.perl5.lang.perl.psi.PerlSubDefinitionElement;
 import com.perl5.lang.perl.psi.PsiPerlBlock;
 import com.perl5.lang.perl.psi.PsiPerlConditionalBlock;
 import com.perl5.lang.perl.psi.PsiPerlForCompound;
 import com.perl5.lang.perl.psi.impl.PsiPerlIfCompoundImpl;
-import org.apache.groovy.util.Maps;
+import consulo.language.BracePair;
+import consulo.language.PairedBraceMatcher;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.PsiComment;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiWhiteSpace;
+import consulo.util.collection.Maps;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

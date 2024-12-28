@@ -16,8 +16,8 @@
 
 package com.perl5.lang.pod.parser.psi;
 
-import com.intellij.psi.PsiElement;
 import com.perl5.lang.pod.parser.psi.util.PodRenderUtil;
+import consulo.language.psi.PsiElement;
 
 public interface PodRenderableElement extends PsiElement {
   /**

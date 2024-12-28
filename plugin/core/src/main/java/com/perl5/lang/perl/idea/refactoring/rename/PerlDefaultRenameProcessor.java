@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.idea.refactoring.rename;
 
-import com.intellij.psi.PsiElement;
 import com.perl5.lang.perl.psi.PerlGlobVariableElement;
 import com.perl5.lang.perl.psi.PerlVariableDeclarationElement;
+import consulo.language.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 
 

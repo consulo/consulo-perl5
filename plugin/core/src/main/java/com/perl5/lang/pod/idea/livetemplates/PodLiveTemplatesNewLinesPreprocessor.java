@@ -16,13 +16,13 @@
 
 package com.perl5.lang.pod.idea.livetemplates;
 
-import com.intellij.codeInsight.template.impl.TemplatePreprocessor;
-import com.intellij.openapi.application.WriteAction;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.util.PsiUtilCore;
 import com.perl5.lang.pod.PodLanguage;
+import consulo.application.WriteAction;
+import consulo.codeEditor.Editor;
+import consulo.document.Document;
+import consulo.language.editor.template.TemplatePreprocessor;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiUtilCore;
 
 /**
  * Handles merging of the newlines in template and editor

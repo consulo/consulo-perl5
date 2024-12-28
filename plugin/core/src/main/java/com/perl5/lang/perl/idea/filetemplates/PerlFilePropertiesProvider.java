@@ -16,11 +16,10 @@
 
 package com.perl5.lang.perl.idea.filetemplates;
 
-import com.intellij.ide.fileTemplates.DefaultTemplatePropertiesProvider;
-import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiDirectory;
 import com.perl5.lang.perl.util.PerlPackageUtil;
+import consulo.fileTemplate.DefaultTemplatePropertiesProvider;
+import consulo.language.psi.PsiDirectory;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Properties;

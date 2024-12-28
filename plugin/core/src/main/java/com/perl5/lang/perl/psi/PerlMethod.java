@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.psi;
 
-import com.intellij.navigation.NavigationItem;
 import com.perl5.lang.perl.psi.properties.PerlNamespaceElementContainer;
 import com.perl5.lang.perl.psi.properties.PerlSubNameElementContainer;
+import consulo.navigation.NavigationItem;
 import org.jetbrains.annotations.Nullable;
 
 /**

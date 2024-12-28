@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.psi.properties;
 
-import com.intellij.psi.PsiElement;
 import com.perl5.lang.perl.psi.PsiPerlContinueBlock;
+import consulo.language.psi.PsiElement;
 import org.jetbrains.annotations.Nullable;
 
 

@@ -16,12 +16,12 @@
 
 package com.perl5.lang.perl.idea.codeInsight.typeInference.value;
 
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.util.registry.Registry;
-import com.intellij.openapi.util.text.StringUtil;
 import com.perl5.lang.perl.psi.PerlNamespaceDefinitionElement;
 import com.perl5.lang.perl.psi.mro.PerlMro;
 import com.perl5.lang.perl.util.PerlPackageUtil;
+import consulo.application.progress.ProgressManager;
+import consulo.application.util.registry.Registry;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

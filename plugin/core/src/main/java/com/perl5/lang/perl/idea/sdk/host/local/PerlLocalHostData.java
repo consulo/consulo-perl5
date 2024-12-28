@@ -16,19 +16,19 @@
 
 package com.perl5.lang.perl.idea.sdk.host.local;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.configurations.PathEnvironmentVariableUtil;
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFileSystem;
-import com.intellij.util.containers.ContainerUtil;
 import com.perl5.lang.perl.idea.execution.PerlCommandLine;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostData;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostFileTransfer;
 import com.perl5.lang.perl.idea.sdk.host.os.PerlOsHandler;
 import com.perl5.lang.perl.util.PerlPluginUtil;
+import consulo.disposer.Disposable;
+import consulo.process.ExecutionException;
+import consulo.process.PathEnvironmentVariableUtil;
+import consulo.project.Project;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.io.FileUtil;
+import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.virtualFileSystem.VirtualFileSystem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

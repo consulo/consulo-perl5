@@ -16,15 +16,15 @@
 
 package com.perl5.lang.perl.parser.perlswitch;
 
-import com.intellij.patterns.PsiElementPattern;
-import com.intellij.psi.PsiElement;
 import com.perl5.lang.perl.psi.PsiPerlBlock;
 import com.perl5.lang.perl.psi.PsiPerlCaseCompound;
 import com.perl5.lang.perl.psi.PsiPerlStatement;
 import com.perl5.lang.perl.psi.PsiPerlSwitchCompound;
+import consulo.language.pattern.PsiElementPattern;
+import consulo.language.psi.PsiElement;
 
-import static com.intellij.patterns.PlatformPatterns.psiElement;
 import static com.perl5.lang.perl.idea.PerlElementPatterns.WHITE_SPACE_AND_COMMENTS;
+import static consulo.language.pattern.PlatformPatterns.psiElement;
 
 
 public final class PerlSwitchElementPatterns {

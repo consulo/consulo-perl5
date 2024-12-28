@@ -16,10 +16,10 @@
 
 package com.perl5.lang.perl.psi;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiTreeUtil;
 import com.perl5.lang.perl.psi.properties.PerlBlockOwner;
 import com.perl5.lang.perl.psi.properties.PerlDieScope;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.Nullable;
 
 public interface PerlCatchExpr extends PsiElement, PerlDieScope, PerlBlockOwner {

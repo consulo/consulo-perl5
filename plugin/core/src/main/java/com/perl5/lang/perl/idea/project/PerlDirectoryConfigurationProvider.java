@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.idea.project;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.component.extension.ExtensionPointName;
+import consulo.module.Module;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
 public interface PerlDirectoryConfigurationProvider {

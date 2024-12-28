@@ -16,28 +16,6 @@
 
 package com.perl5.lang.perl.idea.editor.smartkeys;
 
-import com.intellij.codeInsight.AutoPopupController;
-import com.intellij.codeInsight.CodeInsightSettings;
-import com.intellij.codeInsight.completion.CompletionType;
-import com.intellij.openapi.editor.CaretModel;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.EditorModificationUtilEx;
-import com.intellij.openapi.editor.ex.EditorEx;
-import com.intellij.openapi.editor.highlighter.EditorHighlighter;
-import com.intellij.openapi.editor.highlighter.HighlighterIterator;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiWhiteSpace;
-import com.intellij.psi.codeStyle.CodeStyleManager;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.util.PsiUtilCore;
 import com.perl5.lang.perl.PerlLanguage;
 import com.perl5.lang.perl.idea.codeInsight.Perl5CodeInsightSettings;
 import com.perl5.lang.perl.lexer.PerlElementTypes;
@@ -45,11 +23,26 @@ import com.perl5.lang.perl.psi.*;
 import com.perl5.lang.perl.psi.impl.PerlHeredocElementImpl;
 import com.perl5.lang.perl.psi.impl.PsiPerlPerlRegexImpl;
 import com.perl5.lang.perl.psi.utils.PerlPsiUtil;
+import consulo.codeEditor.*;
+import consulo.codeEditor.util.EditorModificationUtil;
+import consulo.document.Document;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
+import consulo.language.codeStyle.CodeStyleManager;
+import consulo.language.editor.AutoPopupController;
+import consulo.language.editor.CodeInsightSettings;
+import consulo.language.editor.action.TypedHandlerDelegate;
+import consulo.language.editor.completion.CompletionType;
+import consulo.language.psi.*;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.project.Project;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.fileType.FileType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import static com.intellij.psi.TokenType.WHITE_SPACE;
 import static com.perl5.lang.perl.lexer.PerlTokenSets.*;
+import static consulo.language.ast.TokenType.WHITE_SPACE;
 
 
 public class PerlTypedHandler extends PerlTypedHandlerDelegate implements PerlElementTypes {
@@ -70,13 +63,13 @@ public class PerlTypedHandler extends PerlTypedHandlerDelegate implements PerlEl
 
 
   @Override
-  public @NotNull Result beforeCharTyped(char c,
-                                         @NotNull Project project,
-                                         @NotNull Editor editor,
-                                         @NotNull PsiFile file,
-                                         @NotNull FileType fileType) {
+  public @NotNull TypedHandlerDelegate.Result beforeCharTyped(char c,
+                                                              @NotNull Project project,
+                                                              @NotNull Editor editor,
+                                                              @NotNull PsiFile file,
+                                                              @NotNull FileType fileType) {
     if (!isMyFile(file)) {
-      return Result.CONTINUE;
+      return TypedHandlerDelegate.Result.CONTINUE;
     }
     CaretModel caretModel = editor.getCaretModel();
     int currentOffset = caretModel.getOffset();
@@ -143,7 +136,7 @@ public class PerlTypedHandler extends PerlTypedHandlerDelegate implements PerlEl
    */
   private boolean shouldAddColon(@NotNull HighlighterIterator precedingIterator,
                                  @NotNull PsiFile psiFile) {
-    IElementType tokenType = precedingIterator.getTokenType();
+    IElementType tokenType = (IElementType)precedingIterator.getTokenType();
     if (isPreColonSuffixBase(tokenType, precedingIterator.getStart(), psiFile)) {
       return true;
     }
@@ -193,7 +186,7 @@ public class PerlTypedHandler extends PerlTypedHandlerDelegate implements PerlEl
     Perl5CodeInsightSettings perlCodeInsightSettings = Perl5CodeInsightSettings.getInstance();
     EditorHighlighter highlighter = editor.getHighlighter();
     HighlighterIterator iterator = highlighter.createIterator(offset);
-    IElementType elementTokenType = iterator.getTokenType();
+    IElementType elementTokenType = (IElementType)iterator.getTokenType();
     Document document = editor.getDocument();
     CharSequence text = document.getCharsSequence();
     if (QUOTE_OPEN_ANY.contains(elementTokenType) && CodeInsightSettings.getInstance().AUTOINSERT_PAIR_QUOTE) {
@@ -211,14 +204,14 @@ public class PerlTypedHandler extends PerlTypedHandlerDelegate implements PerlEl
       if (QUOTE_CLOSE_FIRST_ANY.contains(possibleCloseQuoteType) && closeChar == text.charAt(iterator.getStart())) {
         if (COMPLEX_QUOTE_OPENERS.contains(quotePrefixType) && StringUtil.containsChar(HANDLED_BY_BRACE_MATCHER, openChar)) {
           iterator.advance();
-          if (iterator.atEnd() || !QUOTE_OPEN_ANY.contains(iterator.getTokenType())) {
-            EditorModificationUtilEx.insertStringAtCaret(editor, Character.toString(closeChar) + openChar, false, false);
+          if (iterator.atEnd() || !QUOTE_OPEN_ANY.contains((IElementType)iterator.getTokenType())) {
+            EditorModificationUtil.insertStringAtCaret(editor, Character.toString(closeChar) + openChar, false, false);
           }
         }
         else if (SIMPLE_QUOTE_OPENERS.contains(quotePrefixType) &&
                  StringUtil.containsChar(HANDLED_BY_BRACE_MATCHER, openChar) &&
                  !PerlEditorUtil.areMarkersBalanced((EditorEx)editor, offset, openChar)) {
-          EditorModificationUtilEx.insertStringAtCaret(editor, Character.toString(closeChar), false, false);
+          EditorModificationUtil.insertStringAtCaret(editor, Character.toString(closeChar), false, false);
           return Result.STOP;
         }
         return Result.CONTINUE;
@@ -234,14 +227,14 @@ public class PerlTypedHandler extends PerlTypedHandlerDelegate implements PerlEl
         }
       }
 
-      EditorModificationUtilEx.insertStringAtCaret(editor, textToAppend.toString(), false, false);
+      EditorModificationUtil.insertStringAtCaret(editor, textToAppend.toString(), false, false);
     }
     else if (elementTokenType == STRING_SPECIAL_HEX && perlCodeInsightSettings.AUTO_BRACE_HEX_SUBSTITUTION ||
              elementTokenType == STRING_SPECIAL_OCT && perlCodeInsightSettings.AUTO_BRACE_OCT_SUBSTITUTION) {
-      EditorModificationUtilEx.insertStringAtCaret(editor, "{}", false, 1);
+      EditorModificationUtil.insertStringAtCaret(editor, "{}", false, 1);
     }
     else if (elementTokenType == STRING_SPECIAL_UNICODE) {
-      EditorModificationUtilEx.insertStringAtCaret(editor, "{}", false, 1);
+      EditorModificationUtil.insertStringAtCaret(editor, "{}", false, 1);
       AutoPopupController.getInstance(project).scheduleAutoPopup(editor, CompletionType.BASIC, null);
     }
     else if (elementTokenType == LEFT_BRACE) {
@@ -258,7 +251,7 @@ public class PerlTypedHandler extends PerlTypedHandlerDelegate implements PerlEl
       iterator.retreat();
       if (PerlEditorUtil.getPreviousTokenType(iterator, true) == PACKAGE &&
           (currentOffset == text.length() || text.charAt(currentOffset) != '>')) {
-        EditorModificationUtilEx.insertStringAtCaret(editor, ">");
+        EditorModificationUtil.insertStringAtCaret(editor, ">");
         AutoPopupController.getInstance(project).scheduleAutoPopup(editor, CompletionType.BASIC, null);
       }
     }
@@ -287,7 +280,7 @@ public class PerlTypedHandler extends PerlTypedHandlerDelegate implements PerlEl
     PsiPerlSignatureContent wrappingSignature = PsiTreeUtil.getParentOfType(elementAtOffset, PsiPerlSignatureContent.class);
     if (wrappingSignature != null) {
       int signatureOffset = wrappingSignature.getNode().getStartOffset();
-      EditorModificationUtilEx.insertStringAtCaret(editor, " ", false, true);
+      EditorModificationUtil.insertStringAtCaret(editor, " ", false, true);
       Project project = file.getProject();
       PsiDocumentManager.getInstance(project).commitDocument(document);
       CodeStyleManager.getInstance(project).reformatText(file, signatureOffset, offset);

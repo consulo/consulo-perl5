@@ -16,16 +16,16 @@
 
 package com.perl5.lang.perl.parser.moose.stubs;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.Language;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
 import com.perl5.lang.perl.lexer.PerlElementTypes;
 import com.perl5.lang.perl.parser.elementTypes.PsiElementProvider;
 import com.perl5.lang.perl.parser.moose.psi.impl.PerlMooseOverrideStatement;
 import com.perl5.lang.perl.psi.PerlSubDefinitionElement;
 import com.perl5.lang.perl.psi.stubs.subsdefinitions.PerlSubDefinitionElementType;
 import com.perl5.lang.perl.psi.stubs.subsdefinitions.PerlSubDefinitionStub;
+import consulo.language.Language;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiElement;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

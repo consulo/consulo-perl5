@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.psi;
 
-import com.intellij.psi.StubBasedPsiElement;
 import com.perl5.lang.perl.psi.stubs.imports.runtime.PerlRuntimeImportStub;
+import consulo.language.psi.StubBasedPsiElement;
 import org.jetbrains.annotations.Nullable;
 
 

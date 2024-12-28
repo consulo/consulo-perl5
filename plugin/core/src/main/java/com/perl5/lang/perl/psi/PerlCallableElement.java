@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.psi;
 
-import com.intellij.psi.PsiElement;
 import com.perl5.lang.perl.psi.properties.PerlIdentifierOwner;
 import com.perl5.lang.perl.psi.properties.PerlPackageMember;
+import consulo.language.psi.PsiElement;
 
 public interface PerlCallableElement extends PsiElement, PerlPackageMember, PerlIdentifierOwner, PerlCallable {
 }

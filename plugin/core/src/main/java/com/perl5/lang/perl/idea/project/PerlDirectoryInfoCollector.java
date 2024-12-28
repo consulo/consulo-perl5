@@ -16,16 +16,10 @@
 
 package com.perl5.lang.perl.idea.project;
 
-import com.intellij.ide.projectView.actions.MarkExcludeRootAction;
-import com.intellij.ide.projectView.actions.MarkTestSourceRootAction;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ProjectFileIndex;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.concurrency.annotations.RequiresEdt;
-import com.intellij.util.concurrency.annotations.RequiresWriteLock;
 import com.perl5.lang.perl.idea.actions.PerlMarkLibrarySourceRootAction;
+import consulo.module.content.ProjectFileIndex;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.idea.codeInsight.typeInference.value;
 
-import com.intellij.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -58,7 +58,7 @@ public class PerlHashValue extends PerlMapValue {
    * @return a value for the {@code key}
    */
   public @NotNull PerlValue get(@NotNull PerlValue key) {
-    return ObjectUtils.notNull(getMap().get(key), UNDEF_VALUE);
+    return ObjectUtil.notNull(getMap().get(key), UNDEF_VALUE);
   }
 
   @Override

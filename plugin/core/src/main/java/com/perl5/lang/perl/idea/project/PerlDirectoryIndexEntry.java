@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.idea.project;
 
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.testFramework.LightVirtualFile;
+import consulo.language.file.light.LightVirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
 class PerlDirectoryIndexEntry {

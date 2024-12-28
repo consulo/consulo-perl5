@@ -16,11 +16,11 @@
 
 package com.perl5.lang.pod.parser.psi.mixin;
 
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
-import com.intellij.lang.ASTNode;
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.psi.PsiReference;
 import com.perl5.lang.pod.parser.psi.PodCompositeElement;
+import consulo.language.ast.ASTNode;
+import consulo.language.impl.psi.ASTWrapperPsiElement;
+import consulo.language.psi.PsiReference;
+import consulo.navigation.ItemPresentation;
 import org.jetbrains.annotations.NotNull;
 
 public class PodCompositeElementMixin extends ASTWrapperPsiElement implements PodCompositeElement {

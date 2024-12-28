@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.psi;
 
-import com.intellij.psi.PsiElement;
 import com.perl5.lang.perl.psi.references.PerlBuiltInVariablesService;
+import consulo.language.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;

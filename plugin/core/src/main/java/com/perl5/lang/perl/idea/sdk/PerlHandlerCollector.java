@@ -16,10 +16,8 @@
 
 package com.perl5.lang.perl.idea.sdk;
 
-import com.intellij.openapi.util.AtomicNotNullLazyValue;
-import com.intellij.openapi.util.KeyedExtensionCollector;
-import com.intellij.util.KeyedLazyInstance;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.application.util.AtomicNotNullLazyValue;
+import consulo.util.collection.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;

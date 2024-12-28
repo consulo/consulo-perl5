@@ -16,13 +16,12 @@
 
 package com.perl5.lang.perl.lexer;
 
-import com.intellij.lexer.FlexLexer;
-import com.intellij.lexer.LexerBase;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
+import consulo.language.lexer.FlexLexer;
+import consulo.language.lexer.LexerBase;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-
 
 public class PerlLexerWithCustomStatesAdapter extends LexerBase {
   private final PerlLexerWithCustomStates myFlex;

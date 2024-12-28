@@ -16,14 +16,14 @@
 
 package com.perl5.lang.perl.idea.editor.smartkeys;
 
-import com.intellij.codeInsight.editorActions.enter.EnterHandlerDelegateAdapter;
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
-import com.intellij.openapi.util.Ref;
-import com.intellij.psi.PsiFile;
 import com.perl5.lang.perl.util.PerlTimeLogger;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.action.EditorActionHandler;
+import consulo.dataContext.DataContext;
+import consulo.language.editor.action.EnterHandlerDelegateAdapter;
+import consulo.language.psi.PsiFile;
+import consulo.logging.Logger;
+import consulo.util.lang.ref.Ref;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class PerlEnterHandler extends EnterHandlerDelegateAdapter {

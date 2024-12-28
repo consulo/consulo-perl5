@@ -16,18 +16,18 @@
 
 package com.perl5.lang.perl.psi.mixins;
 
-import com.intellij.codeInsight.controlflow.Instruction;
-import com.intellij.lang.ASTNode;
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.openapi.util.ClearableLazyValue;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiTreeUtil;
 import com.perl5.lang.perl.idea.codeInsight.controlFlow.PerlControlFlowBuilder;
 import com.perl5.lang.perl.idea.presentations.PerlItemPresentationSimpleDynamicLocation;
 import com.perl5.lang.perl.idea.ui.PerlIconProvider;
 import com.perl5.lang.perl.psi.PerlMethodModifier;
 import com.perl5.lang.perl.psi.PerlSubNameElement;
 import com.perl5.lang.perl.psi.impl.PerlCompositeElementImpl;
+import consulo.application.util.ClearableLazyValue;
+import consulo.language.ast.ASTNode;
+import consulo.language.controlFlow.Instruction;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.navigation.ItemPresentation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

@@ -16,16 +16,12 @@
 
 package com.perl5.lang.perl.idea.project;
 
-import com.intellij.ProjectTopics;
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ModuleRootEvent;
-import com.intellij.openapi.roots.ModuleRootListener;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.indexing.LightDirectoryIndex;
-import com.intellij.util.messages.MessageBusConnection;
-import org.jetbrains.annotations.ApiStatus;
+import consulo.component.messagebus.MessageBusConnection;
+import consulo.disposer.Disposable;
+import consulo.module.content.layer.event.ModuleRootEvent;
+import consulo.module.content.layer.event.ModuleRootListener;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

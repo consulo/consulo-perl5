@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.psi;
 
-import com.intellij.navigation.NavigationItem;
 import com.perl5.lang.perl.psi.properties.PerlVariableNameElementContainer;
+import consulo.navigation.NavigationItem;
 
 
 public interface PerlGlobVariableElement extends PerlCallableElement,

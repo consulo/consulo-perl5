@@ -38,11 +38,6 @@ public class ForeachToForIntention extends PsiElementBaseIntentionAction {
     return PerlBundle.message("perl.intention.foreach.to.for");
   }
 
-  @Override
-  public @Nls @NotNull String getFamilyName() {
-    return getText();
-  }
-
   private PerlForeachCompound getForeachStatement(@NotNull PsiElement element) {
     PerlForeachCompound forCompound = PsiTreeUtil.getParentOfType(element, PerlForeachCompound.class);
     if (forCompound == null) {

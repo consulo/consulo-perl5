@@ -16,14 +16,14 @@
 
 package com.perl5.lang.perl.idea.refactoring.rename;
 
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.*;
-import com.intellij.psi.search.SearchScope;
-import com.intellij.psi.search.searches.ReferencesSearch;
-import com.intellij.refactoring.rename.PsiElementRenameHandler;
-import com.intellij.refactoring.rename.RenamePsiElementProcessor;
 import com.perl5.lang.perl.psi.PerlGlobVariableElement;
+import consulo.codeEditor.Editor;
+import consulo.content.scope.SearchScope;
+import consulo.language.editor.refactoring.rename.PsiElementRenameHandler;
+import consulo.language.editor.refactoring.rename.RenamePsiElementProcessor;
+import consulo.language.psi.*;
+import consulo.language.psi.search.ReferencesSearch;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

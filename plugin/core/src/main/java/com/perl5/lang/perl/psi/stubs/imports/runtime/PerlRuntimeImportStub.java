@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.psi.stubs.imports.runtime;
 
-import com.intellij.psi.stubs.StubElement;
 import com.perl5.lang.perl.psi.PerlDoExpr;
+import consulo.language.psi.stub.StubElement;
 import org.jetbrains.annotations.Nullable;
 
 

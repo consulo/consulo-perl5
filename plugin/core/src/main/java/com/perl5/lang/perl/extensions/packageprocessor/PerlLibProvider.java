@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.extensions.packageprocessor;
 
-import com.intellij.openapi.vfs.VirtualFile;
 import com.perl5.lang.perl.psi.impl.PerlUseStatementElement;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;

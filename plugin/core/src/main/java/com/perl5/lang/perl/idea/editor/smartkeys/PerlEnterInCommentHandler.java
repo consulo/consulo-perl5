@@ -16,16 +16,16 @@
 
 package com.perl5.lang.perl.idea.editor.smartkeys;
 
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
-import com.intellij.openapi.editor.ex.EditorEx;
-import com.intellij.openapi.editor.highlighter.HighlighterIterator;
-import com.intellij.openapi.util.Ref;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.tree.IElementType;
 import com.perl5.lang.perl.PerlLanguage;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorEx;
+import consulo.codeEditor.HighlighterIterator;
+import consulo.codeEditor.action.EditorActionHandler;
+import consulo.dataContext.DataContext;
+import consulo.document.Document;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.PsiFile;
+import consulo.util.lang.ref.Ref;
 import org.jetbrains.annotations.NotNull;
 
 import static com.perl5.lang.perl.parser.PerlElementTypesGenerated.COMMENT_LINE;
@@ -49,7 +49,7 @@ public class PerlEnterInCommentHandler extends PerlEnterHandler {
     if (highlighterIterator.atEnd()) {
       return Result.Continue;
     }
-    IElementType currentTokenType = highlighterIterator.getTokenType();
+    IElementType currentTokenType = (IElementType)highlighterIterator.getTokenType();
     int currentTokenStart = highlighterIterator.getStart();
 
     //noinspection ConstantConditions

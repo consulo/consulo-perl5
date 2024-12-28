@@ -16,10 +16,9 @@
 
 package com.perl5.lang.perl.idea.folding;
 
-import com.intellij.application.options.editor.CodeFoldingOptionsProvider;
-import com.intellij.openapi.options.BeanConfigurable;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.PerlLanguage;
+import consulo.configurable.BeanConfigurable;
 
 
 public class PerlFoldingOptionsProvider extends BeanConfigurable<PerlFoldingSettingsImpl> implements CodeFoldingOptionsProvider {

@@ -42,6 +42,7 @@ import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -111,7 +112,7 @@ public class PerlSdkType extends SdkType {
 
       if (!filesToRefresh.isEmpty()) {
         PerlRunUtil.setProgressText(PerlBundle.message("perl.progress.refreshing.filesystem"));
-        VfsUtil.markDirtyAndRefresh(false, true, true, filesToRefresh.toArray(VirtualFile.EMPTY_ARRAY));
+        VirtualFileUtil.markDirtyAndRefresh(false, true, true, filesToRefresh.toArray(VirtualFile.EMPTY_ARRAY));
       }
 
       try {

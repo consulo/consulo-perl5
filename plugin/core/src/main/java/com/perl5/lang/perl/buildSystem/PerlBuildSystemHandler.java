@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.buildSystem;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.module.Module;
+import consulo.component.extension.ExtensionPointName;
+import consulo.module.Module;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

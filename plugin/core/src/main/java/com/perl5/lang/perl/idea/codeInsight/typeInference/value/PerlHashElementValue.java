@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.idea.codeInsight.typeInference.value;
 
-import com.intellij.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -53,7 +53,7 @@ public final class PerlHashElementValue extends PerlParametrizedOperationValue {
 
   private static @NotNull PerlValue computeStrictResolve(@NotNull PerlValue hashValue,
                                                          @NotNull PerlValue keyValue) {
-    return ObjectUtils.notNull(computeResolve(hashValue, keyValue), UNKNOWN_VALUE);
+    return ObjectUtil.notNull(computeResolve(hashValue, keyValue), UNKNOWN_VALUE);
   }
 
   private static @Nullable PerlValue computeResolve(@NotNull PerlValue hashValue,

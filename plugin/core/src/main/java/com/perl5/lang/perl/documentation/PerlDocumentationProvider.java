@@ -16,14 +16,6 @@
 
 package com.perl5.lang.perl.documentation;
 
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
-import com.intellij.psi.util.PsiUtilCore;
 import com.perl5.lang.perl.PerlLanguage;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlValuesManager;
 import com.perl5.lang.perl.lexer.PerlElementTypes;
@@ -34,6 +26,14 @@ import com.perl5.lang.perl.psi.impl.PerlFileImpl;
 import com.perl5.lang.pod.PodLanguage;
 import com.perl5.lang.pod.idea.documentation.PodDocumentationProvider;
 import com.perl5.lang.pod.parser.psi.PodLinkDescriptor;
+import consulo.codeEditor.Editor;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
+import consulo.language.psi.PsiUtilCore;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;

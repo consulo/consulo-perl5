@@ -16,12 +16,10 @@
 
 package com.perl5.lang.perl.idea.configuration.settings.sdk;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.AdditionalLibraryRootsProvider;
-import com.intellij.openapi.roots.SyntheticLibrary;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.perl5.lang.perl.idea.project.PerlProjectManager;
 import com.perl5.lang.perl.util.PerlRunUtil;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;

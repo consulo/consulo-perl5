@@ -16,22 +16,20 @@
 
 package com.perl5.lang.perl.idea.intellilang;
 
-import com.intellij.lang.Language;
-import com.intellij.lang.html.HTMLLanguage;
-import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.ComboBoxTableRenderer;
-import com.intellij.openapi.ui.VerticalFlowLayout;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.TableUtil;
-import com.intellij.ui.ToolbarDecorator;
-import com.intellij.ui.table.JBTable;
-import com.intellij.util.ArrayUtil;
-import com.intellij.util.FileContentUtil;
-import com.intellij.util.ui.ColumnInfo;
-import com.intellij.util.ui.FormBuilder;
-import com.intellij.util.ui.ListTableModel;
 import com.perl5.PerlBundle;
+import consulo.configurable.Configurable;
+import consulo.language.Language;
+import consulo.project.Project;
+import consulo.ui.ex.awt.ColumnInfo;
+import consulo.ui.ex.awt.FormBuilder;
+import consulo.ui.ex.awt.ToolbarDecorator;
+import consulo.ui.ex.awt.VerticalFlowLayout;
+import consulo.ui.ex.awt.table.ComboBoxTableRenderer;
+import consulo.ui.ex.awt.table.JBTable;
+import consulo.ui.ex.awt.table.ListTableModel;
+import consulo.ui.ex.awt.util.TableUtil;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -53,10 +51,10 @@ final class PerlInjectionMarkersTable extends JBTable implements Configurable {
     final TableColumn languageColumn = getColumnModel().getColumn(1);
 
     List<String> languageIds = Language.getRegisteredLanguages().stream()
-      .map(Language::getID)
-      .filter(it -> !it.isEmpty())
-      .sorted()
-      .collect(Collectors.toList());
+                                       .map(Language::getID)
+                                       .filter(it -> !it.isEmpty())
+                                       .sorted()
+                                       .collect(Collectors.toList());
     ComboBoxTableRenderer<String> roleComboBoxTableRenderer =
       new ComboBoxTableRenderer<>(ArrayUtil.toStringArray(languageIds)) {
         @Override
@@ -85,9 +83,9 @@ final class PerlInjectionMarkersTable extends JBTable implements Configurable {
     JTextPane textPane = new JTextPane();
     textPane.setText(PerlBundle.message("perl.settings.markers.language.description"));
     JPanel panel = FormBuilder.createFormBuilder()
-      .addComponent(textPane)
-      .addComponent(
-        ToolbarDecorator.createDecorator(this).setAddAction(action -> {
+                              .addComponent(textPane)
+                              .addComponent(
+                                ToolbarDecorator.createDecorator(this).setAddAction(action -> {
           final TableCellEditor cellEditor = getCellEditor();
           if (cellEditor != null) {
             cellEditor.stopCellEditing();
@@ -110,9 +108,9 @@ final class PerlInjectionMarkersTable extends JBTable implements Configurable {
 
           TableUtil.editCellAt(this, indexToEdit, 0);
         })
-          .disableDownAction()
-          .disableUpAction()
-          .createPanel()
+                                                .disableDownAction()
+                                                .disableUpAction()
+                                                .createPanel()
       ).getPanel();
     panel.setLayout(new VerticalFlowLayout());
     return panel;

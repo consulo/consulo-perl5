@@ -16,8 +16,7 @@
 
 package com.perl5.lang.pod.parser.psi;
 
-import com.intellij.psi.PsiElement;
-
+import consulo.language.psi.PsiElement;
 
 public interface PodSectionContent extends PsiElement {
 }

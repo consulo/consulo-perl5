@@ -16,11 +16,11 @@
 
 package com.perl5.lang.perl.extensions.packageprocessor.impl;
 
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.perl5.lang.perl.extensions.packageprocessor.PerlLibProvider;
 import com.perl5.lang.perl.extensions.packageprocessor.PerlPragmaProcessorBase;
 import com.perl5.lang.perl.psi.impl.PerlUseStatementElement;
+import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;

@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.extensions.imports;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
 import com.perl5.lang.perl.extensions.packageprocessor.PerlExportDescriptor;
 import com.perl5.lang.perl.psi.PerlNamespaceDefinitionElement;
+import consulo.component.extension.ExtensionPointName;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

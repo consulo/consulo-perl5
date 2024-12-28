@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.idea.codeInsight.typeInference.value;
 
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -44,7 +44,7 @@ public class PerlArithmeticNegationValue extends PerlOperationValue {
   }
 
   private static @NotNull PerlValue doComputeStrictResolve(@NotNull PerlValue target) {
-    return ObjectUtils.notNull(doComputeResolve(target), UNKNOWN_VALUE);
+    return ObjectUtil.notNull(doComputeResolve(target), UNKNOWN_VALUE);
   }
 
   private static @Nullable PerlValue doComputeResolve(@NotNull PerlValue target) {

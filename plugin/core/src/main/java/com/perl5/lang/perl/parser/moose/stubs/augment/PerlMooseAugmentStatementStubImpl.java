@@ -16,10 +16,10 @@
 
 package com.perl5.lang.perl.parser.moose.stubs.augment;
 
-import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.psi.stubs.StubBase;
-import com.intellij.psi.stubs.StubElement;
 import com.perl5.lang.perl.parser.moose.psi.PerlMooseAugmentStatement;
+import consulo.language.psi.stub.IStubElementType;
+import consulo.language.psi.stub.StubBase;
+import consulo.language.psi.stub.StubElement;
 
 public class PerlMooseAugmentStatementStubImpl extends StubBase<PerlMooseAugmentStatement> implements PerlMooseAugmentStatementStub {
   private final String mySubName;

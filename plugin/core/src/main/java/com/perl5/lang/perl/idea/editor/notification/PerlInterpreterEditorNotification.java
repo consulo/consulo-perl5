@@ -16,19 +16,18 @@
 
 package com.perl5.lang.perl.idea.editor.notification;
 
-import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.testFramework.LightVirtualFile;
-import com.intellij.ui.EditorNotificationPanel;
-import com.intellij.ui.EditorNotificationProvider;
-import com.intellij.ui.EditorNotifications;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.fileTypes.PerlFileType;
 import com.perl5.lang.perl.idea.configuration.settings.PerlLocalSettings;
 import com.perl5.lang.perl.idea.configuration.settings.sdk.Perl5SettingsConfigurable;
 import com.perl5.lang.perl.idea.project.PerlProjectManager;
+import consulo.application.dumb.DumbAware;
+import consulo.fileEditor.EditorNotificationProvider;
+import consulo.fileEditor.EditorNotifications;
+import consulo.fileEditor.FileEditor;
+import consulo.language.file.light.LightVirtualFile;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

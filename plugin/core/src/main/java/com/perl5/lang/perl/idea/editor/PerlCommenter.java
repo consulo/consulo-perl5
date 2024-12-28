@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.idea.editor;
 
-import com.intellij.codeInsight.generation.IndentedCommenter;
+import consulo.language.IndentedCommenter;
 import org.jetbrains.annotations.Nullable;
 
 

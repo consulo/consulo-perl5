@@ -16,11 +16,10 @@
 
 package com.perl5.lang.perl.idea.sdk.versionManager;
 
-import com.intellij.ui.CollectionComboBoxModel;
-import com.intellij.ui.ColoredListCellRenderer;
-import com.intellij.ui.ComboboxSpeedSearch;
-import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.util.ObjectUtils;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.CollectionComboBoxModel;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
+import consulo.ui.ex.awt.ComboboxSpeedSearch;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

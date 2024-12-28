@@ -16,21 +16,21 @@
 
 package com.perl5.lang.perl.idea.filetemplates;
 
-import com.intellij.ide.fileTemplates.DefaultCreateFromTemplateHandler;
-import com.intellij.ide.fileTemplates.FileTemplate;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.ex.FileTypeManagerEx;
-import com.intellij.psi.PsiDirectory;
 import com.perl5.lang.perl.fileTypes.PerlFileType;
+import consulo.fileTemplate.CreateFromTemplateHandler;
+import consulo.fileTemplate.FileTemplate;
+import consulo.language.file.FileTypeManager;
+import consulo.language.psi.PsiDirectory;
+import consulo.virtualFileSystem.fileType.FileType;
 import org.jetbrains.annotations.NotNull;
 
 
-public class PerlCreateFileFromTemplateHandler extends DefaultCreateFromTemplateHandler {
+public class PerlCreateFileFromTemplateHandler implements CreateFromTemplateHandler {
   public static final PerlCreateFileFromTemplateHandler INSTANCE = new PerlCreateFileFromTemplateHandler();
 
   @Override
   public boolean handlesTemplate(@NotNull FileTemplate template) {
-    FileType templateFileType = FileTypeManagerEx.getInstanceEx().getFileTypeByExtension(template.getExtension());
+    FileType templateFileType = FileTypeManager.getInstance().getFileTypeByExtension(template.getExtension());
     return templateFileType instanceof PerlFileType;
   }
 

@@ -59,7 +59,6 @@ import consulo.util.xml.serializer.annotation.Transient;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.VisibleForTesting;
 
 import java.io.IOException;
 import java.io.OutputStream;

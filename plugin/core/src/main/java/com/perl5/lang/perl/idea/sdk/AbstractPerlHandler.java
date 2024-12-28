@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.idea.sdk;
 
-import com.intellij.util.xmlb.XmlSerializer;
+import consulo.util.xml.serializer.XmlSerializer;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

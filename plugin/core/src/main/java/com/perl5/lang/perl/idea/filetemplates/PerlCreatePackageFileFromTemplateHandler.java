@@ -16,13 +16,12 @@
 
 package com.perl5.lang.perl.idea.filetemplates;
 
-import com.intellij.ide.fileTemplates.FileTemplate;
 import com.perl5.lang.perl.fileTypes.PerlFileTypePackage;
 import com.perl5.lang.perl.util.PerlPackageUtil;
+import consulo.fileTemplate.FileTemplate;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
-
 
 public class PerlCreatePackageFileFromTemplateHandler extends PerlCreateFileFromTemplateHandler {
   @Override

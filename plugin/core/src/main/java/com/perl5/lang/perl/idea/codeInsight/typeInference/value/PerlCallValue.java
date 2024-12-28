@@ -25,12 +25,14 @@ import com.perl5.lang.perl.psi.references.PerlImplicitDeclarationsService;
 import com.perl5.lang.perl.psi.utils.PerlContextType;
 import com.perl5.lang.perl.util.PerlPackageUtil;
 import consulo.application.util.RecursionManager;
+import consulo.application.util.function.Processor;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiNamedElement;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.Contract;
@@ -338,6 +340,6 @@ public abstract class PerlCallValue extends PerlParametrizedOperationValue {
 
   @Contract("null->null")
   public static @Nullable PerlCallValue from(@Nullable PsiElement element) {
-    return ObjectUtils.tryCast(PerlValuesManager.from(element), PerlCallValue.class);
+    return ObjectUtil.tryCast(PerlValuesManager.from(element), PerlCallValue.class);
   }
 }

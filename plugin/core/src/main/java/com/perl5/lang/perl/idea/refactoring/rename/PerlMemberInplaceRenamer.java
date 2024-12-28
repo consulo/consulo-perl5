@@ -16,18 +16,18 @@
 
 package com.perl5.lang.perl.idea.refactoring.rename;
 
-import com.intellij.codeInsight.TargetElementUtil;
-import com.intellij.lang.injection.InjectedLanguageManager;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.*;
-import com.intellij.psi.search.SearchScope;
-import com.intellij.psi.search.searches.ReferencesSearch;
-import com.intellij.refactoring.rename.inplace.MemberInplaceRenamer;
 import com.perl5.lang.perl.parser.PerlIdentifierRangeProvider;
 import com.perl5.lang.perl.psi.PerlSubElement;
 import com.perl5.lang.perl.psi.light.PerlDelegatingLightNamedElement;
+import consulo.codeEditor.Editor;
+import consulo.content.scope.SearchScope;
+import consulo.document.util.TextRange;
+import consulo.language.editor.TargetElementUtil;
+import consulo.language.editor.refactoring.rename.inplace.MemberInplaceRenamer;
+import consulo.language.inject.InjectedLanguageManager;
+import consulo.language.psi.*;
+import consulo.language.psi.search.ReferencesSearch;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

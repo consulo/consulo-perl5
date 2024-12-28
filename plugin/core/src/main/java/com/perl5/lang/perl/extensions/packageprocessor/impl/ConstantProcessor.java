@@ -16,7 +16,6 @@
 
 package com.perl5.lang.perl.extensions.packageprocessor.impl;
 
-import com.intellij.psi.ElementManipulators;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.extensions.packageprocessor.PerlPragmaProcessorBase;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlValuesManager;
@@ -32,6 +31,7 @@ import com.perl5.lang.perl.psi.stubs.subsdefinitions.PerlSubDefinitionStub;
 import com.perl5.lang.perl.psi.utils.PerlSubAnnotations;
 import com.perl5.lang.perl.util.PerlHashUtil;
 import com.perl5.lang.perl.util.PerlPackageUtil;
+import consulo.language.psi.ElementManipulators;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

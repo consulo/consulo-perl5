@@ -16,8 +16,7 @@
 
 package com.perl5.lang.perl.idea.run.debugger;
 
-import com.intellij.execution.ExecutionException;
-
+import consulo.process.ExecutionException;
 
 public interface PerlDebugOptions {
   String ROLE_SERVER = "server";

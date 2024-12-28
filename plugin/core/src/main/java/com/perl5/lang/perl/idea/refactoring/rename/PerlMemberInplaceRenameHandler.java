@@ -16,18 +16,17 @@
 
 package com.perl5.lang.perl.idea.refactoring.rename;
 
-import com.intellij.codeInsight.lookup.LookupManager;
-import com.intellij.lang.LanguageRefactoringSupport;
-import com.intellij.lang.refactoring.RefactoringSupportProvider;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiNameIdentifierOwner;
-import com.intellij.psi.PsiNamedElement;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.refactoring.rename.inplace.MemberInplaceRenameHandler;
-import com.intellij.refactoring.rename.inplace.MemberInplaceRenamer;
 import com.perl5.lang.perl.idea.refactoring.PerlRefactoringSupportProvider;
+import consulo.codeEditor.Editor;
+import consulo.language.editor.completion.lookup.LookupManager;
+import consulo.language.editor.refactoring.RefactoringSupportProvider;
+import consulo.language.editor.refactoring.rename.inplace.MemberInplaceRenameHandler;
+import consulo.language.editor.refactoring.rename.inplace.MemberInplaceRenamer;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiNameIdentifierOwner;
+import consulo.language.psi.PsiNamedElement;
+import consulo.language.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 
 

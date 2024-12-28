@@ -16,10 +16,6 @@
 
 package com.perl5.lang.perl.extensions.packageprocessor.impl;
 
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.ElementManipulators;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.stubs.IStubElementType;
 import com.perl5.lang.perl.extensions.packageprocessor.PerlPackageProcessorBase;
 import com.perl5.lang.perl.parser.Exception.Class.psi.light.PerlLightExceptionClassDefinition;
 import com.perl5.lang.perl.psi.PsiPerlAnonArray;
@@ -36,6 +32,10 @@ import com.perl5.lang.perl.psi.utils.PerlNamespaceAnnotations;
 import com.perl5.lang.perl.psi.utils.PerlSubAnnotations;
 import com.perl5.lang.perl.psi.utils.PerlSubArgument;
 import com.perl5.lang.perl.util.*;
+import consulo.language.psi.ElementManipulators;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.stub.IStubElementType;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;

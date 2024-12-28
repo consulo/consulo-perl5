@@ -16,8 +16,6 @@
 
 package com.perl5.lang.pod.parser.psi.mixin;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
 import com.perl5.lang.pod.parser.psi.PodRenderingContext;
 import com.perl5.lang.pod.parser.psi.PodSectionFormatted;
 import com.perl5.lang.pod.psi.PsiPodSectionFormat;

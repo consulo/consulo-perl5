@@ -54,7 +54,7 @@ public abstract class PerlBracedBlockElementType extends PerlReparseableElementT
   protected abstract boolean isLexerStateOk(int lexerState);
 
   /**
-   * Improved copy of {@link PsiBuilderUtil#hasProperBraceBalance(CharSequence, com.intellij.lexer.Lexer, IElementType, IElementType)}
+   * Improved copy of {@link PsiBuilderUtil#hasProperBraceBalance(CharSequence, Lexer, IElementType, IElementType)}
    * Checks that all perl braces within range are balanced and properly nested
    */
   private static boolean hasProperBraceBalance(@NotNull CharSequence text,

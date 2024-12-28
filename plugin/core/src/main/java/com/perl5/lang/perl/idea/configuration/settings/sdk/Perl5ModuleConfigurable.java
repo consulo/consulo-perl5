@@ -16,10 +16,9 @@
 
 package com.perl5.lang.perl.idea.configuration.settings.sdk;
 
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.options.UnnamedConfigurable;
-import com.intellij.openapi.util.Disposer;
+import consulo.configurable.UnnamedConfigurable;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

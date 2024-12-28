@@ -26,7 +26,15 @@ import com.perl5.lang.perl.parser.elementTypes.PsiElementProvider;
 import com.perl5.lang.perl.psi.PerlLexerAwareParserDefinition;
 import com.perl5.lang.perl.psi.impl.PerlFileImpl;
 import com.perl5.lang.perl.psi.stubs.PerlStubElementTypes;
-import consulo.language.ast.TokenSet;
+import consulo.language.ast.*;
+import consulo.language.file.FileViewProvider;
+import consulo.language.lexer.Lexer;
+import consulo.language.parser.ParserDefinition;
+import consulo.language.parser.PsiParser;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.version.LanguageVersion;
+import consulo.project.Project;
 import org.jetbrains.annotations.NotNull;
 
 import static com.perl5.lang.perl.lexer.PerlLexer.*;
@@ -65,27 +73,27 @@ public class PerlParserDefinition implements ParserDefinition, PerlElementTypes,
     TokenSet.create(SUB_NAME, QUALIFYING_PACKAGE, PACKAGE, IDENTIFIER));
 
   @Override
-  public @NotNull Lexer createLexer(Project project) {
+  public @NotNull Lexer createLexer(LanguageVersion languageVersion) {
     return new PerlMergingLexerAdapter(PerlLexingContext.create(project));
   }
 
   @Override
-  public @NotNull TokenSet getWhitespaceTokens() {
+  public @NotNull TokenSet getWhitespaceTokens(LanguageVersion languageVersion) {
     return WHITE_SPACES;
   }
 
   @Override
-  public @NotNull TokenSet getCommentTokens() {
+  public @NotNull TokenSet getCommentTokens(LanguageVersion languageVersion) {
     return COMMENTS;
   }
 
   @Override
-  public @NotNull TokenSet getStringLiteralElements() {
+  public @NotNull TokenSet getStringLiteralElements(LanguageVersion languageVersion) {
     return LITERALS;
   }
 
   @Override
-  public @NotNull PsiParser createParser(final Project project) {
+  public @NotNull PsiParser createParser(LanguageVersion languageVersion) {
     return PerlParserImpl.INSTANCE;
   }
 

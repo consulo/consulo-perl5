@@ -16,14 +16,14 @@
 
 package com.perl5.lang.pod.parser.psi;
 
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiFile;
 import com.perl5.lang.pod.parser.psi.mixin.PodFormatterL;
 import com.perl5.lang.pod.parser.psi.util.PodRenderUtil;
 import com.perl5.lang.pod.psi.PsiLinkName;
 import com.perl5.lang.pod.psi.PsiLinkSection;
 import com.perl5.lang.pod.psi.PsiLinkText;
 import com.perl5.lang.pod.psi.PsiLinkUrl;
+import consulo.language.psi.PsiFile;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

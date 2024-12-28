@@ -21,6 +21,7 @@ import com.perl5.lang.perl.parser.elementTypes.PsiElementProvider;
 import com.perl5.lang.perl.parser.moose.psi.PerlMooseAugmentStatement;
 import com.perl5.lang.perl.parser.moose.psi.impl.PerlMooseAugmentStatementImpl;
 import com.perl5.lang.perl.psi.stubs.PerlStubSerializationUtil;
+import consulo.language.Language;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.stub.*;

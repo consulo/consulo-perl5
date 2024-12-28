@@ -16,11 +16,11 @@
 
 package com.perl5.lang.perl.parser.perlswitch.idea.annotator;
 
-import com.intellij.lang.annotation.AnnotationHolder;
-import com.intellij.psi.PsiElement;
 import com.perl5.lang.perl.idea.annotators.PerlBaseAnnotator;
 import com.perl5.lang.perl.idea.highlighter.PerlSyntaxHighlighter;
 import com.perl5.lang.perl.parser.PerlSwitchParserExtensionImpl;
+import consulo.language.editor.annotation.AnnotationHolder;
+import consulo.language.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 
 

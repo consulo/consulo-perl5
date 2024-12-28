@@ -16,13 +16,13 @@
 
 package com.perl5.lang.perl.idea.editor.smartkeys;
 
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.ex.EditorEx;
-import com.intellij.openapi.editor.highlighter.HighlighterIterator;
-import com.intellij.psi.TokenType;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
 import com.perl5.lang.perl.PerlParserDefinition;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorEx;
+import consulo.codeEditor.HighlighterIterator;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
+import consulo.language.ast.TokenType;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -35,7 +35,7 @@ public class PerlEditorUtil {
    */
   public static @NotNull HighlighterIterator moveToPreviousMeaningfulToken(@NotNull HighlighterIterator iterator, boolean ignoreComments) {
     while (!iterator.atEnd()) {
-      IElementType tokenType = iterator.getTokenType();
+      IElementType tokenType = (IElementType)iterator.getTokenType();
       if (tokenType != TokenType.WHITE_SPACE && !(ignoreComments && PerlParserDefinition.COMMENTS.contains(tokenType))) {
         break;
       }
@@ -50,7 +50,7 @@ public class PerlEditorUtil {
   public static @NotNull HighlighterIterator moveToNextMeaningfulToken(@NotNull HighlighterIterator iterator, boolean ignoreComments) {
     iterator.advance();
     while (!iterator.atEnd()) {
-      IElementType tokenType = iterator.getTokenType();
+      IElementType tokenType = (IElementType)iterator.getTokenType();
       if (tokenType != TokenType.WHITE_SPACE && !(ignoreComments && PerlParserDefinition.COMMENTS.contains(tokenType))) {
         break;
       }
@@ -73,7 +73,7 @@ public class PerlEditorUtil {
 
   @Contract("null->null")
   public static @Nullable IElementType getTokenType(@Nullable HighlighterIterator iterator) {
-    return iterator == null || iterator.atEnd() ? null : iterator.getTokenType();
+    return iterator == null || iterator.atEnd() ? null : (IElementType)iterator.getTokenType();
   }
 
   public static int getTokenLength(@Nullable HighlighterIterator iterator) {
@@ -110,7 +110,7 @@ public class PerlEditorUtil {
     HighlighterIterator highlighterIterator = editor.getHighlighter().createIterator(0);
     int level = 0;
     while (!highlighterIterator.atEnd()) {
-      IElementType tokenType = highlighterIterator.getTokenType();
+      IElementType tokenType = (IElementType)highlighterIterator.getTokenType();
       if (tokenType == leftType) {
         level++;
       }

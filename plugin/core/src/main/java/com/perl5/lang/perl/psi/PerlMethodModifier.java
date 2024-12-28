@@ -16,11 +16,11 @@
 
 package com.perl5.lang.perl.psi;
 
-import com.intellij.navigation.NavigationItem;
 import com.perl5.lang.perl.psi.properties.PerlBlockOwner;
 import com.perl5.lang.perl.psi.properties.PerlDieScope;
 import com.perl5.lang.perl.psi.properties.PerlLabelScope;
 import com.perl5.lang.perl.psi.properties.PerlLexicalScope;
+import consulo.navigation.NavigationItem;
 import org.jetbrains.annotations.NotNull;
 
 /**

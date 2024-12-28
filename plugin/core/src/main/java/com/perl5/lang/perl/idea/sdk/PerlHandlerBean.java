@@ -16,9 +16,8 @@
 
 package com.perl5.lang.perl.idea.sdk;
 
-import com.intellij.openapi.components.ComponentManager;
-import com.intellij.openapi.extensions.PluginDescriptor;
-import com.intellij.util.KeyedLazyInstanceEP;
+import consulo.component.ComponentManager;
+import consulo.container.plugin.PluginDescriptor;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Constructor;
