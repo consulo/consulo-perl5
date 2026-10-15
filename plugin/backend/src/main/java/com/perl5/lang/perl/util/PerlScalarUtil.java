@@ -16,10 +16,10 @@
 
 package com.perl5.lang.perl.util;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.util.Processor;
-import com.intellij.util.SmartList;
+import consulo.project.Project;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.application.util.function.Processor;
+import consulo.util.collection.SmartList;
 import com.perl5.lang.perl.psi.PerlVariableDeclarationElement;
 import com.perl5.lang.perl.psi.references.PerlImplicitDeclarationsService;
 import org.jetbrains.annotations.NotNull;

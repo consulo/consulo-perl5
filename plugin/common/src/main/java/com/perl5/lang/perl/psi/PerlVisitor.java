@@ -181,7 +181,9 @@ public class PerlVisitor extends PsiPerlVisitor {
 
   @Override
   public void visitVariableDeclarationLexical(@NotNull PsiPerlVariableDeclarationLexical o) {
-    visitPerlVariableDeclarationExpr(o);
+    // TODO consulo: the Consulo grammar generator applies only the first matching implements() of Perl5.bnf, so the generated
+    //  PsiPerlVariableDeclarationLexical lacks PerlVariableDeclarationExpr (its mixin PerlVariableDeclarationExprMixin implements it)
+    visitPerlVariableDeclarationExpr((PerlVariableDeclarationExpr)o);
   }
 
   @Override

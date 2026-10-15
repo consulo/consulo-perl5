@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.debugger.protocol;
 
-import com.intellij.xdebugger.XDebugSession;
+import consulo.execution.debug.XDebugSession;
 import com.perl5.lang.perl.debugger.PerlDebugThread;
 
 

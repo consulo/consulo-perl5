@@ -16,11 +16,11 @@
 
 package com.perl5.lang.perl.psi.impl;
 
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.impl.light.LightElement;
+import consulo.navigation.ItemPresentation;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
+import consulo.language.impl.psi.LightElement;
 import com.perl5.lang.perl.PerlLanguage;
 import com.perl5.lang.perl.idea.presentations.PerlItemPresentationSimple;
 import org.jetbrains.annotations.NotNull;

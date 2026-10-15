@@ -16,10 +16,10 @@
 
 package com.perl5.lang.mojolicious.psi.impl;
 
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.util.ObjectUtils;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.file.FileViewProvider;
+import consulo.util.lang.ObjectUtil;
 import com.perl5.lang.mojolicious.MojoliciousLanguage;
 import com.perl5.lang.mojolicious.filetypes.MojoliciousFileType;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlScalarValue;
@@ -32,10 +32,10 @@ import com.perl5.lang.perl.util.PerlScalarUtilCore;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.HexFormat;
 import java.util.List;
 
 
@@ -51,12 +51,13 @@ public class MojoliciousFileImpl extends PerlFileImpl implements MojoliciousFile
     if (canonicalPath != null) {
       try {
         namespaceName = MOJO_SANDBOX_NS_PREFIX + PerlPackageUtilCore.NAMESPACE_SEPARATOR +
-                        new HexBinaryAdapter().marshal(MessageDigest.getInstance("MD5").digest(canonicalPath.getBytes()));
+                        // consulo: javax.xml.bind is not available, HexFormat produces the same upper case hex as HexBinaryAdapter
+                        HexFormat.of().withUpperCase().formatHex(MessageDigest.getInstance("MD5").digest(canonicalPath.getBytes()));
       }
       catch (NoSuchAlgorithmException ignore) {
       }
     }
-    myNamespaceName = ObjectUtils.notNull(namespaceName, MOJO_SANDBOX_NS_PREFIX);
+    myNamespaceName = ObjectUtil.notNull(namespaceName, MOJO_SANDBOX_NS_PREFIX);
   }
 
   @Override

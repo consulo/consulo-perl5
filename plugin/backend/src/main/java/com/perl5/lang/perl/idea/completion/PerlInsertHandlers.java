@@ -16,13 +16,14 @@
 
 package com.perl5.lang.perl.idea.completion;
 
-import com.intellij.codeInsight.completion.InsertHandler;
-import com.intellij.codeInsight.completion.InsertionContext;
-import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.openapi.editor.CaretModel;
-import com.intellij.openapi.editor.EditorModificationUtilEx;
-import com.intellij.openapi.editor.ex.EditorEx;
-import com.intellij.openapi.editor.highlighter.HighlighterIterator;
+import consulo.language.editor.completion.lookup.InsertHandler;
+import consulo.language.editor.completion.lookup.InsertionContext;
+import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.codeEditor.CaretModel;
+import consulo.codeEditor.util.EditorModificationUtil;
+import consulo.codeEditor.EditorEx;
+import consulo.codeEditor.HighlighterIterator;
+import consulo.language.ast.IElementType;
 import com.perl5.lang.perl.lexer.PerlTokenSets;
 import org.jetbrains.annotations.NotNull;
 
@@ -38,7 +39,7 @@ public class PerlInsertHandlers {
     @Override
     public void handleInsert(final @NotNull InsertionContext context, @NotNull LookupElement item) {
       adjustCaretForBracedVariableName(context);
-      EditorModificationUtilEx.insertStringAtCaret(context.getEditor(), "[]", false, true, 1);
+      EditorModificationUtil.insertStringAtCaret(context.getEditor(), "[]", false, true, 1);
     }
   }
 
@@ -50,7 +51,7 @@ public class PerlInsertHandlers {
     CaretModel caretModel = editor.getCaretModel();
     int offset = caretModel.getOffset();
     HighlighterIterator iterator = editor.getHighlighter().createIterator(offset);
-    if (!iterator.atEnd() && PerlTokenSets.VARIABLE_CLOSE_BRACES.contains(iterator.getTokenType())) {
+    if (!iterator.atEnd() && PerlTokenSets.VARIABLE_CLOSE_BRACES.contains((IElementType)iterator.getTokenType())) {
       caretModel.moveToOffset(offset + 1);
     }
   }
@@ -62,7 +63,7 @@ public class PerlInsertHandlers {
     @Override
     public void handleInsert(final @NotNull InsertionContext context, @NotNull LookupElement item) {
       adjustCaretForBracedVariableName(context);
-      EditorModificationUtilEx.insertStringAtCaret(context.getEditor(), "{}", false, true, 1);
+      EditorModificationUtil.insertStringAtCaret(context.getEditor(), "{}", false, true, 1);
     }
   }
 }

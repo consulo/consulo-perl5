@@ -16,8 +16,8 @@
 
 package com.perl5.lang.mason2.psi.impl;
 
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.psi.FileViewProvider;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.language.file.FileViewProvider;
 import com.perl5.lang.mason2.Mason2TemplatingLanguage;
 import com.perl5.lang.mason2.filetypes.MasonTopLevelComponentFileType;
 import org.jetbrains.annotations.NotNull;

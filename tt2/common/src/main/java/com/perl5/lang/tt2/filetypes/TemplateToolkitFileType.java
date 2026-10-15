@@ -16,9 +16,9 @@
 
 package com.perl5.lang.tt2.filetypes;
 
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.ex.FileTypeIdentifiableByVirtualFile;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.fileType.FileTypeIdentifiableByVirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.perl5.lang.perl.fileTypes.PerlFileTypeService;
 import com.perl5.lang.perl.fileTypes.PerlPluginBaseFileType;
 import com.perl5.lang.tt2.TemplateToolkitBundle;
@@ -27,7 +27,8 @@ import com.perl5.lang.tt2.TemplateToolkitLanguage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
+import consulo.localize.LocalizeValue;
+import consulo.ui.image.Image;
 
 
 public class TemplateToolkitFileType extends PerlPluginBaseFileType implements FileTypeIdentifiableByVirtualFile {
@@ -38,13 +39,13 @@ public class TemplateToolkitFileType extends PerlPluginBaseFileType implements F
   }
 
   @Override
-  public @NotNull String getName() {
+  public @NotNull String getId() {
     return "Template Toolkit";
   }
 
   @Override
-  public @NotNull String getDescription() {
-    return TemplateToolkitBundle.message("label.template.toolkit.template");
+  public @NotNull LocalizeValue getDescription() {
+    return LocalizeValue.localizeTODO(TemplateToolkitBundle.message("label.template.toolkit.template"));
   }
 
   @Override
@@ -53,7 +54,7 @@ public class TemplateToolkitFileType extends PerlPluginBaseFileType implements F
   }
 
   @Override
-  public @Nullable Icon getIcon() {
+  public @Nullable Image getIcon() {
     return TemplateToolkitIcons.TTK2_ICON;
   }
 

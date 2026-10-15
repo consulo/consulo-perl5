@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.parser.Exception.Class.ide.refactoring;
 
-import com.intellij.openapi.util.Condition;
-import com.intellij.psi.PsiElement;
+import consulo.util.lang.function.Condition;
+import consulo.language.psi.PsiElement;
 import com.perl5.lang.perl.extensions.packageprocessor.PerlPackageProcessor;
 import com.perl5.lang.perl.extensions.packageprocessor.impl.ExceptionClassProcessor;
 import com.perl5.lang.perl.psi.impl.PerlImplicitElement;

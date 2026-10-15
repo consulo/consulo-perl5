@@ -16,12 +16,12 @@
 
 package com.perl5.lang.perl.profiler.run;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.process.ExecutionException;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.container.boot.ContainerPathManager;
+import consulo.content.bundle.Sdk;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.StringUtil;
 import com.perl5.lang.perl.idea.project.PerlProjectManager;
 import com.perl5.lang.perl.idea.run.GenericPerlRunConfiguration;
 import com.perl5.lang.perl.idea.run.PerlRunProfileState;
@@ -54,7 +54,7 @@ public class PerlProfilerRunProfileState extends PerlRunProfileState {
   public final @NotNull Path getProfilingResultsPath() {
     var project = getEnvironment().getProject();
     var perlSdk = PerlProjectManager.getSdk(project);
-    return Paths.get(PathManager.getSystemPath(),
+    return Paths.get(ContainerPathManager.get().getSystemPath(),
                      "profiling",
                      FileUtil.sanitizeFileName(
                        String.join("_", project.getName(),

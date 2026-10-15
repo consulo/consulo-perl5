@@ -16,16 +16,16 @@
 
 package com.perl5.lang.perl.idea.sdk.host;
 
-import com.intellij.openapi.vfs.DeprecatedVirtualFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
+import consulo.virtualFileSystem.BaseVirtualFileSystem;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.file.Path;
 import java.util.Objects;
 
-public class PerlHostVirtualFileSystem extends DeprecatedVirtualFileSystem {
+public class PerlHostVirtualFileSystem extends BaseVirtualFileSystem {
   private static final String PROTOCOL = "perlhost";
 
   private @Nullable PerlPluggableVirtualFileSystem myDelegate;

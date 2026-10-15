@@ -16,8 +16,8 @@
 
 package com.perl5.lang.mason2.idea.generation;
 
-import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.PsiElement;
+import consulo.codeEditor.Editor;
+import consulo.language.psi.PsiElement;
 import com.perl5.lang.mason2.Mason2TemplatingLanguage;
 import com.perl5.lang.perl.extensions.generation.PerlCodeGeneratorImpl;
 

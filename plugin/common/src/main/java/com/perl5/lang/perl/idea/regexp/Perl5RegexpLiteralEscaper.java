@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.idea.regexp;
 
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.LiteralTextEscaper;
+import consulo.document.util.TextRange;
+import consulo.language.psi.LiteralTextEscaper;
 import com.perl5.lang.perl.psi.mixins.Perl5RegexpMixin;
 import org.jetbrains.annotations.NotNull;
 

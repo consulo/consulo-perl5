@@ -16,17 +16,17 @@
 
 package com.perl5.lang.tt2.idea.highlighting;
 
-import com.intellij.lexer.Lexer;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
-import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
+import consulo.language.lexer.Lexer;
+import consulo.colorScheme.TextAttributesKey;
+import consulo.language.editor.highlight.SyntaxHighlighterBase;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
 import com.perl5.lang.perl.idea.highlighter.PerlSyntaxHighlighter;
+import com.perl5.lang.tt2.idea.settings.TemplateToolkitSettings;
 import com.perl5.lang.tt2.lexer.TemplateToolkitLexerAdapter;
 import org.jetbrains.annotations.NotNull;
 
-import static com.intellij.openapi.editor.colors.TextAttributesKey.createTextAttributesKey;
+import static consulo.colorScheme.TextAttributesKey.createTextAttributesKey;
 import static com.perl5.lang.tt2.parser.TemplateToolkitElementTypesGenerated.*;
 
 
@@ -45,20 +45,23 @@ public class TemplateToolkitSyntaxHighlighter extends SyntaxHighlighterBase {
   private static final TextAttributesKey[] TT2_NUMBER_KEYS = new TextAttributesKey[]{TT2_NUMBER_KEY};
   private static final TextAttributesKey[] TT2_MARKER_KEYS = new TextAttributesKey[]{TT2_MARKER_KEY};
   private static final TextAttributesKey[] TT2_COMMENT_KEYS = new TextAttributesKey[]{TT2_COMMENT_KEY};
-  private final Project myProject;
+  private final TemplateToolkitSettings mySettings;
   private final TokenSet myMarkers = TokenSet.create(
     TT2_OPEN_TAG,
     TT2_CLOSE_TAG,
     TT2_OUTLINE_TAG
   );
 
-  public TemplateToolkitSyntaxHighlighter(Project project) {
-    myProject = project;
+  /**
+   * consulo: upstream takes the project to read its settings, here the settings of the module of the highlighted file are passed
+   */
+  public TemplateToolkitSyntaxHighlighter(TemplateToolkitSettings settings) {
+    mySettings = settings;
   }
 
   @Override
   public @NotNull Lexer getHighlightingLexer() {
-    return new TemplateToolkitHighlightingLexer(new TemplateToolkitLexerAdapter(myProject));
+    return new TemplateToolkitHighlightingLexer(new TemplateToolkitLexerAdapter(mySettings));
   }
 
   @Override

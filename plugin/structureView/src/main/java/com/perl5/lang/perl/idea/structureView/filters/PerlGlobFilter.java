@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.idea.structureView.filters;
 
-import com.intellij.ide.util.treeView.smartTree.ActionPresentation;
-import com.intellij.ide.util.treeView.smartTree.ActionPresentationData;
+import consulo.fileEditor.structureView.tree.ActionPresentation;
+import consulo.fileEditor.structureView.tree.ActionPresentationData;
 import com.perl5.PerlBundle;
 import com.perl5.PerlIcons;
 import com.perl5.lang.perl.idea.structureView.elements.PerlGlobStructureViewElement;

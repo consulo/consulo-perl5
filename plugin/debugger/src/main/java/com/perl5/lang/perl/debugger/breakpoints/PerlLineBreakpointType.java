@@ -16,11 +16,12 @@
 
 package com.perl5.lang.perl.debugger.breakpoints;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
-import com.intellij.xdebugger.breakpoints.XLineBreakpointType;
-import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.execution.debug.breakpoint.XLineBreakpoint;
+import consulo.execution.debug.breakpoint.XLineBreakpointType;
+import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
 import com.perl5.lang.perl.debugger.PerlDebuggerBundle;
 import com.perl5.lang.perl.debugger.PerlDebuggerEditorsProvider;
 import com.perl5.lang.perl.fileTypes.PerlFileType;
@@ -28,6 +29,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
+// consulo: upstream <xdebugger.breakpointType> registration in perl5.plugin.debugger.main.xml
+@ExtensionImpl
 public class PerlLineBreakpointType extends XLineBreakpointType<PerlLineBreakpointProperties> {
   public PerlLineBreakpointType() {
     super("perl_line_breakpoint", PerlDebuggerBundle.message("perl.line.breakpoint"));
@@ -38,7 +41,8 @@ public class PerlLineBreakpointType extends XLineBreakpointType<PerlLineBreakpoi
     return new PerlLineBreakpointProperties();
   }
 
-  @Override
+  // consulo: Consulo XLineBreakpointType has no canPutAt, breakpoints are placed by file type keyed
+  // XLineBreakpointTypeResolver implementations (PerlLineBreakpointTypeResolverBase), which delegate here
   public boolean canPutAt(@NotNull VirtualFile file, int line, @NotNull Project project) {
     // fixme add method to disable in templating
     return file.getFileType() instanceof PerlFileType;

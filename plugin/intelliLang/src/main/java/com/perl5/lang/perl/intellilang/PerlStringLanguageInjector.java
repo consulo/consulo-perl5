@@ -16,22 +16,22 @@
 
 package com.perl5.lang.perl.intellilang;
 
-import com.intellij.codeInsight.completion.CompletionUtil;
-import com.intellij.lang.Language;
-import com.intellij.lang.injection.MultiHostRegistrar;
-import com.intellij.openapi.util.RecursionManager;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.registry.Registry;
-import com.intellij.psi.ElementManipulators;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiLanguageInjectionHost;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.search.LocalSearchScope;
-import com.intellij.psi.search.searches.ReferencesSearch;
-import com.intellij.psi.util.CachedValueProvider;
-import com.intellij.psi.util.CachedValuesManager;
-import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.util.Query;
+import consulo.language.editor.completion.CompletionUtilCore;
+import consulo.language.Language;
+import consulo.language.inject.MultiHostRegistrar;
+import consulo.application.util.RecursionManager;
+import consulo.document.util.TextRange;
+import consulo.application.util.registry.Registry;
+import consulo.language.psi.ElementManipulators;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiLanguageInjectionHost;
+import consulo.language.psi.PsiReference;
+import consulo.language.psi.scope.LocalSearchScope;
+import consulo.language.psi.search.ReferencesSearch;
+import consulo.application.util.CachedValueProvider;
+import consulo.language.psi.util.LanguageCachedValueUtil;
+import consulo.language.psi.PsiUtilCore;
+import consulo.application.util.query.Query;
 import com.perl5.lang.perl.PerlLanguage;
 import com.perl5.lang.perl.idea.intellilang.PerlInjectionMarkersService;
 import com.perl5.lang.perl.psi.*;
@@ -41,7 +41,6 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -50,7 +49,7 @@ import static com.perl5.lang.perl.parser.PerlElementTypesGenerated.OPERATOR_ASSI
 
 public class PerlStringLanguageInjector extends PerlLiteralLanguageInjector {
   @Override
-  public void getLanguagesToInject(@NotNull MultiHostRegistrar registrar, @NotNull PsiElement host) {
+  public void injectLanguages(@NotNull MultiHostRegistrar registrar, @NotNull PsiElement host) {
     if (!(host instanceof PerlStringMixin stringMixin) || !stringMixin.isValidHost() || PerlAnnotations.isInjectionSuppressed(host)) {
       return;
     }
@@ -78,13 +77,14 @@ public class PerlStringLanguageInjector extends PerlLiteralLanguageInjector {
     return context;
   }
 
+  // consulo: single element class instead of upstream elementsToInjectIn() list
   @Override
-  public @NotNull List<? extends Class<? extends PsiElement>> elementsToInjectIn() {
-    return Collections.singletonList(PerlStringMixin.class);
+  public @NotNull Class<? extends PsiElement> getElementClass() {
+    return PerlStringMixin.class;
   }
 
   public static @Nullable PsiElement getPerlInjectionContext(@NotNull PsiLanguageInjectionHost host) {
-    return CachedValuesManager.getCachedValue(
+    return LanguageCachedValueUtil.getCachedValue(
       host, () -> {
         var result = RecursionManager.doPreventingRecursion(host, false, () -> computeInjectionContext(host));
         return CachedValueProvider.Result.create(result, host.getContainingFile());
@@ -126,7 +126,7 @@ public class PerlStringLanguageInjector extends PerlLiteralLanguageInjector {
     else {
       return null;
     }
-    PsiElement realVariable = CompletionUtil.getOriginalOrSelf(variable);
+    PsiElement realVariable = CompletionUtilCore.getOriginalOrSelf(variable);
     Query<PsiReference> references =
       ReferencesSearch.search(realVariable, new LocalSearchScope(host.getContainingFile().getOriginalFile()));
     for (PsiReference reference : references) {

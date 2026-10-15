@@ -16,31 +16,32 @@
 
 package com.perl5.lang.perl.debugger.values;
 
-import com.intellij.xdebugger.frame.XCompositeNode;
-import com.intellij.xdebugger.frame.XValueChildrenList;
-import com.intellij.xdebugger.frame.XValueGroup;
+import consulo.execution.debug.frame.XCompositeNode;
+import consulo.execution.debug.frame.XValueChildrenList;
+import consulo.execution.debug.frame.XValueGroup;
+import consulo.localize.LocalizeValue;
+import consulo.ui.image.Image;
 import com.perl5.lang.perl.debugger.PerlStackFrame;
 import com.perl5.lang.perl.debugger.protocol.PerlValueDescriptor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
-
 
 public class PerlXValueGroup extends XValueGroup {
   private final @NotNull PerlStackFrame myStackFrame;
   private final String myComment;
-  private final Icon myIcon;
+  private final Image myIcon;
   private final PerlValueDescriptor[] myVariables;
   private final boolean myIsAutoExpand;
 
   public PerlXValueGroup(@NotNull String name,
                          String comment,
-                         Icon icon,
+                         Image icon,
                          PerlValueDescriptor[] variables,
                          @NotNull PerlStackFrame stackFrame,
                          boolean isAutoExpand) {
-    super(name);
+    // consulo: Consulo XValueGroup name is a LocalizeValue
+    super(LocalizeValue.of(name));
     myComment = comment;
     myIcon = icon;
     myVariables = variables;
@@ -69,7 +70,7 @@ public class PerlXValueGroup extends XValueGroup {
   }
 
   @Override
-  public @Nullable Icon getIcon() {
+  public @Nullable Image getIcon() {
     return myIcon;
   }
 
@@ -92,7 +93,7 @@ public class PerlXValueGroup extends XValueGroup {
   }
 
   @Override
-  public @NotNull String getName() {
-    return super.getName() + "(" + getSize() + ")";
+  public @NotNull LocalizeValue getName() {
+    return super.getName().map(name -> name + "(" + getSize() + ")");
   }
 }

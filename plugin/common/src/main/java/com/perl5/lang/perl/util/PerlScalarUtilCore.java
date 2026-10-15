@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.util;
 
-import com.intellij.psi.ElementManipulators;
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.ElementManipulators;
+import consulo.language.psi.PsiElement;
 import com.perl5.lang.perl.psi.PerlString;
 import com.perl5.lang.perl.psi.PerlStringContentElement;
 import org.jetbrains.annotations.Nullable;

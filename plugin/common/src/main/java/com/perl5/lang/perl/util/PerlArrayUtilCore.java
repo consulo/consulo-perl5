@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.util;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.impl.source.tree.CompositeElement;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.psi.PsiElement;
+import consulo.language.impl.ast.CompositeElement;
+import consulo.language.psi.PsiUtilCore;
 import com.perl5.lang.perl.lexer.PerlTokenSetsEx;
 import com.perl5.lang.perl.psi.PerlStringList;
 import com.perl5.lang.perl.psi.PsiPerlCommaSequenceExpr;

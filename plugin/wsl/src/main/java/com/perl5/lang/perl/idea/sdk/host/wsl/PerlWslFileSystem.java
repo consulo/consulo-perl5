@@ -16,12 +16,12 @@
 
 package com.perl5.lang.perl.idea.sdk.host.wsl;
 
-import com.intellij.execution.wsl.WSLDistribution;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.execution.wsl.WSLDistribution;
+import consulo.util.io.FileUtil;
+import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.util.collection.ContainerUtil;
 import com.perl5.lang.perl.idea.sdk.host.PerlPluggableVirtualFileSystem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -51,7 +51,7 @@ class PerlWslFileSystem extends PerlPluggableVirtualFileSystem {
   @Override
   public @Nullable VirtualFile findFileByPath(@NotNull String path) {
     String windowsPath = computeSafeOnWsl(() -> myDistribution.getWindowsPath(path));
-    VirtualFile realFile = windowsPath == null ? null : VfsUtil.findFileByIoFile(new File(windowsPath), false);
+    VirtualFile realFile = windowsPath == null ? null : VirtualFileUtil.findFileByIoFile(new File(windowsPath), false);
     return realFile == null ? null : new WslVirtualFile(realFile, path);
   }
 
@@ -61,7 +61,7 @@ class PerlWslFileSystem extends PerlPluggableVirtualFileSystem {
     if (windowsPath == null) {
       return;
     }
-    VirtualFile rootFile = VfsUtil.findFileByIoFile(new File(Objects.requireNonNull(windowsPath)), false);
+    VirtualFile rootFile = VirtualFileUtil.findFileByIoFile(new File(Objects.requireNonNull(windowsPath)), false);
     if (rootFile != null) {
       rootFile.refresh(asynchronous, true);
     }

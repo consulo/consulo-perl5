@@ -16,10 +16,10 @@
 
 package com.perl5.lang.perl.idea.filetemplates;
 
-import com.intellij.ide.fileTemplates.DefaultTemplatePropertiesProvider;
-import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiDirectory;
+import consulo.fileTemplate.DefaultTemplatePropertiesProvider;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.psi.PsiDirectory;
 import com.perl5.lang.perl.util.PerlPackageUtil;
 import com.perl5.lang.perl.util.PerlPackageUtilCore;
 import org.jetbrains.annotations.NotNull;
@@ -34,7 +34,7 @@ public class PerlFilePropertiesProvider implements DefaultTemplatePropertiesProv
     VirtualFile newInnermostRoot = PerlPackageUtil.getClosestIncRoot(directory.getProject(), directoryFile);
 
     if (newInnermostRoot != null) {
-      String newRelativePath = VfsUtilCore.getRelativePath(directoryFile, newInnermostRoot);
+      String newRelativePath = VirtualFileUtil.getRelativePath(directoryFile, newInnermostRoot);
       props.put("PERL_PACKAGE_PREFIX",
                 newRelativePath == null || newRelativePath.isEmpty() ? "" : PerlPackageUtilCore.getPackageNameByPath(newRelativePath));
     }

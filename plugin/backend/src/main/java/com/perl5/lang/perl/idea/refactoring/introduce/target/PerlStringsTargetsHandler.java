@@ -16,12 +16,12 @@
 
 package com.perl5.lang.perl.idea.refactoring.introduce.target;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.ElementManipulators;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.logging.Logger;
+import consulo.document.util.TextRange;
+import consulo.language.psi.ElementManipulators;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiUtilCore;
+import consulo.util.collection.ContainerUtil;
 import com.perl5.lang.perl.idea.refactoring.introduce.PerlIntroduceTarget;
 import com.perl5.lang.perl.psi.*;
 import com.perl5.lang.perl.psi.impl.PsiPerlStringBareImpl;

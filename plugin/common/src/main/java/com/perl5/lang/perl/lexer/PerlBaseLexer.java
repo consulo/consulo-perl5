@@ -16,15 +16,15 @@
 
 package com.perl5.lang.perl.lexer;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.AtomicNotNullLazyValue;
-import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.Trinity;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.TokenType;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.application.util.AtomicNotNullLazyValue;
+import consulo.util.lang.Pair;
+import consulo.util.lang.Trinity;
+import consulo.util.lang.StringUtil;
+import consulo.language.ast.TokenType;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
 import com.perl5.lang.perl.extensions.parser.PerlParserExtension;
 import com.perl5.lang.perl.idea.configuration.settings.PerlSharedSettings;
 import com.perl5.lang.perl.idea.project.PerlNamesCache;
@@ -77,8 +77,9 @@ public abstract class PerlBaseLexer extends PerlProtoLexer {
   protected static final String SUB_SIGNATURE = "Sub.Signature";
 
   private static final AtomicNotNullLazyValue<Boolean> ourListenersInitializer = AtomicNotNullLazyValue.createValue(()->{
+    // TODO consulo: no extension point change listeners (no dynamic plugins); upstream refreshes extensions on parserExtension EP changes
     //noinspection deprecation
-    PerlParserExtension.EP_NAME.addChangeListener(PerlBaseLexer::refreshExtensions, PerlPluginUtil.getUnloadAwareDisposable());
+    //PerlParserExtension.EP_NAME.addChangeListener(PerlBaseLexer::refreshExtensions, PerlPluginUtil.getUnloadAwareDisposable());
     refreshExtensions();
     return true;
   });

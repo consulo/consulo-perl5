@@ -16,11 +16,11 @@
 
 package com.perl5.lang.perl.parser.trycatch;
 
-import com.intellij.patterns.PsiElementPattern;
-import com.intellij.psi.PsiElement;
+import consulo.language.pattern.PsiElementPattern;
+import consulo.language.psi.PsiElement;
 import com.perl5.lang.perl.psi.PsiPerlStatement;
 
-import static com.intellij.patterns.PlatformPatterns.psiElement;
+import static consulo.language.pattern.PlatformPatterns.psiElement;
 import static com.perl5.lang.perl.idea.PerlElementPatterns.WHITE_SPACE_AND_COMMENTS;
 import static com.perl5.lang.perl.parser.PerlElementTypesGenerated.*;
 

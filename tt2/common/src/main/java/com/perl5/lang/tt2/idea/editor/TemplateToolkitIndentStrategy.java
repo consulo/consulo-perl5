@@ -16,8 +16,10 @@
 
 package com.perl5.lang.tt2.idea.editor;
 
-import com.intellij.openapi.editor.IndentStrategy;
-import com.intellij.psi.PsiElement;
+import com.perl5.lang.tt2.TemplateToolkitLanguage;
+import consulo.language.Language;
+import consulo.language.editor.IndentStrategy;
+import consulo.language.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 
 import static com.perl5.lang.tt2.parser.TemplateToolkitElementTypesGenerated.TT2_OUTLINE_TAG;
@@ -25,7 +27,13 @@ import static com.perl5.lang.tt2.parser.TemplateToolkitElementTypesGenerated.TT2
 
 public class TemplateToolkitIndentStrategy implements IndentStrategy {
   @Override
-  public boolean canIndent(int indentationStartOffset, int indentationEndOffset, @NotNull PsiElement element) {
+  public @NotNull Language getLanguage() {
+    return TemplateToolkitLanguage.INSTANCE;
+  }
+
+  // consulo: Consulo IndentStrategy has no indentationStartOffset/indentationEndOffset parameters (unused here)
+  @Override
+  public boolean canIndent(@NotNull PsiElement element) {
     return element.getNode().getElementType() != TT2_OUTLINE_TAG;
   }
 }

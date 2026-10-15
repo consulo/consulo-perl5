@@ -16,12 +16,14 @@
 
 package com.perl5.lang.htmlmason.idea.highlighter;
 
-import com.intellij.lexer.Lexer;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.tree.TokenSet;
+import consulo.language.lexer.Lexer;
+import consulo.project.Project;
+import consulo.language.ast.TokenSet;
+import com.perl5.lang.htmlmason.idea.configuration.HTMLMasonSettings;
 import com.perl5.lang.htmlmason.lexer.HTMLMasonLexerAdapter;
 import com.perl5.lang.perl.idea.highlighter.PerlSyntaxHighlighterEmbedded;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import static com.perl5.lang.htmlmason.elementType.HTMLMasonElementTypes.*;
 
@@ -51,8 +53,14 @@ public class HTMLMasonSyntaxHighlighter extends PerlSyntaxHighlighterEmbedded {
     HTML_MASON_ONCE_OPENER, HTML_MASON_ONCE_CLOSER
   );
 
-  public HTMLMasonSyntaxHighlighter(Project project) {
+  private final @Nullable HTMLMasonSettings mySettings;
+
+  /**
+   * @param settings consulo: settings of the module of the highlighted file (custom tags), upstream reads the project settings
+   */
+  public HTMLMasonSyntaxHighlighter(@Nullable Project project, @Nullable HTMLMasonSettings settings) {
     super(project);
+    mySettings = settings;
   }
 
   @Override
@@ -62,6 +70,6 @@ public class HTMLMasonSyntaxHighlighter extends PerlSyntaxHighlighterEmbedded {
 
   @Override
   public @NotNull Lexer getHighlightingLexer() {
-    return new HTMLMasonLexerAdapter(myProject, true);
+    return new HTMLMasonLexerAdapter(myProject, mySettings, true);
   }
 }

@@ -16,61 +16,74 @@
 
 package com.perl5.lang.htmlmason.idea.editor.notification;
 
-import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.NlsContexts.Label;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
-import com.intellij.ui.EditorNotificationPanel;
-import com.intellij.ui.EditorNotificationProvider;
+import consulo.fileEditor.FileEditor;
+import consulo.application.dumb.DumbAware;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.fileEditor.EditorNotificationBuilder;
+import consulo.localize.LocalizeValue;
+import jakarta.inject.Inject;
+import consulo.fileEditor.EditorNotificationProvider;
 import com.perl5.lang.htmlmason.HTMLMasonUtil;
 import com.perl5.lang.htmlmason.HtmlMasonBundle;
 import com.perl5.lang.htmlmason.filetypes.HTMLMasonFileType;
-import com.perl5.lang.htmlmason.idea.configuration.AbstractMasonSettings;
-import com.perl5.lang.htmlmason.idea.configuration.HTMLMasonSettings;
 import com.perl5.lang.htmlmason.parser.psi.impl.HTMLMasonFileImpl;
-import com.perl5.lang.perl.idea.configuration.settings.sdk.Perl5SettingsConfigurable;
-import com.perl5.lang.perl.idea.project.PerlProjectManager;
+import consulo.perl5.core.module.PerlModuleSettingsUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
-import java.util.function.Function;
+import java.util.function.Supplier;
 
 
+@ExtensionImpl
 public class HTMLMasonPathsNotification implements EditorNotificationProvider, DumbAware {
   private final Project myProject;
 
+  @Inject
   public HTMLMasonPathsNotification(Project myProject) {
     this.myProject = myProject;
   }
 
   @Override
-  public @Nullable Function<? super @NotNull FileEditor, ? extends @Nullable JComponent> collectNotificationData(@NotNull Project project,
-                                                                                                                 @NotNull VirtualFile file) {
+  public @NotNull String getId() {
+    return "html-mason-paths";
+  }
+
+  // consulo: IntelliJ collectNotificationData (panel factory) -> Consulo buildNotification (builder)
+  @RequiredReadAction
+  @Override
+  public @Nullable EditorNotificationBuilder buildNotification(@NotNull VirtualFile file,
+                                                               @NotNull FileEditor fileEditor,
+                                                               @NotNull Supplier<EditorNotificationBuilder> builderFactory) {
     if (file.getFileType() != HTMLMasonFileType.INSTANCE) {
       return null;
     }
 
-    AbstractMasonSettings settings = HTMLMasonSettings.getInstance(myProject);
-    if (PerlProjectManager.getInstance(settings.getProject()).getModulesRootsOfType(settings.getSourceRootType()).isEmpty()) {
-      return fileEditor -> createNotificationPanel(HtmlMasonBundle.message("link.label.html.mason.components.roots.are.not.configured"));
+    if (HTMLMasonUtil.getComponentRoots(myProject).isEmpty()) {
+      return createNotificationPanel(builderFactory.get(),
+                                     HtmlMasonBundle.message("link.label.html.mason.components.roots.are.not.configured"), file);
     }
     else {
       PsiFile psiFile = PsiManager.getInstance(myProject).findFile(file);
       if (psiFile instanceof HTMLMasonFileImpl htmlMasonFile && HTMLMasonUtil.getComponentRoot(htmlMasonFile) == null) {
-        return fileEditor -> createNotificationPanel(HtmlMasonBundle.message("link.label.component.not.under.one.configured.roots"));
+        return createNotificationPanel(builderFactory.get(), HtmlMasonBundle.message("link.label.component.not.under.one.configured.roots"),
+                                       file);
       }
     }
     return null;
   }
 
-  private @NotNull EditorNotificationPanel createNotificationPanel(@NotNull @Label String message) {
-    EditorNotificationPanel panel = new EditorNotificationPanel();
-    panel.setText(message);
-    panel.createActionLabel(HtmlMasonBundle.message("link.label.configure"), () -> Perl5SettingsConfigurable.open(myProject));
+  private @NotNull EditorNotificationBuilder createNotificationPanel(@NotNull EditorNotificationBuilder panel,
+                                                                     @NotNull String message,
+                                                                     @NotNull VirtualFile file) {
+    panel.withText(LocalizeValue.localizeTODO(message));
+    // consulo: components roots are content folders, configured in module settings (with the HTML::Mason module extension enabled)
+    panel.withAction(LocalizeValue.localizeTODO(HtmlMasonBundle.message("link.label.configure")),
+                     e -> PerlModuleSettingsUtil.openRootsSettings(myProject, file));
     return panel;
   }
 }

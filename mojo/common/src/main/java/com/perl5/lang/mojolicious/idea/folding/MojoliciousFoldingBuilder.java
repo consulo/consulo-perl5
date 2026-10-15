@@ -16,7 +16,7 @@
 
 package com.perl5.lang.mojolicious.idea.folding;
 
-import com.intellij.psi.tree.TokenSet;
+import consulo.language.ast.TokenSet;
 import com.perl5.lang.mojolicious.MojoliciousElementTypes;
 import com.perl5.lang.perl.idea.folding.PerlFoldingBuilder;
 import org.jetbrains.annotations.NotNull;

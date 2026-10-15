@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.psi;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.psi.PsiElement;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.PsiUtilCore;
 import com.perl5.lang.perl.lexer.PerlTokenSetsEx;
 import com.perl5.lang.perl.psi.properties.PerlLexicalScopeMember;
 import com.perl5.lang.perl.psi.properties.PerlNamespaceElementContainer;

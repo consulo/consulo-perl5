@@ -16,16 +16,16 @@
 
 package com.perl5.lang.perl.idea.structureView.groupers;
 
-import com.intellij.ide.util.treeView.AbstractTreeNode;
-import com.intellij.ide.util.treeView.smartTree.*;
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.navigation.PsiElementNavigationItem;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.SmartPointerManager;
-import com.intellij.psi.SmartPsiElementPointer;
-import com.intellij.util.containers.FactoryMap;
+import consulo.project.ui.view.tree.AbstractTreeNode;
+
+import consulo.navigation.ItemPresentation;
+import consulo.language.psi.PsiElementNavigationItem;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.SmartPointerManager;
+import consulo.language.psi.SmartPsiElementPointer;
+import consulo.util.collection.FactoryMap;
 import com.perl5.PerlBundle;
 import com.perl5.PerlIcons;
 import com.perl5.lang.perl.idea.structureView.elements.PerlStructureViewElement;
@@ -35,14 +35,21 @@ import com.perl5.lang.perl.psi.light.PerlLightMethodDefinitionElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
+import consulo.localize.LocalizeValue;
+import consulo.ui.image.Image;
 import java.util.*;
+import consulo.fileEditor.structureView.tree.ActionPresentation;
+import consulo.fileEditor.structureView.tree.Group;
+import consulo.ide.impl.idea.ide.util.treeView.smartTree.GroupWrapper;
+import consulo.fileEditor.structureView.tree.Grouper;
+import consulo.fileEditor.structureView.tree.TreeElement;
 
 public class PerlAttributeGrouper implements Grouper, ActionPresentation {
   private static final String GROUPER_ID = "perl.structure.group.attributes";
 
   @Override
-  public @NotNull Collection<Group> group(@NotNull AbstractTreeNode<?> parent, @NotNull Collection<TreeElement> children) {
+  // consulo: parent is passed as Object (it is an AbstractTreeNode)
+  public @NotNull Collection<Group> group(@NotNull Object parent, @NotNull Collection<TreeElement> children) {
     if (children.isEmpty() || parent instanceof GroupWrapper groupWrapper && groupWrapper.getValue() instanceof AttributeGroup) {
       return Collections.emptyList();
     }
@@ -79,17 +86,17 @@ public class PerlAttributeGrouper implements Grouper, ActionPresentation {
   }
 
   @Override
-  public @NotNull String getText() {
-    return PerlBundle.message("perl.structure.group.attributes.title");
+  public @NotNull LocalizeValue getText() {
+    return LocalizeValue.localizeTODO(PerlBundle.message("perl.structure.group.attributes.title"));
   }
 
   @Override
-  public String getDescription() {
-    return PerlBundle.message("perl.structure.group.attributes.description");
+  public @NotNull LocalizeValue getDescription() {
+    return LocalizeValue.localizeTODO(PerlBundle.message("perl.structure.group.attributes.description"));
   }
 
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return PerlIcons.ATTRIBUTE_GROUP_ICON;
   }
 
@@ -133,7 +140,7 @@ public class PerlAttributeGrouper implements Grouper, ActionPresentation {
     }
 
     @Override
-    public @Nullable Icon getIcon(boolean unused) {
+    public @Nullable Image getIcon(boolean unused) {
       return PerlIcons.ATTRIBUTE_GUTTER_ICON;
     }
 

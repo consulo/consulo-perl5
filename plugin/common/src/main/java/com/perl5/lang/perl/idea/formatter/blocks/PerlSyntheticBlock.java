@@ -16,10 +16,10 @@
 
 package com.perl5.lang.perl.idea.formatter.blocks;
 
-import com.intellij.formatting.*;
-import com.intellij.lang.ASTNode;
-import com.intellij.openapi.util.AtomicNotNullLazyValue;
-import com.intellij.openapi.util.TextRange;
+
+import consulo.language.ast.ASTNode;
+import consulo.application.util.AtomicNotNullLazyValue;
+import consulo.document.util.TextRange;
 import com.perl5.lang.perl.idea.formatter.PurePerlFormattingContext;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -27,6 +27,13 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import consulo.language.codeStyle.ASTBlock;
+import consulo.language.codeStyle.Alignment;
+import consulo.language.codeStyle.Block;
+import consulo.language.codeStyle.ChildAttributes;
+import consulo.language.codeStyle.Indent;
+import consulo.language.codeStyle.Spacing;
+import consulo.language.codeStyle.Wrap;
 
 /**
  * Synthetic block for wrapping group of other blocks

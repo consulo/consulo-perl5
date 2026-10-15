@@ -16,12 +16,14 @@
 
 package com.perl5.lang.perl.moduleBuild;
 
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.module.Module;
+import consulo.virtualFileSystem.VirtualFile;
 import com.perl5.lang.perl.idea.project.PerlDirectoryConfigurationProvider;
 import com.perl5.lang.perl.idea.project.PerlDirectoryInfoCollector;
 import org.jetbrains.annotations.NotNull;
 
+@ExtensionImpl
 public class PerlModuleBuildDirectoryConfigurationProvider implements PerlDirectoryConfigurationProvider {
   @Override
   public void configureContentRoot(@NotNull Module module,

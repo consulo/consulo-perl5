@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.idea.codeInsight;
 
-import com.intellij.lang.parameterInfo.ParameterInfoUIContext;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.language.editor.parameterInfo.ParameterInfoUIContext;
+import consulo.util.collection.ContainerUtil;
 import com.perl5.lang.perl.psi.utils.PerlSubArgument;
 import org.jetbrains.annotations.NotNull;
 

@@ -16,10 +16,10 @@
 
 package com.perl5.lang.htmlmason.parser.psi.impl;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.ResolveState;
-import com.intellij.psi.scope.PsiScopeProcessor;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.resolve.ResolveState;
+import consulo.language.psi.resolve.PsiScopeProcessor;
 import com.perl5.lang.perl.psi.impl.PerlCompositeElementImpl;
 import org.jetbrains.annotations.NotNull;
 

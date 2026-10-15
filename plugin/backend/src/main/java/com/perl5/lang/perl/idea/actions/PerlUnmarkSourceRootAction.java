@@ -16,20 +16,19 @@
 
 package com.perl5.lang.perl.idea.actions;
 
-import com.intellij.icons.AllIcons;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.Presentation;
-import com.intellij.openapi.module.Module;
+import consulo.application.AllIcons;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
+import consulo.module.Module;
 import com.intellij.openapi.projectRoots.impl.PerlModuleExtension;
-import com.intellij.openapi.roots.ui.configuration.ModuleSourceRootEditHandler;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.ui.LayeredIcon;
+import com.perl5.lang.perl.idea.configuration.settings.sdk.PerlSourceRootEditHandler;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.ui.image.ImageEffects;
 import com.perl5.PerlBundle;
 import com.perl5.PerlIcons;
 import com.perl5.lang.perl.idea.modules.PerlSourceRootType;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
 import java.util.List;
 
 public class PerlUnmarkSourceRootAction extends PerlSourceRootAction {
@@ -63,15 +62,15 @@ public class PerlUnmarkSourceRootAction extends PerlSourceRootAction {
         return;
       }
 
-      ModuleSourceRootEditHandler<?> handler = type.getEditHandler();
+      PerlSourceRootEditHandler handler = type.getEditHandler();
       presentation.setText(handler.getUnmarkRootButtonText());
       presentation.setIcon(
-        LayeredIcon.layeredIcon(() -> new Icon[]{handler.getRootIcon(), AllIcons.RunConfigurations.InvalidConfigurationLayer}));
+        ImageEffects.layered(handler.getRootIcon(), AllIcons.RunConfigurations.InvalidConfigurationLayer));
     }
     else {
       presentation.setText(PerlBundle.message("perl.action.unmark.multi"));
       presentation.setIcon(
-        LayeredIcon.layeredIcon(() -> new Icon[]{PerlIcons.PERL_LANGUAGE_ICON, AllIcons.RunConfigurations.InvalidConfigurationLayer}));
+        ImageEffects.layered(PerlIcons.PERL_LANGUAGE_ICON, AllIcons.RunConfigurations.InvalidConfigurationLayer));
     }
   }
 

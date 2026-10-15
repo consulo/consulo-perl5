@@ -16,14 +16,14 @@
 
 package com.perl5.lang.pod.idea.codeInsight;
 
-import com.intellij.codeInsight.TargetElementEvaluator;
-import com.intellij.codeInsight.TargetElementEvaluatorEx2;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiTreeUtil;
+import consulo.language.editor.TargetElementUtilExtender;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.util.PsiTreeUtil;
 import com.perl5.lang.pod.parser.psi.PodTitledSection;
 import org.jetbrains.annotations.Nullable;
 
-public class PodTargetElementEvaluator extends TargetElementEvaluatorEx2 implements TargetElementEvaluator {
+// consulo: TargetElementUtilExtender is application-wide (upstream evaluator is registered for Perl5 POD language only)
+public class PodTargetElementEvaluator implements TargetElementUtilExtender {
   @Override
   public @Nullable PsiElement getNamedElement(@Nullable PsiElement element) {
     PodTitledSection parent = PsiTreeUtil.getParentOfType(element, PodTitledSection.class, false);

@@ -16,15 +16,15 @@
 
 package com.perl5.lang.perl.moduleBuild.run;
 
-import com.intellij.execution.BeforeRunTask;
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.configurations.ConfigurationFactory;
-import com.intellij.openapi.application.ReadAction;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ProjectFileIndex;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.execution.BeforeRunTask;
+import consulo.process.ExecutionException;
+import consulo.execution.configuration.ConfigurationFactory;
+import consulo.application.ReadAction;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.module.content.ProjectFileIndex;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.util.collection.ContainerUtil;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.idea.run.prove.PerlAbstractTestRunConfiguration;
 import com.perl5.lang.perl.moduleBuild.PerlModuleBuildUtil;
@@ -74,11 +74,11 @@ public class PerlModuleBuildTestRunConfiguration extends PerlAbstractTestRunConf
 
   @Override
   public @NotNull List<String> getRequiredModulesList() {
-    return ContainerUtil.append(super.getRequiredModulesList(), MODULE_BUILD);
+    return ContainerUtil.concat(super.getRequiredModulesList(), List.of(MODULE_BUILD));
   }
 
   @Nullable VirtualFile getEffectiveContentRootSafe() {
-    return ReadAction.computeBlocking(() -> {
+    return ReadAction.compute(() -> {
       var files = computeTargetFiles();
       if (!files.isEmpty()) {
         var projectFileIndex = ProjectFileIndex.getInstance(getProject());
@@ -110,17 +110,20 @@ public class PerlModuleBuildTestRunConfiguration extends PerlAbstractTestRunConf
     }
   }
 
-  @Override
-  public @NotNull List<BeforeRunTask<?>> getBeforeRunTasks() {
-    var realTasks = super.getBeforeRunTasks();
-    if (realTasks.contains(PerlModuleBuildTaskProvider.PerlModuleBuildTask.INSTANCE)) {
-      return realTasks;
-    }
-    var patchedTasks = new ArrayList<BeforeRunTask<?>>();
-    patchedTasks.add(PerlModuleBuildTaskProvider.PerlModuleBuildTask.INSTANCE);
-    patchedTasks.addAll(realTasks);
-    return patchedTasks;
-  }
+  // TODO consulo: RunConfiguration#getBeforeRunTasks() does not exist in Consulo, before run tasks are owned by RunManager,
+  //  so Module::Build task can't be forced here. PerlModuleBuildTaskProvider#createTask provides it as a default task for new
+  //  configurations instead. Upstream override:
+  //@Override
+  //public @NotNull List<BeforeRunTask<?>> getBeforeRunTasks() {
+  //  var realTasks = super.getBeforeRunTasks();
+  //  if (realTasks.contains(PerlModuleBuildTaskProvider.PerlModuleBuildTask.INSTANCE)) {
+  //    return realTasks;
+  //  }
+  //  var patchedTasks = new ArrayList<BeforeRunTask<?>>();
+  //  patchedTasks.add(PerlModuleBuildTaskProvider.PerlModuleBuildTask.INSTANCE);
+  //  patchedTasks.addAll(realTasks);
+  //  return patchedTasks;
+  //}
 
   @Override
   protected @NotNull List<String> getTestsArguments() {

@@ -16,21 +16,26 @@
 
 package com.perl5.lang.perl.debugger;
 
-import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.SearchableConfigurable;
-import com.intellij.openapi.ui.VerticalFlowLayout;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.TableUtil;
-import com.intellij.ui.ToolbarDecorator;
-import com.intellij.ui.table.JBTable;
-import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.ColumnInfo;
-import com.intellij.util.ui.FormBuilder;
-import com.intellij.util.ui.ListTableModel;
-import com.intellij.util.xmlb.annotations.Attribute;
-import com.intellij.util.xmlb.annotations.Tag;
-import com.intellij.xdebugger.settings.DebuggerSettingsCategory;
-import com.intellij.xdebugger.settings.XDebuggerSettings;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.configurable.Configurable;
+import consulo.configurable.SearchableConfigurable;
+import consulo.disposer.Disposable;
+import consulo.ui.ex.awt.VerticalFlowLayout;
+import consulo.util.lang.StringUtil;
+import consulo.ui.ex.awt.util.TableUtil;
+import consulo.ui.ex.awt.ToolbarDecorator;
+import consulo.ui.ex.awt.table.JBTable;
+import consulo.util.collection.ContainerUtil;
+import consulo.ui.ex.awt.ColumnInfo;
+import consulo.ui.ex.awt.FormBuilder;
+import consulo.ui.ex.awt.table.ListTableModel;
+import consulo.util.xml.serializer.annotation.Attribute;
+import consulo.util.xml.serializer.annotation.Tag;
+import consulo.execution.debug.setting.DebuggerSettingsCategory;
+import consulo.execution.debug.setting.XDebuggerSettings;
+import consulo.localize.LocalizeValue;
+import consulo.ui.Component;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,6 +45,8 @@ import javax.swing.*;
 import javax.swing.table.TableCellEditor;
 import java.util.*;
 
+// consulo: upstream <xdebugger.settings> registration in perl5.plugin.debugger.main.xml
+@ExtensionImpl
 public class PerlDebuggerSettings extends XDebuggerSettings<PerlDebuggerSettings> {
   @Tag("dataRenderers")
   private List<Item> myDataRenderers = new ArrayList<>();
@@ -51,7 +58,8 @@ public class PerlDebuggerSettings extends XDebuggerSettings<PerlDebuggerSettings
   @Override
   public @NotNull Collection<? extends Configurable> createConfigurables(@NotNull DebuggerSettingsCategory category) {
     if (category == DebuggerSettingsCategory.DATA_VIEWS) {
-      return Collections.singletonList(new DataViewsConfigurable());
+      // consulo: unified UI configurable, upstream Swing DataViewsConfigurable can't be shown in Consulo Web
+      return Collections.singletonList(new PerlDebuggerDataViewsConfigurable(this));
     }
     return super.createConfigurables(category);
   }
@@ -190,12 +198,12 @@ public class PerlDebuggerSettings extends XDebuggerSettings<PerlDebuggerSettings
     }
 
     @Override
-    public @Nls(capitalization = Nls.Capitalization.Title) String getDisplayName() {
-      return PerlDebuggerBundle.message("perl.debugger.settings.type.renderers.title");
+    public @Nls(capitalization = Nls.Capitalization.Title) LocalizeValue getDisplayName() {
+      return LocalizeValue.localizeTODO(PerlDebuggerBundle.message("perl.debugger.settings.type.renderers.title"));
     }
 
     @Override
-    public @Nullable JComponent createComponent() {
+    public @Nullable Component createUIComponent(Disposable parentDisposable) {
       JTextPane textPane = new JTextPane();
       textPane.setText(PerlDebuggerBundle.message("perl.debugger.settings.type.renderers.explanation"));
       JPanel panel = FormBuilder.createFormBuilder()
@@ -229,7 +237,7 @@ public class PerlDebuggerSettings extends XDebuggerSettings<PerlDebuggerSettings
       getColumnModel().getColumn(0).setPreferredWidth(200);
       getColumnModel().getColumn(1).setPreferredWidth(600);
 
-      return panel;
+      return TargetAWT.wrap(panel);
     }
 
     @Override

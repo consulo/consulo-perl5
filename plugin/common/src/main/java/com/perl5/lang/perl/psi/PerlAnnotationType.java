@@ -16,11 +16,11 @@
 
 package com.perl5.lang.perl.psi;
 
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.CachedValueProvider;
-import com.intellij.psi.util.CachedValuesManager;
-import com.intellij.psi.util.PsiModificationTracker;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiElement;
+import consulo.application.util.CachedValueProvider;
+import consulo.language.psi.util.LanguageCachedValueUtil;
+import consulo.language.psi.PsiModificationTracker;
 import com.perl5.lang.perl.psi.utils.PerlVariableAnnotations;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -63,7 +63,7 @@ public interface PerlAnnotationType extends PerlAnnotationWithValue {
    * @return collection of declarations this annotation applies to
    */
   default @NotNull List<PerlVariableDeclarationElement> getTargets() {
-    return CachedValuesManager.getCachedValue(
+    return LanguageCachedValueUtil.getCachedValue(
       this,
       () -> CachedValueProvider.Result.create(computeTargets(this), PsiModificationTracker.MODIFICATION_COUNT));
   }

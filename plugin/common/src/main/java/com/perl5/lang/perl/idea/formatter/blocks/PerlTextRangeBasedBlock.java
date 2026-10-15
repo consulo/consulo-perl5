@@ -16,14 +16,20 @@
 
 package com.perl5.lang.perl.idea.formatter.blocks;
 
-import com.intellij.formatting.*;
-import com.intellij.lang.ASTNode;
-import com.intellij.openapi.util.TextRange;
+
+import consulo.language.ast.ASTNode;
+import consulo.document.util.TextRange;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
+import consulo.language.codeStyle.Alignment;
+import consulo.language.codeStyle.Block;
+import consulo.language.codeStyle.ChildAttributes;
+import consulo.language.codeStyle.Indent;
+import consulo.language.codeStyle.Spacing;
+import consulo.language.codeStyle.Wrap;
 
 class PerlTextRangeBasedBlock implements PerlAstBlock {
   private final @NotNull TextRange myTextRange;

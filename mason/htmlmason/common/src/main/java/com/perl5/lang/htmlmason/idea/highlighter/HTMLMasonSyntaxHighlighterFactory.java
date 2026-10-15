@@ -16,17 +16,27 @@
 
 package com.perl5.lang.htmlmason.idea.highlighter;
 
-import com.intellij.openapi.fileTypes.SyntaxHighlighter;
-import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.Language;
+import com.perl5.lang.htmlmason.HTMLMasonLanguage;
+import com.perl5.lang.htmlmason.idea.configuration.HTMLMasonSettings;
+import consulo.language.editor.highlight.SyntaxHighlighter;
+import consulo.language.editor.highlight.SyntaxHighlighterFactory;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
+@ExtensionImpl
 public class HTMLMasonSyntaxHighlighterFactory extends SyntaxHighlighterFactory {
   @Override
+  public @NotNull Language getLanguage() {
+    return HTMLMasonLanguage.INSTANCE;
+  }
+
+  @Override
   public @NotNull SyntaxHighlighter getSyntaxHighlighter(@Nullable Project project, @Nullable VirtualFile virtualFile) {
-    return new HTMLMasonSyntaxHighlighter(project);
+    return new HTMLMasonSyntaxHighlighter(project, HTMLMasonSettings.forFile(project, virtualFile));
   }
 }

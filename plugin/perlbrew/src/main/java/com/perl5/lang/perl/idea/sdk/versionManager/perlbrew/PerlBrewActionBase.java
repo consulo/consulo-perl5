@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.idea.sdk.versionManager.perlbrew;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.ui.ex.action.AnActionEvent;
 import com.perl5.lang.perl.idea.actions.PerlActionBase;
 import com.perl5.lang.perl.idea.project.PerlProjectManager;
 import org.jetbrains.annotations.Nls;

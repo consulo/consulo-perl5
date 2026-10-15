@@ -16,33 +16,31 @@
 
 package com.perl5.lang.perl.idea.refactoring.introduce;
 
-import com.intellij.ide.DataManager;
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.command.WriteCommandAction;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.NlsContexts.DialogMessage;
-import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.Pass;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.SmartPointerManager;
-import com.intellij.psi.SmartPsiElementPointer;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.refactoring.IntroduceTargetChooser;
-import com.intellij.refactoring.RefactoringActionHandler;
-import com.intellij.refactoring.RefactoringActionHandlerFactory;
-import com.intellij.refactoring.RefactoringBundle;
-import com.intellij.refactoring.introduce.inplace.OccurrencesChooser;
-import com.intellij.refactoring.listeners.RefactoringEventData;
-import com.intellij.refactoring.listeners.RefactoringEventListener;
-import com.intellij.refactoring.rename.PsiElementRenameHandler;
-import com.intellij.refactoring.util.CommonRefactoringUtil;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.dataContext.DataManager;
+import consulo.dataContext.DataContext;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.language.editor.WriteCommandAction;
+import consulo.logging.Logger;
+import consulo.codeEditor.Editor;
+import consulo.project.Project;
+import consulo.util.lang.Pair;
+import consulo.document.util.TextRange;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.SmartPointerManager;
+import consulo.language.psi.SmartPsiElementPointer;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.editor.refactoring.introduce.IntroduceTargetChooser;
+import consulo.language.editor.refactoring.action.RefactoringActionHandler;
+import consulo.language.editor.refactoring.action.RefactoringActionHandlerFactory;
+import consulo.language.editor.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.introduce.inplace.OccurrencesChooser;
+import consulo.language.editor.refactoring.event.RefactoringEventData;
+import consulo.language.editor.refactoring.event.RefactoringEventListener;
+import consulo.language.editor.refactoring.rename.PsiElementRenameHandler;
+import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
+import consulo.util.collection.ContainerUtil;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.idea.refactoring.PerlNameSuggestionProvider;
 import com.perl5.lang.perl.idea.refactoring.introduce.occurrence.PerlIntroduceTargetOccurrencesCollector;
@@ -56,6 +54,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 public class PerlIntroduceVariableHandler implements RefactoringActionHandler {
   private static final Logger LOG = Logger.getInstance(PerlIntroduceVariableHandler.class);
@@ -76,9 +75,9 @@ public class PerlIntroduceVariableHandler implements RefactoringActionHandler {
         IntroduceTargetChooser.showIntroduceTargetChooser(
           editor,
           targets,
-          new Pass<>() {
+          new Consumer<>() {
             @Override
-            public void pass(PerlIntroduceTarget target) {
+            public void accept(PerlIntroduceTarget target) {
               selectOccurrences(target, editor, file);
             }
           },
@@ -111,9 +110,9 @@ public class PerlIntroduceVariableHandler implements RefactoringActionHandler {
         }.showChooser(
           target,
           allOccurrences,
-          new Pass<>() {
+          new Consumer<>() {
             @Override
-            public void pass(OccurrencesChooser.ReplaceChoice replaceChoice) {
+            public void accept(OccurrencesChooser.ReplaceChoice replaceChoice) {
               performIntroduce(target, allOccurrences, replaceChoice, editor, file);
             }
           }
@@ -202,10 +201,8 @@ public class PerlIntroduceVariableHandler implements RefactoringActionHandler {
       Application application = ApplicationManager.getApplication();
       if (application.isUnitTestMode()) {
         DataContext originalContext = renamingContext;
-        //noinspection removal
-        renamingContext = dataId -> PsiElementRenameHandler.DEFAULT_NAME.getName().equals(dataId)
-                                    ? "dialog_test_name"
-                                    : originalContext.getData(dataId);
+        // consulo: DataContext#getData is generic in Consulo, so no lambda
+        renamingContext = DataContext.builder().parent(originalContext).add(PsiElementRenameHandler.DEFAULT_NAME, "dialog_test_name").build();
       }
       RefactoringActionHandler handler = RefactoringActionHandlerFactory.getInstance().createRenameHandler();
       DataContext effectiveContext = renamingContext;
@@ -272,12 +269,12 @@ public class PerlIntroduceVariableHandler implements RefactoringActionHandler {
     var elementPointer = WriteCommandAction.writeCommandAction(project).compute(() -> {
       final RefactoringEventData afterData = new RefactoringEventData();
       afterData.addElement(declarationBlock.first);
-      project.getMessageBus().syncPublisher(RefactoringEventListener.REFACTORING_EVENT_TOPIC)
+      project.getMessageBus().syncPublisher(RefactoringEventListener.class)
         .refactoringStarted("perl.introduce.variable", afterData);
 
       PsiElement introducedStatement = anchor.getParent().addRangeBefore(declarationBlock.first, declarationBlock.second, anchor);
 
-      project.getMessageBus().syncPublisher(RefactoringEventListener.REFACTORING_EVENT_TOPIC)
+      project.getMessageBus().syncPublisher(RefactoringEventListener.class)
         .refactoringDone("perl.introduce.variable", afterData);
 
       if (introducedStatement == null) {
@@ -333,7 +330,7 @@ public class PerlIntroduceVariableHandler implements RefactoringActionHandler {
     return elementPointer == null ? null : elementPointer.getElement();
   }
 
-  protected void showErrorMessage(@NotNull Project project, Editor editor, @DialogMessage @NotNull String message) {
+  protected void showErrorMessage(@NotNull Project project, Editor editor, @NotNull String message) {
     CommonRefactoringUtil
       .showErrorHint(project, editor, message, RefactoringBundle.message("introduce.variable.title"), null);
   }

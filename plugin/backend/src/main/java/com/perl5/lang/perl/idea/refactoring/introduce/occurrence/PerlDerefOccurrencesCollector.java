@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.idea.refactoring.introduce.occurrence;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiElement;
+import consulo.logging.Logger;
+import consulo.document.util.TextRange;
+import consulo.language.psi.PsiElement;
 import com.perl5.lang.perl.idea.refactoring.introduce.PerlIntroduceTarget;
 import com.perl5.lang.perl.psi.PerlDerefExpression;
 import com.perl5.lang.perl.psi.utils.PerlPsiUtil;

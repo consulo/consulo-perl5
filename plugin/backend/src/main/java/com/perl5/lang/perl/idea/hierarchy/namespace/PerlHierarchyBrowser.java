@@ -16,10 +16,16 @@
 
 package com.perl5.lang.perl.idea.hierarchy.namespace;
 
-import com.intellij.ide.hierarchy.*;
-import com.intellij.ide.util.treeView.NodeDescriptor;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
-import com.intellij.psi.PsiElement;
+
+import consulo.annotation.access.RequiredReadAction;
+import consulo.language.editor.hierarchy.HierarchyKind;
+import consulo.language.editor.hierarchy.HierarchyModel;
+import consulo.language.editor.hierarchy.HierarchyRequest;
+import consulo.language.editor.hierarchy.HierarchyViewType;
+import consulo.language.editor.hierarchy.StandardHierarchyKinds;
+import consulo.language.editor.hierarchy.StandardHierarchyViewTypes;
+import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.language.psi.PsiElement;
 import com.perl5.lang.perl.idea.hierarchy.namespace.treestructures.PerlSubTypesHierarchyTreeStructure;
 import com.perl5.lang.perl.idea.hierarchy.namespace.treestructures.PerlSuperTypesHierarchyTreeStructure;
 import com.perl5.lang.perl.psi.PerlNamespaceDefinitionElement;
@@ -27,27 +33,58 @@ import com.perl5.lang.perl.psi.properties.PerlIdentifierOwner;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.Comparator;
-import java.util.Map;
+import java.util.List;
+import consulo.language.editor.hierarchy.HierarchyNodeDescriptor;
+import consulo.language.editor.hierarchy.HierarchyTreeStructure;
 
 
-public class PerlHierarchyBrowser extends TypeHierarchyBrowserBase {
+/**
+ * consulo: IntelliJ TypeHierarchyBrowserBase -> Consulo HierarchyModel, the browser UI (trees, view actions, alphabetical sorting,
+ * legend) is provided by the platform
+ */
+public class PerlHierarchyBrowser implements HierarchyModel<PsiElement> {
+  private final @NotNull PsiElement myTarget;
+
   public PerlHierarchyBrowser(PsiElement element) {
-    super(element.getProject(), element);
+    myTarget = element;
   }
 
   @Override
+  public HierarchyKind getKind() {
+    return StandardHierarchyKinds.TYPE;
+  }
+
+  @Override
+  public PsiElement getTarget() {
+    return myTarget;
+  }
+
+  // consulo: upstream prependActions() adds ViewSupertypesHierarchyAction, ViewSubtypesHierarchyAction and AlphaSortAction;
+  // the type hierarchy tree is created too, but has no structure (getTypesHierarchyStructure() returns null)
+  @Override
+  public List<HierarchyViewType> getViewTypes() {
+    return List.of(StandardHierarchyViewTypes.SUPERTYPES, StandardHierarchyViewTypes.SUBTYPES);
+  }
+
+  // consulo: upstream PerlTypeHierarchyProvider#browserActivated switches the browser to the supertypes view
+  @RequiredReadAction
+  @Override
+  public HierarchyViewType getDefaultViewType() {
+    return StandardHierarchyViewTypes.SUPERTYPES;
+  }
+
+  // consulo: no HierarchyModel counterpart, HierarchyNodeDescriptor#canBeDeleted() is false by default as well
   protected boolean isInterface(@NotNull PsiElement psiElement) {
     return false;
   }
 
-  @Override
+  // consulo: no HierarchyModel counterpart, HierarchyNodeDescriptor#canBeDeleted() is false by default as well
   protected boolean canBeDeleted(PsiElement psiElement) {
     return false;
   }
 
-  @Override
+  // consulo: no HierarchyModel counterpart, only used for deletion which is not allowed
   protected @Nullable String getQualifiedName(PsiElement psiElement) {
     if (psiElement instanceof PerlIdentifierOwner identifierOwner) {
       return identifierOwner.getPresentableName();
@@ -56,7 +93,7 @@ public class PerlHierarchyBrowser extends TypeHierarchyBrowserBase {
     return null;
   }
 
-  @Override
+  // consulo: no HierarchyModel counterpart, the platform uses HierarchyNodeDescriptor#getHierarchyElement() (the same element)
   protected @Nullable PsiElement getElementFromDescriptor(@NotNull HierarchyNodeDescriptor descriptor) {
     if (!(descriptor instanceof PerlHierarchyNodeDescriptor hierarchyNodeDescriptor)) {
       return null;
@@ -64,46 +101,32 @@ public class PerlHierarchyBrowser extends TypeHierarchyBrowserBase {
     return hierarchyNodeDescriptor.getPerlElement();
   }
 
+  @RequiredReadAction
   @Override
-  protected void createTrees(@NotNull Map<? super String, ? super JTree> trees) {
-    trees.put(getSupertypesHierarchyType(), createTree(true));
-    trees.put(getSubtypesHierarchyType(), createTree(true));
-    trees.put(getTypeHierarchyType(), createTree(true));
-  }
-
-  @Override
-  protected void prependActions(final @NotNull DefaultActionGroup actionGroup) {
-    actionGroup.add(new ViewSupertypesHierarchyAction());
-    actionGroup.add(new ViewSubtypesHierarchyAction());
-    actionGroup.add(new AlphaSortAction());
-  }
-
-
-  @Override
-  protected @Nullable JPanel createLegendPanel() {
-    return null;
-  }
-
-  @Override
-  protected boolean isApplicableElement(@NotNull PsiElement element) {
+  public boolean isApplicableElement(@NotNull PsiElement element) {
     return element instanceof PerlNamespaceDefinitionElement;
   }
 
+  @RequiredReadAction
   @Override
-  protected @Nullable HierarchyTreeStructure createHierarchyTreeStructure(@NotNull String typeName, @NotNull PsiElement psiElement) {
-    if (getSupertypesHierarchyType().equals(typeName)) {
+  public @Nullable HierarchyTreeStructure createTreeStructure(@NotNull HierarchyRequest<PsiElement> request) {
+    return createHierarchyTreeStructure(request.getViewType(), request.getTarget());
+  }
+
+  protected @Nullable HierarchyTreeStructure createHierarchyTreeStructure(@NotNull HierarchyViewType typeName, @NotNull PsiElement psiElement) {
+    if (StandardHierarchyViewTypes.SUPERTYPES.equals(typeName)) {
       return getSuperTypesHierarchyStructure(psiElement);
     }
-    else if (getSubtypesHierarchyType().equals(typeName)) {
+    else if (StandardHierarchyViewTypes.SUBTYPES.equals(typeName)) {
       return getSubTypesHierarchyStructure(psiElement);
     }
-    else if (getTypeHierarchyType().equals(typeName)) {
+    else if (StandardHierarchyViewTypes.CLASS.equals(typeName)) {
       return getTypesHierarchyStructure(psiElement);
     }
     return null;
   }
 
-  @Override
+  // consulo: no HierarchyModel counterpart, the platform browser chooses alphabetical or source order
   protected @Nullable Comparator<NodeDescriptor<?>> getComparator() {
     return null;
   }

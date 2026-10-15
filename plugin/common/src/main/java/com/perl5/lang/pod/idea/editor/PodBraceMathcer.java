@@ -16,10 +16,12 @@
 
 package com.perl5.lang.pod.idea.editor;
 
-import com.intellij.lang.BracePair;
-import com.intellij.lang.PairedBraceMatcher;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.Language;
+import com.perl5.lang.pod.PodLanguage;
+import consulo.language.BracePair;
+import consulo.language.PairedBraceMatcher;
+import consulo.language.psi.PsiFile;
+import consulo.language.ast.IElementType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,6 +29,11 @@ import static com.perl5.lang.pod.parser.PodElementTypesGenerated.*;
 
 
 public class PodBraceMathcer implements PairedBraceMatcher {
+  @Override
+  public @NotNull Language getLanguage() {
+    return PodLanguage.INSTANCE;
+  }
+
   private static final BracePair[] PAIRS = new BracePair[]{
     new BracePair(POD_BEGIN, POD_END, true),
     new BracePair(POD_OVER, POD_BACK, true),

@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.idea.sdk.versionManager.asdf;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.util.ObjectUtils;
+import consulo.project.Project;
+import consulo.content.bundle.Sdk;
+import consulo.util.lang.ObjectUtil;
 import com.perl5.lang.perl.adapters.PackageManagerAdapter;
 import com.perl5.lang.perl.idea.execution.PerlCommandLine;
 import com.perl5.lang.perl.idea.sdk.versionManager.PerlRealVersionManagerData;
@@ -62,7 +62,7 @@ class AsdfData extends PerlRealVersionManagerData<AsdfData, AsdfHandler> {
   @SuppressWarnings("unused")
   @Contract("null->null")
   public static @Nullable AsdfData from(@Nullable Sdk sdk) {
-    return ObjectUtils.tryCast(PerlVersionManagerData.from(sdk), AsdfData.class);
+    return ObjectUtil.tryCast(PerlVersionManagerData.from(sdk), AsdfData.class);
   }
 
   @Override

@@ -16,7 +16,9 @@
 
 package com.perl5.lang.pod.idea.findusages;
 
-import com.intellij.psi.PsiElement;
+import com.perl5.lang.pod.PodLanguage;
+import consulo.language.Language;
+import consulo.language.psi.PsiElement;
 import com.perl5.lang.perl.idea.findusages.PerlFindUsagesProviderBase;
 import com.perl5.lang.pod.parser.psi.PodTitledSection;
 import org.jetbrains.annotations.NotNull;
@@ -26,5 +28,10 @@ public class PodFindUsagesProvider extends PerlFindUsagesProviderBase {
   @Override
   public boolean canFindUsagesFor(@NotNull PsiElement psiElement) {
     return psiElement instanceof PodTitledSection;
+  }
+
+  @Override
+  public @NotNull Language getLanguage() {
+    return PodLanguage.INSTANCE;
   }
 }

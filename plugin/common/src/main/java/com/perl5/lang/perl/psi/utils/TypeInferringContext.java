@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.psi.utils;
 
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiElement;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlDuckValue;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlOneOfValue;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlValue;

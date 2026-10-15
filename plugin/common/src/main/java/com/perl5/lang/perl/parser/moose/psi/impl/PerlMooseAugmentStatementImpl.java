@@ -16,11 +16,11 @@
 
 package com.perl5.lang.perl.parser.moose.psi.impl;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.ElementManipulators;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.ElementManipulators;
+import consulo.language.psi.PsiElement;
+import consulo.language.ast.IElementType;
+import consulo.language.util.IncorrectOperationException;
 import com.perl5.lang.perl.parser.moose.psi.PerlMooseAugmentStatement;
 import com.perl5.lang.perl.parser.moose.psi.PerlMooseMethodModifier;
 import com.perl5.lang.perl.parser.moose.psi.PerlMooseStatementWithSubReference;

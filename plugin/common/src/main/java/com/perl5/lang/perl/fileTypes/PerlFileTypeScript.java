@@ -21,7 +21,8 @@ import com.perl5.PerlIcons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
+import consulo.localize.LocalizeValue;
+import consulo.ui.image.Image;
 
 
 public class PerlFileTypeScript extends PurePerlFileType {
@@ -34,17 +35,17 @@ public class PerlFileTypeScript extends PurePerlFileType {
   }
 
   @Override
-  public @NotNull String getName() {
+  public @NotNull String getId() {
     return "Perl5 Script";
   }
 
   @Override
-  public @NotNull String getDescription() {
-    return PerlBundle.message("perl.filetype.script.description");
+  public @NotNull LocalizeValue getDescription() {
+    return LocalizeValue.localizeTODO(PerlBundle.message("perl.filetype.script.description"));
   }
 
   @Override
-  public @Nullable Icon getIcon() {
+  public @Nullable Image getIcon() {
     return PerlIcons.PERL_SCRIPT_FILE_ICON;
   }
 }

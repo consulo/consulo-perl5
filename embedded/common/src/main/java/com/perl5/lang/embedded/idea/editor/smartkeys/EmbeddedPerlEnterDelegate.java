@@ -16,10 +16,10 @@
 
 package com.perl5.lang.embedded.idea.editor.smartkeys;
 
-import com.intellij.codeInsight.editorActions.enter.EnterHandlerDelegateAdapter;
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.PsiFile;
+import consulo.language.editor.action.EnterHandlerDelegateAdapter;
+import consulo.dataContext.DataContext;
+import consulo.codeEditor.Editor;
+import consulo.language.psi.PsiFile;
 import com.perl5.lang.embedded.psi.EmbeddedPerlFileViewProvider;
 import org.jetbrains.annotations.NotNull;
 

@@ -16,14 +16,14 @@
 
 package com.perl5.lang.htmlmason.parser.psi;
 
-import com.intellij.psi.ElementDescriptionLocation;
-import com.intellij.psi.ElementDescriptionProvider;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiNamedElement;
-import com.intellij.usageView.UsageViewLongNameLocation;
-import com.intellij.usageView.UsageViewNodeTextLocation;
-import com.intellij.usageView.UsageViewShortNameLocation;
-import com.intellij.usageView.UsageViewTypeLocation;
+import consulo.language.psi.ElementDescriptionLocation;
+import consulo.language.psi.ElementDescriptionProvider;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiNamedElement;
+import consulo.usage.UsageViewLongNameLocation;
+import consulo.usage.UsageViewNodeTextLocation;
+import consulo.usage.UsageViewShortNameLocation;
+import consulo.usage.UsageViewTypeLocation;
 import com.perl5.lang.htmlmason.HTMLMasonUtil;
 import com.perl5.lang.htmlmason.parser.psi.impl.HTMLMasonFileImpl;
 import org.jetbrains.annotations.NotNull;

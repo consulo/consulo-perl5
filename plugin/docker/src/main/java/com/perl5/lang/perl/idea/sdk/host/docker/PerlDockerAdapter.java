@@ -16,25 +16,25 @@
 
 package com.perl5.lang.perl.idea.sdk.host.docker;
 
-import com.intellij.execution.CommandLineUtil;
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.process.ProcessOutput;
-import com.intellij.execution.util.ExecUtil;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.ArrayUtil;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.process.CommandLineUtil;
+import consulo.process.ExecutionException;
+import consulo.process.util.ProcessOutput;
+import consulo.process.local.ExecUtil;
+import consulo.application.ApplicationManager;
+import consulo.ide.impl.idea.openapi.application.PathManager;
+import consulo.logging.Logger;
+import consulo.module.Module;
+import consulo.module.ModuleManager;
+import consulo.application.progress.ProgressManager;
+import consulo.project.Project;
+import consulo.module.content.ModuleRootManager;
+import consulo.application.util.SystemInfo;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.ContainerUtil;
 import com.perl5.lang.perl.idea.execution.PerlCommandLine;
 import com.perl5.lang.perl.idea.project.PerlProjectManager;
 import com.perl5.lang.perl.idea.sdk.host.PerlExecutionException;
@@ -195,7 +195,7 @@ class PerlDockerAdapter {
         roots.addAll(Arrays.asList(ModuleRootManager.getInstance(module).getContentRoots()));
       }
       roots.addAll(PerlProjectManager.getInstance(project).getExternalLibraryRoots());
-      for (VirtualFile rootToMount : VfsUtil.getCommonAncestors(roots.toArray(VirtualFile.EMPTY_ARRAY))) {
+      for (VirtualFile rootToMount : VirtualFileUtil.getCommonAncestors(roots.toArray(VirtualFile.EMPTY_ARRAY))) {
         String localPath = rootToMount.getPath();
         String remotePath = myData.getRemotePath(localPath);
         dockerCommandLine.withParameters(WITH_VOLUME, localPath + ':' + remotePath);

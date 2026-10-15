@@ -16,23 +16,22 @@
 
 package com.perl5.lang.perl.idea.sdk.versionManager.berrybrew;
 
-import com.intellij.openapi.util.NlsSafe;
 import com.perl5.PerlIcons;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import com.perl5.lang.perl.idea.sdk.PerlHandlerBean;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostData;
 import com.perl5.lang.perl.idea.sdk.host.os.PerlOsHandler;
 import com.perl5.lang.perl.idea.sdk.versionManager.InstallPerlHandler;
 import com.perl5.lang.perl.idea.sdk.versionManager.PerlRealVersionManagerHandler;
 import com.perl5.lang.perl.idea.sdk.versionManager.PerlVersionManagerAdapter;
-import kotlin.NotImplementedError;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
 class BerryBrewHandler extends PerlRealVersionManagerHandler<BerryBrewData, BerryBrewHandler> {
-  private static final @NlsSafe String BERRYBREW = "berrybrew";
-  private static final @NlsSafe String BERRYBREW_EXE = BERRYBREW + ".exe";
+  private static final String BERRYBREW = "berrybrew";
+  private static final String BERRYBREW_EXE = BERRYBREW + ".exe";
 
 
   @SuppressWarnings("NonDefaultConstructor")
@@ -72,7 +71,7 @@ class BerryBrewHandler extends PerlRealVersionManagerHandler<BerryBrewData, Berr
 
   @Override
   public @NotNull Icon getIcon() {
-    return PerlIcons.STRAWBERRY_ICON;
+    return TargetAWT.to(PerlIcons.STRAWBERRY_ICON);
   }
 
   @Override
@@ -82,6 +81,7 @@ class BerryBrewHandler extends PerlRealVersionManagerHandler<BerryBrewData, Berr
 
   @Override
   public @NotNull String getControlOutputForPerlVersion(@NotNull String perlVersion) {
-    throw new NotImplementedError("We have no tests for this yet");
+    // consulo: no kotlin stdlib (upstream throws kotlin.NotImplementedError)
+    throw new UnsupportedOperationException("We have no tests for this yet");
   }
 }

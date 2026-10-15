@@ -16,11 +16,11 @@
 
 package com.perl5.lang.perl.moduleBuild;
 
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.module.Module;
+import consulo.module.ModuleManager;
+import consulo.project.Project;
+import consulo.module.content.ModuleRootManager;
+import consulo.virtualFileSystem.VirtualFile;
 import com.perl5.lang.perl.idea.project.PerlProjectManager;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;

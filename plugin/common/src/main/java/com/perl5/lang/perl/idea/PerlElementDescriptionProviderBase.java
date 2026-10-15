@@ -16,18 +16,23 @@
 
 package com.perl5.lang.perl.idea;
 
-import com.intellij.ide.util.DeleteNameDescriptionLocation;
-import com.intellij.ide.util.DeleteTypeDescriptionLocation;
-import com.intellij.lang.Language;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.ElementDescriptionLocation;
-import com.intellij.psi.ElementDescriptionProvider;
-import com.intellij.psi.PsiElement;
-import com.intellij.refactoring.util.NonCodeSearchDescriptionLocation;
-import com.intellij.usageView.*;
+import consulo.language.editor.refactoring.util.DeleteNameDescriptionLocation;
+import consulo.language.editor.refactoring.util.DeleteTypeDescriptionLocation;
+import consulo.language.Language;
+import consulo.logging.Logger;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.ElementDescriptionLocation;
+import consulo.language.psi.ElementDescriptionProvider;
+import consulo.language.psi.PsiElement;
+import consulo.language.editor.refactoring.util.NonCodeSearchDescriptionLocation;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import consulo.usage.UsageViewLongNameLocation;
+import consulo.usage.UsageViewNodeTextLocation;
+import consulo.usage.UsageViewShortNameLocation;
+import consulo.usage.UsageViewTypeLocation;
+import consulo.usage.UsageViewUtil;
 
 public abstract class PerlElementDescriptionProviderBase implements ElementDescriptionProvider {
   private static final Logger LOG = Logger.getInstance(PerlElementDescriptionProviderBase.class);

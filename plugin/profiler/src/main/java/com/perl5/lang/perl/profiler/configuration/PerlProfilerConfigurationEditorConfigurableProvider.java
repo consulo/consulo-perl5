@@ -16,10 +16,12 @@
 
 package com.perl5.lang.perl.profiler.configuration;
 
-import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.ConfigurableProvider;
-import com.intellij.openapi.options.SearchableConfigurable;
-import com.intellij.profiler.configurations.ui.EditProfilerConfigurationsComponent;
+import consulo.configurable.Configurable;
+import consulo.configurable.ConfigurableProvider;
+import consulo.configurable.SearchableConfigurable;
+import consulo.execution.profiler.configuration.EditProfilerConfigurationComponent;
+import consulo.localize.LocalizeValue;
+import com.perl5.lang.perl.profiler.PerlProfilerBundle;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,12 +30,29 @@ public class PerlProfilerConfigurationEditorConfigurableProvider extends Configu
 
   @Override
   public @Nullable Configurable createConfigurable() {
-    return new SearchableConfigurable.Delegate(new EditProfilerConfigurationsComponent(
-      PerlProfilerConfigurationType.PERL_PROFILER_LANGUAGE_SETTINGS_GROUP, null)) {
-      @Override
-      public @NotNull String getId() {
-        return PERL_PROFILER_CONFIGURABLE_ID;
-      }
-    };
+    // consulo: Consulo has no SearchableConfigurable.Delegate, the profiler configurations component is extended directly
+    return new PerlProfilerConfigurable();
+  }
+
+  /**
+   * consulo: upstream anonymous {@code SearchableConfigurable.Delegate} over {@code EditProfilerConfigurationsComponent}.
+   * Registered as application configurable under the profiler settings group by {@code PerlProfilerConfigurableRegistration}
+   * (upstream {@code <applicationConfigurable parentId="profiler" id="profiler.perl5">} in perl5.plugin.profiler.main.xml)
+   */
+  public static class PerlProfilerConfigurable extends EditProfilerConfigurationComponent implements SearchableConfigurable {
+    public PerlProfilerConfigurable() {
+      super(PerlProfilerConfigurationType.PERL_PROFILER_LANGUAGE_SETTINGS_GROUP, null);
+    }
+
+    @Override
+    public @NotNull String getId() {
+      return PERL_PROFILER_CONFIGURABLE_ID;
+    }
+
+    // consulo: upstream display name comes from <applicationConfigurable key="profiler.configurable.name">
+    @Override
+    public @NotNull LocalizeValue getDisplayName() {
+      return LocalizeValue.localizeTODO(PerlProfilerBundle.message("profiler.configurable.name"));
+    }
   }
 }

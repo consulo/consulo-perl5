@@ -16,8 +16,10 @@
 
 package com.perl5.lang.perl.idea;
 
-import com.intellij.lang.refactoring.NamesValidator;
-import com.intellij.openapi.project.Project;
+import com.perl5.lang.perl.PerlLanguage;
+import consulo.language.Language;
+import consulo.language.editor.refactoring.NamesValidator;
+import consulo.project.Project;
 import com.perl5.lang.perl.parser.PerlParserUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -32,5 +34,10 @@ public class PerlNamesValidator implements NamesValidator {
   @Override
   public boolean isIdentifier(@NotNull String name, Project project) {
     return PerlParserUtil.isIdentifier(name) || PerlParserUtil.isAmbiguousPackage(name);
+  }
+
+  @Override
+  public @NotNull Language getLanguage() {
+    return PerlLanguage.INSTANCE;
   }
 }

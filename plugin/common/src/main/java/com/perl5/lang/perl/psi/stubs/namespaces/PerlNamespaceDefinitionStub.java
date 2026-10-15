@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.psi.stubs.namespaces;
 
-import com.intellij.psi.stubs.StubBase;
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.psi.stub.IStubElementType;
+import consulo.language.psi.stub.StubBase;
+import consulo.language.psi.stub.StubElement;
 import com.perl5.lang.perl.psi.PerlNamespaceDefinition;
 import com.perl5.lang.perl.psi.PerlNamespaceDefinitionElement;
 import com.perl5.lang.perl.psi.mro.PerlMroType;
@@ -33,7 +33,7 @@ public class PerlNamespaceDefinitionStub extends StubBase<PerlNamespaceDefinitio
   private final @NotNull PerlNamespaceDefinitionData myData;
 
   public PerlNamespaceDefinitionStub(@Nullable StubElement parent,
-                                     @NotNull IElementType elementType,
+                                     @NotNull IStubElementType<?, ?> elementType,
                                      @NotNull PerlNamespaceDefinitionData data) {
     super(parent, elementType);
     myData = data;

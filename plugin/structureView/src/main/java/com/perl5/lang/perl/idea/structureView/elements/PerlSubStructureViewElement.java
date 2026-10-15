@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.idea.structureView.elements;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.perl5.lang.perl.parser.constant.psi.light.PerlLightConstantDefinitionElement;
 import com.perl5.lang.perl.psi.PerlSubDeclarationElement;
 import com.perl5.lang.perl.psi.PerlSubDefinitionElement;

@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.idea.sdk.host;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.process.ProcessOutput;
+import consulo.process.ExecutionException;
+import consulo.process.util.ProcessOutput;
 import org.jetbrains.annotations.NotNull;
 
 public class PerlExecutionException extends ExecutionException {

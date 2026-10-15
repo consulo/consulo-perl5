@@ -16,12 +16,12 @@
 
 package com.perl5.lang.perl.idea.folding;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.folding.FoldingBuilderEx;
-import com.intellij.lang.folding.FoldingDescriptor;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiElement;
+import consulo.language.ast.ASTNode;
+import consulo.language.editor.folding.FoldingBuilderEx;
+import consulo.language.editor.folding.FoldingDescriptor;
+import consulo.document.Document;
+import consulo.document.util.TextRange;
+import consulo.language.psi.PsiElement;
 import com.perl5.lang.perl.psi.PerlNamespaceDefinitionWithIdentifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

@@ -16,14 +16,15 @@
 
 package com.perl5.lang.perl.idea.livetemplates;
 
-import com.intellij.codeInsight.template.Template;
-import com.intellij.codeInsight.template.impl.TemplateContext;
-import com.intellij.codeInsight.template.impl.TemplateImpl;
-import com.intellij.codeInsight.template.impl.TemplateOptionalProcessor;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.RangeMarker;
-import com.intellij.openapi.project.Project;
+import consulo.language.editor.template.Template;
+import consulo.language.editor.template.context.TemplateContext;
+import consulo.language.editor.template.TemplateOptionalProcessor;
+import consulo.document.Document;
+import consulo.codeEditor.Editor;
+import consulo.document.RangeMarker;
+import consulo.localize.LocalizeValue;
+import consulo.project.Project;
+import consulo.util.dataholder.KeyWithDefaultValue;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -37,6 +38,14 @@ public class PerlIndentionSuppresor implements TemplateOptionalProcessor {
   public static final Pattern HEREDOC_OPENER_PATTERN_DQ = Pattern.compile("<<(\\s*)(\")(.*?)\"");
   public static final Pattern HEREDOC_OPENER_PATTERN_SQ = Pattern.compile("<<(\\s*)(')(.*?)'");
   public static final Pattern HEREDOC_OPENER_PATTERN_XQ = Pattern.compile("<<(\\s*)(`)(.*?)`");
+
+  // consulo: Consulo template options are keyed; this processor overrides isEnabled() and is never visible
+  private static final KeyWithDefaultValue<Boolean> KEY = KeyWithDefaultValue.create("perl5.indention.suppressor", true);
+
+  @Override
+  public KeyWithDefaultValue<Boolean> getKey() {
+    return KEY;
+  }
 
 
   @Override
@@ -55,21 +64,19 @@ public class PerlIndentionSuppresor implements TemplateOptionalProcessor {
   }
 
   @Override
-  public @Nullable @Nls String getOptionName() {
-    return null;
+  public @NotNull LocalizeValue getOptionText() {
+    return LocalizeValue.empty();
   }
 
   @Override
   public boolean isEnabled(Template template) {
     // fixme this is probably bad. Doesn't work if it's custom group
-    if (template instanceof TemplateImpl templateImpl) {
-      return templateImpl.getGroupName().startsWith("Perl5");
-    }
-    return false;
+    String groupName = template.getGroupName();
+    return groupName != null && groupName.startsWith("Perl5");
   }
 
   @Override
-  public boolean isVisible(@NotNull Template template, @NotNull TemplateContext context) {
+  public boolean isVisible(@NotNull Template template) {
     return false;
   }
 }

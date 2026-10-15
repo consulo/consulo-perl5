@@ -16,25 +16,25 @@
 
 package com.perl5.lang.perl.cpanminus.cpanfile;
 
-import com.intellij.openapi.util.NlsSafe;
 import com.perl5.PerlIcons;
 import com.perl5.lang.perl.fileTypes.PerlFileTypeScript;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
+import consulo.localize.LocalizeValue;
+import consulo.ui.image.Image;
 
 public class PerlFileTypeCpanfile extends PerlFileTypeScript {
-  public static final @NlsSafe String CPANFILE = "cpanfile";
+  public static final String CPANFILE = "cpanfile";
   public static final PerlFileTypeCpanfile INSTANCE = new PerlFileTypeCpanfile();
 
   @Override
-  public @NlsSafe @NotNull String getName() {
+  public @NotNull String getId() {
     return "Cpanfile";
   }
 
   @Override
-  public @Nullable Icon getIcon() {
+  public @Nullable Image getIcon() {
     return PerlIcons.METACPAN;
   }
 
@@ -49,7 +49,7 @@ public class PerlFileTypeCpanfile extends PerlFileTypeScript {
   }
 
   @Override
-  public @NotNull String getDescription() {
-    return getName();
+  public @NotNull LocalizeValue getDescription() {
+    return LocalizeValue.of(getId());
   }
 }

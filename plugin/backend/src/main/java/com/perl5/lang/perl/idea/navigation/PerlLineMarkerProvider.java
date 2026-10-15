@@ -16,13 +16,15 @@
 
 package com.perl5.lang.perl.idea.navigation;
 
-import com.intellij.codeInsight.daemon.RelatedItemLineMarkerInfo;
-import com.intellij.codeInsight.daemon.RelatedItemLineMarkerProvider;
-import com.intellij.codeInsight.navigation.NavigationGutterIconBuilder;
-import com.intellij.icons.AllIcons;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.Processor;
+import com.perl5.lang.perl.PerlLanguage;
+import consulo.language.Language;
+import consulo.language.editor.gutter.RelatedItemLineMarkerInfo;
+import consulo.language.editor.gutter.RelatedItemLineMarkerProvider;
+import consulo.language.editor.ui.navigation.NavigationGutterIconBuilder;
+import consulo.application.AllIcons;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.application.util.function.Processor;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.psi.*;
 import com.perl5.lang.perl.psi.impl.PerlPolyNamedElement;
@@ -38,7 +40,7 @@ import java.util.List;
 
 public class PerlLineMarkerProvider extends RelatedItemLineMarkerProvider {
   @Override
-  protected void collectNavigationMarkers(@NotNull PsiElement element, @NotNull Collection<? super RelatedItemLineMarkerInfo<?>> result) {
+  protected void collectNavigationMarkers(@NotNull PsiElement element, @NotNull Collection<? super RelatedItemLineMarkerInfo> result) {
     switch (element) {
       case PerlNamespaceDefinitionWithIdentifier namespaceDefinition -> addNamespaceMarkers(namespaceDefinition, result);
       case PerlSubDefinitionElement subDefinition when subDefinition.isMethod() -> addSubDefinitionsMarkers(subDefinition, result);
@@ -57,8 +59,13 @@ public class PerlLineMarkerProvider extends RelatedItemLineMarkerProvider {
     }
   }
 
+  @Override
+  public @NotNull Language getLanguage() {
+    return PerlLanguage.INSTANCE;
+  }
+
   private void addNamespaceMarkers(@NotNull PerlNamespaceDefinitionWithIdentifier element,
-                                   Collection<? super RelatedItemLineMarkerInfo<?>> result) {
+                                   Collection<? super RelatedItemLineMarkerInfo> result) {
     PsiElement nameIdentifier = element.getNameIdentifier();
     if (nameIdentifier == null) {
       nameIdentifier = element;
@@ -96,7 +103,7 @@ public class PerlLineMarkerProvider extends RelatedItemLineMarkerProvider {
   }
 
   private void addSubDefinitionsMarkers(@NotNull PerlSubDefinitionElement subElement,
-                                        Collection<? super RelatedItemLineMarkerInfo<?>> result) {
+                                        Collection<? super RelatedItemLineMarkerInfo> result) {
     PerlNamespaceDefinitionElement containingNamespace = PsiTreeUtil.getParentOfType(subElement, PerlNamespaceDefinitionElement.class);
     if (containingNamespace != null) {
       PsiElement nameIdentifier = subElement.getNameIdentifier();

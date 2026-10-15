@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.idea.codeInsight.controlFlow;
 
-import com.intellij.codeInsight.controlflow.ControlFlowBuilder;
-import com.intellij.codeInsight.controlflow.impl.ConditionalInstructionImpl;
-import com.intellij.psi.PsiElement;
+import consulo.language.controlFlow.ControlFlowBuilder;
+import consulo.language.controlFlow.base.ConditionalInstructionImpl;
+import consulo.language.psi.PsiElement;
 import org.jetbrains.annotations.Nullable;
 
 public class PerlIteratorConditionInstruction extends ConditionalInstructionImpl {

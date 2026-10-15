@@ -17,7 +17,7 @@
 package model;
 
 import base.MojoLightTestCase;
-import com.intellij.openapi.ui.InputValidator;
+import consulo.ui.ex.InputValidator;
 import com.perl5.lang.mojolicious.model.MojoApp;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;

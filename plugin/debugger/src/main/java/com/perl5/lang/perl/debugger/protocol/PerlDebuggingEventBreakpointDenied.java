@@ -16,10 +16,10 @@
 
 package com.perl5.lang.perl.debugger.protocol;
 
-import com.intellij.icons.AllIcons;
-import com.intellij.xdebugger.XDebugSession;
-import com.intellij.xdebugger.XDebuggerManager;
-import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
+import consulo.execution.debug.icon.ExecutionDebugIconGroup;
+import consulo.execution.debug.XDebugSession;
+import consulo.execution.debug.XDebuggerManager;
+import consulo.execution.debug.breakpoint.XLineBreakpoint;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -28,7 +28,7 @@ public class PerlDebuggingEventBreakpointDenied extends PerlDebuggingEventBreakp
   protected void processBreakPoint(@NotNull XLineBreakpoint<?> breakpoint, XDebugSession session) {
     XDebuggerManager.getInstance(session.getProject()).getBreakpointManager().updateBreakpointPresentation(
       breakpoint,
-      AllIcons.Debugger.Db_invalid_breakpoint,
+      ExecutionDebugIconGroup.breakpointBreakpointinvalid(),
       "You can't set a breakpoint here"
     );
   }

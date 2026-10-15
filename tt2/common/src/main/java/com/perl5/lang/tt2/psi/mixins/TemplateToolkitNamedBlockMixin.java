@@ -16,11 +16,11 @@
 
 package com.perl5.lang.tt2.psi.mixins;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.impl.source.tree.LeafPsiElement;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.ast.ASTNode;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.impl.psi.LeafPsiElement;
+import consulo.language.util.IncorrectOperationException;
 import com.perl5.lang.tt2.TemplateToolkitBundle;
 import com.perl5.lang.tt2.TemplateToolkitIcons;
 import com.perl5.lang.tt2.psi.PsiBlockName;
@@ -30,7 +30,7 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
+import consulo.ui.image.Image;
 
 
 public abstract class TemplateToolkitNamedBlockMixin extends TemplateToolkitCompositeElementImpl implements TemplateToolkitNamedBlock {
@@ -74,8 +74,9 @@ public abstract class TemplateToolkitNamedBlockMixin extends TemplateToolkitComp
     return nameIdentifier == null ? super.getTextOffset() : nameIdentifier.getTextOffset();
   }
 
-  @Override
-  public @Nullable Icon getIcon(int flags) {
+  // consulo: PsiElement#getIcon(int) does not exist in Consulo (element icons come from IconDescriptorUpdater),
+  //  so this is no longer an override; it is called by consulo.perl5.tt2.TemplateToolkitIconDescriptorUpdater
+  public @Nullable Image getIcon(int flags) {
     return TemplateToolkitIcons.TTK2_BLOCK_ICON;
   }
 }

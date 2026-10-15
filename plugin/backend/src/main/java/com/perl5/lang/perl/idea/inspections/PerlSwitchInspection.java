@@ -16,12 +16,12 @@
 
 package com.perl5.lang.perl.idea.inspections;
 
-import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.editor.inspection.ProblemsHolder;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiElementVisitor;
+import consulo.language.psi.PsiReference;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.PsiUtilCore;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.lexer.PerlSyntax;
 import com.perl5.lang.perl.psi.*;
@@ -35,7 +35,14 @@ import java.util.Objects;
 import static com.perl5.PerlBundleKt.PATH_TO_BUNDLE;
 import static com.perl5.lang.perl.idea.inspections.PerlLoopControlInspection.MAP_GREP;
 import static com.perl5.lang.perl.parser.PerlElementTypesGenerated.*;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.Language;
+import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
+import consulo.localize.LocalizeValue;
+import com.perl5.lang.perl.PerlLanguage;
+import org.jetbrains.annotations.Nullable;
 
+@ExtensionImpl
 public class PerlSwitchInspection extends PerlInspection {
   @Override
   public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {
@@ -178,5 +185,26 @@ public class PerlSwitchInspection extends PerlInspection {
         super.visitDefaultCompound(o);
       }
     };
+  }
+
+  // consulo: metadata from upstream <localInspection> registration in perl5.plugin.backend.main.xml
+  @Override
+  public @Nullable Language getLanguage() {
+    return PerlLanguage.INSTANCE;
+  }
+
+  @Override
+  public @NotNull LocalizeValue getDisplayName() {
+    return LocalizeValue.localizeTODO(PerlBundle.message("inspection.perl.switch.display.name"));
+  }
+
+  @Override
+  public @NotNull LocalizeValue getGroupDisplayName() {
+    return LocalizeValue.localizeTODO(PerlBundle.message("inspection.group.perl"));
+  }
+
+  @Override
+  public @NotNull HighlightDisplayLevel getDefaultLevel() {
+    return HighlightDisplayLevel.ERROR;
   }
 }

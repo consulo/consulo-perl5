@@ -23,7 +23,8 @@ import com.perl5.lang.pod.PodLanguage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
+import consulo.localize.LocalizeValue;
+import consulo.ui.image.Image;
 
 
 public class PodFileType extends PerlPluginBaseFileType {
@@ -35,13 +36,13 @@ public class PodFileType extends PerlPluginBaseFileType {
   }
 
   @Override
-  public @NotNull String getName() {
+  public @NotNull String getId() {
     return "POD File";
   }
 
   @Override
-  public @NotNull String getDescription() {
-    return PerlBundle.message("label.perl5.documentation.file");
+  public @NotNull LocalizeValue getDescription() {
+    return LocalizeValue.localizeTODO(PerlBundle.message("label.perl5.documentation.file"));
   }
 
   @Override
@@ -50,7 +51,7 @@ public class PodFileType extends PerlPluginBaseFileType {
   }
 
   @Override
-  public @Nullable Icon getIcon() {
+  public @Nullable Image getIcon() {
     return PerlIcons.POD_FILE;
   }
 }

@@ -16,24 +16,24 @@
 
 package com.perl5.lang.pod.idea.editor;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.openapi.editor.CaretModel;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.EditorModificationUtilEx;
-import com.intellij.openapi.editor.highlighter.HighlighterIterator;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiWhiteSpace;
-import com.intellij.psi.TokenType;
-import com.intellij.psi.impl.source.tree.LeafPsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.util.ObjectUtils;
+import consulo.language.ast.ASTNode;
+import consulo.codeEditor.CaretModel;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.util.EditorModificationUtil;
+import consulo.codeEditor.HighlighterIterator;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.project.Project;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiWhiteSpace;
+import consulo.language.ast.TokenType;
+import consulo.language.impl.psi.LeafPsiElement;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.psi.PsiUtilCore;
+import consulo.util.lang.ObjectUtil;
 import com.perl5.lang.perl.idea.editor.smartkeys.PerlEditorUtil;
 import com.perl5.lang.perl.idea.editor.smartkeys.PerlTypedHandlerDelegate;
 import com.perl5.lang.pod.lexer.PodTokenSets;
@@ -132,7 +132,7 @@ public class PodTypedHandler extends PerlTypedHandlerDelegate {
         CharSequence documentChars = editor.getDocument().getCharsSequence();
 
         if (elementType == POD_IDENTIFIER && StringUtil.containsChar(POD_COMMANDS, documentChars.charAt(prevCharOffset))) {
-          EditorModificationUtilEx.insertStringAtCaret(editor, ">", false, false, 0);
+          EditorModificationUtil.insertStringAtCaret(editor, ">", false, false, 0);
         }
         else if (elementType == POD_ANGLE_LEFT || POD_COMMANDS_TOKENSET.contains(elementType)) {
           extendAngles(element.getParent());
@@ -161,9 +161,9 @@ public class PodTypedHandler extends PerlTypedHandlerDelegate {
   @Override
   protected boolean shouldShowPopup(char typedChar, @NotNull Editor editor, @Nullable PsiElement element) {
     IElementType elementType = PsiUtilCore.getElementType(element);
-    ASTNode elementNode = ObjectUtils.doIfNotNull(element, PsiElement::getNode);
-    CharSequence elementChars = ObjectUtils.doIfNotNull(elementNode, ASTNode::getChars);
-    PsiElement elementParent = ObjectUtils.doIfNotNull(element, PsiElement::getParent);
+    ASTNode elementNode = ObjectUtil.doIfNotNull(element, PsiElement::getNode);
+    CharSequence elementChars = ObjectUtil.doIfNotNull(elementNode, ASTNode::getChars);
+    PsiElement elementParent = ObjectUtil.doIfNotNull(element, PsiElement::getParent);
     IElementType parentType = PsiUtilCore.getElementType(elementParent);
 
     return typedChar == '=' && isCommandPosition(editor, elementType, elementChars) ||
@@ -209,7 +209,7 @@ public class PodTypedHandler extends PerlTypedHandlerDelegate {
     }
     HighlighterIterator iterator = editor.getHighlighter().createIterator(offset - 1);
     while (!iterator.atEnd()) {
-      IElementType tokenType = iterator.getTokenType();
+      IElementType tokenType = (IElementType)iterator.getTokenType();
       if (tokenType == POD_NEWLINE) {
         return true;
       }

@@ -16,9 +16,9 @@
 
 package com.perl5.lang.htmlmason.lexer;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.tree.IElementType;
+import consulo.project.Project;
+import consulo.util.lang.StringUtil;
+import consulo.language.ast.IElementType;
 import com.perl5.lang.htmlmason.idea.configuration.HTMLMasonCustomTag;
 import com.perl5.lang.htmlmason.idea.configuration.HTMLMasonCustomTagRole;
 import com.perl5.lang.htmlmason.idea.configuration.HTMLMasonSettings;
@@ -50,8 +50,18 @@ public abstract class HTMLMasonBaseLexer extends PerlTemplatingLexer {
 
   @Override
   public HTMLMasonBaseLexer withProject(@Nullable Project project) {
-    myCustomTagsMap = project == null ? null : HTMLMasonSettings.getInstance(project).getCustomTagsMap();
     myPerlLexer.withProject(project);
+    return this;
+  }
+
+  /**
+   * consulo: upstream reads custom tags from the project settings in {@link #withProject(Project)}, here the settings of the module of
+   * the lexed file are passed
+   *
+   * @param settings null means no custom tags
+   */
+  public HTMLMasonBaseLexer withSettings(@Nullable HTMLMasonSettings settings) {
+    myCustomTagsMap = settings == null ? null : settings.getCustomTagsMap();
     return this;
   }
 

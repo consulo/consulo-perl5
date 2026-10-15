@@ -16,13 +16,13 @@
 
 package com.perl5.lang.perl.idea.inspections;
 
-import com.intellij.codeInspection.LocalQuickFix;
-import com.intellij.codeInspection.ProblemDescriptor;
-import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElementVisitor;
+import consulo.language.editor.inspection.LocalQuickFix;
+import consulo.language.editor.inspection.ProblemDescriptor;
+import consulo.language.editor.inspection.ProblemsHolder;
+import consulo.project.Project;
+import consulo.content.bundle.Sdk;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiElementVisitor;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.adapters.PackageManagerAdapter;
 import com.perl5.lang.perl.adapters.PackageManagerAdapterFactory;
@@ -39,8 +39,15 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.Language;
+import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
+import consulo.localize.LocalizeValue;
+import com.perl5.lang.perl.PerlLanguage;
+import org.jetbrains.annotations.Nullable;
 
 
+@ExtensionImpl
 public class PerlUnresolvedPackageFileInspection extends PerlInspection {
   @Override
   public @NotNull PsiElementVisitor buildVisitor(final @NotNull ProblemsHolder holder, boolean isOnTheFly) {
@@ -90,19 +97,45 @@ public class PerlUnresolvedPackageFileInspection extends PerlInspection {
   private record InstallPackageQuickfix(@SafeFieldForPreview @NotNull PackageManagerAdapter myAdapter, @NotNull String myPackageName)
     implements LocalQuickFix {
 
-    @Override
+    // TODO consulo: Consulo QuickFix has no family name; kept for upstream parity (unused)
     public @Nls(capitalization = Nls.Capitalization.Sentence) @NotNull String getFamilyName() {
       return PerlBundle.message("perl.quickfix.install.family", myAdapter.getPresentableName());
     }
 
     @Override
-    public @Nls(capitalization = Nls.Capitalization.Sentence) @NotNull String getName() {
-      return PerlBundle.message("perl.quickfix.install.name", myPackageName, myAdapter.getPresentableName());
+    public @NotNull LocalizeValue getName() {
+      return LocalizeValue.localizeTODO(PerlBundle.message("perl.quickfix.install.name", myPackageName, myAdapter.getPresentableName()));
     }
 
     @Override
     public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
       myAdapter.queueInstall(myPackageName);
     }
+  }
+
+  // consulo: metadata from upstream <localInspection> registration in perl5.plugin.backend.main.xml
+  @Override
+  public @NotNull String getShortName() {
+    return "PackageFileMissing";
+  }
+
+  @Override
+  public @Nullable Language getLanguage() {
+    return PerlLanguage.INSTANCE;
+  }
+
+  @Override
+  public @NotNull LocalizeValue getDisplayName() {
+    return LocalizeValue.localizeTODO(PerlBundle.message("inspection.package.file.missing.display.name"));
+  }
+
+  @Override
+  public @NotNull LocalizeValue getGroupDisplayName() {
+    return LocalizeValue.localizeTODO(PerlBundle.message("inspection.group.perl"));
+  }
+
+  @Override
+  public @NotNull HighlightDisplayLevel getDefaultLevel() {
+    return HighlightDisplayLevel.WARNING;
   }
 }

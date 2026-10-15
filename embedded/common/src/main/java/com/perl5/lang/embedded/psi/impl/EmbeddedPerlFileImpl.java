@@ -16,8 +16,8 @@
 
 package com.perl5.lang.embedded.psi.impl;
 
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.psi.FileViewProvider;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.language.file.FileViewProvider;
 import com.perl5.lang.embedded.EmbeddedPerlLanguage;
 import com.perl5.lang.embedded.filetypes.EmbeddedPerlFileType;
 import com.perl5.lang.perl.psi.impl.PerlFileImpl;

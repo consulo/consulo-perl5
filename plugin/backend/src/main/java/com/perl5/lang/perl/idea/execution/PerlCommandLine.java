@@ -16,17 +16,16 @@
 
 package com.perl5.lang.perl.idea.execution;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.configurations.GeneralCommandLine;
-import com.intellij.execution.configurations.ParametersList;
-import com.intellij.execution.configurations.PtyCommandLine;
-import com.intellij.execution.process.ProcessListener;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.util.ObjectUtils;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.process.ExecutionException;
+import consulo.process.cmd.GeneralCommandLine;
+import consulo.process.cmd.ParametersList;
+import consulo.process.event.ProcessListener;
+import consulo.logging.Logger;
+import consulo.module.Module;
+import consulo.project.Project;
+import consulo.content.bundle.Sdk;
+import consulo.util.lang.ObjectUtil;
+import consulo.util.collection.ContainerUtil;
 import com.perl5.lang.perl.idea.project.PerlProjectManager;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostData;
 import com.perl5.lang.perl.idea.sdk.versionManager.PerlVersionManagerData;
@@ -222,7 +221,7 @@ public class PerlCommandLine extends GeneralCommandLine {
   }
 
   public @Nullable Project getEffectiveProject() {
-    return myProject != null ? myProject : ObjectUtils.doIfNotNull(getModule(), Module::getProject);
+    return myProject != null ? myProject : ObjectUtil.doIfNotNull(getModule(), Module::getProject);
   }
 
   public @NotNull Project getNonNullEffectiveProject() {
@@ -255,7 +254,7 @@ public class PerlCommandLine extends GeneralCommandLine {
    * Appends mappings of ports
    */
   public @NotNull PerlCommandLine withPortMappings(PortMapping... mappings) {
-    Set<PortMapping> newMappings = ContainerUtil.newHashSet(mappings);
+    Set<PortMapping> newMappings = new HashSet<>(Arrays.asList(mappings));
     newMappings.addAll(myPortMappings);
     myPortMappings = newMappings;
     return this;
@@ -290,11 +289,10 @@ public class PerlCommandLine extends GeneralCommandLine {
       return super.createProcess();
     }
 
-    PtyCommandLine ptyCommandLine = new PtyCommandLine(this).withConsoleMode(false).withInitialColumns(256);
-    if (hostData == null || !hostData.getOsHandler().isMsWindows()) {
-      ptyCommandLine.withEnvironment("TERM", "xterm-256color");
-    }
-
-    return ptyCommandLine.createProcess();
+    // TODO consulo: PtyCommandLine is internal in Consulo (consulo.process.impl), there is no public API to start a Process with PTY
+    //  from a command line. Upstream: new PtyCommandLine(this).withConsoleMode(false).withInitialColumns(256) + TERM=xterm-256color
+    //  for non-Windows hosts (hostData == null || !hostData.getOsHandler().isMsWindows()). For the local host the PTY
+    //  is applied by PerlHostData#doCreateConsoleProcessHandler through the public ProcessHandlerBuilder.
+    return super.createProcess();
   }
 }

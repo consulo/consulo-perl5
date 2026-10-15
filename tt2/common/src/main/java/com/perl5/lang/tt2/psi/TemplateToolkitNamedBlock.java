@@ -16,8 +16,8 @@
 
 package com.perl5.lang.tt2.psi;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiNameIdentifierOwner;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiNameIdentifierOwner;
 
 
 public interface TemplateToolkitNamedBlock extends PsiElement, PsiNameIdentifierOwner, PsiNamedBlock {

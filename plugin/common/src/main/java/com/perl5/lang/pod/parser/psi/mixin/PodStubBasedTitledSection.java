@@ -16,18 +16,18 @@
 
 package com.perl5.lang.pod.parser.psi.mixin;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.StubBasedPsiElement;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.ASTNode;
+import consulo.navigation.ItemPresentation;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.StubBasedPsiElement;
+import consulo.language.ast.IElementType;
+import consulo.language.icon.IconDescriptorUpdaters;
+import consulo.ui.image.Image;
 import com.perl5.lang.pod.parser.psi.PodCompositeElement;
 import com.perl5.lang.pod.parser.psi.PodTitledSection;
 import com.perl5.lang.pod.parser.psi.stubs.PodSectionStub;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import javax.swing.*;
 
 public abstract class PodStubBasedTitledSection extends PodStubBasedSection implements StubBasedPsiElement<PodSectionStub>,
                                                                                        PodTitledSection {
@@ -65,8 +65,8 @@ public abstract class PodStubBasedTitledSection extends PodStubBasedSection impl
   }
 
   @Override
-  public @Nullable Icon getIcon(boolean unused) {
-    return getContainingFile().getIcon(0);
+  public @Nullable Image getIcon(boolean unused) {
+    return IconDescriptorUpdaters.getIcon(getContainingFile(), 0);
   }
 
   @Override

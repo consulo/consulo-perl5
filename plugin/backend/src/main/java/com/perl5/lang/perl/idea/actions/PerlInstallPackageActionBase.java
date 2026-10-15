@@ -16,9 +16,11 @@
 
 package com.perl5.lang.perl.idea.actions;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.project.Project;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.InputBoxBuilder;
+import consulo.localize.LocalizeValue;
+import consulo.util.lang.StringUtil;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.adapters.PackageManagerAdapter;
 import org.jetbrains.annotations.NotNull;
@@ -51,17 +53,17 @@ public abstract class PerlInstallPackageActionBase extends PerlActionBase {
       return;
     }
 
-    String packageNames = Messages.showInputDialog(
-      e.getProject(),
-      PerlBundle.message("dialog.message.enter.packages.names"),
-      getTemplatePresentation().getText(),
-      null
-    );
+    // consulo: Messages are Swing dialogs (not available in web), the unified input box is asynchronous
+    InputBoxBuilder.text()
+      .title(getTemplatePresentation().getTextValue())
+      .text(LocalizeValue.of(PerlBundle.message("dialog.message.enter.packages.names")))
+      .showAsync(e.getData(Project.KEY))
+      .whenComplete((packageNames, error) -> {
+        if (StringUtil.isEmpty(packageNames)) {
+          return;
+        }
 
-    if (StringUtil.isEmpty(packageNames)) {
-      return;
-    }
-
-    packageManagerAdapter.queueInstall(Arrays.asList(packageNames.split("[\\s,;]+")), false);
+        packageManagerAdapter.queueInstall(Arrays.asList(packageNames.split("[\\s,;]+")), false);
+      });
   }
 }

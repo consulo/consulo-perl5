@@ -16,9 +16,9 @@
 
 package com.perl5.lang.htmlmason.parser.stubs.impl;
 
-import com.intellij.psi.stubs.StubBase;
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.psi.stub.StubBase;
+import consulo.language.psi.stub.StubElement;
+import consulo.language.psi.stub.IStubElementType;
 import com.perl5.lang.htmlmason.parser.psi.HTMLMasonArgsBlock;
 import com.perl5.lang.htmlmason.parser.stubs.HTMLMasonArgsBlockStub;
 import com.perl5.lang.perl.psi.utils.PerlSubArgument;
@@ -29,7 +29,7 @@ import java.util.List;
 public class HTMLMasonArgsBlockStubImpl extends StubBase<HTMLMasonArgsBlock> implements HTMLMasonArgsBlockStub {
   private final List<PerlSubArgument> myArguments;
 
-  public HTMLMasonArgsBlockStubImpl(StubElement parent, IElementType elementType, List<PerlSubArgument> arguments) {
+  public HTMLMasonArgsBlockStubImpl(StubElement parent, IStubElementType<?, ?> elementType, List<PerlSubArgument> arguments) {
     super(parent, elementType);
     myArguments = arguments;
   }

@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.idea.configuration.settings.sdk;
 
-import com.intellij.openapi.projectRoots.Sdk;
+import consulo.content.bundle.Sdk;
 import com.intellij.openapi.projectRoots.impl.PerlSdkTable;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.util.collection.ContainerUtil;
 import com.perl5.lang.perl.idea.configuration.settings.sdk.wrappers.Perl5RealSdkWrapper;
 import com.perl5.lang.perl.idea.configuration.settings.sdk.wrappers.Perl5SdkWrapper;
 import org.jetbrains.annotations.NotNull;

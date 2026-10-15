@@ -20,10 +20,10 @@ import com.perl5.lang.embedded.EmbeddedPerlBundle;
 import com.perl5.lang.embedded.EmbeddedPerlIcons;
 import com.perl5.lang.embedded.EmbeddedPerlLanguage;
 import com.perl5.lang.perl.fileTypes.PerlFileType;
+import consulo.localize.LocalizeValue;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import javax.swing.*;
 
 
 public class EmbeddedPerlFileType extends PerlFileType {
@@ -35,13 +35,13 @@ public class EmbeddedPerlFileType extends PerlFileType {
   }
 
   @Override
-  public @NotNull String getName() {
+  public @NotNull String getId() {
     return "Embedded Perl";
   }
 
   @Override
-  public @NotNull String getDescription() {
-    return EmbeddedPerlBundle.message("label.embedded.perl.file");
+  public @NotNull LocalizeValue getDescription() {
+    return LocalizeValue.localizeTODO(EmbeddedPerlBundle.message("label.embedded.perl.file"));
   }
 
   @Override
@@ -50,7 +50,7 @@ public class EmbeddedPerlFileType extends PerlFileType {
   }
 
   @Override
-  public @Nullable Icon getIcon() {
+  public @Nullable Image getIcon() {
     return EmbeddedPerlIcons.EMBEDDED_PERL_FILE;
   }
 

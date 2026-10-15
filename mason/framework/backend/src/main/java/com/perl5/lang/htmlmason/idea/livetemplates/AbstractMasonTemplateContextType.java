@@ -16,21 +16,22 @@
 
 package com.perl5.lang.htmlmason.idea.livetemplates;
 
-import com.intellij.codeInsight.template.TemplateActionContext;
-import com.intellij.codeInsight.template.TemplateContextType;
-import com.intellij.codeInsight.template.XmlContextType;
-import com.intellij.lang.Language;
-import com.intellij.lang.html.HTMLLanguage;
-import com.intellij.lang.xhtml.XHTMLLanguage;
-import com.intellij.openapi.util.NlsContexts;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.editor.template.context.BaseTemplateContextType;
+import consulo.language.editor.template.context.TemplateActionContext;
+import consulo.localize.LocalizeValue;
+import consulo.xml.codeInsight.template.XmlContextType;
+import consulo.language.Language;
+import consulo.html.language.HTMLLanguage;
+import consulo.xhtml.language.XHTMLLanguage;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiUtilCore;
 import org.jetbrains.annotations.NotNull;
 
 
-public abstract class AbstractMasonTemplateContextType extends TemplateContextType {
-  public AbstractMasonTemplateContextType(@NlsContexts.Label @NotNull String presentableName) {
-    super(presentableName);
+public abstract class AbstractMasonTemplateContextType extends BaseTemplateContextType {
+  // consulo: context id is declared in upstream xml (<liveTemplateContext contextId=...>)
+  public AbstractMasonTemplateContextType(@NotNull String contextId, @NotNull String presentableName) {
+    super(contextId, LocalizeValue.localizeTODO(presentableName));
   }
 
   protected abstract boolean isMyFile(PsiFile file);

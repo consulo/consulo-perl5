@@ -16,15 +16,15 @@
 
 package com.perl5.lang.perl.idea.run;
 
-import com.intellij.execution.DefaultExecutionResult;
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.ExecutionResult;
-import com.intellij.execution.Executor;
-import com.intellij.execution.configurations.CommandLineState;
-import com.intellij.execution.process.ProcessHandler;
-import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.execution.runners.ProgramRunner;
-import com.intellij.execution.ui.ConsoleView;
+import consulo.execution.DefaultExecutionResult;
+import consulo.process.ExecutionException;
+import consulo.execution.ExecutionResult;
+import consulo.execution.executor.Executor;
+import consulo.execution.configuration.CommandLineState;
+import consulo.process.ProcessHandler;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.execution.runner.ProgramRunner;
+import consulo.execution.ui.console.ConsoleView;
 import com.perl5.lang.perl.idea.execution.PerlCommandLine;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostData;
 import org.jetbrains.annotations.NotNull;
@@ -46,7 +46,7 @@ public class PerlRunProfileState extends CommandLineState {
   }
 
   /**
-   * Copy paste of {@link CommandLineState#execute(com.intellij.execution.Executor, com.intellij.execution.runners.ProgramRunner)} without
+   * Copy paste of {@link CommandLineState#execute(consulo.execution.executor.Executor, consulo.execution.runner.ProgramRunner)} without
    * a runner argument
    */
   public @NotNull ExecutionResult execute(final @NotNull Executor executor) throws ExecutionException {

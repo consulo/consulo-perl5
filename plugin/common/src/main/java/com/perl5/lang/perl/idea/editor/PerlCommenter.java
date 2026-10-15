@@ -16,11 +16,19 @@
 
 package com.perl5.lang.perl.idea.editor;
 
-import com.intellij.codeInsight.generation.IndentedCommenter;
+import com.perl5.lang.perl.PerlLanguage;
+import consulo.language.IndentedCommenter;
+import consulo.language.Language;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
 public class PerlCommenter implements IndentedCommenter {
+  @Override
+  public @NotNull Language getLanguage() {
+    return PerlLanguage.INSTANCE;
+  }
+
   @Override
   public @Nullable String getLineCommentPrefix() {
     return "# ";

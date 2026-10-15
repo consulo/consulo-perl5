@@ -16,14 +16,14 @@
 
 package com.perl5.lang.htmlmason.parser.stubs.impl;
 
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.psi.stub.StubElement;
+import consulo.language.psi.stub.IStubElementType;
 import com.perl5.lang.htmlmason.parser.psi.HTMLMasonMethodDefinition;
 import com.perl5.lang.htmlmason.parser.stubs.HTMLMasonMethodDefinitionStub;
 
 public class HTMLMasonMethodDefinitionStubImpl extends HTMLMasonNamedElementStubBaseImpl<HTMLMasonMethodDefinition>
   implements HTMLMasonMethodDefinitionStub {
-  public HTMLMasonMethodDefinitionStubImpl(StubElement parent, IElementType elementType, String myName) {
+  public HTMLMasonMethodDefinitionStubImpl(StubElement parent, IStubElementType<?, ?> elementType, String myName) {
     super(parent, elementType, myName);
   }
 }

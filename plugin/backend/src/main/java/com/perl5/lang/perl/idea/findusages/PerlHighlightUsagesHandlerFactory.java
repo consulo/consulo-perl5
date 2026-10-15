@@ -16,19 +16,19 @@
 
 package com.perl5.lang.perl.idea.findusages;
 
-import com.intellij.codeInsight.TargetElementUtil;
-import com.intellij.codeInsight.highlighting.HighlightUsagesHandlerBase;
-import com.intellij.codeInsight.highlighting.HighlightUsagesHandlerFactory;
-import com.intellij.codeInsight.highlighting.ReadWriteAccessDetector;
-import com.intellij.lang.injection.InjectedLanguageManager;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.*;
-import com.intellij.psi.impl.source.tree.injected.InjectedLanguageEditorUtil;
-import com.intellij.psi.search.LocalSearchScope;
-import com.intellij.psi.search.searches.ReferencesSearch;
-import com.intellij.util.Consumer;
+import consulo.language.editor.TargetElementUtil;
+import consulo.language.editor.highlight.usage.HighlightUsagesHandlerBase;
+import consulo.language.editor.highlight.usage.HighlightUsagesHandlerFactory;
+import consulo.language.editor.highlight.ReadWriteAccessDetector;
+import consulo.language.inject.InjectedLanguageManager;
+import consulo.codeEditor.Editor;
+import consulo.project.Project;
+import consulo.document.util.TextRange;
+
+import consulo.language.editor.inject.EditorWindow;
+import consulo.language.editor.inject.InjectedEditorManager;
+import consulo.language.psi.scope.LocalSearchScope;
+import consulo.language.psi.search.ReferencesSearch;
 import com.perl5.lang.perl.PerlLanguage;
 import com.perl5.lang.perl.parser.PerlIdentifierRangeProvider;
 import org.jetbrains.annotations.NotNull;
@@ -37,6 +37,14 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
+import consulo.language.psi.ElementManipulators;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiNameIdentifierOwner;
+import consulo.language.psi.PsiPolyVariantReference;
+import consulo.language.psi.PsiReference;
+import consulo.language.psi.ResolveResult;
 
 
 public class PerlHighlightUsagesHandlerFactory implements HighlightUsagesHandlerFactory {
@@ -52,7 +60,7 @@ public class PerlHighlightUsagesHandlerFactory implements HighlightUsagesHandler
     PsiElement target = injectedLanguageManager.findInjectedElementAt(file, offset);
     if (target != null && target.getLanguage().isKindOf(PerlLanguage.INSTANCE)) {
       //noinspection deprecation
-      editor = com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil.getEditorForInjectedLanguageNoCommit(editor, file, offset);
+      editor = InjectedEditorManager.getInstance(project).getEditorForInjectedLanguageNoCommit(editor, file, offset);
       file = target.getContainingFile();
       offset = TargetElementUtil.adjustOffset(file, editor.getDocument(), editor.getCaretModel().getOffset());
     }
@@ -69,7 +77,7 @@ public class PerlHighlightUsagesHandlerFactory implements HighlightUsagesHandler
     private final @NotNull Editor myOriginalEditor;
 
     public PerlHighlightUsagesHandler(@NotNull Editor editor, @NotNull PsiFile file, @NotNull PsiElement element, int offsetInTopEditor) {
-      super(InjectedLanguageEditorUtil.getTopLevelEditor(editor),
+      super(EditorWindow.getTopLevelEditor(editor),
             InjectedLanguageManager.getInstance(file.getProject()).getTopLevelFile(file));
       myElement = element;
       myOriginalEditorOffset = offsetInTopEditor;
@@ -79,7 +87,7 @@ public class PerlHighlightUsagesHandlerFactory implements HighlightUsagesHandler
     @Override
     public @NotNull List<PsiElement> getTargets() {
       PsiElement namedElement = myElement.isValid() ?
-        TargetElementUtil.getInstance().getNamedElement(myElement, myOriginalEditorOffset - myElement.getNode().getStartOffset()) : null;
+        TargetElementUtil.getNamedElement(myElement, myOriginalEditorOffset - myElement.getNode().getStartOffset()) : null;
       if (namedElement != null) {
         return collectReferenceTargets(ReferencesSearch.search(namedElement, new LocalSearchScope(myFile)).findFirst());
       }
@@ -111,13 +119,13 @@ public class PerlHighlightUsagesHandlerFactory implements HighlightUsagesHandler
     }
 
     @Override
-    protected void selectTargets(@NotNull List<? extends PsiElement> targets,
-                                 @NotNull Consumer<? super List<? extends PsiElement>> selectionConsumer) {
-      selectionConsumer.consume(targets);
+    protected void selectTargets(@NotNull List<PsiElement> targets,
+                                 @NotNull Consumer<List<PsiElement>> selectionConsumer) {
+      selectionConsumer.accept(targets);
     }
 
     @Override
-    public void computeUsages(@NotNull List<? extends PsiElement> targets) {
+    public void computeUsages(@NotNull List<PsiElement> targets) {
       for (PsiElement target : targets) {
         if (myFile.equals(target.getContainingFile()) && target instanceof PsiNameIdentifierOwner nameIdentifierOwner) {
           PsiElement nameIdentifier = nameIdentifierOwner.getNameIdentifier();

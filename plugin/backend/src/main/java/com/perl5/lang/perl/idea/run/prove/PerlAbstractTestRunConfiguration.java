@@ -17,21 +17,21 @@
 package com.perl5.lang.perl.idea.run.prove;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.configurations.ConfigurationFactory;
-import com.intellij.execution.configurations.RunConfiguration;
-import com.intellij.execution.testframework.sm.SMTestRunnerConnectionUtil;
-import com.intellij.execution.testframework.sm.runner.ui.SMTRunnerConsoleView;
-import com.intellij.execution.ui.ConsoleView;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.options.SettingsEditor;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.xmlb.annotations.Tag;
+import consulo.process.ExecutionException;
+import consulo.execution.configuration.ConfigurationFactory;
+import consulo.execution.configuration.RunConfiguration;
+import consulo.execution.test.sm.SMTestRunnerConnectionUtil;
+import consulo.execution.test.sm.ui.SMTRunnerConsoleView;
+import consulo.execution.ui.console.ConsoleView;
+import consulo.application.ApplicationManager;
+import consulo.logging.Logger;
+import consulo.execution.configuration.ui.SettingsEditor;
+import consulo.project.Project;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.xml.serializer.annotation.Tag;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.idea.execution.PerlCommandLine;
 import com.perl5.lang.perl.idea.execution.PerlTerminalExecutionConsole;
@@ -45,8 +45,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-import static com.intellij.execution.configurations.GeneralCommandLine.ParentEnvironmentType.CONSOLE;
-import static com.intellij.execution.configurations.GeneralCommandLine.ParentEnvironmentType.NONE;
+import static consulo.process.cmd.GeneralCommandLine.ParentEnvironmentType.CONSOLE;
+import static consulo.process.cmd.GeneralCommandLine.ParentEnvironmentType.NONE;
 import static com.perl5.lang.perl.util.PerlRunUtil.PERL5OPT;
 import static com.perl5.lang.perl.util.PerlRunUtil.getPerlRunIncludeArguments;
 
@@ -96,7 +96,8 @@ public abstract class PerlAbstractTestRunConfiguration extends GenericPerlRunCon
 
   @Override
   public @NotNull SettingsEditor<? extends RunConfiguration> getConfigurationEditor() {
-    return new PerlTestRunConfigurationEditor(getProject(), getRunConfigurationProducer());
+    // consulo: unified UI editor, upstream Swing PerlTestRunConfigurationEditor can't be shown in Consulo Web
+    return new PerlTestRunConfigurationUIEditor(getProject(), getRunConfigurationProducer());
   }
 
   protected abstract @NotNull PerlAbstractTestRunConfigurationProducer<? extends PerlAbstractTestRunConfiguration> getRunConfigurationProducer();
@@ -210,8 +211,8 @@ public abstract class PerlAbstractTestRunConfiguration extends GenericPerlRunCon
       }
       String virtualFilePath = testVirtualFile.getPath();
       String effectivePath;
-      if (workingDirectory != null && VfsUtilCore.isAncestor(workingDirectory, testVirtualFile, true)) {
-        effectivePath = VfsUtilCore.getRelativePath(testVirtualFile, workingDirectory);
+      if (workingDirectory != null && VirtualFileUtil.isAncestor(workingDirectory, testVirtualFile, true)) {
+        effectivePath = VirtualFileUtil.getRelativePath(testVirtualFile, workingDirectory);
       }
       else {
         effectivePath = perlHostData.getRemotePath(virtualFilePath);
@@ -228,8 +229,8 @@ public abstract class PerlAbstractTestRunConfiguration extends GenericPerlRunCon
 
   @Override
   public @NotNull List<String> getRequiredModulesList() {
-    return ContainerUtil.append(super.getRequiredModulesList(), PerlPackageUtilCore.TEST_HARNESS_MODULE,
-                                PerlPackageUtilCore.TAP_FORMATTER_MODULE);
+    return ContainerUtil.concat(super.getRequiredModulesList(), List.of(PerlPackageUtilCore.TEST_HARNESS_MODULE,
+                                PerlPackageUtilCore.TAP_FORMATTER_MODULE));
   }
 
   protected void addTestPathArguments(@NotNull List<? super String> arguments, @NotNull String testFilePath, @NotNull VirtualFile testVirtualFile) {

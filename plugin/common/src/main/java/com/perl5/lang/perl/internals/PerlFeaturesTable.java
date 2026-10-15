@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.internals;
 
-import com.intellij.util.containers.ContainerUtil;
+import consulo.util.collection.ContainerUtil;
 import com.perl5.PerlBundle;
 import org.jetbrains.annotations.Nls;
 

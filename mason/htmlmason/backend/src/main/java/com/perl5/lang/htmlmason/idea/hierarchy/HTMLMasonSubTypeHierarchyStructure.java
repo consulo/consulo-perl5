@@ -16,10 +16,10 @@
 
 package com.perl5.lang.htmlmason.idea.hierarchy;
 
-import com.intellij.ide.hierarchy.HierarchyNodeDescriptor;
-import com.intellij.ide.util.treeView.NodeDescriptor;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
+import consulo.language.editor.hierarchy.HierarchyNodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.project.Project;
+import consulo.language.psi.PsiElement;
 import com.perl5.lang.htmlmason.HTMLMasonUtil;
 import com.perl5.lang.htmlmason.parser.psi.impl.HTMLMasonFileImpl;
 import com.perl5.lang.perl.idea.hierarchy.namespace.PerlHierarchyNodeDescriptor;

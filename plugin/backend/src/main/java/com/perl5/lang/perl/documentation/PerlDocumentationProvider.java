@@ -16,14 +16,14 @@
 
 package com.perl5.lang.perl.documentation;
 
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.codeEditor.Editor;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
+import consulo.language.psi.PsiUtilCore;
 import com.perl5.lang.perl.PerlLanguage;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlValuesManager;
 import com.perl5.lang.perl.lexer.PerlTokenSets;
@@ -98,11 +98,11 @@ public class PerlDocumentationProvider extends PerlDocumentationProviderBase {
     return super.getDocumentationElementForLookupItem(psiManager, object, element);
   }
 
+  // consulo: Consulo DocumentationProviderEx#getCustomDocumentationElement has no targetOffset parameter (it was unused)
   @Override
   public @Nullable PsiElement getCustomDocumentationElement(@NotNull Editor editor,
                                                             @NotNull PsiFile file,
-                                                            @Nullable PsiElement contextElement,
-                                                            int targetOffset) {
+                                                            @Nullable PsiElement contextElement) {
     if (isWrongElement(contextElement)) {
       return null;
     }

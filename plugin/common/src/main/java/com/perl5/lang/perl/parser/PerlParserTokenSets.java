@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.parser;
 
-import com.intellij.psi.tree.TokenSet;
+import consulo.language.ast.TokenSet;
 
 import static com.perl5.lang.perl.lexer.PerlTokenSets.HEREDOC_BODIES_TOKENSET;
 import static com.perl5.lang.perl.parser.PerlElementTypesGenerated.*;

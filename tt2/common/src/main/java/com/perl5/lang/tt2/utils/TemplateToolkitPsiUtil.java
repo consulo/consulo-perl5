@@ -16,10 +16,10 @@
 
 package com.perl5.lang.tt2.utils;
 
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.highlighter.HighlighterIterator;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.HighlighterIterator;
+import consulo.language.psi.PsiElement;
+import consulo.language.ast.IElementType;
 import com.perl5.lang.tt2.elementTypes.TemplateToolkitTokenSets;
 import com.perl5.lang.tt2.lexer.TemplateToolkitSyntaxElements;
 import org.jetbrains.annotations.Contract;
@@ -53,7 +53,7 @@ public class TemplateToolkitPsiUtil {
     HighlighterIterator iterator = editor.getHighlighter().createIterator(offset);
 
     while (!iterator.atEnd()) {
-      IElementType tokenType = iterator.getTokenType();
+      IElementType tokenType = (IElementType)iterator.getTokenType();
       if (TemplateToolkitSyntaxElements.OPEN_TAGS.contains(tokenType)) {
         return tokenType;
       }

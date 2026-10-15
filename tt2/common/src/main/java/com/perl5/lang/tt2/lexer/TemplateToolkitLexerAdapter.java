@@ -16,13 +16,16 @@
 
 package com.perl5.lang.tt2.lexer;
 
-import com.intellij.openapi.project.Project;
 import com.perl5.lang.perl.lexer.PerlLexerWithCustomStatesAdapter;
-import org.jetbrains.annotations.Nullable;
+import com.perl5.lang.tt2.idea.settings.TemplateToolkitSettings;
+import org.jetbrains.annotations.NotNull;
 
 
 public class TemplateToolkitLexerAdapter extends PerlLexerWithCustomStatesAdapter {
-  public TemplateToolkitLexerAdapter(@Nullable Project project) {
-    super(new TemplateToolkitLexer(project));
+  /**
+   * consulo: upstream takes the project to read its settings, here the settings of the module of the lexed file are passed
+   */
+  public TemplateToolkitLexerAdapter(@NotNull TemplateToolkitSettings settings) {
+    super(new TemplateToolkitLexer(settings));
   }
 }

@@ -16,23 +16,23 @@
 
 package com.perl5.lang.perl.idea.copyright;
 
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiWhiteSpace;
-import com.intellij.psi.TokenType;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.util.PsiUtilCore;
-import com.maddyhome.idea.copyright.CopyrightProfile;
-import com.maddyhome.idea.copyright.options.LanguageOptions;
-import com.maddyhome.idea.copyright.psi.UpdatePsiFileCopyright;
+import consulo.module.Module;
+import consulo.project.Project;
+import consulo.util.lang.Pair;
+import consulo.util.lang.ref.Ref;
+import consulo.document.util.TextRange;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiWhiteSpace;
+import consulo.language.ast.TokenType;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.psi.PsiUtilCore;
+import consulo.language.copyright.UpdatePsiFileCopyright;
+import consulo.language.copyright.config.CopyrightFileConfig;
+import consulo.language.copyright.config.CopyrightProfile;
 import com.perl5.lang.perl.parser.PerlElementTypesGenerated;
 import com.perl5.lang.pod.PodLanguage;
 import com.perl5.lang.pod.idea.completion.PodTitleCompletionProvider;
@@ -47,14 +47,13 @@ import java.util.regex.Pattern;
 import static com.perl5.lang.pod.lexer.PodElementTypes.POD_OUTER;
 import static com.perl5.lang.pod.parser.PodElementTypesGenerated.CUT_SECTION;
 
-class UpdatePerlPackageFileCopyright extends UpdatePsiFileCopyright {
+class UpdatePerlPackageFileCopyright extends UpdatePsiFileCopyright<CopyrightFileConfig> {
   private final @NotNull CopyrightProfile myOptions;
 
-  public UpdatePerlPackageFileCopyright(Project project,
-                                        Module module,
-                                        VirtualFile root,
+  // consulo: UpdatePsiFileCopyright is created for the psi file, not for project/module/virtual file
+  public UpdatePerlPackageFileCopyright(@NotNull PsiFile psiFile,
                                         @NotNull CopyrightProfile options) {
-    super(project, module, root, options);
+    super(psiFile, options);
     myOptions = options;
   }
 
@@ -62,7 +61,7 @@ class UpdatePerlPackageFileCopyright extends UpdatePsiFileCopyright {
   protected void scanFile() {
     TextRange rangeInLineComments = getCopyrightRangeInLineComments();
     Pair<TextRange, TextRange> rangesInPod = getCopyrightRangesInPod();
-    LanguageOptions languageOptions = getLanguageOptions();
+    CopyrightFileConfig languageOptions = getLanguageOptions();
     if (languageOptions.isBlock()) {
       if (rangesInPod != null) {
         // replace
@@ -106,10 +105,12 @@ class UpdatePerlPackageFileCopyright extends UpdatePsiFileCopyright {
     }
   }
 
+  // TODO consulo: Consulo's UpdatePsiFileCopyright has no getCommentText(prefix, suffix, oldComment), the old comment is not
+  //  passed to the copyright template (upstream overrides getCommentText(String prefix, String suffix, String oldComment))
   @Override
-  protected String getCommentText(String prefix, String suffix, String oldComment) {
-    LanguageOptions languageOptions = getLanguageOptions();
-    String defaultText = super.getCommentText("", "", oldComment);
+  protected String getCommentText(String prefix, String suffix) {
+    CopyrightFileConfig languageOptions = getLanguageOptions();
+    String defaultText = super.getCommentText("", "");
     if (languageOptions.isBlock()) {
       return prefix + StringUtil.trimStart(defaultText, "# \n") + suffix;
     }

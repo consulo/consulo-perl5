@@ -16,22 +16,21 @@
 
 package com.perl5.lang.tt2;
 
-import com.intellij.lang.Language;
-import com.intellij.lang.LanguageParserDefinitions;
-import com.intellij.lang.ParserDefinition;
-import com.intellij.lang.html.HTMLLanguage;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.MultiplePsiFilesPerDocumentFileViewProvider;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.impl.source.PsiFileImpl;
-import com.intellij.psi.templateLanguages.ConfigurableTemplateLanguageFileViewProvider;
-import com.intellij.psi.templateLanguages.OuterLanguageElement;
-import com.intellij.psi.templateLanguages.TemplateDataLanguageMappings;
-import com.intellij.testFramework.LightVirtualFile;
-import com.intellij.util.ReflectionUtil;
+import consulo.language.Language;
+import consulo.language.parser.ParserDefinition;
+import consulo.html.language.HTMLLanguage;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.impl.file.MultiplePsiFilesPerDocumentFileViewProvider;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
+import consulo.language.impl.psi.PsiFileImpl;
+import consulo.language.template.ConfigurableTemplateLanguageFileViewProvider;
+import consulo.language.psi.OuterLanguageElement;
+import consulo.language.template.TemplateDataLanguageMappings;
+import consulo.language.file.light.LightVirtualFile;
+import consulo.util.lang.reflect.ReflectionUtil;
 import com.perl5.lang.perl.PerlLanguage;
 import com.perl5.lang.tt2.elementTypes.TemplateToolkitElementTypes;
 import org.jetbrains.annotations.NotNull;
@@ -76,7 +75,7 @@ public class TemplateToolkitFileViewProvider extends MultiplePsiFilesPerDocument
   @Override
   protected @Nullable PsiFile createFile(@NotNull Language lang) {
     if (lang == getTemplateDataLanguage()) {
-      ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(getTemplateDataLanguage());
+      ParserDefinition parserDefinition = ParserDefinition.forLanguage(getTemplateDataLanguage());
 
       if (parserDefinition == null) {
         return null;
@@ -88,7 +87,7 @@ public class TemplateToolkitFileViewProvider extends MultiplePsiFilesPerDocument
     }
 
     if (lang == getBaseLanguage()) {
-      return LanguageParserDefinitions.INSTANCE.forLanguage(lang).createFile(this);
+      return ParserDefinition.forLanguage(lang).createFile(this);
     }
     return null;
   }

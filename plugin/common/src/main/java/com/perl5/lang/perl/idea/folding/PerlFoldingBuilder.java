@@ -16,20 +16,22 @@
 
 package com.perl5.lang.perl.idea.folding;
 
-import com.intellij.codeInsight.folding.CodeFoldingSettings;
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.folding.FoldingDescriptor;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiComment;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiWhiteSpace;
-import com.intellij.psi.templateLanguages.OuterLanguageElementImpl;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.Language;
+import com.perl5.lang.perl.PerlLanguage;
+import consulo.language.editor.folding.CodeFoldingSettings;
+import consulo.language.ast.ASTNode;
+import consulo.language.editor.folding.FoldingDescriptor;
+import consulo.document.Document;
+import consulo.application.dumb.DumbAware;
+import consulo.document.util.TextRange;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiComment;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiWhiteSpace;
+import consulo.language.impl.psi.template.OuterLanguageElementImpl;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
+import consulo.language.psi.PsiUtilCore;
 import com.perl5.lang.perl.psi.*;
 import com.perl5.lang.perl.psi.impl.PerlHeredocElementImpl;
 import com.perl5.lang.perl.psi.impl.PerlNoStatementElement;
@@ -49,6 +51,11 @@ import static com.perl5.lang.perl.parser.PerlElementTypesGenerated.*;
 import static com.perl5.lang.perl.psi.stubs.PerlStubElementTypes.USE_STATEMENT;
 
 public class PerlFoldingBuilder extends PerlFoldingBuilderBase implements DumbAware {
+  @Override
+  public @NotNull Language getLanguage() {
+    return PerlLanguage.INSTANCE;
+  }
+
   public static final String PH_CODE_BLOCK = "{code block}";
 
   protected static final TokenSet COMMENT_EXCLUDED_TOKENS = TokenSet.EMPTY;
@@ -57,7 +64,7 @@ public class PerlFoldingBuilder extends PerlFoldingBuilderBase implements DumbAw
   public FoldingDescriptor @NotNull [] buildFoldRegions(@NotNull PsiElement root, @NotNull Document document, boolean quick) {
     // @todo handle this
     if (root instanceof OuterLanguageElementImpl) {
-      return FoldingDescriptor.EMPTY_ARRAY;
+      return FoldingDescriptor.EMPTY;
     }
 
     FoldingRegionsCollector collector = getCollector(document);
@@ -67,7 +74,7 @@ public class PerlFoldingBuilder extends PerlFoldingBuilderBase implements DumbAw
     descriptors.addAll(getCommentsDescriptors(collector.getComments(), document));
     descriptors.addAll(getImportDescriptors(collector.getImports()));
 
-    return descriptors.toArray(FoldingDescriptor.EMPTY_ARRAY);
+    return descriptors.toArray(FoldingDescriptor.EMPTY);
   }
 
   protected FoldingRegionsCollector getCollector(Document document) {

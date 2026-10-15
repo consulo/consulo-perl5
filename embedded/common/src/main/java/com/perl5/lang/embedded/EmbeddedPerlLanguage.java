@@ -16,15 +16,14 @@
 
 package com.perl5.lang.embedded;
 
-import com.intellij.lang.Language;
-import com.intellij.openapi.util.NlsSafe;
-import com.intellij.psi.templateLanguages.TemplateLanguage;
+import consulo.language.Language;
+import consulo.language.template.TemplateLanguage;
 import com.perl5.lang.perl.PerlLanguage;
 
 
 public class EmbeddedPerlLanguage extends Language implements TemplateLanguage {
   public static final EmbeddedPerlLanguage INSTANCE = new EmbeddedPerlLanguage();
-  public static final @NlsSafe String NAME = "Embedded Perl";
+  public static final String NAME = "Embedded Perl";
 
   private EmbeddedPerlLanguage() {
     super(PerlLanguage.INSTANCE, NAME);

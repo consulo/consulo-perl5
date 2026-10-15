@@ -19,10 +19,11 @@ package com.perl5.lang.mojolicious.idea.modules;
 import com.perl5.lang.mojolicious.MojoBundle;
 import com.perl5.lang.mojolicious.MojoIcons;
 import com.perl5.lang.perl.idea.configuration.settings.sdk.PerlTemplatesRootEditHandler;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
-
+@ExtensionImpl
 public class MojoTemplateSourceRootEditHandler extends PerlTemplatesRootEditHandler {
   public MojoTemplateSourceRootEditHandler() {
     super(MojoTemplateSourceRootType.INSTANCE);
@@ -34,7 +35,7 @@ public class MojoTemplateSourceRootEditHandler extends PerlTemplatesRootEditHand
   }
 
   @Override
-  public @NotNull Icon getRootIcon() {
+  public @NotNull Image getRootIcon() {
     return MojoIcons.rootIcon();
   }
 

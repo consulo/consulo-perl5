@@ -16,128 +16,109 @@
 
 package com.perl5.lang.htmlmason.idea.configuration;
 
-import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.components.State;
-import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.fileTypes.FileNameMatcher;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.fileTypes.LanguageFileType;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.ClearableLazyValue;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.xmlb.XmlSerializerUtil;
 import com.perl5.lang.mason2.idea.configuration.VariableDescription;
-import com.perl5.lang.perl.idea.PerlPathMacros;
-import com.perl5.lang.perl.idea.modules.PerlSourceRootType;
+import com.perl5.lang.perl.util.PerlConfigurationUtil;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.language.file.light.LightVirtualFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.ModuleUtilCore;
+import consulo.module.Module;
+import consulo.perl5.mason.module.HTMLMasonModuleExtension;
+import consulo.project.Project;
+import consulo.util.lang.lazy.LazyValue;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileNameMatcher;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.Supplier;
 
 import static com.perl5.lang.htmlmason.HTMLMasonSyntaxElements.*;
 
+/**
+ * HTML::Mason settings of a module.
+ * <p>
+ * TODO consulo: upstream is a project-level persistent service. In Consulo the settings are the state of the HTML::Mason module extension
+ *  ({@link HTMLMasonModuleExtension}), see {@link AbstractMasonSettings}. The settings of a file are the settings of its module if the
+ *  extension is enabled there, {@link #DEFAULT} otherwise. Changes are handled by {@code HTMLMasonSettingsChangeListener}.
+ */
+public final class HTMLMasonSettings extends AbstractMasonSettings {
+  public static final HTMLMasonSettings DEFAULT = new HTMLMasonSettings(
+    "autohandler",
+    "dhandler",
+    List.of(),
+    List.of(),
+    List.of(new VariableDescription("$m", "HTML::Mason::Request"), new VariableDescription("$r", "Apache::Request")));
 
-@State(
-  name = "HTMLMasonSettings",
-  storages = @Storage(PerlPathMacros.PERL5_PROJECT_SHARED_SETTINGS_FILE),
-  perClient = true
-)
+  private final @NotNull String myAutoHandlerName;
+  private final @NotNull String myDefaultHandlerName;
+  private final @NotNull List<String> mySubstitutedExtensions;
+  private final @NotNull List<HTMLMasonCustomTag> myCustomTags;
 
-public class HTMLMasonSettings extends AbstractMasonSettings implements PersistentStateComponent<HTMLMasonSettings> {
+  private final Supplier<List<FileNameMatcher>> myLazyMatchersProvider;
+  private final Supplier<Map<String, String>> myOpenCloseMapProvider = LazyValue.atomicNotNull(this::computeOpenCloseMap);
+  private final Supplier<Map<String, HTMLMasonCustomTag>> myCustomTagsMapProvider = LazyValue.atomicNotNull(this::computeCustomTagsMap);
 
-  public String autoHandlerName = "autohandler";
-  public String defaultHandlerName = "dhandler";
-  public final List<String> substitutedExtensions = new ArrayList<>();
-  public final List<HTMLMasonCustomTag> customTags = new ArrayList<>();
-
-  private final transient ClearableLazyValue<List<FileNameMatcher>> myLazyMatchersProvider
-    = ClearableLazyValue.createAtomic(this::computeMatchers);
-  private final transient ClearableLazyValue<Map<String, String>> myOpenCloseMapProvider =
-    ClearableLazyValue.createAtomic(this::computeOpenCloseMap);
-  private final transient ClearableLazyValue<Map<String, HTMLMasonCustomTag>> myCustomTagsMapProvider =
-    ClearableLazyValue.createAtomic(this::computeCustomTagsMap);
-
-  public HTMLMasonSettings(@NotNull Project project) {
-    super(project);
-    initInstance();
+  /**
+   * @param substitutedExtensions file name matchers (presentable strings) of files which should be handled as components under components
+   *                              roots
+   * @param customTags            custom tags which mimic the built-in ones, they are copied
+   * @param globalVariables       global variables of components, they are copied
+   */
+  public HTMLMasonSettings(@NotNull String autoHandlerName,
+                           @NotNull String defaultHandlerName,
+                           @NotNull List<String> substitutedExtensions,
+                           @NotNull List<HTMLMasonCustomTag> customTags,
+                           @NotNull List<VariableDescription> globalVariables) {
+    super(globalVariables);
+    myAutoHandlerName = autoHandlerName;
+    myDefaultHandlerName = defaultHandlerName;
+    mySubstitutedExtensions = List.copyOf(substitutedExtensions);
+    myCustomTags = customTags.stream().map(HTMLMasonCustomTag::copy).toList();
+    myLazyMatchersProvider = LazyValue.atomicNotNull(() -> PerlConfigurationUtil.getSubstitutedExtensionsMatchers(mySubstitutedExtensions));
   }
 
-  private HTMLMasonSettings() {
-    initInstance();
+  public @NotNull String getAutoHandlerName() {
+    return myAutoHandlerName;
   }
 
-  private void initInstance() {
-    globalVariables.add(new VariableDescription("$m", "HTML::Mason::Request"));
-    globalVariables.add(new VariableDescription("$r", "Apache::Request"));
-    changeCounter++;
+  public @NotNull String getDefaultHandlerName() {
+    return myDefaultHandlerName;
+  }
+
+  public @NotNull List<String> getSubstitutedExtensions() {
+    return mySubstitutedExtensions;
+  }
+
+  /**
+   * @return custom tags, must not be modified
+   */
+  public @NotNull List<HTMLMasonCustomTag> getCustomTags() {
+    return myCustomTags;
   }
 
   private @NotNull Map<String, HTMLMasonCustomTag> computeCustomTagsMap() {
-    if (customTags.isEmpty()) {
+    if (myCustomTags.isEmpty()) {
       return Collections.emptyMap();
     }
 
     Map<String, HTMLMasonCustomTag> result = new HashMap<>();
 
-    for (HTMLMasonCustomTag customTag : customTags) {
+    for (HTMLMasonCustomTag customTag : myCustomTags) {
       result.put(customTag.getText(), customTag);
     }
 
     return result;
   }
 
-  @Override
-  public @Nullable HTMLMasonSettings getState() {
-    return this;
-  }
-
-  @Override
-  public void noStateLoaded() {
-    loadState(new HTMLMasonSettings());
-  }
-
-  @Override
-  public void loadState(@NotNull HTMLMasonSettings state) {
-    XmlSerializerUtil.copyBean(state, this);
-    changeCounter++;
-  }
-
-  private @NotNull List<FileNameMatcher> computeMatchers() {
-    List<FileNameMatcher> result = new ArrayList<>();
-    FileTypeManager fileTypeManager = FileTypeManager.getInstance();
-    for (FileType fileType : fileTypeManager.getRegisteredFileTypes()) {
-      if (fileType instanceof LanguageFileType) {
-        for (FileNameMatcher matcher : fileTypeManager.getAssociations(fileType)) {
-          if (substitutedExtensions.contains(matcher.getPresentableString())) {
-            result.add(matcher);
-          }
-        }
-      }
-    }
-    return result;
-  }
-
   public boolean isVirtualFileNameMatches(@NotNull VirtualFile file) {
-    for (FileNameMatcher matcher : myLazyMatchersProvider.getValue()) {
+    for (FileNameMatcher matcher : myLazyMatchersProvider.get()) {
       if (matcher.acceptsCharSequence(file.getName())) {
         return true;
       }
     }
     return false;
-  }
-
-  @Override
-  public PerlSourceRootType getSourceRootType() {
-    return HTMLMasonSourceRootType.INSTANCE;
-  }
-
-  @Override
-  public void settingsUpdated() {
-    super.settingsUpdated();
-    myLazyMatchersProvider.drop();
-    myOpenCloseMapProvider.drop();
-    myCustomTagsMapProvider.drop();
   }
 
   private @NotNull Map<String, String> computeOpenCloseMap() {
@@ -159,21 +140,65 @@ public class HTMLMasonSettings extends AbstractMasonSettings implements Persiste
     openCloseMap.put(KEYWORD_DEF_OPENER, KEYWORD_DEF_CLOSER);
 
     // iterate custom tags
-    for (HTMLMasonCustomTag customTag : customTags) {
+    for (HTMLMasonCustomTag customTag : myCustomTags) {
       openCloseMap.put(customTag.getOpenTagText(), customTag.getCloseTagText());
     }
-    return openCloseMap;
+    return Collections.unmodifiableMap(openCloseMap);
   }
 
   public @NotNull Map<String, String> getOpenCloseMap() {
-    return myOpenCloseMapProvider.getValue();
+    return myOpenCloseMapProvider.get();
   }
 
-  public @Nullable Map<String, HTMLMasonCustomTag> getCustomTagsMap() {
-    return myCustomTagsMapProvider.getValue();
+  public @NotNull Map<String, HTMLMasonCustomTag> getCustomTagsMap() {
+    return myCustomTagsMapProvider.get();
   }
 
-  public static @NotNull HTMLMasonSettings getInstance(@NotNull Project project) {
-    return project.getService(HTMLMasonSettings.class);
+  @Override
+  public boolean equals(Object o) {
+    return this == o ||
+           super.equals(o) &&
+           o instanceof HTMLMasonSettings settings &&
+           myAutoHandlerName.equals(settings.myAutoHandlerName) &&
+           myDefaultHandlerName.equals(settings.myDefaultHandlerName) &&
+           mySubstitutedExtensions.equals(settings.mySubstitutedExtensions) &&
+           myCustomTags.equals(settings.myCustomTags);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(super.hashCode(), myAutoHandlerName, myDefaultHandlerName, mySubstitutedExtensions, myCustomTags);
+  }
+
+  /**
+   * @return settings of the {@code module} if the HTML::Mason module extension is enabled for it, {@link #DEFAULT} otherwise
+   */
+  public static @NotNull HTMLMasonSettings forModule(@Nullable Module module) {
+    HTMLMasonModuleExtension extension =
+      module == null || module.isDisposed() ? null : module.getExtension(HTMLMasonModuleExtension.class);
+    return extension == null ? DEFAULT : extension.getSettings();
+  }
+
+  /**
+   * @return settings of the module of the {@code file}, {@link #DEFAULT} if the file is not in a module with the HTML::Mason module
+   * extension enabled
+   */
+  public static @NotNull HTMLMasonSettings forFile(@Nullable Project project, @Nullable VirtualFile file) {
+    if (file instanceof LightVirtualFile lightVirtualFile && lightVirtualFile.getOriginalFile() != null) {
+      return forFile(project, lightVirtualFile.getOriginalFile());
+    }
+    if (project == null || project.isDisposed() || file == null) {
+      return DEFAULT;
+    }
+    return forModule(ModuleUtilCore.findModuleForFile(file, project));
+  }
+
+  /**
+   * @return settings of the module of the {@code element}, {@link #DEFAULT} if it is not in a module with the HTML::Mason module extension
+   * enabled
+   */
+  @RequiredReadAction
+  public static @NotNull HTMLMasonSettings forPsiElement(@Nullable PsiElement element) {
+    return element == null || !element.isValid() ? DEFAULT : forModule(element.getModule());
   }
 }

@@ -16,15 +16,14 @@
 
 package com.perl5.lang.htmlmason;
 
-import com.intellij.ui.LayeredIcon;
 import com.perl5.PerlIcons;
-
-import javax.swing.*;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 
 
 public class HTMLMasonIcons {
-  public static final Icon HTML_MASON_COMPONENT_ICON = PerlIcons.PERL_SCRIPT_FILE_ICON;
-  public static final Icon HTML_MASON_SUBCOMPONENT_ICON = PerlIcons.SUB_GUTTER_ICON;
-  public static final Icon HTML_MASON_METHOD_ICON = PerlIcons.METHOD_GUTTER_ICON;
-  public static final Icon ROOT_ICON = LayeredIcon.layeredIcon(() -> new Icon[]{PerlIcons.TEMPLATE_ROOT, PerlIcons.CAMEL_MODIFIER});
+  public static final Image HTML_MASON_COMPONENT_ICON = PerlIcons.PERL_SCRIPT_FILE_ICON;
+  public static final Image HTML_MASON_SUBCOMPONENT_ICON = PerlIcons.SUB_GUTTER_ICON;
+  public static final Image HTML_MASON_METHOD_ICON = PerlIcons.METHOD_GUTTER_ICON;
+  public static final Image ROOT_ICON = ImageEffects.layered(PerlIcons.TEMPLATE_ROOT, PerlIcons.CAMEL_MODIFIER);
 }

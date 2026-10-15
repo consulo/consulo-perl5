@@ -16,10 +16,10 @@
 
 package com.perl5.lang.pod.parser.psi.mixin;
 
-import com.intellij.extapi.psi.StubBasedPsiElementBase;
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.StubBasedPsiElement;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.impl.psi.stub.StubBasedPsiElementBase;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.StubBasedPsiElement;
+import consulo.language.ast.IElementType;
 import com.perl5.lang.pod.parser.psi.PodSection;
 import com.perl5.lang.pod.parser.psi.stubs.PodSectionStub;
 import org.jetbrains.annotations.NotNull;
@@ -28,16 +28,18 @@ public abstract class PodStubBasedSection extends StubBasedPsiElementBase<PodSec
   implements PodSection, StubBasedPsiElement<PodSectionStub> {
   public PodStubBasedSection(@NotNull PodSectionStub stub,
                              @NotNull IElementType nodeType) {
-    super(stub, nodeType);
+    super(stub, nodeType, null); // consulo: (stub, IElementType, node) constructor, the 2-arg one requires IStubElementType
   }
 
   public PodStubBasedSection(@NotNull ASTNode node) {
     super(node);
   }
 
-  @Override
+  // TODO consulo: Consulo StubBasedPsiElementBase has neither getIElementType() nor getElementTypeImpl() (element type field is private);
+  //  emulating via stub type or AST node type
   public final IElementType getIElementType() {
-    return getElementTypeImpl();
+    PodSectionStub stub = getStub();
+    return stub != null ? stub.getStubType() : getNode().getElementType();
   }
 
   @Override

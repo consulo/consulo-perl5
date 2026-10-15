@@ -16,13 +16,13 @@
 
 package com.perl5.lang.perl.idea.codeInsight.highlighting;
 
-import com.intellij.codeInsight.highlighting.HighlightUsagesHandlerBase;
-import com.intellij.codeInsight.highlighting.HighlightUsagesHandlerFactoryBase;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.tree.TokenSet;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.editor.highlight.usage.HighlightUsagesHandlerBase;
+import consulo.language.editor.highlight.usage.HighlightUsagesHandlerFactoryBase;
+import consulo.codeEditor.Editor;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.ast.TokenSet;
+import consulo.language.psi.PsiUtilCore;
 import com.perl5.lang.perl.idea.codeInsight.controlFlow.PerlControlFlowBuilder;
 import com.perl5.lang.perl.psi.PerlFlowControlExpr;
 import com.perl5.lang.perl.psi.PerlSubDefinition;

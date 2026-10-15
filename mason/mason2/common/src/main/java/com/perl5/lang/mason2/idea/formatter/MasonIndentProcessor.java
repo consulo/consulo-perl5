@@ -16,7 +16,7 @@
 
 package com.perl5.lang.mason2.idea.formatter;
 
-import com.intellij.psi.tree.TokenSet;
+import consulo.language.ast.TokenSet;
 import com.perl5.lang.mason2.elementType.Mason2ElementTypes;
 import com.perl5.lang.perl.idea.formatter.PerlFormattingTokenSets;
 import com.perl5.lang.perl.idea.formatter.PerlIndentProcessor;

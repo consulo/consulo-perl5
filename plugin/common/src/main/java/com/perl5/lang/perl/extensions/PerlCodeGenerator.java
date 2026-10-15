@@ -16,17 +16,53 @@
 
 package com.perl5.lang.perl.extensions;
 
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.util.ClassExtension;
-import com.intellij.psi.PsiElement;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.application.Application;
+import consulo.codeEditor.Editor;
+import consulo.component.extension.ByClassGrouper;
+import consulo.component.extension.ExtensionPointCacheKey;
+import consulo.language.psi.PsiElement;
 import com.perl5.lang.perl.psi.PerlFile;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Function;
+
 public interface PerlCodeGenerator {
-  ClassExtension<PerlCodeGenerator> EP = new ClassExtension<>("com.perl5.codeGenerator");
+  // TODO consulo: IntelliJ ClassExtension (forClass declared in plugin.xml) is missing in Consulo; generators are bound to classes
+  //  by @ExtensionImpl of PerlCodeGenerator.ClassExtensionPoint instead
+  ClassExtension EP = new ClassExtension();
 
   static PerlCodeGenerator getInstance(PerlFile perlFile) {
     return EP.forClass(perlFile.getClass());
+  }
+
+  /**
+   * consulo: replacement of IntelliJ {@code ClassExtensionPoint} for the {@code com.perl5.codeGenerator} extension point,
+   * binds a class ({@code forClass}) to the generator
+   */
+  @ExtensionAPI(ComponentScope.APPLICATION)
+  interface ClassExtensionPoint {
+    @NotNull
+    Class<?> getForClass();
+
+    @NotNull
+    PerlCodeGenerator getInstance();
+  }
+
+  /**
+   * consulo: replacement of IntelliJ {@code ClassExtension} over {@link ClassExtensionPoint} extensions
+   */
+  final class ClassExtension {
+    private static final ExtensionPointCacheKey<ClassExtensionPoint, Function<Class, ClassExtensionPoint>> CACHE_KEY =
+      ExtensionPointCacheKey.create("PerlCodeGenerator.EP", ByClassGrouper.build(ClassExtensionPoint::getForClass));
+
+    public @Nullable PerlCodeGenerator forClass(@NotNull Class<?> cls) {
+      ClassExtensionPoint extension =
+        Application.get().getExtensionPoint(ClassExtensionPoint.class).getOrBuildCache(CACHE_KEY).apply(cls);
+      return extension == null ? null : extension.getInstance();
+    }
   }
 
   /**

@@ -16,8 +16,10 @@
 
 package com.perl5.lang.htmlmason.lexer;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.tree.TokenSet;
+import com.perl5.lang.htmlmason.idea.configuration.HTMLMasonSettings;
+import consulo.project.Project;
+import org.jetbrains.annotations.Nullable;
+import consulo.language.ast.TokenSet;
 import com.perl5.lang.perl.lexer.adapters.PerlMergingLexerAdapter;
 import com.perl5.lang.perl.lexer.adapters.PerlTemplatingMergingLexerAdapter;
 
@@ -30,8 +32,11 @@ public class HTMLMasonLexerAdapter extends PerlTemplatingMergingLexerAdapter {
     TokenSet.create(HTML_MASON_TEMPLATE_BLOCK_HTML)
   );
 
-  public HTMLMasonLexerAdapter(Project project, boolean enforceSublexing) {
-    super(project, new HTMLMasonLexer(null).withProject(project), TOKENS_TO_MERGE, enforceSublexing);
+  /**
+   * @param settings consulo: settings of the module of the lexed file (custom tags), upstream reads the project settings
+   */
+  public HTMLMasonLexerAdapter(@Nullable Project project, @Nullable HTMLMasonSettings settings, boolean enforceSublexing) {
+    super(project, new HTMLMasonLexer(null).withSettings(settings).withProject(project), TOKENS_TO_MERGE, enforceSublexing);
   }
 }
 

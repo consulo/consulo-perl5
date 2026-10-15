@@ -16,7 +16,7 @@
 
 package com.perl5.lang.pod.parser.psi;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 
 import static com.perl5.lang.perl.psi.PsiStubsAwareRecursiveVisitor.tryUseStubs;

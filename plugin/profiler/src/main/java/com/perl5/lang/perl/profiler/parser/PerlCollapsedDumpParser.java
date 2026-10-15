@@ -16,12 +16,12 @@
 
 package com.perl5.lang.perl.profiler.parser;
 
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.profiler.DummyCallTreeBuilder;
-import com.intellij.profiler.LineByLineParser;
-import com.intellij.profiler.api.BaseCallStackElement;
-import com.intellij.profiler.model.NoThreadInfoInProfilerData;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.util.lang.StringUtil;
+import consulo.execution.profiler.DummyCallTreeBuilder;
+import consulo.execution.profiler.LineByLineParser;
+import consulo.execution.profiler.BaseCallStackElement;
+import consulo.execution.profiler.model.NoThreadInfoInProfilerData;
+import consulo.util.collection.ContainerUtil;
 import com.perl5.lang.perl.profiler.parser.frames.PerlCallStackElement;
 import org.jetbrains.annotations.NotNull;
 

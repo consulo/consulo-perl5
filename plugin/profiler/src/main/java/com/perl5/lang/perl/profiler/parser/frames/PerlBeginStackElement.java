@@ -16,15 +16,15 @@
 
 package com.perl5.lang.perl.profiler.parser.frames;
 
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.NavigatablePsiElement;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.search.GlobalSearchScope;
+import consulo.navigation.OpenFileDescriptorFactory;
+import consulo.application.progress.ProgressManager;
+import consulo.project.Project;
+import consulo.content.bundle.Sdk;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.NavigatablePsiElement;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.scope.GlobalSearchScope;
 import com.perl5.lang.perl.psi.impl.PerlUseStatementElementBase;
 import com.perl5.lang.perl.psi.impl.PsiPerlNamedBlockImpl;
 import com.perl5.lang.perl.psi.utils.PerlPsiUtil;
@@ -102,7 +102,9 @@ class PerlBeginStackElement extends PerlCallStackElement {
               result.add(new PerlTargetElementWrapper(namedBlockAtOffset) {
                 @Override
                 public void navigate(boolean requestFocus) {
-                  new OpenFileDescriptor(getProject(), psiFile.getVirtualFile(), startOffset).navigate(requestFocus);
+                  // consulo: OpenFileDescriptor is an interface in Consulo, created by OpenFileDescriptorFactory
+                  OpenFileDescriptorFactory.getInstance(getProject()).newBuilder(psiFile.getVirtualFile()).offset(startOffset).build()
+                    .navigate(requestFocus);
                 }
               });
             }

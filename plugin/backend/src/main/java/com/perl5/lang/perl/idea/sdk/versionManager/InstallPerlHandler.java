@@ -16,15 +16,14 @@
 
 package com.perl5.lang.perl.idea.sdk.versionManager;
 
-import com.intellij.execution.process.ProcessEvent;
-import com.intellij.execution.process.ProcessListener;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.openapi.progress.Task;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.text.VersionComparatorUtil;
+import consulo.process.event.ProcessEvent;
+import consulo.process.event.ProcessListener;
+import consulo.application.ApplicationManager;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.Task;
+import consulo.project.Project;
+import consulo.ui.image.Image;
+import consulo.util.lang.VersionComparatorUtil;
 import com.perl5.PerlBundle;
 import com.perl5.PerlIcons;
 import com.perl5.lang.perl.idea.project.PerlProjectManager;
@@ -33,7 +32,6 @@ import com.perl5.lang.perl.util.PerlRunUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +46,8 @@ public abstract class InstallPerlHandler {
   }
 
   void install(@NotNull PerlHostData<?, ?> hostData, @Nullable Project project) {
-    new Task.Modal(project, PerlBundle.message("perl.vm.installing.perl"), false) {
+    // consulo: a background task, the dialog is asynchronous and a modal task would block the web UI thread
+    new Task.Backgroundable(project, PerlBundle.message("perl.vm.installing.perl"), false) {
       @Override
       public void run(@NotNull ProgressIndicator indicator) {
         indicator.setIndeterminate(true);
@@ -69,10 +68,8 @@ public abstract class InstallPerlHandler {
     }
     ApplicationManager.getApplication().invokeLater(() -> {
       PerlInstallFormOptions optionsForm = createOptionsForm();
-      MyDialog dialog = new MyDialog(project, optionsForm, new ArrayList<>(distributionsList));
-      if (dialog.showAndGet()) {
-        PerlInstallForm installForm = dialog.getForm();
-
+      // consulo: unified dialog instead of the Swing MyDialog (not available in web), it is answered asynchronously
+      PerlUnifiedInstallForm.show(this, project, optionsForm, new ArrayList<>(distributionsList), installForm -> {
         boolean createInterpreter = installForm.isAddInstalledPerl();
         boolean chooseInterpreter = installForm.isChooseInstalledPerl();
 
@@ -94,7 +91,7 @@ public abstract class InstallPerlHandler {
               }, project);
           }
         });
-      }
+      });
     });
   }
 
@@ -114,58 +111,8 @@ public abstract class InstallPerlHandler {
     return VersionComparatorUtil.compare(b, a);
   }
 
-  public @Nullable Icon doGetIcon(@NotNull String distribution) {
+  // consulo: unified Image instead of Swing Icon, it is rendered by the unified install dialog
+  public @Nullable Image doGetIcon(@NotNull String distribution) {
     return PerlIcons.PERL_LANGUAGE_ICON;
-  }
-
-  private class MyDialog extends DialogWrapper implements PerlInstallForm.InstallFormHelper {
-    private final @NotNull PerlInstallForm myForm;
-
-    public MyDialog(@Nullable Project project, @Nullable PerlInstallFormOptions optionsPanel, @NotNull List<String> distributions) {
-      super(project, true, IdeModalityType.IDE);
-      myForm = new PerlInstallForm(optionsPanel, this, distributions);
-      if (project == null) {
-        myForm.disableChooseCheckbox();
-      }
-
-      setOKButtonText(PerlBundle.message("perl.vm.perlbrew.install.form.button"));
-      setResizable(false);
-      setTitle(PerlBundle.message("perl.vm.install.form.title"));
-      init();
-    }
-
-    @Override
-    public void changed(@NotNull PerlInstallForm form) {
-      getOKAction().setEnabled(StringUtil.isNotEmpty(form.getSelectedDistributionId()));
-    }
-
-    @Override
-    public int compare(String o1, String o2) {
-      return doCompareVersions(o1, o2);
-    }
-
-    @Override
-    public @Nullable Icon getIcon(@NotNull String distribution) {
-      return doGetIcon(distribution);
-    }
-
-    @Override
-    public String cleanDistributionItem(@NotNull String rawItem) {
-      return doCleanDistributionItem(rawItem);
-    }
-
-    @Override
-    public boolean isInstalled(@NotNull String rawItem) {
-      return doIsInstalled(rawItem);
-    }
-
-    public @NotNull PerlInstallForm getForm() {
-      return myForm;
-    }
-
-    @Override
-    protected @Nullable JComponent createCenterPanel() {
-      return myForm.getRootPanel();
-    }
   }
 }

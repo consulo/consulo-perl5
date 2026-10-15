@@ -16,10 +16,12 @@
 
 package com.perl5.lang.perl.moduleBuild;
 
-import com.intellij.openapi.module.Module;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.module.Module;
 import com.perl5.lang.perl.buildSystem.PerlBuildSystemHandler;
 import org.jetbrains.annotations.NotNull;
 
+@ExtensionImpl
 public class PerlModuleBuildHandler implements PerlBuildSystemHandler {
   @Override
   public boolean handlesTests(@NotNull Module module) {

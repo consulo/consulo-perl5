@@ -16,11 +16,11 @@
 
 package com.perl5.lang.perl.idea.quickfixes;
 
-import com.intellij.codeInspection.LocalQuickFix;
-import com.intellij.codeInspection.ProblemDescriptor;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.NlsSafe;
-import com.intellij.psi.PsiElement;
+import consulo.language.editor.inspection.LocalQuickFix;
+import consulo.language.editor.inspection.ProblemDescriptor;
+import consulo.project.Project;
+import consulo.localize.LocalizeValue;
+import consulo.language.psi.PsiElement;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.psi.PerlMethod;
 import com.perl5.lang.perl.psi.PerlNamespaceElement;
@@ -32,7 +32,7 @@ import org.jetbrains.annotations.NotNull;
 
 
 public class PerlFancyMethodQuickFix implements LocalQuickFix {
-  final @NlsSafe String myNewForm;
+  final String myNewForm;
 
   public PerlFancyMethodQuickFix(String newForm) {
     super();
@@ -40,11 +40,11 @@ public class PerlFancyMethodQuickFix implements LocalQuickFix {
   }
 
   @Override
-  public @Nls @NotNull String getName() {
-    return PerlBundle.message("perl.quickfix.fancy.method.prefix") + myNewForm + "()";
+  public @NotNull LocalizeValue getName() {
+    return LocalizeValue.localizeTODO(PerlBundle.message("perl.quickfix.fancy.method.prefix") + myNewForm + "()");
   }
 
-  @Override
+  // TODO consulo: Consulo QuickFix has no family name; kept for upstream parity (unused)
   public @NotNull String getFamilyName() {
     return PerlBundle.message("perl.quickfix.fancy.method.family");
   }

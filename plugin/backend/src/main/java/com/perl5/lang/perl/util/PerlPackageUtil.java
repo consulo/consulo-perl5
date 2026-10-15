@@ -16,24 +16,23 @@
 
 package com.perl5.lang.perl.util;
 
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.search.FileTypeIndex;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.util.CachedValueProvider;
-import com.intellij.psi.util.CachedValuesManager;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.util.PairProcessor;
-import com.intellij.util.Processor;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.application.progress.ProgressManager;
+import consulo.project.Project;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
+import consulo.language.psi.search.FileTypeIndex;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.application.util.CachedValueProvider;
+import consulo.language.psi.util.LanguageCachedValueUtil;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.psi.PsiUtilCore;
+import consulo.util.lang.function.PairProcessor;
+import consulo.application.util.function.Processor;
 import com.perl5.lang.perl.extensions.packageprocessor.PerlLibProvider;
 import com.perl5.lang.perl.extensions.packageprocessor.PerlPackageProcessor;
 import com.perl5.lang.perl.fileTypes.PerlFileTypePackage;
@@ -143,7 +142,7 @@ public final class PerlPackageUtil {
     return processIncFilesForPsiElement(
       element,
       (file, classRoot) -> {
-        String relativePath = VfsUtilCore.getRelativePath(file, classRoot);
+        String relativePath = VirtualFileUtil.getRelativePath(file, classRoot);
         String packageName = PerlPackageUtilCore.getPackageNameByPath(relativePath);
         return processor.process(packageName, file);
       },
@@ -227,7 +226,7 @@ public final class PerlPackageUtil {
   }
 
   public static List<PsiElement> collectNamespaceSubs(final @NotNull PsiElement namespace) {
-    return CachedValuesManager.getCachedValue(
+    return LanguageCachedValueUtil.getCachedValue(
       namespace,
       () -> CachedValueProvider.Result
         .create(PerlPsiUtil.collectNamespaceMembers(namespace, PerlSubElement.class), namespace));
@@ -306,7 +305,7 @@ public final class PerlPackageUtil {
       if (targetFile == null) {
         continue;
       }
-      String foundRelativePath = VfsUtilCore.getRelativePath(targetFile, classRoot);
+      String foundRelativePath = VirtualFileUtil.getRelativePath(targetFile, classRoot);
 
       if (StringUtil.isNotEmpty(foundRelativePath) && StringUtil.equals(foundRelativePath, relativePath)) {
         return targetFile;
@@ -377,7 +376,7 @@ public final class PerlPackageUtil {
    * @apiNote this method may work wrong, because it is not accounts for dynamic lib paths, e.g. use lib
    */
   public static @Nullable VirtualFile getClosestIncRoot(@NotNull Project project, @NotNull String filePath) {
-    return getClosestIncRoot(project, VfsUtil.findFileByIoFile(new File(filePath), false));
+    return getClosestIncRoot(project, VirtualFileUtil.findFileByIoFile(new File(filePath), false));
   }
 
   public static boolean processCallables(@NotNull Project project,

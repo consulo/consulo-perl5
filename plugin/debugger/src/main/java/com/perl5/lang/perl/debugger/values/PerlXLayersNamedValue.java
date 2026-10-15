@@ -16,17 +16,22 @@
 
 package com.perl5.lang.perl.debugger.values;
 
-import com.intellij.icons.AllIcons;
-import com.intellij.xdebugger.frame.*;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.image.Image;
+
 import com.perl5.lang.perl.debugger.protocol.PerlLayerDescriptor;
 import com.perl5.lang.perl.debugger.protocol.PerlLayersDescriptor;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import consulo.execution.debug.frame.XCompositeNode;
+import consulo.execution.debug.frame.XNamedValue;
+import consulo.execution.debug.frame.XValueChildrenList;
+import consulo.execution.debug.frame.XValueNode;
+import consulo.execution.debug.frame.XValuePlace;
 
 public class PerlXLayersNamedValue extends XNamedValue {
   private final @NotNull PerlLayersDescriptor myLayersDescriptor;
@@ -44,7 +49,8 @@ public class PerlXLayersNamedValue extends XNamedValue {
         .filter(Objects::nonNull)
         .collect(Collectors.joining(" & "));
 
-    node.setPresentation(AllIcons.Windows.Restore, value, "", true);
+    // TODO consulo: no AllIcons.Windows.Restore in Consulo, the closest platform icon is used
+    node.setPresentation(PlatformIconGroup.linuxGnomeRestore(), value, "", true);
   }
 
   @Override
@@ -52,21 +58,21 @@ public class PerlXLayersNamedValue extends XNamedValue {
     XValueChildrenList childrenList = new XValueChildrenList();
     List<PerlLayerDescriptor> input = myLayersDescriptor.getInput();
     if (input != null) {
-      childrenList.add(new PerlLayers("Input", AllIcons.ToolbarDecorator.Import, input));
+      childrenList.add(new PerlLayers("Input", PlatformIconGroup.actionsImport(), input));
     }
     List<PerlLayerDescriptor> output = myLayersDescriptor.getOutput();
     if (output != null) {
-      childrenList.add(new PerlLayers("Output", AllIcons.ToolbarDecorator.Export, output));
+      childrenList.add(new PerlLayers("Output", PlatformIconGroup.actionsExport(), output));
     }
     node.addChildren(childrenList, true);
   }
 
   private static class PerlLayers extends XNamedValue {
     private final @NotNull List<? extends PerlLayerDescriptor> myLayersDescriptors;
-    private final @NotNull Icon myIcon;
+    private final @NotNull Image myIcon;
 
     public PerlLayers(@NotNull String name,
-                      @NotNull Icon icon,
+                      @NotNull Image icon,
                       @NotNull List<? extends PerlLayerDescriptor> layersDescriptors) {
       super(name);
       myLayersDescriptors = layersDescriptors;

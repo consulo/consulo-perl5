@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.idea.hierarchy.namespace.treestructures;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.perl5.lang.perl.psi.PerlNamespaceDefinitionElement;
 import com.perl5.lang.perl.psi.PerlNamespaceDefinitionHandler;
 import org.jetbrains.annotations.NotNull;

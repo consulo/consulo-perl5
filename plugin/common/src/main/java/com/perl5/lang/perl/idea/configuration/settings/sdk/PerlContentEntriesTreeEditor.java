@@ -16,40 +16,39 @@
 
 package com.perl5.lang.perl.idea.configuration.settings.sdk;
 
-import com.intellij.icons.AllIcons;
-import com.intellij.ide.util.treeView.NodeDescriptor;
-import com.intellij.ide.util.treeView.NodeRenderer;
-import com.intellij.idea.ActionsBundle;
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.actionSystem.ActionManager;
-import com.intellij.openapi.actionSystem.ActionToolbar;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
-import com.intellij.openapi.actionSystem.Presentation;
-import com.intellij.openapi.actionSystem.ex.CustomComponentAction;
-import com.intellij.openapi.application.WriteAction;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
-import com.intellij.openapi.fileChooser.FileElement;
-import com.intellij.openapi.fileChooser.actions.NewFolderAction;
-import com.intellij.openapi.fileChooser.ex.FileNodeDescriptor;
-import com.intellij.openapi.fileChooser.ex.FileSystemTreeImpl;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.options.UnnamedConfigurable;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.platform.base.localize.ActionLocalize;
+import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.ui.ex.awt.tree.NodeRenderer;
+import consulo.disposer.Disposable;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.ActionToolbar;
+import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.application.WriteAction;
+import consulo.logging.Logger;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDescriptorFactory;
+import consulo.fileChooser.node.FileElement;
+import consulo.ide.impl.idea.openapi.fileChooser.actions.NewFolderAction;
+import consulo.fileChooser.node.FileNodeDescriptor;
+import consulo.ide.impl.idea.openapi.fileChooser.ex.FileSystemTreeImpl;
+import consulo.module.Module;
+import consulo.configurable.UnnamedConfigurable;
 import com.intellij.openapi.projectRoots.impl.PerlModuleExtension;
-import com.intellij.openapi.roots.ModifiableRootModel;
-import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.roots.ui.configuration.actions.IconWithTextAction;
-import com.intellij.openapi.ui.VerticalFlowLayout;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.ui.ScrollPaneFactory;
-import com.intellij.ui.TreeUIHelper;
-import com.intellij.ui.treeStructure.Tree;
-import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.tree.TreeUtil;
+import consulo.module.content.layer.ModifiableRootModel;
+import consulo.module.content.ModuleRootManager;
+import consulo.ui.ex.awt.VerticalFlowLayout;
+import consulo.disposer.Disposer;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.ui.ex.awt.ScrollPaneFactory;
+import consulo.ui.ex.awt.tree.TreeUIHelper;
+import consulo.ui.ex.awt.tree.Tree;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.tree.TreeUtil;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.idea.modules.PerlSourceRootType;
+import consulo.ui.Component;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -109,8 +108,9 @@ public class PerlContentEntriesTreeEditor implements UnnamedConfigurable, Dispos
     descriptor.setShowFileSystemRoots(false);
     descriptor.setRoots(contentRoots);
 
+    // TODO consulo: FileSystemTreeImpl has no onInitialized callback (upstream: () -> myFileSystemTree.updateTree()), tree model updates itself
     myFileSystemTree = new FileSystemTreeImpl(
-      module.getProject(), descriptor, myTree, new MyTreeCellRenderer(), () -> myFileSystemTree.updateTree(), null
+      module.getProject(), descriptor, myTree, new MyTreeCellRenderer(), null
     );
     myFileSystemTree.showHiddens(true);
     Disposer.register(this, myFileSystemTree);
@@ -128,10 +128,10 @@ public class PerlContentEntriesTreeEditor implements UnnamedConfigurable, Dispos
   }
 
   @Override
-  public @NotNull JComponent createComponent() {
+  public Component createUIComponent(Disposable parentDisposable) {
     JPanel panel = new JPanel(new VerticalFlowLayout());
     panel.add(myTreePanel);
-    return panel;
+    return TargetAWT.wrap(panel);
   }
 
   @Override
@@ -201,19 +201,20 @@ public class PerlContentEntriesTreeEditor implements UnnamedConfigurable, Dispos
 
   @NotNull
   PerlModuleExtension getPerlModuleExtensionModifiableModel() {
-    return myModifiableRootModel.getModuleExtension(PerlModuleExtension.class);
+    return myModifiableRootModel.getExtensionWithoutCheck(PerlModuleExtension.class);
   }
 
-  private static class MyNewFolderAction extends NewFolderAction implements CustomComponentAction {
+  // TODO consulo: upstream implements CustomComponentAction with IconWithTextAction component (missing in Consulo), text is displayed in toolbar instead
+  private static class MyNewFolderAction extends NewFolderAction {
     private MyNewFolderAction() {
-      super(ActionsBundle.message("action.FileChooser.NewFolder.text"),
-            ActionsBundle.message("action.FileChooser.NewFolder.description"),
-            AllIcons.Actions.NewFolder);
+      super(ActionLocalize.actionFilechooserNewfolderText(),
+            ActionLocalize.actionFilechooserNewfolderDescription(),
+            PlatformIconGroup.actionsNewfolder());
     }
 
     @Override
-    public @NotNull JComponent createCustomComponent(@NotNull Presentation presentation, @NotNull String place) {
-      return IconWithTextAction.createCustomComponentImpl(this, presentation, place);
+    public boolean displayTextInToolbar() {
+      return true;
     }
   }
 

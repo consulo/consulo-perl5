@@ -16,17 +16,17 @@
 
 package com.perl5.lang.perl.profiler.run;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.configurations.RunProfile;
-import com.intellij.execution.configurations.RunProfileState;
-import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.execution.ui.RunContentDescriptor;
-import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.io.NioFiles;
-import com.intellij.profiler.DefaultProfilerExecutorGroup;
-import com.intellij.profiler.ProfilerToolWindowManager;
+import consulo.process.ExecutionException;
+import consulo.execution.configuration.RunProfile;
+import consulo.execution.configuration.RunProfileState;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.execution.ui.RunContentDescriptor;
+import consulo.container.boot.ContainerPathManager;
+import consulo.logging.Logger;
+import consulo.util.io.FileUtil;
+import consulo.execution.profiler.DefaultProfilerExecutorGroup;
+import consulo.execution.profiler.ProfilerExecutorSettings;
+import consulo.execution.profiler.ProfilerToolWindowManager;
 import com.perl5.lang.perl.idea.run.GenericPerlProgramRunner;
 import com.perl5.lang.perl.idea.run.GenericPerlRunConfiguration;
 import com.perl5.lang.perl.idea.run.PerlRunProfileState;
@@ -35,9 +35,8 @@ import com.perl5.lang.perl.profiler.configuration.PerlProfilerConfigurationState
 import com.perl5.lang.perl.util.PerlPackageUtilCore;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.concurrency.AsyncPromise;
+import consulo.util.concurrent.AsyncPromise;
 
-import java.io.IOException;
 import java.util.Set;
 
 @SuppressWarnings("UnstableApiUsage")
@@ -58,8 +57,8 @@ public class PerlProfilerProgramRunner extends GenericPerlProgramRunner {
     return executorSettings != null && executorSettings.canRun(profile);
   }
 
-  private static @Nullable DefaultProfilerExecutorGroup.ProfilerExecutorSettings getExecutorSettings(@NotNull String executorId) {
-    var executorGroup = DefaultProfilerExecutorGroup.Companion.getInstance();
+  private static @Nullable ProfilerExecutorSettings getExecutorSettings(@NotNull String executorId) {
+    var executorGroup = DefaultProfilerExecutorGroup.getInstance();
     if (executorGroup == null) {
       return null;
     }
@@ -109,15 +108,12 @@ public class PerlProfilerProgramRunner extends GenericPerlProgramRunner {
     }
     var profileResultsPath = profilerRunProfileState.getProfilingResultsPath();
     LOG.info("Profiling results saved in: " + profileResultsPath);
-    if (FileUtil.isAncestor(PathManager.getSystemPath(), profileResultsPath.toString(), true)) {
-      try {
-        // fxime we probably should fix permissions here
-        NioFiles.deleteRecursively(profileResultsPath, (path) -> {
-        });
-      }
-      catch (IOException e) {
-        throw new ExecutionException(PerlProfilerBundle.message("dialog.message.error.removing.old.profiling.data.at", profileResultsPath),
-                                     e);
+    if (FileUtil.isAncestor(ContainerPathManager.get().getSystemPath(), profileResultsPath.toString(), true)) {
+      // fxime we probably should fix permissions here
+      // TODO consulo: IntelliJ NioFiles.deleteRecursively is not available, FileUtil.delete only reports a failure
+      //  (the IOException is logged by FileUtil and not attached to the ExecutionException)
+      if (!FileUtil.delete(profileResultsPath)) {
+        throw new ExecutionException(PerlProfilerBundle.message("dialog.message.error.removing.old.profiling.data.at", profileResultsPath));
       }
     }
     else {

@@ -16,13 +16,13 @@
 
 package com.perl5.lang.perl.idea.manipulators;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.AbstractElementManipulator;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.ast.ASTNode;
+import consulo.logging.Logger;
+import consulo.document.util.TextRange;
+import consulo.language.psi.AbstractElementManipulator;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiUtilCore;
+import consulo.language.util.IncorrectOperationException;
 import com.perl5.lang.perl.psi.PerlString;
 import com.perl5.lang.perl.psi.PsiPerlStatement;
 import com.perl5.lang.perl.psi.impl.PerlFileImpl;
@@ -181,5 +181,10 @@ public class PerlStringManipulator extends AbstractElementManipulator<PerlString
 
   public @NotNull PsiElement getOpeningQuote(@NotNull PerlStringMixin element) {
     return Objects.requireNonNull(element.getOpenQuoteElement(), element.getText());
+  }
+
+  @Override
+  public @NotNull Class<PerlStringMixin> getElementClass() {
+    return PerlStringMixin.class;
   }
 }

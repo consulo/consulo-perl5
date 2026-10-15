@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.idea.run;
 
-import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.project.Project;
+import consulo.configurable.ConfigurationException;
+import consulo.project.Project;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

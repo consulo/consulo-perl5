@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.lexer.adapters;
 
-import com.intellij.lexer.FlexAdapter;
-import com.intellij.lexer.FlexLexer;
-import com.intellij.openapi.progress.ProgressManager;
+import consulo.language.lexer.FlexAdapter;
+import consulo.language.lexer.FlexLexer;
+import consulo.application.progress.ProgressManager;
 import org.jetbrains.annotations.NotNull;
 
 public class PerlProgressAwareAdapter extends FlexAdapter {

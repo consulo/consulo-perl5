@@ -16,32 +16,28 @@
 
 package com.perl5.lang.mojolicious;
 
-import com.intellij.icons.AllIcons;
-import com.intellij.openapi.util.IconLoader;
-import com.intellij.openapi.util.NotNullLazyValue;
+import consulo.application.util.NotNullLazyValue;
 import com.perl5.PerlIcons;
+import consulo.perl5.mojo.icon.MojoIconGroup;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
-
+// consulo: icons are generated from consulo/mojo/src/main/resources/ICON-LIB (MojoIconGroup) instead of IconLoader
 public final class MojoIcons {
-  public static final Icon MOJO_FILE = load("/icons/mojolicious.png");
-  public static final Icon MOJO_LOGO = load("/icons/mojolicious_color.png");
+  public static final Image MOJO_FILE = MojoIconGroup.mojolicious();
+  public static final Image MOJO_LOGO = MojoIconGroup.mojolicious_color();
 
-  private static @NotNull Icon load(@NotNull String resourcePath) {
-    return IconLoader.getIcon(resourcePath, MojoIcons.class);
-  }
+  public static final Image MOJO_APP_ICON = MOJO_LOGO;
+  public static final Image MOJO_LITE_APP_ICON = MOJO_LOGO;
+  private static final NotNullLazyValue<Image> MOJO_ROOT = PerlIcons.createLazyIconWithModifier(PerlIcons.TEMPLATE_ROOT, MOJO_LOGO);
+  private static final NotNullLazyValue<Image> MOJO_PLUGIN_LOGO = PerlIcons.createLazyIconWithModifier(PlatformIconGroup.nodesPlugin(), MOJO_LOGO);
 
-  public static final Icon MOJO_APP_ICON = MOJO_LOGO;
-  public static final Icon MOJO_LITE_APP_ICON = MOJO_LOGO;
-  private static final NotNullLazyValue<Icon> MOJO_ROOT = PerlIcons.createLazyIconWithModifier(PerlIcons.TEMPLATE_ROOT, MOJO_LOGO);
-  private static final NotNullLazyValue<Icon> MOJO_PLUGIN_LOGO = PerlIcons.createLazyIconWithModifier(AllIcons.Nodes.Plugin, MOJO_LOGO);
-
-  public static @NotNull Icon pluginIcon() {
+  public static @NotNull Image pluginIcon() {
     return MOJO_PLUGIN_LOGO.getValue();
   }
 
-  public static @NotNull Icon rootIcon() {
+  public static @NotNull Image rootIcon() {
     return MOJO_ROOT.getValue();
   }
 

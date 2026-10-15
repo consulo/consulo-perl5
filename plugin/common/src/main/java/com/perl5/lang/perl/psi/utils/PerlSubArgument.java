@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.psi.utils;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.project.Project;
+import consulo.util.lang.StringUtil;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlUndefValue;
 import com.perl5.lang.perl.idea.configuration.settings.PerlSharedSettings;
 import com.perl5.lang.perl.util.PerlScalarUtilCore;

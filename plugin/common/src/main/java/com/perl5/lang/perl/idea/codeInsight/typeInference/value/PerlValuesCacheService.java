@@ -16,27 +16,36 @@
 
 package com.perl5.lang.perl.idea.codeInsight.typeInference.value;
 
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.RecursionManager;
-import com.intellij.psi.util.PsiModificationTracker;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
+import consulo.disposer.Disposable;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.util.lang.Pair;
+import consulo.application.util.RecursionManager;
+import consulo.language.psi.PsiModificationTrackerListener;
+import consulo.util.collection.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class PerlValuesCacheService implements PsiModificationTracker.Listener, Disposable {
+@ServiceAPI(ComponentScope.PROJECT)
+@ServiceImpl
+@Singleton
+public class PerlValuesCacheService implements PsiModificationTrackerListener, Disposable {
   private static final Logger LOG = Logger.getInstance(PerlValuesCacheService.class);
   private final @NotNull Map<Pair<PerlValue, PerlValueResolver>, PerlValue> myResolveMap = ContainerUtil.createConcurrentWeakMap();
 
   private final AtomicLong myResolveRequests = new AtomicLong();
   private final AtomicLong myResolveBuilds = new AtomicLong();
 
+  @Inject
   public PerlValuesCacheService(@NotNull Project project) {
-    project.getMessageBus().connect(this).subscribe(PsiModificationTracker.TOPIC, this);
+    project.getMessageBus().connect(this).subscribe(PsiModificationTrackerListener.class, this);
   }
 
   @Override

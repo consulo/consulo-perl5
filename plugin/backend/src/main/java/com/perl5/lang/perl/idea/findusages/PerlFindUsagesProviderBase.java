@@ -16,14 +16,14 @@
 
 package com.perl5.lang.perl.idea.findusages;
 
-import com.intellij.lang.findUsages.FindUsagesProvider;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.ElementDescriptionProvider;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiNamedElement;
-import com.intellij.usageView.UsageViewNodeTextLocation;
-import com.intellij.usageView.UsageViewUtil;
+import consulo.language.findUsage.FindUsagesProvider;
+import consulo.logging.Logger;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.ElementDescriptionProvider;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiNamedElement;
+import consulo.usage.UsageViewNodeTextLocation;
+import consulo.usage.UsageViewUtil;
 import com.perl5.PerlBundle;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -42,8 +42,8 @@ public abstract class PerlFindUsagesProviderBase implements FindUsagesProvider {
   }
 
   /**
-   * @implNote invoked if {@link ElementDescriptionProvider} failed to resolve {@link com.intellij.usageView.UsageViewTypeLocation#INSTANCE}
-   * @see ElementDescriptionProvider#getElementDescription(com.intellij.psi.PsiElement, com.intellij.psi.ElementDescriptionLocation)
+   * @implNote invoked if {@link ElementDescriptionProvider} failed to resolve {@link consulo.usage.UsageViewTypeLocation#INSTANCE}
+   * @see ElementDescriptionProvider#getElementDescription(consulo.language.psi.PsiElement, consulo.language.psi.ElementDescriptionLocation)
    */
   @Override
   public @NotNull String getType(@NotNull PsiElement element) {

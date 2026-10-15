@@ -1,6 +1,6 @@
 package com.perl5.lang.perl.idea.sdk;
 
-import com.intellij.openapi.projectRoots.SdkAdditionalData;
+import consulo.content.bundle.SdkAdditionalData;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 

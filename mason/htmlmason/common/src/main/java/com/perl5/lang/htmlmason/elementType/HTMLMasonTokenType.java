@@ -16,7 +16,7 @@
 
 package com.perl5.lang.htmlmason.elementType;
 
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 import com.perl5.lang.htmlmason.HTMLMasonLanguage;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;

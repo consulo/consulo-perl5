@@ -16,36 +16,46 @@
 
 package com.perl5.lang.htmlmason;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.PsiParser;
-import com.intellij.lexer.Lexer;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.impl.source.DummyHolder;
-import com.intellij.psi.impl.source.tree.TreeUtil;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.IFileElementType;
-import com.intellij.psi.tree.TokenSet;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.Language;
+import consulo.language.ast.ASTNode;
+import consulo.language.parser.PsiParser;
+import consulo.language.lexer.Lexer;
+import consulo.language.version.LanguageVersion;
+import consulo.util.lang.StringUtil;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.impl.psi.DummyHolder;
+import consulo.language.impl.ast.TreeUtil;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.IFileElementType;
+import consulo.language.ast.TokenSet;
 import com.perl5.lang.htmlmason.elementType.HTMLMasonTokenSets;
 import com.perl5.lang.htmlmason.lexer.HTMLMasonLexer;
 import com.perl5.lang.htmlmason.lexer.HTMLMasonLexerAdapter;
 import com.perl5.lang.htmlmason.parser.psi.impl.HTMLMasonFileImpl;
 import com.perl5.lang.perl.PerlParserDefinition;
 import com.perl5.lang.perl.lexer.PerlTemplatingLexer;
-import com.perl5.lang.perl.parser.HTMLMasonParserImpl;
+import com.perl5.lang.htmlmason.parser.HTMLMasonParserImpl;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
 import static com.perl5.lang.htmlmason.elementType.HTMLMasonElementTypes.*;
 
+@ExtensionImpl
 public class HTMLMasonParserDefinition extends PerlParserDefinition {
   @Override
-  public @NotNull Lexer createLexer(Project project) {
-    return new HTMLMasonLexerAdapter(project, false);
+  public @NotNull Language getLanguage() {
+    return HTMLMasonLanguage.INSTANCE;
+  }
+
+  @Override
+  public @NotNull Lexer createLexer(LanguageVersion languageVersion) {
+    // TODO consulo: no project/file in ParserDefinition.createLexer(LanguageVersion); upstream passes the project to the lexer, which
+    //  reads custom tags from the project settings, here the settings are per module, so the parser ignores custom tags
+    return new HTMLMasonLexerAdapter(null, null, false);
   }
 
   @Override
@@ -59,12 +69,12 @@ public class HTMLMasonParserDefinition extends PerlParserDefinition {
   }
 
   @Override
-  public @NotNull TokenSet getCommentTokens() {
+  public @NotNull TokenSet getCommentTokens(LanguageVersion languageVersion) {
     return HTMLMasonTokenSets.COMMENTS;
   }
 
   @Override
-  public @NotNull PsiParser createParser(Project project) {
+  public @NotNull PsiParser createParser(LanguageVersion languageVersion) {
     return new HTMLMasonParserImpl();
   }
 

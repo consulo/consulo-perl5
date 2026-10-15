@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.psi;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.util.ObjectUtils;
+import consulo.language.psi.PsiElement;
+import consulo.util.lang.ObjectUtil;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -29,7 +29,7 @@ public interface PerlSimpleRegex extends PerlRegexExpression {
     if (children.length == 0) {
       return null;
     }
-    return ObjectUtils.tryCast(children[0], PsiPerlPerlRegex.class);
+    return ObjectUtil.tryCast(children[0], PsiPerlPerlRegex.class);
   }
 
   @SuppressWarnings("override")

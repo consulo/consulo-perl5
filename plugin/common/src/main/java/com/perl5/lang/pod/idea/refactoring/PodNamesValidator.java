@@ -16,8 +16,10 @@
 
 package com.perl5.lang.pod.idea.refactoring;
 
-import com.intellij.lang.refactoring.NamesValidator;
-import com.intellij.openapi.project.Project;
+import com.perl5.lang.pod.PodLanguage;
+import consulo.language.Language;
+import consulo.language.editor.refactoring.NamesValidator;
+import consulo.project.Project;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -30,5 +32,10 @@ public class PodNamesValidator implements NamesValidator {
   @Override
   public boolean isIdentifier(@NotNull String name, Project project) {
     return true;
+  }
+
+  @Override
+  public @NotNull Language getLanguage() {
+    return PodLanguage.INSTANCE;
   }
 }

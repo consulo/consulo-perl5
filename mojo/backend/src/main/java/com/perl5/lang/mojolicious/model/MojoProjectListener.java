@@ -16,11 +16,14 @@
 
 package com.perl5.lang.mojolicious.model;
 
-import com.intellij.util.messages.Topic;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.TopicAPI;
 import org.jetbrains.annotations.NotNull;
 
+// consulo: topics are declared with @TopicAPI and addressed by the listener class
+@TopicAPI(ComponentScope.PROJECT)
 public interface MojoProjectListener {
-  Topic<MojoProjectListener> MOJO_PROJECT_TOPIC = Topic.create("Mojo project manager topic", MojoProjectListener.class);
+  Class<MojoProjectListener> MOJO_PROJECT_TOPIC = MojoProjectListener.class;
 
   default void projectCreated(@NotNull MojoProject project) {
     MojoProjectManager.LOG.debug("project created event: " + project);

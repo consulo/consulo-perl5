@@ -16,17 +16,18 @@
 
 package com.perl5.lang.perl.idea.copyright;
 
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiFile;
-import com.maddyhome.idea.copyright.pattern.CopyrightVariablesProvider;
+import consulo.module.Module;
+import consulo.project.Project;
+import consulo.language.psi.PsiFile;
 import com.perl5.lang.perl.psi.impl.PerlFileImpl;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
-public class PerlCopyrightsVariablesProvider extends CopyrightVariablesProvider {
-  @Override
+// TODO consulo: Consulo has no copyright variables provider extension point (CopyrightGeneratorImpl/VelocityHelper put a fixed set
+//  of variables), so the $perlfile variable is not available in copyright templates; class is not registered
+//  (upstream: <copyright.variablesProvider filetype="Perl5 Package"/>, extends com.maddyhome.idea.copyright.pattern.CopyrightVariablesProvider)
+public class PerlCopyrightsVariablesProvider {
   public void collectVariables(@NotNull Map<String, Object> context, Project project, Module module, @NotNull PsiFile file) {
     if (file instanceof PerlFileImpl perlFile) {
       context.put("perlfile", new PerlFileInfo(perlFile));

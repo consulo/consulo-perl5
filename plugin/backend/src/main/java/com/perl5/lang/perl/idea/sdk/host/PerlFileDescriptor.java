@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.idea.sdk.host;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.io.FileUtil;
+import consulo.logging.Logger;
+import consulo.util.io.FileUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

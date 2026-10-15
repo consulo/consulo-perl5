@@ -16,16 +16,17 @@
 
 package com.perl5.lang.perl.idea.configuration.module;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.logging.Logger;
+import consulo.module.Module;
+import consulo.module.content.ModuleRootManager;
+import consulo.virtualFileSystem.VirtualFile;
+import com.perl5.PerlIcons;
 import com.perl5.lang.perl.idea.actions.PerlMarkLibrarySourceRootAction;
 import com.perl5.lang.perl.idea.modules.PerlModuleType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
+import consulo.ui.image.Image;
 import java.io.IOException;
 
 import static com.perl5.lang.perl.util.PerlPackageUtilCore.DEFAULT_LIB_DIR;
@@ -33,14 +34,14 @@ import static com.perl5.lang.perl.util.PerlPackageUtilCore.DEFAULT_TEST_DIR;
 
 public class PerlProjectGenerator extends PerlProjectGeneratorBase<PerlProjectGenerationSettings> {
   private static final Logger LOG = Logger.getInstance(PerlProjectGenerator.class);
-  @Override
+  // consulo: was DirectoryProjectGenerator.getName()
   public @NotNull String getName() {
     return PerlModuleType.getInstance().getName();
   }
 
-  @Override
-  public @Nullable Icon getLogo() {
-    return PerlModuleType.getInstance().getIcon();
+  // consulo: was DirectoryProjectGenerator.getLogo(); IntelliJ ModuleType.getIcon() is PerlModuleType.getNodeIcon()
+  public @Nullable Image getLogo() {
+    return PerlIcons.PERL_LANGUAGE_ICON;
   }
 
   @Override

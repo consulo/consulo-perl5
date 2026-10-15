@@ -16,13 +16,13 @@
 
 package com.perl5.lang.pod.parser.psi.references;
 
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementResolveResult;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.ResolveResult;
-import com.intellij.util.IncorrectOperationException;
+import consulo.document.util.TextRange;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiElementResolveResult;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.ResolveResult;
+import consulo.language.util.IncorrectOperationException;
 import com.perl5.lang.perl.fileTypes.PerlFileTypePackage;
 import com.perl5.lang.perl.psi.references.PerlCachingReference;
 import com.perl5.lang.perl.util.PerlPackageUtilCore;

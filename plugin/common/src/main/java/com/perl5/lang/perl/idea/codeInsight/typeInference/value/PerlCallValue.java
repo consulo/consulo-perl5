@@ -16,10 +16,10 @@
 
 package com.perl5.lang.perl.idea.codeInsight.typeInference.value;
 
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.util.ObjectUtils;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiElement;
+import consulo.util.lang.ObjectUtil;
+import consulo.util.collection.ContainerUtil;
 import com.perl5.lang.perl.psi.utils.PerlContextType;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -109,6 +109,6 @@ public abstract class PerlCallValue extends PerlParametrizedOperationValue {
 
   @Contract("null->null")
   public static @Nullable PerlCallValue from(@Nullable PsiElement element) {
-    return ObjectUtils.tryCast(PerlValuesManager.from(element), PerlCallValue.class);
+    return ObjectUtil.tryCast(PerlValuesManager.from(element), PerlCallValue.class);
   }
 }

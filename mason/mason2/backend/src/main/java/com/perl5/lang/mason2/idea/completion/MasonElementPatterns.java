@@ -16,15 +16,15 @@
 
 package com.perl5.lang.mason2.idea.completion;
 
-import com.intellij.patterns.PsiElementPattern;
-import com.intellij.psi.PsiElement;
+import consulo.language.pattern.PsiElementPattern;
+import consulo.language.psi.PsiElement;
 import com.perl5.lang.mason2.psi.MasonCallStatement;
 import com.perl5.lang.mason2.psi.MasonFlagsStatement;
 import com.perl5.lang.perl.psi.PerlString;
 import com.perl5.lang.perl.psi.PerlStringContentElement;
 import com.perl5.lang.perl.psi.PsiPerlCommaSequenceExpr;
 
-import static com.intellij.patterns.PlatformPatterns.psiElement;
+import static consulo.language.pattern.PlatformPatterns.psiElement;
 
 
 public final class MasonElementPatterns {

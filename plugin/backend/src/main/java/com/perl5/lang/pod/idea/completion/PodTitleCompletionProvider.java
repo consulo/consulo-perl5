@@ -16,17 +16,18 @@
 
 package com.perl5.lang.pod.idea.completion;
 
-import com.intellij.codeInsight.completion.CompletionParameters;
-import com.intellij.codeInsight.completion.CompletionProvider;
-import com.intellij.codeInsight.completion.CompletionResultSet;
-import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.ResolveResult;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.util.ProcessingContext;
+import consulo.language.icon.IconDescriptorUpdaters;
+import consulo.language.editor.completion.CompletionParameters;
+import consulo.language.editor.completion.CompletionProvider;
+import consulo.language.editor.completion.CompletionResultSet;
+import consulo.language.editor.completion.lookup.LookupElementBuilder;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.ResolveResult;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.PsiUtilCore;
+import consulo.language.util.ProcessingContext;
 import com.perl5.lang.perl.idea.completion.providers.processors.PerlSimpleCompletionProcessor;
 import com.perl5.lang.perl.psi.PerlSubElement;
 import com.perl5.lang.perl.psi.utils.PerlPsiUtil;
@@ -46,14 +47,14 @@ import java.util.Set;
 import static com.perl5.lang.pod.elementTypes.PodStubElementTypes.HEAD_1_SECTION;
 import static com.perl5.lang.pod.parser.PodElementTypesGenerated.POD_IDENTIFIER;
 
-public class PodTitleCompletionProvider extends CompletionProvider<CompletionParameters> implements PodElementPatterns {
+public class PodTitleCompletionProvider implements CompletionProvider, PodElementPatterns {
   public static final String COPYRIGHT_AND_LICENSE = "COPYRIGHT AND LICENSE";
   public static final List<String> DEFAULT_POD_SECTIONS =
     List.of("VERSION", "SYNOPSIS", "API", "DESCRIPTION", "INSTALLATION", "NAME", "AUTHORS", "CONTRIBUTORS", COPYRIGHT_AND_LICENSE,
             "METHODS", "ATTRIBUTES", "FUNCTIONS");
 
   @Override
-  protected void addCompletions(@NotNull CompletionParameters parameters,
+  public void addCompletions(@NotNull CompletionParameters parameters,
                                 @NotNull ProcessingContext context,
                                 @NotNull CompletionResultSet result) {
     PsiElement element = parameters.getPosition();
@@ -112,7 +113,7 @@ public class PodTitleCompletionProvider extends CompletionProvider<CompletionPar
     for (PerlSubElement subElement : possibleTargets) {
       String lookupString = StringUtil.notNullize(subElement.getPresentableName());
       if (completionProcessor.matches(lookupString) &&
-          !completionProcessor.process(LookupElementBuilder.create(subElement, lookupString).withIcon(subElement.getIcon(0)))) {
+          !completionProcessor.process(LookupElementBuilder.create(subElement, lookupString).withIcon(IconDescriptorUpdaters.getIcon(subElement, 0)))) {
         break;
       }
     }

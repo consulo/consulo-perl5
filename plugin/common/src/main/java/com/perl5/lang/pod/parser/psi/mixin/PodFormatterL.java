@@ -16,12 +16,12 @@
 
 package com.perl5.lang.pod.parser.psi.mixin;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.util.CachedValueProvider;
-import com.intellij.psi.util.CachedValuesManager;
-import com.intellij.psi.util.PsiTreeUtil;
+import consulo.language.ast.ASTNode;
+import consulo.logging.Logger;
+import consulo.language.psi.PsiReference;
+import consulo.application.util.CachedValueProvider;
+import consulo.language.psi.util.LanguageCachedValueUtil;
+import consulo.language.psi.util.PsiTreeUtil;
 import com.perl5.lang.pod.parser.psi.PodFormatter;
 import com.perl5.lang.pod.parser.psi.PodLinkDescriptor;
 import com.perl5.lang.pod.parser.psi.PodRenderingContext;
@@ -68,7 +68,7 @@ public class PodFormatterL extends PodSectionMixin implements PodFormatter, PodS
   }
 
   public @Nullable PodLinkDescriptor getLinkDescriptor() {
-    return CachedValuesManager.getCachedValue(this, () -> CachedValueProvider.Result.create(
+    return LanguageCachedValueUtil.getCachedValue(this, () -> CachedValueProvider.Result.create(
       PodLinkDescriptor.create(this), PodFormatterL.this));
   }
 

@@ -16,14 +16,22 @@
 
 package com.perl5.lang.tt2.idea.completion;
 
-import com.intellij.codeInsight.completion.CompletionContributor;
-import com.intellij.codeInsight.completion.CompletionType;
+import com.perl5.lang.tt2.TemplateToolkitLanguage;
+import consulo.language.Language;
+import consulo.language.editor.completion.CompletionContributor;
+import consulo.language.editor.completion.CompletionType;
+import org.jetbrains.annotations.NotNull;
 
 import static com.perl5.lang.tt2.elementTypes.TemplateToolkitElementPatterns.BLOCK_NAME_USAGE_PATTERN;
 import static com.perl5.lang.tt2.elementTypes.TemplateToolkitElementPatterns.FILTER_NAME_PATTERN;
 
 
 public class TemplateToolkitCompletionContributor extends CompletionContributor {
+  @Override
+  public @NotNull Language getLanguage() {
+    return TemplateToolkitLanguage.INSTANCE;
+  }
+
   public TemplateToolkitCompletionContributor() {
     extend(
       CompletionType.BASIC,

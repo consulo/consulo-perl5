@@ -16,12 +16,13 @@
 
 package com.perl5.lang.mojolicious.idea.ide;
 
-import com.intellij.ide.actions.CreateFileFromTemplateAction;
-import com.intellij.ide.actions.CreateFileFromTemplateDialog;
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiDirectory;
+import consulo.ide.action.CreateFileFromTemplateAction;
+import consulo.ide.action.CreateFileFromTemplateDialog;
+import consulo.dataContext.DataContext;
+import consulo.localize.LocalizeValue;
+import consulo.application.dumb.DumbAware;
+import consulo.project.Project;
+import consulo.language.psi.PsiDirectory;
 import com.perl5.lang.mojolicious.MojoBundle;
 import com.perl5.lang.mojolicious.MojoIcons;
 import com.perl5.lang.mojolicious.MojoUtil;
@@ -35,13 +36,13 @@ public class MojoCreateFileFromTemplateAction extends CreateFileFromTemplateActi
 
   @Override
   protected void buildDialog(@NotNull Project project, @NotNull PsiDirectory directory, CreateFileFromTemplateDialog.Builder builder) {
-    builder.setTitle(MojoBundle.message("action.new.file.builder.title"));
+    builder.setTitle(LocalizeValue.localizeTODO(MojoBundle.message("action.new.file.builder.title")));
     builder.addKind(MojoliciousFileType.INSTANCE.getDescription(), MojoIcons.MOJO_FILE, MojoBundle.message("perl.file.kind.mojo"));
   }
 
   @Override
-  protected String getActionName(PsiDirectory directory, @NotNull String newName, String templateName) {
-    return MojoBundle.message("action.new.file.action.name", newName);
+  protected LocalizeValue getActionName(PsiDirectory directory, @NotNull String newName, String templateName) {
+    return LocalizeValue.localizeTODO(MojoBundle.message("action.new.file.action.name", newName));
   }
 
   @Override

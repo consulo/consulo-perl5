@@ -16,16 +16,16 @@
 
 package com.perl5.lang.perl.parser.Class.Accessor.psi.impl;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.ElementManipulators;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.stubs.StubInputStream;
-import com.intellij.psi.stubs.StubOutputStream;
-import com.intellij.psi.util.CachedValueProvider;
-import com.intellij.psi.util.CachedValuesManager;
-import com.intellij.util.Function;
+import consulo.logging.Logger;
+import consulo.util.lang.ref.Ref;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.ElementManipulators;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.stub.StubInputStream;
+import consulo.language.psi.stub.StubOutputStream;
+import consulo.application.util.CachedValueProvider;
+import consulo.language.psi.util.LanguageCachedValueUtil;
+import java.util.function.Function;
 import com.perl5.lang.perl.parser.Class.Accessor.ClassAccessorElementTypes;
 import com.perl5.lang.perl.psi.PerlSubCallHandler;
 import com.perl5.lang.perl.psi.PsiPerlNamespaceContent;
@@ -90,7 +90,7 @@ public abstract class PerlClassAccessorHandler extends PerlSubCallHandler<PerlCl
   public @NotNull List<? extends PerlDelegatingLightNamedElement<?>> computeLightElementsFromStubs(@NotNull PerlSubCallElement psiElement,
                                                                                                    @NotNull PerlSubCallElementStub stubElement) {
     return stubElement.getLightNamedElementsStubs().stream()
-      .filter(childStub -> childStub.getElementType() == ClassAccessorElementTypes.CLASS_ACCESSOR_METHOD)
+      .filter(childStub -> childStub.getStubType() == ClassAccessorElementTypes.CLASS_ACCESSOR_METHOD)
       .map(childStub -> new PerlClassAccessorMethod(psiElement, (PerlSubDefinitionStub)childStub))
       .collect(Collectors.toList());
   }
@@ -127,7 +127,7 @@ public abstract class PerlClassAccessorHandler extends PerlSubCallHandler<PerlCl
       LOG.assertTrue(callData instanceof PerlClassAccessorCallData, "Got: " + callData);
       return ((PerlClassAccessorCallData)callData).isFBP();
     }
-    return CachedValuesManager.getCachedValue(psiElement, () -> {
+    return LanguageCachedValueUtil.getCachedValue(psiElement, () -> {
       Ref<Boolean> result = Ref.create(Boolean.FALSE);
 
       // fixme we need a smarter treewalkup here, scopes are not necessary here

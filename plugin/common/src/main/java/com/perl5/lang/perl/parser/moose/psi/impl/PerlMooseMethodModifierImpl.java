@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.parser.moose.psi.impl;
 
-import com.intellij.lang.ASTNode;
+import consulo.language.ast.ASTNode;
 import com.perl5.lang.perl.parser.moose.psi.PerlMooseMethodModifier;
 import com.perl5.lang.perl.parser.moose.psi.PerlMooseStatementWithSubReference;
 import com.perl5.lang.perl.psi.PsiPerlExpr;

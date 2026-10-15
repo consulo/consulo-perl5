@@ -16,15 +16,14 @@
 
 package com.perl5.lang.htmlmason.parser.psi.impl;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.IElementType;
 import com.perl5.lang.htmlmason.HTMLMasonIcons;
 import com.perl5.lang.htmlmason.parser.psi.HTMLMasonMethodDefinition;
 import com.perl5.lang.htmlmason.parser.stubs.HTMLMasonMethodDefinitionStub;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import javax.swing.*;
+import consulo.ui.image.Image;
 
 
 public class HTMLMasonMethodDefinitionImpl extends HTMLMasonStubBasedNamedElementImpl<HTMLMasonMethodDefinitionStub>
@@ -43,8 +42,9 @@ public class HTMLMasonMethodDefinitionImpl extends HTMLMasonStubBasedNamedElemen
     return stub == null ? null : stub.getName();
   }
 
-  @Override
-  public @Nullable Icon getIcon(int flags) {
+  // TODO consulo: PsiElement#getIcon(int) does not exist in Consulo (element icons come from IconDescriptorUpdater),
+  //  so this is no longer an override and is not called by the platform
+  public @Nullable Image getIcon(int flags) {
     return HTMLMasonIcons.HTML_MASON_METHOD_ICON;
   }
 }

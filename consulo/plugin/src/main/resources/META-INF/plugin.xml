@@ -1,0 +1,12 @@
+<consulo-plugin url="https://github.com/consulo/consulo-perl5">
+  <id>com.perl5</id>
+  <name>Perl</name>
+  <version>SNAPSHOT</version>
+  <vendor>consulo.io</vendor>
+  <description>Perl 5 language support, ported from Perl5-IDEA by Alexandr Evstigneev (https://github.com/Camelcade/Perl5-IDEA)</description>
+  <depends>com.intellij.xml</depends>
+  <depends>com.intellij.regexp</depends>
+  <tags>
+    <tag>custom.language</tag>
+  </tags>
+</consulo-plugin>

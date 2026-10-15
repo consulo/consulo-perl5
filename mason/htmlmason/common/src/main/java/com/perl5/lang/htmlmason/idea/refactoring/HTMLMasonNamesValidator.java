@@ -16,7 +16,7 @@
 
 package com.perl5.lang.htmlmason.idea.refactoring;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.perl5.lang.perl.idea.PerlNamesValidator;
 import org.jetbrains.annotations.NotNull;
 

@@ -16,16 +16,38 @@
 
 package com.perl5.lang.perl.coverage;
 
-import com.intellij.coverage.CoverageRunner;
-import com.intellij.execution.configurations.RunConfigurationBase;
-import com.intellij.execution.configurations.coverage.CoverageEnabledConfiguration;
+import consulo.execution.coverage.CoverageRunner;
+import consulo.execution.configuration.RunConfigurationBase;
+import consulo.execution.coverage.CoverageEnabledConfiguration;
+import consulo.execution.coverage.CoverageFileProvider;
+import consulo.execution.coverage.DefaultCoverageFileProvider;
 import com.perl5.lang.perl.idea.run.GenericPerlRunConfiguration;
 import org.jetbrains.annotations.NotNull;
+
+import java.io.File;
+import java.util.Objects;
 
 public class PerlCoverageEnabledConfiguration extends CoverageEnabledConfiguration {
 
   public PerlCoverageEnabledConfiguration(RunConfigurationBase configuration) {
-    super(configuration, CoverageRunner.getInstance(PerlCoverageRunner.class));
+    // consulo: Consulo CoverageEnabledConfiguration has no (configuration, runner) constructor
+    super(configuration);
+    setCoverageRunner(CoverageRunner.getInstance(PerlCoverageRunner.class));
+  }
+
+  /**
+   * consulo: IntelliJ {@code CoverageEnabledConfiguration#createSuiteName}, missing in Consulo
+   * (the same name Consulo CoverageDataManager uses for suites)
+   */
+  public @NotNull String createSuiteName() {
+    return getName() + " Coverage Results";
+  }
+
+  /**
+   * consulo: IntelliJ {@code CoverageEnabledConfiguration#createFileProvider}, missing in Consulo
+   */
+  public @NotNull CoverageFileProvider createFileProvider() {
+    return new DefaultCoverageFileProvider(new File(Objects.requireNonNull(getCoverageFilePath())));
   }
 
   @Override

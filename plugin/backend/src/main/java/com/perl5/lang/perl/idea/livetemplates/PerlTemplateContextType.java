@@ -16,15 +16,18 @@
 
 package com.perl5.lang.perl.idea.livetemplates;
 
-import com.intellij.codeInsight.template.TemplateActionContext;
-import com.intellij.codeInsight.template.TemplateContextType;
-import com.intellij.openapi.util.NlsContexts;
-import com.intellij.psi.PsiComment;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiWhiteSpace;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.editor.template.context.BaseTemplateContextType;
+import consulo.language.editor.template.context.EverywhereContextType;
+import consulo.language.editor.template.context.TemplateActionContext;
+import consulo.language.editor.template.context.TemplateContextType;
+import consulo.localize.LocalizeValue;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiComment;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiWhiteSpace;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.psi.PsiUtilCore;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.PerlLanguage;
 import com.perl5.lang.perl.fileTypes.PerlFileTypeTest;
@@ -34,13 +37,34 @@ import com.perl5.lang.perl.psi.impl.PerlStringContentElementImpl;
 import com.perl5.lang.perl.psi.properties.PerlLoop;
 import com.perl5.lang.perl.psi.utils.PerlPsiUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import static com.perl5.lang.perl.parser.PerlElementTypesGenerated.REGEX_TOKEN;
 
 
-public abstract class PerlTemplateContextType extends TemplateContextType {
-  protected PerlTemplateContextType(@NlsContexts.Label @NotNull String presentableName) {
-    super(presentableName);
+public abstract class PerlTemplateContextType extends BaseTemplateContextType {
+  // TODO consulo: upstream takes context ids from xml (<liveTemplateContext contextId=...>), subclasses using this constructor
+  //  (TryCatchTemplateContextType, PerlSwitchTemplateContextType, PerlInSwitchAfterCaseTemplateContextType) should pass their id,
+  //  until then the class name is used as id (see getContextId())
+  protected PerlTemplateContextType(@NotNull String presentableName) {
+    this(null, presentableName);
+  }
+
+  // consulo: context id and base context (upstream baseContextId="PERL5") are declared in upstream xml
+  protected PerlTemplateContextType(@Nullable String contextId, @NotNull String presentableName) {
+    this(contextId, presentableName, Generic.class);
+  }
+
+  protected PerlTemplateContextType(@Nullable String contextId,
+                                    @NotNull String presentableName,
+                                    @Nullable Class<? extends TemplateContextType> baseContextType) {
+    super(StringUtil.notNullize(contextId), LocalizeValue.localizeTODO(presentableName), baseContextType);
+  }
+
+  @Override
+  public String getContextId() {
+    String contextId = super.getContextId();
+    return contextId.isEmpty() ? getClass().getName() : contextId;
   }
 
   @Override
@@ -73,7 +97,7 @@ public abstract class PerlTemplateContextType extends TemplateContextType {
 
   public static class Generic extends PerlTemplateContextType {
     public Generic() {
-      super(PerlLanguage.NAME);
+      super("PERL5", PerlLanguage.NAME, EverywhereContextType.class);
     }
 
     @Override
@@ -84,7 +108,7 @@ public abstract class PerlTemplateContextType extends TemplateContextType {
 
   public static class Postfix extends PerlTemplateContextType {
     public Postfix() {
-      super(PerlBundle.message("perl.template.context.postfix"));
+      super("PERL5_POSTFIX", PerlBundle.message("perl.template.context.postfix"));
     }
 
     @Override
@@ -97,11 +121,15 @@ public abstract class PerlTemplateContextType extends TemplateContextType {
 
   public static class Prefix extends PerlTemplateContextType {
     public Prefix() {
-      this(PerlBundle.message("perl.template.context.prefix"));
+      this("PERL5_PREFIX", PerlBundle.message("perl.template.context.prefix"));
     }
 
-    public Prefix(@NlsContexts.Label @NotNull String presentableName) {
+    public Prefix(@NotNull String presentableName) {
       super(presentableName);
+    }
+
+    public Prefix(@NotNull String contextId, @NotNull String presentableName) {
+      super(contextId, presentableName);
     }
 
     @Override
@@ -114,7 +142,7 @@ public abstract class PerlTemplateContextType extends TemplateContextType {
 
   public static class UnfinishedIf extends PerlTemplateContextType.Prefix {
     public UnfinishedIf() {
-      super(PerlBundle.message("perl.template.context.incomplete.if"));
+      super("PERL5_UNFINISHED_IF", PerlBundle.message("perl.template.context.incomplete.if"));
     }
 
     @Override
@@ -134,7 +162,7 @@ public abstract class PerlTemplateContextType extends TemplateContextType {
 
   public static class Continue extends PerlTemplateContextType.Prefix {
     public Continue() {
-      super(PerlBundle.message("perl.template.context.continue"));
+      super("PERL5_CONTINUE", PerlBundle.message("perl.template.context.continue"));
     }
 
     @Override
@@ -157,7 +185,7 @@ public abstract class PerlTemplateContextType extends TemplateContextType {
 
   public static class TestFile extends PerlTemplateContextType.Prefix {
     public TestFile() {
-      super(PerlBundle.message("perl.template.context.test.file"));
+      super("PERL5_TEST_FILE", PerlBundle.message("perl.template.context.test.file"));
     }
 
     @Override

@@ -16,13 +16,15 @@
 
 package com.perl5.lang.htmlmason;
 
-import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.newvfs.impl.FakeVirtualFile;
-import com.intellij.psi.PsiFile;
-import com.intellij.testFramework.LightVirtualFile;
-import com.perl5.lang.htmlmason.idea.configuration.AbstractMasonSettings;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.NullVirtualFile;
+import consulo.virtualFileSystem.StubVirtualFile;
+import consulo.language.psi.PsiFile;
+import consulo.language.file.light.LightVirtualFile;
+import com.perl5.lang.perl.idea.modules.PerlSourceRootType;
 import com.perl5.lang.perl.idea.project.PerlProjectManager;
+import consulo.project.Project;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,15 +33,20 @@ public final class MasonCoreUtil {
   private MasonCoreUtil() {
   }
 
-  public static @Nullable VirtualFile getComponentRoot(@NotNull AbstractMasonSettings masonSettings, @Nullable VirtualFile file) {
+  /**
+   * consulo: upstream takes the project settings, which provide the project and the components root type
+   */
+  public static @Nullable VirtualFile getComponentRoot(@NotNull Project project,
+                                                       @NotNull PerlSourceRootType rootType,
+                                                       @Nullable VirtualFile file) {
     if (file != null) {
-      if (file instanceof FakeVirtualFile) {
+      // consulo: FakeVirtualFile (a file which is not created yet) is internal; it's the only platform StubVirtualFile with a parent
+      if (file instanceof StubVirtualFile && !(file instanceof NullVirtualFile)) {
         file = file.getParent();
       }
 
-      for (VirtualFile componentRoot : PerlProjectManager.getInstance(masonSettings.getProject())
-        .getModulesRootsOfType(masonSettings.getSourceRootType())) {
-        if (VfsUtilCore.isAncestor(componentRoot, file, false)) {
+      for (VirtualFile componentRoot : PerlProjectManager.getInstance(project).getModulesRootsOfType(rootType)) {
+        if (VirtualFileUtil.isAncestor(componentRoot, file, false)) {
           return componentRoot;
         }
       }

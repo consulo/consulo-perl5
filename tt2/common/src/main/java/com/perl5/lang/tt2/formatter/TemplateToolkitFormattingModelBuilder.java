@@ -16,13 +16,14 @@
 
 package com.perl5.lang.tt2.formatter;
 
-import com.intellij.formatting.*;
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
-import com.intellij.psi.formatter.xml.XmlFormattingPolicy;
-import com.intellij.psi.util.PsiUtilCore;
+
+import consulo.language.Language;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.codeStyle.CodeStyleSettings;
+import consulo.xml.psi.formatter.xml.XmlFormattingPolicy;
+import consulo.language.psi.PsiUtilCore;
 import com.perl5.lang.perl.idea.formatter.PerlXmlTemplateFormattingModelBuilder;
 import com.perl5.lang.perl.idea.formatter.blocks.PerlFormattingBlock;
 import com.perl5.lang.tt2.TemplateToolkitLanguage;
@@ -32,9 +33,19 @@ import org.jetbrains.annotations.Nullable;
 import static com.perl5.lang.tt2.formatter.TemplateToolkitFormattingTokenSets.PERL_BLOCKS;
 import static com.perl5.lang.tt2.parser.TemplateToolkitElementTypesGenerated.TT2_HTML;
 import static com.perl5.lang.tt2.parser.TemplateToolkitElementTypesGenerated.TT2_OUTER;
+import consulo.language.codeStyle.Alignment;
+import consulo.language.codeStyle.Block;
+import consulo.language.codeStyle.FormattingContext;
+import consulo.language.codeStyle.Indent;
+import consulo.language.codeStyle.Wrap;
 
 public class TemplateToolkitFormattingModelBuilder
   extends PerlXmlTemplateFormattingModelBuilder<TemplateToolkitFormattingContext, TemplateToolkitFormattingBlock> {
+  @Override
+  public @NotNull Language getLanguage() {
+    return TemplateToolkitLanguage.INSTANCE;
+  }
+
   @Override
   protected boolean isTemplateFile(PsiFile file) {
     return file.getLanguage().isKindOf(TemplateToolkitLanguage.INSTANCE);

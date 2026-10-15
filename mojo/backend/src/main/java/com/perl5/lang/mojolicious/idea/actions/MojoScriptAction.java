@@ -16,16 +16,15 @@
 
 package com.perl5.lang.mojolicious.idea.actions;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.project.DumbAware;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.application.dumb.DumbAware;
 import com.perl5.lang.mojolicious.MojoIcons;
 import com.perl5.lang.mojolicious.MojoUtil;
 import com.perl5.lang.perl.idea.actions.PerlActionBase;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import javax.swing.*;
 
 public abstract class MojoScriptAction extends PerlActionBase implements DumbAware {
 
@@ -33,7 +32,7 @@ public abstract class MojoScriptAction extends PerlActionBase implements DumbAwa
     this(text, MojoIcons.MOJO_LOGO);
   }
 
-  public MojoScriptAction(@Nls(capitalization = Nls.Capitalization.Title) @Nullable String text, @Nullable Icon icon) {
+  public MojoScriptAction(@Nls(capitalization = Nls.Capitalization.Title) @Nullable String text, @Nullable Image icon) {
     super(text, icon);
   }
 

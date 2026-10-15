@@ -16,11 +16,11 @@
 
 package com.perl5.lang.htmlmason.idea.hierarchy;
 
-import com.intellij.ide.hierarchy.HierarchyNodeDescriptor;
-import com.intellij.ide.util.treeView.NodeDescriptor;
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.openapi.roots.ui.util.CompositeAppearance;
-import com.intellij.psi.PsiElement;
+import consulo.language.editor.hierarchy.HierarchyNodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.navigation.ItemPresentation;
+import consulo.ui.ex.util.CompositeAppearance;
+import consulo.language.psi.PsiElement;
 import com.perl5.lang.htmlmason.HTMLMasonUtil;
 import com.perl5.lang.htmlmason.HtmlMasonBundle;
 import com.perl5.lang.htmlmason.parser.psi.impl.HTMLMasonFileImpl;

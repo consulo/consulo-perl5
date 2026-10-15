@@ -16,9 +16,9 @@
 
 package com.perl5.lang.tt2.psi.impl;
 
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiReference;
+import consulo.language.impl.psi.ASTWrapperPsiElement;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiReference;
 import com.perl5.lang.perl.psi.PerlReferenceOwner;
 import com.perl5.lang.tt2.psi.TemplateToolkitCompositeElement;
 import org.jetbrains.annotations.NotNull;

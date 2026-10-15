@@ -16,13 +16,16 @@
 
 package com.perl5.lang.perl.idea.intentions;
 
-import com.intellij.codeInsight.intention.PsiElementBaseIntentionAction;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiWhiteSpace;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.IncorrectOperationException;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.editor.intention.IntentionMetaData;
+import consulo.localize.LocalizeValue;
+import consulo.language.editor.intention.PsiElementBaseIntentionAction;
+import consulo.codeEditor.Editor;
+import consulo.project.Project;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiWhiteSpace;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.util.IncorrectOperationException;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.psi.*;
 import com.perl5.lang.perl.psi.utils.PerlElementFactory;
@@ -33,15 +36,13 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 
 
+// TODO consulo: upstream descriptionDirectoryName is intentionDescriptions/ForeachToForConverter, Consulo looks up intentionDescriptions/ForeachToForIntention
+@ExtensionImpl
+@IntentionMetaData(ignoreId = "perl5.ForeachToForIntention", categories = {"Perl"}, fileExtensions = "pm")
 public class ForeachToForIntention extends PsiElementBaseIntentionAction {
   @Override
-  public @Nls @NotNull String getText() {
-    return PerlBundle.message("perl.intention.foreach.to.for");
-  }
-
-  @Override
-  public @Nls @NotNull String getFamilyName() {
-    return getText();
+  public @NotNull LocalizeValue getText() {
+    return LocalizeValue.localizeTODO(PerlBundle.message("perl.intention.foreach.to.for"));
   }
 
   private @Nullable PerlForeachCompound getForeachStatement(@NotNull PsiElement element) {

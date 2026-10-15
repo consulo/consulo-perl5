@@ -16,8 +16,9 @@
 
 package com.perl5.lang.mojolicious.idea.actions;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.projectRoots.Sdk;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.content.bundle.Sdk;
+import consulo.project.Project;
 import com.perl5.lang.mojolicious.MojoBundle;
 import com.perl5.lang.mojolicious.MojoIcons;
 import com.perl5.lang.mojolicious.MojoUtil;
@@ -44,7 +45,7 @@ public class InstallMojoliciousAction extends PerlActionBase {
     if (sdk == null) {
       return;
     }
-    PackageManagerAdapter.installModules(sdk, e.getProject(), List.of(MojoUtil.MOJO_PACKAGE_NAME), null, true);
+    PackageManagerAdapter.installModules(sdk, e.getData(Project.KEY), List.of(MojoUtil.MOJO_PACKAGE_NAME), null, true);
   }
 
   @Override

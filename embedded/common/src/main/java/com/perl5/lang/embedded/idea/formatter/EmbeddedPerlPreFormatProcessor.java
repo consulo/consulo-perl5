@@ -16,7 +16,7 @@
 
 package com.perl5.lang.embedded.idea.formatter;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.perl5.lang.embedded.EmbeddedPerlLanguage;
 import com.perl5.lang.perl.idea.formatter.PerlPreFormatProcessor;
 

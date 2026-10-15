@@ -17,7 +17,7 @@
 package unit;
 
 import base.HTMLMasonLightTestCase;
-import com.intellij.configurationStore.XmlSerializer;
+import consulo.util.xml.serializer.XmlSerializer;
 import com.perl5.lang.htmlmason.idea.configuration.HTMLMasonCustomTag;
 import com.perl5.lang.htmlmason.idea.configuration.HTMLMasonCustomTagRole;
 import com.perl5.lang.htmlmason.idea.configuration.HTMLMasonSettings;

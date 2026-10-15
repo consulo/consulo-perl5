@@ -16,10 +16,10 @@
 
 package com.perl5.lang.pod.parser.psi;
 
-import com.intellij.navigation.NavigationItem;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiNameIdentifierOwner;
-import com.intellij.psi.util.PsiTreeUtil;
+import consulo.navigation.NavigationItem;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiNameIdentifierOwner;
+import consulo.language.psi.util.PsiTreeUtil;
 import com.perl5.lang.pod.parser.psi.util.PodRenderUtil;
 import com.perl5.lang.pod.psi.PsiPodFormatIndex;
 import org.jetbrains.annotations.NotNull;

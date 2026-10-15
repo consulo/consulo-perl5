@@ -16,17 +16,17 @@
 
 package com.perl5.lang.perl.idea.inspections;
 
-import com.intellij.codeInsight.controlflow.ControlFlowUtil;
-import com.intellij.codeInsight.controlflow.Instruction;
-import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.TokenType;
-import com.intellij.psi.tree.TokenSet;
-import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.language.controlFlow.ControlFlowUtil;
+import consulo.language.controlFlow.Instruction;
+import consulo.language.editor.inspection.ProblemsHolder;
+import consulo.document.util.TextRange;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiElementVisitor;
+import consulo.language.psi.PsiFile;
+import consulo.language.ast.TokenType;
+import consulo.language.ast.TokenSet;
+import consulo.language.psi.PsiUtilCore;
+import consulo.util.collection.ContainerUtil;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.idea.codeInsight.controlFlow.PerlControlFlowBuilder;
 import com.perl5.lang.perl.psi.PerlMethodModifier;
@@ -40,7 +40,14 @@ import java.util.HashSet;
 import java.util.LinkedList;
 
 import static com.perl5.lang.perl.parser.PerlElementTypesGenerated.*;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.Language;
+import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
+import consulo.localize.LocalizeValue;
+import com.perl5.lang.perl.PerlLanguage;
+import org.jetbrains.annotations.Nullable;
 
+@ExtensionImpl
 public class PerlUnreachableCodeInspection extends PerlInspection {
   private final TokenSet TRANSPARENT_ELEMENTS = TokenSet.create(
     COMMA_SEQUENCE_EXPR, DO_BLOCK_EXPR, PARENTHESISED_EXPR, DEREF_EXPR, SUB_EXPR, SUB_DEFINITION, METHOD_DEFINITION, FUNC_DEFINITION,
@@ -175,5 +182,26 @@ public class PerlUnreachableCodeInspection extends PerlInspection {
         }
       }
     };
+  }
+
+  // consulo: metadata from upstream <localInspection> registration in perl5.plugin.backend.main.xml
+  @Override
+  public @Nullable Language getLanguage() {
+    return PerlLanguage.INSTANCE;
+  }
+
+  @Override
+  public @NotNull LocalizeValue getDisplayName() {
+    return LocalizeValue.localizeTODO(PerlBundle.message("inspection.unreachable.code.display.name"));
+  }
+
+  @Override
+  public @NotNull LocalizeValue getGroupDisplayName() {
+    return LocalizeValue.localizeTODO(PerlBundle.message("inspection.group.perl"));
+  }
+
+  @Override
+  public @NotNull HighlightDisplayLevel getDefaultLevel() {
+    return HighlightDisplayLevel.ERROR;
   }
 }

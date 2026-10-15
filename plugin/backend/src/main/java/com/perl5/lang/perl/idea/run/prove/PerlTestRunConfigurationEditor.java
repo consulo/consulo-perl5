@@ -16,18 +16,19 @@
 
 package com.perl5.lang.perl.idea.run.prove;
 
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.fileChooser.FileChooserDialog;
-import com.intellij.openapi.fileChooser.FileChooserFactory;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.LabeledComponent;
-import com.intellij.openapi.ui.TextFieldWithBrowseButton;
-import com.intellij.openapi.util.NlsContexts;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.ui.RawCommandLineEditor;
-import com.intellij.ui.components.fields.ExpandableTextField;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDialog;
+import consulo.fileChooser.FileChooserFactory;
+import consulo.project.Project;
+import consulo.ui.ex.awt.LabeledComponent;
+import consulo.ui.ex.awt.TextFieldWithBrowseButton;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.execution.ui.awt.RawCommandLineEditor;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.TextBoxWithExpandAction;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.util.collection.ContainerUtil;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.idea.run.GenericPerlRunConfiguration;
 import com.perl5.lang.perl.idea.run.GenericPerlRunConfigurationEditor;
@@ -116,13 +117,15 @@ class PerlTestRunConfigurationEditor extends GenericPerlRunConfigurationEditor<P
     }
 
     @Override
-    protected @NotNull @NlsContexts.Label String getScriptFieldLabelText() {
+    protected @NotNull String getScriptFieldLabelText() {
       return PerlBundle.message("perl.run.prove.option.script.label");
     }
 
     @Override
     protected @NotNull TextFieldWithBrowseButton createTextFieldForScript() {
-      TextFieldWithBrowseButton fieldWithBrowseButton = new TextFieldWithBrowseButton(new ExpandableTextField(FILES_PARSER, FILES_JOINER));
+      // TODO consulo: no Swing ExpandableTextField in Consulo API, using text field of uni UI TextBoxWithExpandAction (desktop AWT only)
+      TextFieldWithBrowseButton fieldWithBrowseButton = new TextFieldWithBrowseButton((JTextField)TargetAWT.to(
+        TextBoxWithExpandAction.create(PlatformIconGroup.actionsShow(), getScriptFieldLabelText(), FILES_PARSER, FILES_JOINER)));
       fieldWithBrowseButton.addActionListener(e -> {
         var fileChooserDescriptor = createFileChooserDescriptor();
 

@@ -16,27 +16,28 @@
 
 package com.perl5.lang.perl.idea.sdk.versionManager;
 
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationType;
-import com.intellij.notification.Notifications;
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.ui.messages.MessagesService;
-import com.intellij.openapi.util.NlsActions.ActionText;
-import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFileSystem;
-import com.intellij.util.ArrayUtil;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.notification.Notifications;
+import consulo.disposer.Disposable;
+import consulo.application.ApplicationManager;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.content.bundle.Sdk;
+import consulo.ui.InputBoxBuilder;
+import consulo.ui.MessageBoxes;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.localize.LocalizeValue;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFileSystem;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.idea.sdk.PerlHandlerBean;
+import com.perl5.lang.perl.idea.sdk.PerlSdkNotificationGroups;
 import com.perl5.lang.perl.idea.sdk.PerlSdkType;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostData;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostHandler;
 import com.perl5.lang.perl.idea.sdk.host.os.PerlOsHandler;
+import consulo.perl5.core.ui.PerlDialogUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -75,7 +76,7 @@ public abstract class PerlRealVersionManagerHandler<Data extends PerlRealVersion
   protected abstract @NotNull String getExecutableName();
 
   @Override
-  public @NotNull @ActionText String getMenuItemTitle() {
+  public @NotNull String getMenuItemTitle() {
     return PerlBundle.message("perl.vm.menu.title", getPresentableName());
   }
 
@@ -152,45 +153,53 @@ public abstract class PerlRealVersionManagerHandler<Data extends PerlRealVersion
     if (distributions == null) {
       return;
     }
+    // consulo: Messages are Swing dialogs (not available in web), the unified boxes are asynchronous, the flow continues
+    // with the answer (still on this background thread)
     if (distributions.isEmpty()) {
       InstallPerlHandler installHandler = createInstallHandler(selectedPath);
       if (installHandler != null) {
-        int[] response = new int[]{-1};
-        ApplicationManager.getApplication().invokeAndWait(
-          () -> response[0] = Messages.showYesNoDialog(PerlBundle.message("perl.vm.would.you.like.to.install"),
-                                                       PerlBundle.message("perl.vm.empty.list.title"),
-                                                       getIcon()));
-        if (response[0] == Messages.YES) {
-          installHandler.doInstall(perlHostData, project);
-          return;
-        }
+        PerlDialogUtil.showAndThen(
+          () -> MessageBoxes.yesNo()
+            .title(LocalizeValue.of(PerlBundle.message("perl.vm.empty.list.title")))
+            .text(LocalizeValue.of(PerlBundle.message("perl.vm.would.you.like.to.install")))
+            .icon(TargetAWT.from(getIcon()))
+            .showAsync(),
+          install -> {
+            if (Boolean.TRUE.equals(install)) {
+              installHandler.doInstall(perlHostData, project);
+            }
+            else {
+              showEmptyListMessage();
+            }
+          });
+        return;
       }
-      ApplicationManager.getApplication().invokeAndWait(
-        () -> Messages.showInfoMessage(PerlBundle.message("perl.vm.empty.list.message"), PerlBundle.message("perl.vm.empty.list.title")));
+      showEmptyListMessage();
       return;
     }
 
-    String installation;
     if (distributions.size() > 1) {
-      Ref<Integer> selectionRef = Ref.create(-1);
-      ApplicationManager.getApplication().invokeAndWait(
-        () -> selectionRef.set(MessagesService.getInstance().showChooseDialog(
-          null, null,
-          "",
-          PerlBundle.message("perl.vm.perlbrew.choose.installation"),
-          ArrayUtil.toStringArray(distributions),
-          distributions.getFirst(),
-          null)));
-      if (selectionRef.get() == -1) {
-        return;
-      }
-      installation = distributions.get(selectionRef.get());
+      PerlDialogUtil.showAndThen(
+        () -> InputBoxBuilder.items(distributions)
+          .title(LocalizeValue.of(PerlBundle.message("perl.vm.perlbrew.choose.installation")))
+          .value(distributions.getFirst())
+          .showAsync(),
+        installation -> {
+          if (installation != null) {
+            createInterpreter(installation, vmAdapter, sdkConsumer, project);
+          }
+        });
     }
     else {
-      installation = distributions.getFirst();
+      createInterpreter(distributions.getFirst(), vmAdapter, sdkConsumer, project);
     }
+  }
 
-    createInterpreter(installation, vmAdapter, sdkConsumer, project);
+  private static void showEmptyListMessage() {
+    ApplicationManager.getApplication().invokeLater(
+      () -> MessageBoxes.okInfo(LocalizeValue.of(PerlBundle.message("perl.vm.empty.list.message")))
+        .title(LocalizeValue.of(PerlBundle.message("perl.vm.empty.list.title")))
+        .showAsync());
   }
 
   public abstract @Nullable InstallPerlHandler createInstallHandler(@NotNull String pathToVersionManager);
@@ -216,7 +225,7 @@ public abstract class PerlRealVersionManagerHandler<Data extends PerlRealVersion
       LOG.warn("Error getting perl location from interpreter. One line with path expected, got:\n" +
                (perlPath == null ? "nothing" : StringUtil.join(perlPath, "\n")));
       Notifications.Bus.notify(new Notification(
-        PerlBundle.message("perl.vm.notification.group"),
+        PerlSdkNotificationGroups.VERSION_MANAGERS,
         PerlBundle.message("perl.vm.error.getting.interpreter.path.title"),
         PerlBundle.message("perl.vm.error.getting.interpreter.path.message"),
         NotificationType.ERROR

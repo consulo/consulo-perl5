@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.lexer;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.tree.IElementType;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.language.ast.IElementType;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;

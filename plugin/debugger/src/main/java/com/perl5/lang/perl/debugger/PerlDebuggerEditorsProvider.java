@@ -16,12 +16,12 @@
 
 package com.perl5.lang.perl.debugger;
 
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiFileFactory;
-import com.intellij.xdebugger.evaluation.XDebuggerEditorsProviderBase;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.project.Project;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiFileFactory;
+import consulo.execution.debug.evaluation.XDebuggerEditorsProviderBase;
 import com.perl5.lang.perl.fileTypes.PerlFileTypeScript;
 import com.perl5.lang.perl.psi.impl.PerlFileImpl;
 import org.jetbrains.annotations.NotNull;

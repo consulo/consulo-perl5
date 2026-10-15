@@ -16,20 +16,19 @@
 
 package com.perl5.lang.htmlmason.idea.hierarchy;
 
-import com.intellij.ide.hierarchy.HierarchyBrowser;
-import com.intellij.ide.hierarchy.TypeHierarchyBrowserBase;
-import com.intellij.lang.Language;
-import com.intellij.psi.PsiElement;
+import consulo.language.editor.hierarchy.HierarchyModel;
+import consulo.language.Language;
+import consulo.project.Project;
+import consulo.language.psi.PsiElement;
 import com.perl5.lang.htmlmason.HTMLMasonLanguage;
 import com.perl5.lang.htmlmason.parser.psi.impl.HTMLMasonFileImpl;
-import com.perl5.lang.perl.idea.hierarchy.namespace.PerlHierarchyBrowser;
 import com.perl5.lang.perl.idea.hierarchy.namespace.PerlTypeHierarchyProvider;
 import org.jetbrains.annotations.NotNull;
 
 
 public class HTMLMasonTypeHierarchyProvider extends PerlTypeHierarchyProvider {
   @Override
-  protected Language getLanguage() {
+  public Language getLanguage() {
     return HTMLMasonLanguage.INSTANCE;
   }
 
@@ -42,13 +41,11 @@ public class HTMLMasonTypeHierarchyProvider extends PerlTypeHierarchyProvider {
     return element;
   }
 
+  // consulo: IntelliJ createHierarchyBrowser() -> Consulo createModel(), the platform builds the browser from the model
   @Override
-  public @NotNull HierarchyBrowser createHierarchyBrowser(@NotNull PsiElement target) {
+  public @NotNull HierarchyModel<PsiElement> createModel(@NotNull Project project, @NotNull PsiElement target) {
     return new HTMLMasonHierarchyBrowser(target);
   }
 
-  @Override
-  public void browserActivated(@NotNull HierarchyBrowser hierarchyBrowser) {
-    ((PerlHierarchyBrowser)hierarchyBrowser).changeView(TypeHierarchyBrowserBase.getTypeHierarchyType());
-  }
+  // consulo: IntelliJ browserActivated() switched the browser to the type hierarchy view, see HTMLMasonHierarchyBrowser#getDefaultViewType()
 }

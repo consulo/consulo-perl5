@@ -16,54 +16,41 @@
 
 package com.perl5.lang.perl.idea.modules;
 
-import com.intellij.ide.util.projectWizard.EmptyModuleBuilder;
-import com.intellij.ide.util.projectWizard.ModuleBuilder;
-import com.intellij.openapi.module.ModuleType;
-import com.intellij.openapi.module.ModuleTypeManager;
 import com.perl5.PerlBundle;
 import com.perl5.PerlIcons;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
-
-public class PerlModuleType extends ModuleType<ModuleBuilder> {
+/**
+ * TODO consulo: Consulo has no module types, upstream {@code ModuleType<ModuleBuilder>} registered as {@code moduleType}.
+ *  A perl module in Consulo is a module with enabled {@code PerlModuleExtension}, see {@code PerlModuleExtensionProvider} which uses
+ *  this class for presentation and {@code PerlNewModuleBuilder} for the "New Project/Module" wizard.
+ *  Upstream {@code createModuleBuilder()} returned an unavailable {@code EmptyModuleBuilder}, it has no Consulo counterpart.
+ */
+public class PerlModuleType {
   public static final String PERL_MODULE_TYPE_ID = "PERL5_MODULE";
+  private static final PerlModuleType INSTANCE = new PerlModuleType();
 
   public PerlModuleType() {
-    super(PERL_MODULE_TYPE_ID);
   }
 
-  @Override
-  public @NotNull ModuleBuilder createModuleBuilder() {
-    return new EmptyModuleBuilder() {
-      @Override
-      public boolean isAvailable() {
-        return false;
-      }
-
-      @Override
-      public ModuleType<?> getModuleType() {
-        return PerlModuleType.this;
-      }
-    };
+  public @NotNull String getId() {
+    return PERL_MODULE_TYPE_ID;
   }
 
-  @Override
   public @NotNull String getName() {
     return PerlBundle.message("perl.module.name");
   }
 
-  @Override
   public @NotNull String getDescription() {
     return PerlBundle.message("perl.module.description");
   }
 
-  @Override
-  public @NotNull Icon getNodeIcon(@Deprecated boolean isOpened) {
+  public @NotNull Image getNodeIcon(@Deprecated boolean isOpened) {
     return PerlIcons.PERL_LANGUAGE_ICON;
   }
 
   public static PerlModuleType getInstance() {
-    return (PerlModuleType)ModuleTypeManager.getInstance().findByID(PERL_MODULE_TYPE_ID);
+    return INSTANCE;
   }
 }

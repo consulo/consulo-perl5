@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.idea.sdk.versionManager.perlbrew;
 
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.ObjectUtils;
+import consulo.util.lang.StringUtil;
+import consulo.util.lang.ObjectUtil;
 import com.perl5.lang.perl.idea.sdk.versionManager.PerlInstallFormOptions;
 import org.jetbrains.annotations.NotNull;
 
@@ -64,7 +64,7 @@ class PerlBrewInstallPerlForm extends PerlInstallFormOptions {
     if (myForceInstallationCheckBox.isSelected()) {
       buildParams.add("--force");
     }
-    Integer threads = ObjectUtils.tryCast(myThreadsComboBox.getSelectedItem(), Integer.class);
+    Integer threads = ObjectUtil.tryCast(myThreadsComboBox.getSelectedItem(), Integer.class);
     if (threads != null && threads > 1) {
       buildParams.add("-j");
       buildParams.add(threads.toString());

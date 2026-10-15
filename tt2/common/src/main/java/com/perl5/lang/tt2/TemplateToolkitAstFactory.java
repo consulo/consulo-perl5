@@ -16,21 +16,31 @@
 
 package com.perl5.lang.tt2;
 
-import com.intellij.lang.ASTFactory;
-import com.intellij.psi.impl.source.tree.LeafElement;
-import com.intellij.psi.templateLanguages.OuterLanguageElementImpl;
-import com.intellij.psi.tree.IElementType;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.impl.ast.ASTFactory;
+import consulo.language.impl.ast.ASTLeafFactory;
+import consulo.language.impl.ast.LeafElement;
+import consulo.language.impl.psi.template.OuterLanguageElementImpl;
+import consulo.language.ast.IElementType;
+import consulo.language.version.LanguageVersion;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import static com.perl5.lang.tt2.parser.TemplateToolkitElementTypesGenerated.TT2_OUTER;
 
-public class TemplateToolkitAstFactory extends ASTFactory {
+// consulo: IntelliJ language ASTFactory -> Consulo ASTLeafFactory, selected by test(IElementType)
+@ExtensionImpl
+public class TemplateToolkitAstFactory implements ASTLeafFactory {
   @Override
-  public @Nullable LeafElement createLeaf(@NotNull IElementType type, @NotNull CharSequence text) {
+  public @Nullable LeafElement createLeaf(@NotNull IElementType type, @NotNull LanguageVersion languageVersion, @NotNull CharSequence text) {
     if (type == TT2_OUTER) {
       return new OuterLanguageElementImpl(type, text);
     }
-    return super.createLeaf(type, text);
+    return ASTFactory.leaf(type, languageVersion, text);
+  }
+
+  @Override
+  public boolean test(IElementType type) {
+    return type == TT2_OUTER;
   }
 }

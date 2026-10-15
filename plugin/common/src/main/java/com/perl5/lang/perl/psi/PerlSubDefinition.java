@@ -16,7 +16,6 @@
 
 package com.perl5.lang.perl.psi;
 
-import com.intellij.openapi.util.NlsSafe;
 import com.perl5.lang.perl.psi.utils.PerlSubArgument;
 import com.perl5.lang.perl.util.PerlSubUtilCore;
 import org.jetbrains.annotations.NotNull;
@@ -40,7 +39,7 @@ public interface PerlSubDefinition extends PerlSub {
     return subArguments;
   }
 
-  default @NlsSafe String getSubArgumentsListAsString() {
+  default String getSubArgumentsListAsString() {
     return PerlSubUtilCore.getArgumentsListAsString(getSubArgumentsListWithoutSelf());
   }
 }

@@ -16,14 +16,19 @@
 
 package com.perl5.lang.perl.idea.project;
 
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ModuleRootEvent;
-import com.intellij.openapi.roots.ModuleRootListener;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.indexing.LightDirectoryIndex;
-import com.intellij.util.messages.MessageBusConnection;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
+import jakarta.inject.Singleton;
+import jakarta.inject.Inject;
+import consulo.disposer.Disposable;
+import consulo.project.Project;
+import consulo.module.content.layer.event.ModuleRootEvent;
+import consulo.module.content.layer.event.ModuleRootListener;
+import consulo.disposer.Disposer;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.ide.impl.idea.util.indexing.LightDirectoryIndex;
+import consulo.component.messagebus.MessageBusConnection;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -33,15 +38,20 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+@ServiceAPI(ComponentScope.PROJECT)
+@ServiceImpl
+@Singleton
 public class PerlDirectoryIndex implements Disposable {
   private final @NotNull LightDirectoryIndex<PerlDirectoryIndexEntry> myIndex;
   private final @NotNull Function<VirtualFile, VirtualFile> myRootComputator;
+
+  @Inject
 
   public PerlDirectoryIndex(@NotNull Project project) {
     myIndex = createIndexForRoots(() -> PerlProjectManager.getInstance(project).getAllLibraryRoots());
     myRootComputator = createRootComputator(myIndex);
     MessageBusConnection connection = project.getMessageBus().connect(this);
-    connection.subscribe(ModuleRootListener.TOPIC, new ModuleRootListener() {
+    connection.subscribe(ModuleRootListener.class, new ModuleRootListener() {
       @Override
       public void rootsChanged(@NotNull ModuleRootEvent event) {
         myIndex.resetIndex();
@@ -55,7 +65,7 @@ public class PerlDirectoryIndex implements Disposable {
    */
   @ApiStatus.Experimental
   public @NotNull Function<VirtualFile, VirtualFile> createRootComputator(@NotNull List<VirtualFile> roots) {
-    Disposable disposable = Disposer.newDisposable();
+    Disposable disposable = Disposable.newDisposable();
     Function<VirtualFile, VirtualFile> result = createRootComputator(createIndexForRoots(() -> roots));
     disposable.dispose();
     return result;

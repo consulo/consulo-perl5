@@ -16,13 +16,13 @@
 
 package com.perl5.lang.perl.parser.moose.psi.impl;
 
-import com.intellij.openapi.util.AtomicNotNullLazyValue;
-import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.ElementManipulators;
-import com.intellij.psi.PsiElement;
-import com.intellij.util.ObjectUtils;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.application.util.AtomicNotNullLazyValue;
+import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.ElementManipulators;
+import consulo.language.psi.PsiElement;
+import consulo.util.lang.ObjectUtil;
+import consulo.util.collection.ContainerUtil;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlScalarValue;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlSmartGetterValue;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlValue;
@@ -86,7 +86,7 @@ public class PerlMooseAttributeHandler extends PerlSubCallHandlerWithEmptyData {
                                                                                                    @NotNull PerlSubCallElementStub stubElement) {
     return stubElement.getLightNamedElementsStubs().stream()
       .map(childStub -> {
-        var stubType = childStub.getElementType();
+        var stubType = childStub.getStubType();
         if (stubType == LIGHT_METHOD_DEFINITION) {
           return new PerlLightMethodDefinitionElement<>(psiElement, (PerlSubDefinitionStub)childStub);
         }
@@ -127,7 +127,7 @@ public class PerlMooseAttributeHandler extends PerlSubCallHandlerWithEmptyData {
                                                                                  @NotNull Pair<? extends List<PsiElement>, ? extends List<PsiElement>> lists) {
     List<PsiElement> arguments = lists.second.subList(1, lists.second.size());
     PsiElement argument = ContainerUtil.getFirstItem(arguments);
-    PerlSubExpr subExpr = ObjectUtils.tryCast(argument, PerlSubExpr.class);
+    PerlSubExpr subExpr = ObjectUtil.tryCast(argument, PerlSubExpr.class);
 
     List<PerlDelegatingLightNamedElement<?>> result = new ArrayList<>();
     String namespaceName = PerlPackageUtilCore.getContextNamespaceName(subCallElement);
@@ -313,7 +313,7 @@ public class PerlMooseAttributeHandler extends PerlSubCallHandlerWithEmptyData {
       var identifierAnnotations = PerlSubAnnotations.tryToFindAnnotations(identifier, subCallElement.getParent());
       PerlAttributeDefinition newElement = new PerlAttributeDefinition(
         subCallElement,
-        PerlAttributeDefinition.DEFAULT_NAME_COMPUTATION.fun(identifierText),
+        PerlAttributeDefinition.DEFAULT_NAME_COMPUTATION.apply(identifierText),
         LIGHT_ATTRIBUTE_DEFINITION,
         identifier,
         packageName,

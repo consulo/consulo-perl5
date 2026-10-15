@@ -16,9 +16,11 @@
 
 package com.perl5.lang.perl.idea.configuration.settings.sdk;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.project.Project;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.component.extension.ExtensionPointName;
+import consulo.configurable.Configurable;
+import consulo.project.Project;
 import com.perl5.lang.perl.idea.modules.PerlSourceRootType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -28,8 +30,9 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface Perl5SettingsConfigurableExtension {
-  ExtensionPointName<Perl5SettingsConfigurableExtension> EP_NAME = ExtensionPointName.create("com.perl5.settings.configurable.extension");
+  ExtensionPointName<Perl5SettingsConfigurableExtension> EP_NAME = ExtensionPointName.create(Perl5SettingsConfigurableExtension.class);
 
   default @NotNull List<PerlSourceRootType> getSourceRootTypes() {
     return Collections.emptyList();

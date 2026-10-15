@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.profiler.run;
 
-import com.intellij.execution.ui.RunContentDescriptor;
-import com.intellij.profiler.api.AttachableTargetProcess;
+import consulo.execution.ui.RunContentDescriptor;
+import consulo.execution.profiler.AttachableTargetProcess;
 import org.jetbrains.annotations.NotNull;
 
 public class PerlTargetProcess implements AttachableTargetProcess {

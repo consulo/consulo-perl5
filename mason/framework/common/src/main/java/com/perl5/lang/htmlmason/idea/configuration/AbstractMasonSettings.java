@@ -16,50 +16,39 @@
 
 package com.perl5.lang.htmlmason.idea.configuration;
 
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.project.Project;
-import com.intellij.ui.EditorNotifications;
-import com.intellij.util.xmlb.annotations.Transient;
 import com.perl5.lang.mason2.idea.configuration.VariableDescription;
-import com.perl5.lang.perl.idea.modules.PerlSourceRootType;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-
+/**
+ * Settings of a Mason framework (HTML::Mason, Mason2) of a module.
+ * <p>
+ * TODO consulo: upstream settings are project-level persistent services, edited on tabs of the Perl5 settings page, with a change counter
+ *  to reset caches. In Consulo the settings are per module: the state of the framework module extension (a child of the Perl module
+ *  extension), edited in the module settings. Instances are immutable, caches may be keyed by the settings instance.
+ */
 public abstract class AbstractMasonSettings {
-  public final List<VariableDescription> globalVariables = new ArrayList<>();
+  private final @NotNull List<VariableDescription> myGlobalVariables;
 
-  @Transient
-  protected int changeCounter = 0;
-
-  @Transient private final @Nullable Project myProject;
-
-  public AbstractMasonSettings() {
-    myProject = null;
+  protected AbstractMasonSettings(@NotNull List<VariableDescription> globalVariables) {
+    myGlobalVariables = globalVariables.stream().map(VariableDescription::copy).toList();
   }
 
-  public @NotNull Project getProject() {
-    return Objects.requireNonNull(myProject);
+  /**
+   * @return global variables of components, must not be modified
+   */
+  public @NotNull List<VariableDescription> getGlobalVariables() {
+    return myGlobalVariables;
   }
 
-  public AbstractMasonSettings(@NotNull Project project) {
-    myProject = project;
+  @Override
+  public boolean equals(Object o) {
+    return this == o || o != null && getClass() == o.getClass() && myGlobalVariables.equals(((AbstractMasonSettings)o).myGlobalVariables);
   }
 
-  public void settingsUpdated() {
-    changeCounter++;
-    if (!ApplicationManager.getApplication().isUnitTestMode()) {
-      EditorNotifications.getInstance(getProject()).updateAllNotifications();
-    }
-  }
-
-  public abstract PerlSourceRootType getSourceRootType();
-
-  public int getChangeCounter() {
-    return changeCounter;
+  @Override
+  public int hashCode() {
+    return myGlobalVariables.hashCode();
   }
 }

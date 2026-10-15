@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.idea.sdk.host.os;
 
-import com.intellij.openapi.projectRoots.Sdk;
+import consulo.content.bundle.Sdk;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

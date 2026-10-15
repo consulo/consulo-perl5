@@ -16,15 +16,22 @@
 
 package com.perl5.lang.perl.idea.project;
 
-import com.intellij.ide.projectView.actions.MarkExcludeRootAction;
-import com.intellij.ide.projectView.actions.MarkTestSourceRootAction;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ProjectFileIndex;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.concurrency.annotations.RequiresEdt;
-import com.intellij.util.concurrency.annotations.RequiresWriteLock;
+import consulo.application.ApplicationManager;
+import consulo.content.ContentFolderTypeProvider;
+import consulo.content.base.ExcludedContentFolderTypeProvider;
+import consulo.language.content.LanguageContentFolderScopes;
+import consulo.language.content.TestContentFolderTypeProvider;
+import consulo.module.content.ModuleRootManager;
+import consulo.module.content.layer.ContentEntry;
+import consulo.module.content.layer.ContentFolder;
+import consulo.module.content.layer.ModifiableRootModel;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import consulo.module.Module;
+import consulo.project.Project;
+import consulo.module.content.ProjectFileIndex;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.annotation.access.RequiredWriteAction;
 import com.perl5.lang.perl.idea.actions.PerlMarkLibrarySourceRootAction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -77,12 +84,9 @@ public final class PerlDirectoryInfoCollector {
       return;
     }
 
-    new MarkExcludeRootAction() {
-      public void actionPerformed() {
-        modifyRoots(module, excludedRoots.toArray(VirtualFile.EMPTY_ARRAY));
-        excludedRoots.clear();
-      }
-    }.actionPerformed();
+    // TODO consulo: IntelliJ MarkExcludeRootAction#modifyRoots is missing, same logic is in #modifyRoots
+    modifyRoots(module, excludedRoots.toArray(VirtualFile.EMPTY_ARRAY), ExcludedContentFolderTypeProvider.getInstance());
+    excludedRoots.clear();
   }
 
   private void commitTestRoots(@NotNull Module module) {
@@ -95,15 +99,43 @@ public final class PerlDirectoryInfoCollector {
       return;
     }
 
-    new MarkTestSourceRootAction() {
-      public void actionPerformed() {
-        modifyRoots(module, testRoots.toArray(VirtualFile.EMPTY_ARRAY));
-        testRoots.clear();
-      }
-    }.actionPerformed();
+    // TODO consulo: IntelliJ MarkTestSourceRootAction#modifyRoots is missing, same logic is in #modifyRoots
+    modifyRoots(module, testRoots.toArray(VirtualFile.EMPTY_ARRAY), TestContentFolderTypeProvider.getInstance());
+    testRoots.clear();
   }
 
-  @RequiresWriteLock
+  /**
+   * Marks {@code files} of the {@code module} with {@code folderType}, same as IntelliJ {@code MarkRootActionBase#modifyRoots}
+   * TODO consulo: upstream also saves the project after the commit
+   */
+  private static void modifyRoots(@NotNull Module module, VirtualFile @NotNull [] files, @NotNull ContentFolderTypeProvider folderType) {
+    ModifiableRootModel model = ModuleRootManager.getInstance(module).getModifiableModel();
+    for (VirtualFile file : files) {
+      ContentEntry entry = findContentEntry(model, file);
+      if (entry != null) {
+        for (ContentFolder folder : entry.getFolders(LanguageContentFolderScopes.all())) {
+          if (file.equals(folder.getFile())) {
+            entry.removeFolder(folder);
+            break;
+          }
+        }
+        entry.addFolder(file, folderType);
+      }
+    }
+    ApplicationManager.getApplication().runWriteAction(model::commit);
+  }
+
+  private static @Nullable ContentEntry findContentEntry(@NotNull ModifiableRootModel model, @NotNull VirtualFile file) {
+    for (ContentEntry contentEntry : model.getContentEntries()) {
+      VirtualFile contentEntryFile = contentEntry.getFile();
+      if (contentEntryFile != null && VirtualFileUtil.isAncestor(contentEntryFile, file, false)) {
+        return contentEntry;
+      }
+    }
+    return null;
+  }
+
+  @RequiredWriteAction
   void commit(){
     if( myProject.isDisposed()){
       return;

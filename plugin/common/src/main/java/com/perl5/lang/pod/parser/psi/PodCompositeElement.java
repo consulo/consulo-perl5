@@ -16,16 +16,16 @@
 
 package com.perl5.lang.pod.parser.psi;
 
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.util.PsiTreeUtil;
+import consulo.navigation.ItemPresentation;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.icon.IconDescriptorUpdaters;
+import consulo.ui.image.Image;
 import com.perl5.lang.perl.psi.PerlReferenceOwner;
 import com.perl5.lang.pod.parser.psi.mixin.PodFormatterX;
 import org.jetbrains.annotations.Nullable;
-
-import javax.swing.*;
 
 public interface PodCompositeElement extends PsiElement, PodRenderableElement, ItemPresentation, PerlReferenceOwner {
   /**
@@ -71,8 +71,8 @@ public interface PodCompositeElement extends PsiElement, PodRenderableElement, I
   }
 
   @Override
-  default @Nullable Icon getIcon(boolean unused) {
+  default @Nullable Image getIcon(boolean unused) {
     PsiFile file = getContainingFile();
-    return file == null ? null : file.getIcon(0);
+    return file == null ? null : IconDescriptorUpdaters.getIcon(file, 0);
   }
 }

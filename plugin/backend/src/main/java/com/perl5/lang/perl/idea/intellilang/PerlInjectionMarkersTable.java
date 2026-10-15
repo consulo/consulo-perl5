@@ -16,33 +16,38 @@
 
 package com.perl5.lang.perl.idea.intellilang;
 
-import com.intellij.lang.Language;
-import com.intellij.lang.html.HTMLLanguage;
-import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.ComboBoxTableRenderer;
-import com.intellij.openapi.ui.VerticalFlowLayout;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.TableUtil;
-import com.intellij.ui.ToolbarDecorator;
-import com.intellij.ui.table.JBTable;
-import com.intellij.util.ArrayUtil;
-import com.intellij.util.FileContentUtil;
-import com.intellij.util.ui.ColumnInfo;
-import com.intellij.util.ui.FormBuilder;
-import com.intellij.util.ui.ListTableModel;
+import consulo.language.Language;
+import consulo.html.language.HTMLLanguage;
+import consulo.configurable.Configurable;
+import consulo.project.Project;
+import consulo.ui.ex.awt.table.ComboBoxTableRenderer;
+import consulo.ui.ex.awt.VerticalFlowLayout;
+import consulo.util.lang.StringUtil;
+import consulo.ui.ex.awt.util.TableUtil;
+import consulo.ui.ex.awt.ToolbarDecorator;
+import consulo.ui.ex.awt.table.JBTable;
+import consulo.util.collection.ArrayUtil;
+import consulo.fileEditor.util.FileContentUtil;
+import consulo.ui.ex.awt.ColumnInfo;
+import consulo.ui.ex.awt.FormBuilder;
+import consulo.ui.ex.awt.table.ListTableModel;
+import consulo.localize.LocalizeValue;
 import com.perl5.PerlBundle;
-import org.jetbrains.annotations.Nls;
+import consulo.disposer.Disposable;
+import consulo.ui.Component;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
+import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.util.*;
 import java.util.stream.Collectors;
 
+// TODO consulo: Swing (consulo.ui.ex.awt) table based configurable, not rewritten with uni UI yet
 final class PerlInjectionMarkersTable extends JBTable implements Configurable {
   private final @NotNull Project myProject;
 
@@ -72,16 +77,17 @@ final class PerlInjectionMarkersTable extends JBTable implements Configurable {
     languageColumn.setCellEditor(roleComboBoxTableRenderer);
     getColumnModel().getColumn(0).setPreferredWidth(200);
     languageColumn.setPreferredWidth(600);
-    setVisibleRowCount(18);
+    // TODO consulo: Consulo JBTable has no setVisibleRowCount(18), the preferred viewport height is fixed to 18 rows instead
+    setPreferredScrollableViewportSize(new Dimension(getPreferredScrollableViewportSize().width, 18 * getRowHeight()));
   }
 
   @Override
-  public @Nls(capitalization = Nls.Capitalization.Title) String getDisplayName() {
-    return PerlBundle.message("perl.settings.markers.label.text");
+  public @NotNull LocalizeValue getDisplayName() {
+    return LocalizeValue.localizeTODO(PerlBundle.message("perl.settings.markers.label.text"));
   }
 
   @Override
-  public @NotNull JComponent createComponent() {
+  public Component createUIComponent(Disposable parentDisposable) {
     JTextPane textPane = new JTextPane();
     textPane.setText(PerlBundle.message("perl.settings.markers.language.description"));
     JPanel panel = FormBuilder.createFormBuilder()
@@ -115,7 +121,7 @@ final class PerlInjectionMarkersTable extends JBTable implements Configurable {
           .createPanel()
       ).getPanel();
     panel.setLayout(new VerticalFlowLayout());
-    return panel;
+    return TargetAWT.wrap(panel);
   }
 
   private MyModel getMyModel() {
@@ -245,7 +251,7 @@ final class PerlInjectionMarkersTable extends JBTable implements Configurable {
       Language language = Language.findLanguageByID(item.languageId);
       return language == null ?
              PerlBundle.message("perl.settings.markers.language.unsupported", item.languageId) :
-             language.getDisplayName();
+             language.getDisplayName().get();
     }
   }
 }

@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.psi.impl;
 
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.impl.source.tree.LeafPsiElement;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.psi.PsiReference;
+import consulo.language.impl.psi.LeafPsiElement;
+import consulo.language.ast.IElementType;
 import com.perl5.lang.perl.psi.PerlReferenceOwner;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

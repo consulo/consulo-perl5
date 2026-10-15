@@ -16,15 +16,14 @@
 
 package com.perl5.lang.mojolicious;
 
-import com.intellij.lang.Language;
-import com.intellij.openapi.util.NlsSafe;
-import com.intellij.psi.templateLanguages.TemplateLanguage;
+import consulo.language.Language;
+import consulo.language.template.TemplateLanguage;
 import com.perl5.lang.perl.PerlLanguage;
 
 
 public class MojoliciousLanguage extends Language implements TemplateLanguage {
   public static final MojoliciousLanguage INSTANCE = new MojoliciousLanguage();
-  public static final @NlsSafe String NAME = "Mojolicious Perl";
+  public static final String NAME = "Mojolicious Perl";
 
   private MojoliciousLanguage() {
     super(PerlLanguage.INSTANCE, NAME);

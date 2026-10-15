@@ -16,14 +16,14 @@
 
 package com.perl5.lang.mason2.idea.hierarchy;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.perl5.lang.mason2.Mason2TemplatingLanguage;
 import com.perl5.lang.perl.idea.hierarchy.namespace.PerlTypeHierarchyProvider;
 
 
 public class MasonTemplatingTypeHierarchyProvider extends PerlTypeHierarchyProvider {
   @Override
-  protected Language getLanguage() {
+  public Language getLanguage() {
     return Mason2TemplatingLanguage.INSTANCE;
   }
 }

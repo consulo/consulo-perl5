@@ -20,7 +20,7 @@ import com.perl5.PerlIcons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
+import consulo.ui.image.Image;
 
 
 public enum PerlVariableType {
@@ -31,9 +31,9 @@ public enum PerlVariableType {
   CODE('&', PerlIcons.SUB_GUTTER_ICON);
 
   private final char mySigil;
-  private final @NotNull Icon myIcon;
+  private final @NotNull Image myIcon;
 
-  PerlVariableType(char sigil, @NotNull Icon icon) {
+  PerlVariableType(char sigil, @NotNull Image icon) {
     mySigil = sigil;
     myIcon = icon;
   }
@@ -46,7 +46,7 @@ public enum PerlVariableType {
     return getSigil() + variableName;
   }
 
-  public @NotNull Icon getIcon() {
+  public @NotNull Image getIcon() {
     return myIcon;
   }
 

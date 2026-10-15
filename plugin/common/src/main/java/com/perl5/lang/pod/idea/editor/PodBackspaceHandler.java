@@ -16,12 +16,12 @@
 
 package com.perl5.lang.pod.idea.editor;
 
-import com.intellij.codeInsight.editorActions.BackspaceHandlerDelegate;
-import com.intellij.openapi.editor.CaretModel;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.editor.action.BackspaceHandlerDelegate;
+import consulo.codeEditor.CaretModel;
+import consulo.codeEditor.Editor;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.ast.IElementType;
 import com.perl5.lang.pod.parser.psi.PodFile;
 import org.jetbrains.annotations.NotNull;
 

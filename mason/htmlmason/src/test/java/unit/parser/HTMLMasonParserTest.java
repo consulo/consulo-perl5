@@ -17,7 +17,7 @@
 package unit.parser;
 
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.perl5.lang.htmlmason.idea.configuration.HTMLMasonCustomTag;
 import com.perl5.lang.htmlmason.idea.configuration.HTMLMasonCustomTagRole;
 import com.perl5.lang.htmlmason.idea.configuration.HTMLMasonSettings;

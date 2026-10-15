@@ -16,7 +16,7 @@
 
 package com.perl5.lang.mason2.idea.livetemplates;
 
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.perl5.lang.htmlmason.idea.livetemplates.AbstractMasonTemplateContextType;
 import com.perl5.lang.mason2.Mason2Bundle;
 import com.perl5.lang.mason2.psi.impl.MasonTemplatingFileImpl;
@@ -24,7 +24,7 @@ import com.perl5.lang.mason2.psi.impl.MasonTemplatingFileImpl;
 
 public class MasonTemplateContextType extends AbstractMasonTemplateContextType {
   public MasonTemplateContextType() {
-    super(Mason2Bundle.message("label.mason2.template"));
+    super("PERL5_MASON", Mason2Bundle.message("label.mason2.template"));
   }
 
   @Override

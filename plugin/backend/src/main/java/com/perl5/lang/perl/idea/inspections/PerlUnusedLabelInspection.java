@@ -16,16 +16,23 @@
 
 package com.perl5.lang.perl.idea.inspections;
 
-import com.intellij.codeInspection.ProblemHighlightType;
-import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.search.searches.ReferencesSearch;
+import consulo.language.editor.inspection.ProblemHighlightType;
+import consulo.language.editor.inspection.ProblemsHolder;
+import consulo.language.psi.PsiElementVisitor;
+import consulo.language.psi.search.ReferencesSearch;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.psi.PerlVisitor;
 import com.perl5.lang.perl.psi.PsiPerlLabelDeclaration;
 import org.jetbrains.annotations.NotNull;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.Language;
+import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
+import consulo.localize.LocalizeValue;
+import com.perl5.lang.perl.PerlLanguage;
+import org.jetbrains.annotations.Nullable;
 
 
+@ExtensionImpl
 public class PerlUnusedLabelInspection extends PerlInspection {
   @Override
   public @NotNull PsiElementVisitor buildVisitor(final @NotNull ProblemsHolder holder, boolean isOnTheFly) {
@@ -39,5 +46,31 @@ public class PerlUnusedLabelInspection extends PerlInspection {
         super.visitLabelDeclaration(o);
       }
     };
+  }
+
+  // consulo: metadata from upstream <localInspection> registration in perl5.plugin.backend.main.xml
+  @Override
+  public @NotNull String getShortName() {
+    return "UnusedLabels";
+  }
+
+  @Override
+  public @Nullable Language getLanguage() {
+    return PerlLanguage.INSTANCE;
+  }
+
+  @Override
+  public @NotNull LocalizeValue getDisplayName() {
+    return LocalizeValue.localizeTODO(PerlBundle.message("inspection.unused.labels.display.name"));
+  }
+
+  @Override
+  public @NotNull LocalizeValue getGroupDisplayName() {
+    return LocalizeValue.localizeTODO(PerlBundle.message("inspection.group.perl"));
+  }
+
+  @Override
+  public @NotNull HighlightDisplayLevel getDefaultLevel() {
+    return HighlightDisplayLevel.WARNING;
   }
 }

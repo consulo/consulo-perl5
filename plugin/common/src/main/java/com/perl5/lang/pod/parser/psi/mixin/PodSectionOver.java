@@ -16,7 +16,7 @@
 
 package com.perl5.lang.pod.parser.psi.mixin;
 
-import com.intellij.lang.ASTNode;
+import consulo.language.ast.ASTNode;
 import com.perl5.lang.pod.parser.psi.PodStructureElement;
 import org.jetbrains.annotations.NotNull;
 

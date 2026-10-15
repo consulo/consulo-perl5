@@ -16,7 +16,7 @@
 
 package com.perl5.lang.pod.parser.psi.impl;
 
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 import com.perl5.lang.perl.psi.impl.PerlLeafPsiElementWithReferences;
 import org.jetbrains.annotations.NotNull;
 

@@ -16,11 +16,11 @@
 
 package com.perl5.lang.perl.psi.mixins;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.search.LocalSearchScope;
-import com.intellij.psi.search.SearchScope;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.scope.LocalSearchScope;
+import consulo.content.scope.SearchScope;
+import consulo.language.util.IncorrectOperationException;
 import com.perl5.lang.perl.psi.PerlLabelDeclaration;
 import com.perl5.lang.perl.psi.impl.PerlCompositeElementImpl;
 import com.perl5.lang.perl.psi.utils.PerlPsiUtil;

@@ -16,24 +16,40 @@
 
 package com.perl5.lang.perl.idea.sdk;
 
-import com.intellij.openapi.util.AtomicNotNullLazyValue;
-import com.intellij.openapi.util.KeyedExtensionCollector;
-import com.intellij.util.KeyedLazyInstance;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.application.Application;
+import consulo.application.util.AtomicNotNullLazyValue;
+import consulo.util.collection.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.List;
 
-public class PerlHandlerCollector<Handler extends AbstractPerlHandler<?, ?>> extends KeyedExtensionCollector<Handler, String> {
+// TODO consulo: KeyedExtensionCollector is missing in Consulo; handlers are collected from PerlHandlerBean extensions with matching EP name
+public class PerlHandlerCollector<Handler extends AbstractPerlHandler<?, ?>> {
+  private final @NotNull String myEpName;
+  @SuppressWarnings("unchecked")
   private final AtomicNotNullLazyValue<@Unmodifiable List<Handler>> myHandlers = AtomicNotNullLazyValue.createValue(
-    () -> ContainerUtil.map(super.getExtensions(), KeyedLazyInstance::getInstance));
+    () -> ContainerUtil.map(getExtensions(), it -> (Handler)it.getInstance()));
 
   public PerlHandlerCollector(@NotNull String epName) {
-    super(epName);
+    myEpName = epName;
+  }
+
+  private @NotNull List<PerlHandlerBean> getExtensions() {
+    return Application.get().getExtensionPoint(PerlHandlerBean.class).collectFiltered(it -> myEpName.equals(it.getEpName()));
   }
 
   public List<Handler> getExtensionsList() {
     return myHandlers.getValue();
+  }
+
+  @SuppressWarnings("unchecked")
+  public @Nullable Handler findSingle(@Nullable String key) {
+    if (key == null) {
+      return null;
+    }
+    PerlHandlerBean bean = getExtensions().stream().filter(it -> key.equals(it.getKey())).findFirst().orElse(null);
+    return bean == null ? null : (Handler)bean.getInstance();
   }
 }

@@ -16,38 +16,36 @@
 
 package com.perl5.lang.pod.idea.ui.breadcrumbs;
 
-import com.intellij.lang.Language;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.ui.breadcrumbs.BreadcrumbsProvider;
+import consulo.language.Language;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.icon.IconDescriptorUpdaters;
 import com.perl5.lang.pod.PodLanguage;
 import com.perl5.lang.pod.parser.psi.PodTitledSection;
 import com.perl5.lang.pod.parser.psi.mixin.PodSectionItem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
+import consulo.ui.image.Image;
 import java.util.Objects;
 
-public class PodBreadCrumbsProvider implements BreadcrumbsProvider {
-  @Override
+// TODO consulo: Consulo has no breadcrumbs API (BreadcrumbsProvider was dropped in favour of the navigation bar), so this
+//  class is not an extension; the methods are kept (getStructuralParentElement is used by usage grouping rules)
+public class PodBreadCrumbsProvider {
   public Language[] getLanguages() {
     return PodLanguage.ARRAY;
   }
 
-  @Override
   public boolean acceptElement(@NotNull PsiElement element) {
     return element instanceof PodTitledSection titledSection && StringUtil.isNotEmpty(titledSection.getTitleText()) &&
            !(element instanceof PodSectionItem sectionItem && sectionItem.isBulleted());
   }
 
-  @Override
-  public @Nullable Icon getElementIcon(@NotNull PsiElement element) {
-    return element.getIcon(0);
+  public @Nullable Image getElementIcon(@NotNull PsiElement element) {
+    return IconDescriptorUpdaters.getIcon(element, 0);
   }
 
-  @Override
   public @Nullable PsiElement getParent(@NotNull PsiElement element) {
     return getStructuralParentElement(element);
   }
@@ -64,7 +62,6 @@ public class PodBreadCrumbsProvider implements BreadcrumbsProvider {
     return parentSection;
   }
 
-  @Override
   public @NotNull String getElementInfo(@NotNull PsiElement element) {
     if (element instanceof PodTitledSection titledSection) {
       return Objects.requireNonNull(titledSection.getTitleText());

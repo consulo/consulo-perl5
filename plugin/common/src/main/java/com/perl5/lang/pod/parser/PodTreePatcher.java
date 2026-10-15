@@ -16,15 +16,18 @@
 
 package com.perl5.lang.pod.parser;
 
-import com.intellij.psi.impl.source.tree.CompositeElement;
-import com.intellij.psi.impl.source.tree.FileElement;
-import com.intellij.psi.impl.source.tree.TreeElement;
-import com.intellij.psi.templateLanguages.OuterLanguageElement;
-import com.intellij.psi.templateLanguages.SimpleTreePatcher;
+import com.perl5.lang.pod.PodLanguage;
+import consulo.language.Language;
+import consulo.language.impl.ast.CompositeElement;
+import consulo.language.impl.ast.FileElement;
+import consulo.language.impl.ast.TreeElement;
+import consulo.language.psi.OuterLanguageElement;
+import consulo.language.impl.psi.template.TreePatcher;
 import org.jetbrains.annotations.NotNull;
 
 
-public class PodTreePatcher extends SimpleTreePatcher {
+// consulo: SimpleTreePatcher is package-private in Consulo, so TreePatcher is implemented directly and SimpleTreePatcher#insert is inlined
+public class PodTreePatcher implements TreePatcher {
   @Override
   public void insert(@NotNull CompositeElement parent, TreeElement anchorBefore, @NotNull OuterLanguageElement toInsert) {
     while (anchorBefore != null && anchorBefore.getTreePrev() == null && !(parent instanceof FileElement)) {
@@ -32,6 +35,17 @@ public class PodTreePatcher extends SimpleTreePatcher {
       parent = anchorBefore.getTreeParent();
     }
 
-    super.insert(parent, anchorBefore, toInsert);
+    // consulo: SimpleTreePatcher#insert
+    if (anchorBefore != null) {
+      anchorBefore.rawInsertBeforeMe((TreeElement)toInsert);
+    }
+    else {
+      parent.rawAddChildren((TreeElement)toInsert);
+    }
+  }
+
+  @Override
+  public @NotNull Language getLanguage() {
+    return PodLanguage.INSTANCE;
   }
 }

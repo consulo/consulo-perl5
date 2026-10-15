@@ -16,12 +16,14 @@
 
 package com.perl5.lang.perl.idea.regexp;
 
-import com.intellij.lang.PsiParser;
-import com.intellij.lexer.Lexer;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.tree.IFileElementType;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.Language;
+import consulo.language.parser.PsiParser;
+import consulo.language.lexer.Lexer;
+import consulo.language.version.LanguageVersion;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.PsiFile;
+import consulo.language.ast.IFileElementType;
 import org.intellij.lang.regexp.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,19 +32,26 @@ import java.util.EnumSet;
 import static org.intellij.lang.regexp.RegExpCapability.POSIX_BRACKET_EXPRESSIONS;
 
 
+@ExtensionImpl
 public class Perl5RegexpParserDefinition extends RegExpParserDefinition {
   private static final IFileElementType PERL5_REGEXP_FILE = new IFileElementType("PERL5_REGEXP_FILE", Perl5RegexpLanguage.INSTANCE);
   private final EnumSet<RegExpCapability> CAPABILITIES = EnumSet.of(
     POSIX_BRACKET_EXPRESSIONS
   );
 
+  // consulo: parser definitions are registered by language
   @Override
-  public @NotNull Lexer createLexer(Project project) {
+  public @NotNull Language getLanguage() {
+    return Perl5RegexpLanguage.INSTANCE;
+  }
+
+  @Override
+  public @NotNull Lexer createLexer(@NotNull LanguageVersion languageVersion) {
     return new RegExpLexer(CAPABILITIES);
   }
 
   @Override
-  public @NotNull PsiParser createParser(Project project) {
+  public @NotNull PsiParser createParser(@NotNull LanguageVersion languageVersion) {
     return new RegExpParser(CAPABILITIES);
   }
 

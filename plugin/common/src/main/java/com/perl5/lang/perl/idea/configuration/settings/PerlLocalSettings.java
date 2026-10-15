@@ -16,11 +16,15 @@
 
 package com.perl5.lang.perl.idea.configuration.settings;
 
-import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.components.State;
-import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.project.Project;
-import com.intellij.util.xmlb.XmlSerializerUtil;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
+import jakarta.inject.Singleton;
+import consulo.component.persist.PersistentStateComponent;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
+import consulo.project.Project;
+import consulo.util.xml.serializer.XmlSerializerUtil;
 import com.perl5.lang.perl.idea.PerlPathMacros;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,12 +35,16 @@ import java.util.List;
 
 @State(
   name = "Perl5LocalSettings",
-  storages = @Storage(PerlPathMacros.PERL5_PROJECT_SETTINGS_FILE),
-  perClient = true
+  storages = @Storage(PerlPathMacros.PERL5_PROJECT_SETTINGS_FILE)
 )
+@ServiceAPI(ComponentScope.PROJECT)
+@ServiceImpl
+@Singleton
 public class PerlLocalSettings implements PersistentStateComponent<PerlLocalSettings> {
   public boolean DISABLE_NO_INTERPRETER_WARNING = false;
   public boolean ENABLE_REGEX_INJECTIONS = false;
+  // TODO consulo: not used for the interpreter resolution, interpreters are configured per module with the Perl module extension
+  //  (see PerlProjectManager)
   private String myPerlInterpreter;
   private List<String> myExternalLibrariesPaths = new ArrayList<>();
 
@@ -66,7 +74,7 @@ public class PerlLocalSettings implements PersistentStateComponent<PerlLocalSett
     XmlSerializerUtil.copyBean(state, this);
   }
 
-  @Override
+  // TODO consulo: PersistentStateComponent has no noStateLoaded() callback, so this is never called
   public void noStateLoaded() {
     loadState(new PerlLocalSettings());
   }

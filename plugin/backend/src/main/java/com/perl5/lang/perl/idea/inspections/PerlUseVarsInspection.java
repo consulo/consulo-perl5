@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.idea.inspections;
 
-import com.intellij.codeInspection.ProblemHighlightType;
-import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.psi.PsiElementVisitor;
+import consulo.language.editor.inspection.ProblemHighlightType;
+import consulo.language.editor.inspection.ProblemsHolder;
+import consulo.language.psi.PsiElementVisitor;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.idea.quickfixes.PerlUseVarsQuickFix;
 import com.perl5.lang.perl.psi.PerlVisitor;
@@ -26,7 +26,14 @@ import com.perl5.lang.perl.psi.impl.PerlUseStatementElement;
 import org.jetbrains.annotations.NotNull;
 
 import static com.perl5.lang.perl.util.PerlPackageUtilCore.PACKAGE_VARS;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.Language;
+import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
+import consulo.localize.LocalizeValue;
+import com.perl5.lang.perl.PerlLanguage;
+import org.jetbrains.annotations.Nullable;
 
+@ExtensionImpl
 public class PerlUseVarsInspection extends PerlInspection {
   @Override
   public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {
@@ -44,5 +51,36 @@ public class PerlUseVarsInspection extends PerlInspection {
         }
       }
     };
+  }
+
+  // consulo: metadata from upstream <localInspection> registration in perl5.plugin.backend.main.xml
+  @Override
+  public @NotNull String getShortName() {
+    return "UseVars";
+  }
+
+  @Override
+  public @NotNull String getID() {
+    return "UseVarsChecking";
+  }
+
+  @Override
+  public @Nullable Language getLanguage() {
+    return PerlLanguage.INSTANCE;
+  }
+
+  @Override
+  public @NotNull LocalizeValue getDisplayName() {
+    return LocalizeValue.localizeTODO(PerlBundle.message("inspection.use.vars.display.name"));
+  }
+
+  @Override
+  public @NotNull LocalizeValue getGroupDisplayName() {
+    return LocalizeValue.localizeTODO(PerlBundle.message("inspection.group.perl"));
+  }
+
+  @Override
+  public @NotNull HighlightDisplayLevel getDefaultLevel() {
+    return HighlightDisplayLevel.WARNING;
   }
 }

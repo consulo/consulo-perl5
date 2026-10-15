@@ -16,17 +16,19 @@
 
 package com.perl5.lang.perl;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.ParserDefinition;
-import com.intellij.lang.PsiParser;
-import com.intellij.lexer.Lexer;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.IFileElementType;
-import com.intellij.psi.tree.TokenSet;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.Language;
+import consulo.language.version.LanguageVersion;
+import consulo.language.ast.ASTNode;
+import consulo.language.parser.ParserDefinition;
+import consulo.language.parser.PsiParser;
+import consulo.language.lexer.Lexer;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.IFileElementType;
+import consulo.language.ast.TokenSet;
 import com.perl5.lang.perl.lexer.PerlLexer;
 import com.perl5.lang.perl.lexer.PerlLexingContext;
 import com.perl5.lang.perl.lexer.PerlTokenSetsEx;
@@ -41,30 +43,37 @@ import org.jetbrains.annotations.NotNull;
 import static com.perl5.lang.perl.lexer.PerlLexer.*;
 import static com.perl5.lang.perl.parser.PerlElementTypesGenerated.*;
 
+@ExtensionImpl
 public class PerlParserDefinition implements ParserDefinition, PerlLexerAwareParserDefinition {
+  @Override
+  public @NotNull Language getLanguage() {
+    return PerlLanguage.INSTANCE;
+  }
+
 
   @Override
-  public @NotNull Lexer createLexer(Project project) {
-    return new PerlMergingLexerAdapter(PerlLexingContext.create(project));
+  public @NotNull Lexer createLexer(LanguageVersion languageVersion) {
+    // TODO consulo: no project in ParserDefinition.createLexer(LanguageVersion); upstream passes it to the lexing context
+    return new PerlMergingLexerAdapter(PerlLexingContext.create(null));
   }
 
   @Override
-  public @NotNull TokenSet getWhitespaceTokens() {
+  public @NotNull TokenSet getWhitespaceTokens(LanguageVersion languageVersion) {
     return PerlTokenSetsEx.getWHITE_SPACES();
   }
 
   @Override
-  public @NotNull TokenSet getCommentTokens() {
+  public @NotNull TokenSet getCommentTokens(LanguageVersion languageVersion) {
     return PerlTokenSetsEx.getCOMMENTS();
   }
 
   @Override
-  public @NotNull TokenSet getStringLiteralElements() {
+  public @NotNull TokenSet getStringLiteralElements(LanguageVersion languageVersion) {
     return PerlTokenSetsEx.getLITERALS();
   }
 
   @Override
-  public @NotNull PsiParser createParser(final Project project) {
+  public @NotNull PsiParser createParser(LanguageVersion languageVersion) {
     return PerlParserImpl.INSTANCE;
   }
 

@@ -16,10 +16,10 @@
 
 package com.perl5.lang.htmlmason.parser.psi.impl;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.ASTNode;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.ast.IElementType;
 import com.perl5.lang.htmlmason.parser.psi.HTMLMasonArgsBlock;
 import com.perl5.lang.htmlmason.parser.stubs.HTMLMasonArgsBlockStub;
 import com.perl5.lang.perl.psi.PerlVariable;

@@ -16,16 +16,16 @@
 
 package com.perl5.lang.perl.psi.mixins;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.openapi.util.ClearableLazyValue;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.StubBasedPsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.IncorrectOperationException;
-import com.intellij.util.Processor;
+import consulo.language.ast.ASTNode;
+import consulo.navigation.ItemPresentation;
+import consulo.util.lang.lazy.ClearableLazyValue;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.StubBasedPsiElement;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.util.IncorrectOperationException;
+import consulo.application.util.function.Processor;
 import com.perl5.PerlIcons;
 import com.perl5.lang.perl.extensions.packageprocessor.PerlMroProvider;
 import com.perl5.lang.perl.extensions.packageprocessor.PerlPackageProcessor;
@@ -40,7 +40,7 @@ import com.perl5.lang.perl.util.PerlPackageUtilCore;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
+import consulo.ui.image.Image;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -53,9 +53,9 @@ public abstract class PerlNamespaceDefinitionMixin extends PerlStubBasedPsiEleme
   implements StubBasedPsiElement<PerlNamespaceDefinitionStub>,
              PerlNamespaceDefinitionWithIdentifier,
              PerlCompositeElement {
-  private final ClearableLazyValue<ExporterInfo> myExporterInfo = ClearableLazyValue.create(this::computeExporterInfo);
-  private final ClearableLazyValue<PerlMroType> myMroType = ClearableLazyValue.create(this::computeMroType);
-  private final ClearableLazyValue<List<String>> myParentNamespaces = ClearableLazyValue.create(
+  private final ClearableLazyValue<ExporterInfo> myExporterInfo = ClearableLazyValue.notNull(this::computeExporterInfo);
+  private final ClearableLazyValue<PerlMroType> myMroType = ClearableLazyValue.notNull(this::computeMroType);
+  private final ClearableLazyValue<List<String>> myParentNamespaces = ClearableLazyValue.notNull(
     () -> PerlPackageUtilCore.collectParentNamespaceNamesFromPsi(this));
 
   public PerlNamespaceDefinitionMixin(@NotNull ASTNode node) {
@@ -116,11 +116,12 @@ public abstract class PerlNamespaceDefinitionMixin extends PerlStubBasedPsiEleme
     if (stub != null) {
       return stub.getParentNamespacesNames();
     }
-    return myParentNamespaces.getValue();
+    return myParentNamespaces.get();
   }
 
-  @Override
-  public @Nullable Icon getIcon(int flags) {
+  // TODO consulo: PsiElement#getIcon(int) does not exist in Consulo (element icons come from IconDescriptorUpdater),
+  //  so this is no longer an override and is not called by the platform
+  public @Nullable Image getIcon(int flags) {
     return PerlIcons.PACKAGE_GUTTER_ICON;
   }
 
@@ -136,7 +137,7 @@ public abstract class PerlNamespaceDefinitionMixin extends PerlStubBasedPsiEleme
       return stub.getMroType();
     }
 
-    return myMroType.getValue();
+    return myMroType.get();
   }
 
   private @NotNull PerlMroType computeMroType() {
@@ -186,7 +187,7 @@ public abstract class PerlNamespaceDefinitionMixin extends PerlStubBasedPsiEleme
   }
 
   public @NotNull ExporterInfo getExporterInfo() {
-    return myExporterInfo.getValue();
+    return myExporterInfo.get();
   }
 
   private @NotNull ExporterInfo computeExporterInfo() {
@@ -239,9 +240,9 @@ public abstract class PerlNamespaceDefinitionMixin extends PerlStubBasedPsiEleme
   @Override
   public void subtreeChanged() {
     super.subtreeChanged();
-    myExporterInfo.drop();
-    myMroType.drop();
-    myParentNamespaces.drop();
+    myExporterInfo.clear();
+    myMroType.clear();
+    myParentNamespaces.clear();
   }
 
   public static class ExporterInfo implements Processor<PsiElement> {

@@ -16,17 +16,17 @@
 
 package com.perl5.lang.htmlmason;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.NlsSafe;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.stubs.StubIndex;
-import com.intellij.util.Processor;
+import consulo.project.Project;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.stub.StubIndex;
+import consulo.application.util.function.Processor;
 import com.perl5.lang.htmlmason.idea.configuration.HTMLMasonSettings;
+import com.perl5.lang.htmlmason.idea.configuration.HTMLMasonSourceRootType;
 import com.perl5.lang.htmlmason.parser.psi.*;
 import com.perl5.lang.htmlmason.parser.psi.impl.HTMLMasonFileImpl;
 import com.perl5.lang.htmlmason.parser.stubs.HTMLMasonFlagsStubIndex;
@@ -38,8 +38,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-import static com.intellij.openapi.vfs.VfsUtilCore.VFS_SEPARATOR;
-import static com.intellij.openapi.vfs.VfsUtilCore.VFS_SEPARATOR_CHAR;
+import static consulo.virtualFileSystem.util.VirtualFileUtil.VFS_SEPARATOR_CHAR;
 
 
 public final class HTMLMasonUtil {
@@ -47,7 +46,16 @@ public final class HTMLMasonUtil {
   }
 
   public static @Nullable VirtualFile getComponentRoot(@NotNull Project project, @Nullable VirtualFile file) {
-    return MasonCoreUtil.getComponentRoot(HTMLMasonSettings.getInstance(project), file);
+    return MasonCoreUtil.getComponentRoot(project, HTMLMasonSourceRootType.INSTANCE, file);
+  }
+
+  /**
+   * consulo: upstream takes the roots from the project settings, which provide the root type
+   *
+   * @return components roots of the modules with the HTML::Mason module extension enabled
+   */
+  public static @NotNull List<VirtualFile> getComponentRoots(@NotNull Project project) {
+    return PerlProjectManager.getInstance(project).getModulesRootsOfType(HTMLMasonSourceRootType.INSTANCE);
   }
 
   public static List<PerlSubArgument> getArgumentsList(HTMLMasonParametrizedEntity entity) {
@@ -67,34 +75,35 @@ public final class HTMLMasonUtil {
   /**
    * @return absolute path relative to the components root
    */
-  public static @NlsSafe @Nullable String getAbsoluteComponentPath(@NotNull HTMLMasonFileImpl masonFile) {
+  public static @Nullable String getAbsoluteComponentPath(@NotNull HTMLMasonFileImpl masonFile) {
 
     VirtualFile componentFile = getComponentVirtualFile(masonFile);
     VirtualFile componentRoot = getComponentRoot(masonFile);
 
     if (componentFile != null && componentRoot != null) {
-      return VFS_SEPARATOR + VfsUtilCore.getRelativePath(componentFile, componentRoot);
+      return VFS_SEPARATOR_CHAR + VirtualFileUtil.getRelativePath(componentFile, componentRoot);
     }
     return null;
   }
 
   public static @Nullable HTMLMasonFileImpl getParentComponent(@NotNull HTMLMasonFileImpl masonFile) {
     String parentComponentPath = getParentComponentPath(masonFile);
-    HTMLMasonSettings settings = HTMLMasonSettings.getInstance(masonFile.getProject());
+    // consulo: settings of the module of the component
+    HTMLMasonSettings settings = HTMLMasonSettings.forPsiElement(masonFile);
     VirtualFile parentFile = null;
 
     if (parentComponentPath == null) {
       VirtualFile containingFile = getComponentVirtualFile(masonFile);
       if (containingFile != null) {
         VirtualFile startDir = containingFile.getParent();
-        if (StringUtil.equals(containingFile.getName(), settings.autoHandlerName)) {
+        if (StringUtil.equals(containingFile.getName(), settings.getAutoHandlerName())) {
           startDir = startDir.getParent();
         }
 
         VirtualFile componentRoot = getComponentRoot(masonFile.getProject(), startDir);
         if (componentRoot != null) {
-          while (VfsUtilCore.isAncestor(componentRoot, startDir, false)) {
-            if ((parentFile = startDir.findFileByRelativePath(settings.autoHandlerName)) != null) {
+          while (VirtualFileUtil.isAncestor(componentRoot, startDir, false)) {
+            if ((parentFile = startDir.findFileByRelativePath(settings.getAutoHandlerName())) != null) {
               break;
             }
             startDir = startDir.getParent();
@@ -105,7 +114,7 @@ public final class HTMLMasonUtil {
     else if (!StringUtil.equals(parentComponentPath, HTMLMasonFlagsStatement.UNDEF_RESULT)) {
       if (StringUtil.startsWith(parentComponentPath, "/")) {
         parentComponentPath = parentComponentPath.substring(1);
-        for (VirtualFile root : PerlProjectManager.getInstance(settings.getProject()).getModulesRootsOfType(settings.getSourceRootType())) {
+        for (VirtualFile root : getComponentRoots(masonFile.getProject())) {
           if ((parentFile = root.findFileByRelativePath(parentComponentPath)) != null) {
             break;
           }
@@ -151,11 +160,11 @@ public final class HTMLMasonUtil {
     }
 
     final List<HTMLMasonFileImpl> result = new ArrayList<>();
-    final String relativePath = VFS_SEPARATOR + VfsUtilCore.getRelativePath(containingFile, componentRoot);
+    final String relativePath = VFS_SEPARATOR_CHAR + VirtualFileUtil.getRelativePath(containingFile, componentRoot);
     final Project project = masonFile.getProject();
     final GlobalSearchScope scope = GlobalSearchScope.allScope(project);
     final HTMLMasonFileImpl currentFile = masonFile;
-    HTMLMasonSettings settings = HTMLMasonSettings.getInstance(project);
+    HTMLMasonSettings settings = HTMLMasonSettings.forPsiElement(masonFile);
 
     // indexed children
     for (String parentPath : StubIndex.getInstance().getAllKeys(HTMLMasonFlagsStubIndex.KEY, project)) {
@@ -172,9 +181,9 @@ public final class HTMLMasonUtil {
       }
     }
 
-    if (StringUtil.equals(containingFile.getName(), settings.autoHandlerName)) {
-      collectAutoHandledFiles(masonFile, PsiManager.getInstance(project), containingFile.getParent(), result, settings.autoHandlerName,
-                              null);
+    if (StringUtil.equals(containingFile.getName(), settings.getAutoHandlerName())) {
+      collectAutoHandledFiles(masonFile, PsiManager.getInstance(project), containingFile.getParent(), result,
+                              settings.getAutoHandlerName(), null);
     }
 
     return result;
@@ -221,12 +230,12 @@ public final class HTMLMasonUtil {
   /**
    * @return absolute containing dir path relative to the components root
    */
-  public static @NlsSafe @Nullable String getAbsoluteComponentContainerPath(@NotNull HTMLMasonFileImpl masonFile) {
+  public static @Nullable String getAbsoluteComponentContainerPath(@NotNull HTMLMasonFileImpl masonFile) {
     VirtualFile componentFile = getComponentVirtualFile(masonFile);
     VirtualFile componentRoot = getComponentRoot(masonFile);
 
     if (componentFile != null && componentRoot != null) {
-      return VFS_SEPARATOR + VfsUtilCore.getRelativePath(componentFile.getParent(), componentRoot);
+      return VFS_SEPARATOR_CHAR + VirtualFileUtil.getRelativePath(componentFile.getParent(), componentRoot);
     }
     return null;
   }

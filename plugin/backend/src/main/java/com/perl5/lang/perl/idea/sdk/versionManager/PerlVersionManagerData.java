@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.idea.sdk.versionManager;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.util.ObjectUtils;
+import consulo.project.Project;
+import consulo.content.bundle.Sdk;
+import consulo.util.lang.ObjectUtil;
 import com.perl5.lang.perl.idea.execution.PerlCommandLine;
 import com.perl5.lang.perl.idea.sdk.AbstractPerlData;
 import com.perl5.lang.perl.idea.sdk.PerlSdkAdditionalData;
@@ -97,7 +97,7 @@ public abstract class PerlVersionManagerData<Data extends PerlVersionManagerData
 
   @Contract("null->null")
   public static @Nullable PerlVersionManagerData<?, ?> from(@Nullable Sdk sdk) {
-    return ObjectUtils.doIfNotNull(PerlSdkAdditionalData.from(sdk), PerlSdkAdditionalData::getVersionManagerData);
+    return ObjectUtil.doIfNotNull(PerlSdkAdditionalData.from(sdk), PerlSdkAdditionalData::getVersionManagerData);
   }
 
   /**

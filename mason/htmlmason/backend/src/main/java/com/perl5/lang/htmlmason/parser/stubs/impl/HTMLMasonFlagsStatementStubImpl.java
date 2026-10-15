@@ -16,9 +16,9 @@
 
 package com.perl5.lang.htmlmason.parser.stubs.impl;
 
-import com.intellij.psi.stubs.StubBase;
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.psi.stub.StubBase;
+import consulo.language.psi.stub.StubElement;
+import consulo.language.psi.stub.IStubElementType;
 import com.perl5.lang.htmlmason.parser.psi.HTMLMasonFlagsStatement;
 import com.perl5.lang.htmlmason.parser.stubs.HTMLMasonFlagsStatementStub;
 import org.jetbrains.annotations.Nullable;
@@ -26,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
 public class HTMLMasonFlagsStatementStubImpl extends StubBase<HTMLMasonFlagsStatement> implements HTMLMasonFlagsStatementStub {
   final String myParentComponentPath;
 
-  public HTMLMasonFlagsStatementStubImpl(StubElement parent, IElementType elementType, @Nullable String parentComponentPath) {
+  public HTMLMasonFlagsStatementStubImpl(StubElement parent, IStubElementType<?, ?> elementType, @Nullable String parentComponentPath) {
     super(parent, elementType);
     myParentComponentPath = parentComponentPath;
   }

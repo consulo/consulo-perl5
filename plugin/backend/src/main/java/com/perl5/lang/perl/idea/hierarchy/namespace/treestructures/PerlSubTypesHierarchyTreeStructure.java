@@ -16,11 +16,11 @@
 
 package com.perl5.lang.perl.idea.hierarchy.namespace.treestructures;
 
-import com.intellij.ide.hierarchy.HierarchyNodeDescriptor;
-import com.intellij.ide.hierarchy.HierarchyTreeStructure;
-import com.intellij.ide.util.treeView.NodeDescriptor;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
+import consulo.language.editor.hierarchy.HierarchyNodeDescriptor;
+import consulo.language.editor.hierarchy.HierarchyTreeStructure;
+import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.project.Project;
+import consulo.language.psi.PsiElement;
 import com.perl5.lang.perl.idea.hierarchy.namespace.PerlHierarchyNodeDescriptor;
 import com.perl5.lang.perl.psi.PerlNamespaceDefinitionElement;
 import com.perl5.lang.perl.psi.PerlNamespaceDefinitionHandler;

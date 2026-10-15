@@ -16,26 +16,21 @@
 
 package com.perl5.lang.perl.extensions.generation;
 
-import com.intellij.ide.IdeBundle;
-import com.intellij.ide.util.MemberChooser;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.ScrollType;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.NlsContexts;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.ui.SpeedSearchComparator;
+import consulo.application.ApplicationManager;
+import consulo.document.Document;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.ScrollType;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.project.Project;
+import consulo.ui.InputBoxBuilder;
+import consulo.localize.LocalizeValue;
+import consulo.undoRedo.CommandProcessor;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.util.PsiTreeUtil;
 import com.perl5.PerlBundle;
-import com.perl5.PerlIcons;
 import com.perl5.lang.perl.extensions.PerlCodeGenerator;
 import com.perl5.lang.perl.idea.codeInsight.PerlMethodMember;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlValue;
@@ -48,11 +43,14 @@ import com.perl5.lang.perl.psi.utils.PerlElementFactory;
 import com.perl5.lang.perl.psi.utils.PerlSubAnnotations;
 import com.perl5.lang.perl.psi.utils.PerlSubArgument;
 import com.perl5.lang.perl.util.PerlPackageUtil;
+import consulo.perl5.core.ui.PerlDialogUtil;
+import consulo.perl5.core.ui.PerlUnifiedMemberChooser;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
 
 
@@ -172,99 +170,101 @@ public class PerlCodeGeneratorImpl implements PerlCodeGenerator {
         }
       );
 
-      List<PerlMethodMember> selectedElements = getMembersToOverride(anchor, subDefinitions);
-      if (selectedElements == null) {
-        return;
-      }
-      StringBuilder generatedCode = new StringBuilder();
-      for (PerlMethodMember methodMember : selectedElements) {
-        String code = getOverrideCodeText(methodMember.getPsiElement());
-        if (StringUtil.isNotEmpty(code)) {
-          generatedCode.append(code);
-          generatedCode.append("\n\n");
+      // consulo: the members are chosen asynchronously, see getMembersToOverride
+      getMembersToOverride(anchor, editor, subDefinitions, selectedElements -> {
+        StringBuilder generatedCode = new StringBuilder();
+        for (PerlMethodMember methodMember : selectedElements) {
+          String code = getOverrideCodeText(methodMember.getPsiElement());
+          if (StringUtil.isNotEmpty(code)) {
+            generatedCode.append(code);
+            generatedCode.append("\n\n");
+          }
         }
-      }
 
-      insertCodeAfterElement(anchor, generatedCode.toString(), editor);
+        insertCodeAfterElement(anchor, generatedCode.toString(), editor);
+      });
     }
   }
 
-  private @Nullable List<PerlMethodMember> getMembersToOverride(@NotNull PsiElement anchor,
-                                                                @NotNull List<PerlMethodMember> subDefinitions) {
+  /**
+   * consulo: MemberChooser is a Swing dialog (not available in web), the unified chooser is asynchronous. The chosen members are
+   * passed to the {@code membersConsumer} after the override action command is finished, so the consumer runs in its own command
+   */
+  private void getMembersToOverride(@NotNull PsiElement anchor,
+                                    @NotNull Editor editor,
+                                    @NotNull List<PerlMethodMember> subDefinitions,
+                                    @NotNull Consumer<? super List<PerlMethodMember>> membersConsumer) {
     if (ourTestChooser != null) {
-      return ourTestChooser.apply(subDefinitions);
+      List<PerlMethodMember> selectedElements = ourTestChooser.apply(subDefinitions);
+      if (selectedElements != null) {
+        membersConsumer.accept(selectedElements);
+      }
+      return;
     }
 
-    final MemberChooser<PerlMethodMember> chooser =
-      new MemberChooser<>(subDefinitions.toArray(PerlMethodMember.EMPTY_ARRAY), false, true,
-                          anchor.getProject()) {
-        @Override
-        protected SpeedSearchComparator getSpeedSearchComparator() {
-          return new SpeedSearchComparator(false) {
-            @Override
-            public @Nullable Iterable<TextRange> matchingFragments(@NotNull String pattern, @NotNull String text) {
-              return super.matchingFragments(PerlMethodMember.trimUnderscores(pattern), text);
-            }
-          };
+    Project project = anchor.getProject();
+    LocalizeValue title = LocalizeValue.of(PerlBundle.message("dialog.title.override.implement.method"));
+    PerlDialogUtil.showAndThen(
+      () -> PerlUnifiedMemberChooser.showAsync(project, title, subDefinitions),
+      selectedElements -> {
+        if (selectedElements == null || !anchor.isValid() || editor.isDisposed()) {
+          return;
         }
-
-        @Override
-        protected ShowContainersAction getShowContainersAction() {
-          return new ShowContainersAction(() -> IdeBundle.message("action.show.classes"), PerlIcons.PACKAGE_GUTTER_ICON);
-        }
-      };
-
-    chooser.setTitle(PerlBundle.message("dialog.title.override.implement.method"));
-    chooser.setCopyJavadocVisible(false);
-    chooser.show();
-    if (chooser.getExitCode() != DialogWrapper.OK_EXIT_CODE) {
-      return null;
-    }
-
-    return chooser.getSelectedElements();
+        CommandProcessor.getInstance().newCommand()
+          .project(project)
+          .name(title)
+          .run(() -> membersConsumer.accept(selectedElements));
+      });
   }
 
+  // consulo: the names are asked asynchronously, see askFieldsNames
   @Override
   public void generateSetters(PsiElement anchor, Editor editor) {
-    StringBuilder code = new StringBuilder();
+    askFieldsNames(anchor, PerlBundle.message("dialog.message.type.comma.separated.setters.names"),
+                   PerlBundle.message("dialog.title.generating.setters"), names -> {
+      StringBuilder code = new StringBuilder();
 
-    for (String name : askFieldsNames(anchor.getProject(), PerlBundle.message("dialog.message.type.comma.separated.setters.names"),
-                                      PerlBundle.message("dialog.title.generating.setters"))) {
-      code.append(getSetterCode(name));
-    }
+      for (String name : names) {
+        code.append(getSetterCode(name));
+      }
 
-    if (!code.isEmpty()) {
-      insertCodeAfterElement(anchor, code.toString(), editor);
-    }
+      if (!code.isEmpty()) {
+        insertCodeAfterElement(anchor, code.toString(), editor);
+      }
+    });
   }
 
   @Override
   public void generateGetters(PsiElement anchor, Editor editor) {
-    StringBuilder code = new StringBuilder();
+    askFieldsNames(anchor, PerlBundle.message("dialog.message.type.comma.separated.getters.names"),
+                   PerlBundle.message("dialog.title.generating.getters"), names -> {
+      StringBuilder code = new StringBuilder();
 
-    for (String name : askFieldsNames(anchor.getProject(), PerlBundle.message("dialog.message.type.comma.separated.getters.names"),
-                                      PerlBundle.message("dialog.title.generating.getters"))) {
-      code.append(getGetterCode(name));
-    }
+      for (String name : names) {
+        code.append(getGetterCode(name));
+      }
 
-    if (!code.isEmpty()) {
-      insertCodeAfterElement(anchor, code.toString(), editor);
-    }
+      if (!code.isEmpty()) {
+        insertCodeAfterElement(anchor, code.toString(), editor);
+      }
+    });
   }
 
   @Override
   public void generateGettersAndSetters(PsiElement anchor, Editor editor) {
-    StringBuilder code = new StringBuilder();
+    askFieldsNames(anchor, PerlBundle.message("dialog.message.type.comma.separated.accessors.names"),
+                   PerlBundle.message("dialog.title.generating.getters.setters"), names -> {
+      StringBuilder code = new StringBuilder();
 
-    for (String name : askFieldsNames(anchor.getProject(), PerlBundle.message("dialog.message.type.comma.separated.accessors.names"),
-                                      PerlBundle.message("dialog.title.generating.getters.setters"))) {
-      code.append(getGetterCode(name));
-      code.append(getSetterCode(name));
-    }
+      for (String name : names) {
+        code.append(getGetterCode(name));
+        code.append(getSetterCode(name));
+      }
 
-    if (!code.isEmpty()) {
-      insertCodeAfterElement(anchor, code.toString(), editor);
-    }
+      if (!code.isEmpty()) {
+        insertCodeAfterElement(anchor, code.toString(), editor);
+      }
+    });
   }
 
   @Override
@@ -272,22 +272,42 @@ public class PerlCodeGeneratorImpl implements PerlCodeGenerator {
     insertCodeAfterElement(anchor, getConstructorCode(), editor);
   }
 
-  protected List<String> askFieldsNames(@NotNull Project project,
-                                        @NlsContexts.DialogMessage String promptText,
-                                        @NlsContexts.DialogTitle String promptTitle
+  /**
+   * consulo: Messages are Swing dialogs (not available in web), the unified input box is asynchronous. The names are passed
+   * to the {@code namesConsumer} when the box is confirmed with some, after the generate action command is finished, so the
+   * consumer runs in its own command
+   */
+  protected void askFieldsNames(@NotNull PsiElement anchor,
+                                String promptText,
+                                String promptTitle,
+                                @NotNull Consumer<? super List<String>> namesConsumer
   ) {
-    Set<String> result = new HashSet<>();
-    String name = Messages.showInputDialog(project, promptText, promptTitle, Messages.getQuestionIcon(), "", null);
+    Project project = anchor.getProject();
+    InputBoxBuilder.text()
+      .title(LocalizeValue.of(promptTitle))
+      .text(LocalizeValue.of(promptText))
+      .asQuestion()
+      .showAsync(project)
+      .whenComplete((name, error) -> {
+        Set<String> result = new HashSet<>();
 
-    if (!StringUtil.isEmpty(name)) {
+        if (!StringUtil.isEmpty(name)) {
 
-      for (String nameChunk : name.split("[ ,]+")) {
-        if (!nameChunk.isEmpty() && PerlParserUtil.isIdentifier(nameChunk)) {
-          result.add(nameChunk);
+          for (String nameChunk : name.split("[ ,]+")) {
+            if (!nameChunk.isEmpty() && PerlParserUtil.isIdentifier(nameChunk)) {
+              result.add(nameChunk);
+            }
+          }
         }
-      }
-    }
-    return new ArrayList<>(result);
+
+        if (result.isEmpty() || !anchor.isValid()) {
+          return;
+        }
+        CommandProcessor.getInstance().newCommand()
+          .project(project)
+          .name(LocalizeValue.of(promptTitle))
+          .run(() -> namesConsumer.accept(new ArrayList<>(result)));
+      });
   }
 
   protected void insertCodeAfterElement(PsiElement anchor, String code, Editor editor) {

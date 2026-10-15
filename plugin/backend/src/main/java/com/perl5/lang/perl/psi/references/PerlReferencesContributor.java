@@ -16,8 +16,10 @@
 
 package com.perl5.lang.perl.psi.references;
 
-import com.intellij.psi.*;
-import com.intellij.util.ProcessingContext;
+
+import com.perl5.lang.perl.PerlLanguage;
+import consulo.language.Language;
+import consulo.language.util.ProcessingContext;
 import com.perl5.lang.perl.parser.moose.psi.PerlMooseExtendsStatement;
 import com.perl5.lang.perl.parser.moose.psi.PerlMooseExtendsStatementReferenceProvider;
 import com.perl5.lang.perl.parser.moose.psi.PerlMooseStatementWithSubReference;
@@ -29,8 +31,13 @@ import com.perl5.lang.perl.psi.impl.PerlStringContentElementImpl;
 import com.perl5.lang.perl.psi.references.providers.*;
 import org.jetbrains.annotations.NotNull;
 
-import static com.intellij.patterns.PlatformPatterns.psiElement;
+import static consulo.language.pattern.PlatformPatterns.psiElement;
 import static com.perl5.lang.perl.idea.PerlElementPatterns.*;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiReference;
+import consulo.language.psi.PsiReferenceContributor;
+import consulo.language.psi.PsiReferenceProvider;
+import consulo.language.psi.PsiReferenceRegistrar;
 
 
 public class PerlReferencesContributor extends PsiReferenceContributor {
@@ -62,5 +69,10 @@ public class PerlReferencesContributor extends PsiReferenceContributor {
     });
 
     registrar.registerReferenceProvider(SUB_NAME_PATTERN, new PerlSubReferenceProvider());
+  }
+
+  @Override
+  public @NotNull Language getLanguage() {
+    return PerlLanguage.INSTANCE;
   }
 }

@@ -16,14 +16,14 @@
 
 package com.perl5.lang.htmlmason.idea.editor;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.folding.FoldingDescriptor;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.ast.ASTNode;
+import consulo.language.editor.folding.FoldingDescriptor;
+import consulo.document.Document;
+import consulo.document.util.TextRange;
+import consulo.language.psi.PsiElement;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
+import consulo.language.psi.PsiUtilCore;
 import com.perl5.lang.htmlmason.elementType.HTMLMasonElementTypes;
 import com.perl5.lang.htmlmason.parser.psi.HTMLMasonRecursiveVisitor;
 import com.perl5.lang.perl.idea.folding.PerlFoldingBuilder;
@@ -63,7 +63,7 @@ public class HTMLMasonFoldingBuilder extends AbstractMasonFoldingBuilder {
   public FoldingDescriptor @NotNull [] buildFoldRegions(@NotNull PsiElement root, @NotNull Document document, boolean quick) {
     List<FoldingDescriptor> masonDescriptors = mutableList(super.buildFoldRegions(root, document, quick));
     root.accept(new HTMLMasonFoldingRegionsCollector(document, masonDescriptors));
-    return masonDescriptors.toArray(FoldingDescriptor.EMPTY_ARRAY);
+    return masonDescriptors.toArray(FoldingDescriptor.EMPTY);
   }
 
   @Override

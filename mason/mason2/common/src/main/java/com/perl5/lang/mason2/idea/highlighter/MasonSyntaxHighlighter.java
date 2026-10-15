@@ -16,9 +16,9 @@
 
 package com.perl5.lang.mason2.idea.highlighter;
 
-import com.intellij.lexer.Lexer;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.tree.TokenSet;
+import consulo.language.lexer.Lexer;
+import consulo.project.Project;
+import consulo.language.ast.TokenSet;
 import com.perl5.lang.mason2.lexer.Mason2TemplatingLexerAdapter;
 import com.perl5.lang.perl.idea.highlighter.PerlSyntaxHighlighterEmbedded;
 import org.jetbrains.annotations.NotNull;

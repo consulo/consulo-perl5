@@ -16,19 +16,37 @@
 
 package com.perl5.lang.perl.psi.references;
 
-import com.intellij.codeInsight.TargetElementEvaluatorEx;
-import com.intellij.codeInsight.TargetElementEvaluatorEx2;
-import com.intellij.codeInsight.TargetElementUtil;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.*;
+import consulo.language.editor.TargetElementUtilExtender;
+import consulo.language.editor.TargetElementUtil;
+import consulo.codeEditor.Editor;
+
 import com.perl5.lang.perl.psi.PerlVariableNameElement;
 import com.perl5.lang.perl.psi.utils.PerlPsiUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiPolyVariantReference;
+import consulo.language.psi.PsiReference;
+import consulo.language.psi.ResolveResult;
+
+import java.util.Set;
 
 
-public class PerlTargetElementEvaluatorEx2 extends TargetElementEvaluatorEx2 implements TargetElementEvaluatorEx {
+// consulo: TargetElementUtilExtender is application-wide (upstream evaluator is registered for Perl5 language only)
+public class PerlTargetElementEvaluatorEx2 implements TargetElementUtilExtender {
+  // consulo: adapter for TargetElementEvaluatorEx2.adjustReferenceOrReferencedElement; first non-null result wins, so unchanged
+  // element is reported as null
   @Override
+  public @Nullable PsiElement modifyReferenceOrReferencedElement(@Nullable PsiElement refElement,
+                                                                 PsiFile file,
+                                                                 Editor editor,
+                                                                 Set<String> flags,
+                                                                 int offset) {
+    PsiElement result = adjustReferenceOrReferencedElement(file, editor, offset, 0, refElement);
+    return result == refElement ? null : result;
+  }
+
   public @Nullable PsiElement adjustReferenceOrReferencedElement(@NotNull PsiFile file,
                                                                  @NotNull Editor editor,
                                                                  int offset,
@@ -53,8 +71,13 @@ public class PerlTargetElementEvaluatorEx2 extends TargetElementEvaluatorEx2 imp
   }
 
 
-  // fixme WTF?
+  // consulo: adapter for TargetElementEvaluator.getElementByReference
   @Override
+  public @Nullable PsiElement getReferenceOrReferencedElement(PsiReference reference, Set<String> flags) {
+    return getElementByReference(reference, 0);
+  }
+
+  // fixme WTF?
   public @Nullable PsiElement getElementByReference(@NotNull PsiReference ref, int flags) {
     return null;
   }

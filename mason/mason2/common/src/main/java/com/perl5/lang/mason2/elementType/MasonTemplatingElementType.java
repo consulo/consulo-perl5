@@ -16,9 +16,9 @@
 
 package com.perl5.lang.mason2.elementType;
 
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
+import consulo.language.impl.psi.ASTWrapperPsiElement;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiElement;
 import com.perl5.lang.perl.parser.elementTypes.PsiElementProvider;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;

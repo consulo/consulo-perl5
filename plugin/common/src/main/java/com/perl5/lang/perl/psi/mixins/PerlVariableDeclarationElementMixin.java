@@ -16,14 +16,14 @@
 
 package com.perl5.lang.perl.psi.mixins;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.search.LocalSearchScope;
-import com.intellij.psi.search.SearchScope;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.ast.ASTNode;
+import consulo.navigation.ItemPresentation;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.scope.LocalSearchScope;
+import consulo.content.scope.SearchScope;
+import consulo.language.ast.IElementType;
+import consulo.language.util.IncorrectOperationException;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlScalarValue;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlValue;
 import com.perl5.lang.perl.idea.presentations.PerlItemPresentationSimpleDynamicLocation;
@@ -37,7 +37,8 @@ import com.perl5.lang.perl.util.PerlPackageUtilCore;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
+import consulo.language.icon.IconDescriptorUpdaters;
+import consulo.ui.image.Image;
 import java.util.Objects;
 
 import static com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlValues.UNKNOWN_VALUE;
@@ -190,10 +191,11 @@ public class PerlVariableDeclarationElementMixin extends PerlStubBasedPsiElement
   }
 
 
-  @Override
-  public @Nullable Icon getIcon(int flags) {
-    Icon iconByType = getIconByType(getActualType());
-    return iconByType == null ? super.getIcon(flags) : iconByType;
+  // TODO consulo: PsiElement#getIcon(int) does not exist in Consulo (element icons come from IconDescriptorUpdater),
+  //  so this is no longer an override and is not called by the platform
+  public @Nullable Image getIcon(int flags) {
+    Image iconByType = getIconByType(getActualType());
+    return iconByType == null ? IconDescriptorUpdaters.getIcon(this, flags) : iconByType;
   }
 
   @Override

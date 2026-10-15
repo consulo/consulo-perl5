@@ -16,16 +16,23 @@
 
 package com.perl5.lang.mason2.idea.editor;
 
-import com.intellij.lang.BracePair;
-import com.intellij.lang.PairedBraceMatcher;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.Language;
+import com.perl5.lang.mason2.Mason2Language;
+import consulo.language.BracePair;
+import consulo.language.PairedBraceMatcher;
+import consulo.language.psi.PsiFile;
+import consulo.language.ast.IElementType;
 import org.jetbrains.annotations.NotNull;
 
 import static com.perl5.lang.mason2.elementType.Mason2ElementTypes.*;
 
 
 public class MasonBraceMatcher implements PairedBraceMatcher {
+  @Override
+  public @NotNull Language getLanguage() {
+    return Mason2Language.INSTANCE;
+  }
+
   private static final BracePair[] PAIRS = new BracePair[]{
     new BracePair(MASON_BLOCK_OPENER, MASON_BLOCK_CLOSER, false),
     new BracePair(MASON_CALL_OPENER, MASON_CALL_CLOSER, false),

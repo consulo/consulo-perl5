@@ -16,17 +16,20 @@
 
 package com.perl5.lang.pod.idea.livetemplates;
 
-import com.intellij.codeInsight.template.TemplateActionContext;
-import com.intellij.codeInsight.template.TemplateContextType;
-import com.intellij.openapi.util.NlsContexts;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiWhiteSpace;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.application.Application;
+import consulo.language.editor.template.context.BaseTemplateContextType;
+import consulo.language.editor.template.context.EverywhereContextType;
+import consulo.language.editor.template.context.TemplateActionContext;
+import consulo.language.editor.template.context.TemplateContextType;
+import consulo.localize.LocalizeValue;
+import consulo.util.lang.StringUtil;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiWhiteSpace;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.psi.PsiUtilCore;
 import com.perl5.PerlBundle;
 import com.perl5.lang.pod.PodLanguage;
 import com.perl5.lang.pod.parser.psi.mixin.PodOverSectionContent;
@@ -38,10 +41,25 @@ import static com.perl5.lang.pod.lexer.PodElementTypes.POD_OUTER;
 import static com.perl5.lang.pod.parser.PodElementTypesGenerated.POD_CODE;
 import static com.perl5.lang.pod.parser.PodElementTypesGenerated.POD_NEWLINE;
 
-public abstract class PodTemplateContextType extends TemplateContextType {
+public abstract class PodTemplateContextType extends BaseTemplateContextType {
+  private final @Nullable String myBaseContextId;
 
-  public PodTemplateContextType(@NlsContexts.Label @NotNull String presentableName) {
-    super(presentableName);
+  // consulo: context id and base context id are declared in upstream xml (<liveTemplateContext contextId=... baseContextId=...>)
+  public PodTemplateContextType(@NotNull String contextId,
+                                @Nullable String baseContextId,
+                                @NotNull String presentableName) {
+    super(contextId, LocalizeValue.localizeTODO(presentableName), baseContextId == null ? EverywhereContextType.class : null);
+    myBaseContextId = baseContextId;
+  }
+
+  // consulo: base context is looked up by id, all POD contexts are subclasses of Generic, so lookup by class is ambiguous
+  @Override
+  public @Nullable TemplateContextType getBaseContextType() {
+    if (myBaseContextId == null) {
+      return super.getBaseContextType();
+    }
+    return Application.get().getExtensionPoint(TemplateContextType.class)
+      .findFirstSafe(it -> myBaseContextId.equals(it.getContextId()));
   }
 
   @Override
@@ -71,11 +89,11 @@ public abstract class PodTemplateContextType extends TemplateContextType {
 
   public static class Generic extends PodTemplateContextType {
     public Generic() {
-      this(PodLanguage.NAME);
+      this("POD", null, PodLanguage.NAME);
     }
 
-    public Generic(@NlsContexts.Label String presentableName) {
-      super(presentableName);
+    public Generic(@NotNull String contextId, @Nullable String baseContextId, String presentableName) {
+      super(contextId, baseContextId, presentableName);
     }
 
     @Override
@@ -86,11 +104,11 @@ public abstract class PodTemplateContextType extends TemplateContextType {
 
   public static class CommandPosition extends PodTemplateContextType.Generic {
     public CommandPosition() {
-      this(PerlBundle.message("label.command.position"));
+      this("POD_COMMAND", PerlBundle.message("label.command.position"));
     }
 
-    public CommandPosition(@NlsContexts.Label String presentableName) {
-      super(presentableName);
+    public CommandPosition(@NotNull String contextId, String presentableName) {
+      super(contextId, "POD", presentableName);
     }
 
     @Override
@@ -135,8 +153,8 @@ public abstract class PodTemplateContextType extends TemplateContextType {
   }
 
   public static class InsideOver extends CommandPosition {
-    public InsideOver(@NlsContexts.Label String presentableName) {
-      super(presentableName);
+    public InsideOver(@NotNull String contextId, String presentableName) {
+      super(contextId, presentableName);
     }
 
     @Override
@@ -152,7 +170,7 @@ public abstract class PodTemplateContextType extends TemplateContextType {
 
   public static class InsideOverBulleted extends InsideOver {
     public InsideOverBulleted() {
-      super(PerlBundle.message("label.inside.over.block.bulleted"));
+      super("POD_OVER_BULLETED", PerlBundle.message("label.inside.over.block.bulleted"));
     }
 
     @Override
@@ -168,7 +186,7 @@ public abstract class PodTemplateContextType extends TemplateContextType {
 
   public static class InsideOverNotBulleted extends InsideOver {
     public InsideOverNotBulleted() {
-      super(PerlBundle.message("label.inside.over.block.not.bulleted"));
+      super("POD_OVER_NOT_BULLETED", PerlBundle.message("label.inside.over.block.not.bulleted"));
     }
 
     @Override

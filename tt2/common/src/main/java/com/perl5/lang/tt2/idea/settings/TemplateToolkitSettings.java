@@ -16,91 +16,151 @@
 
 package com.perl5.lang.tt2.idea.settings;
 
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.WriteAction;
-import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.components.State;
-import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.RootsChangeRescanningInfo;
-import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
-import com.intellij.openapi.util.EmptyRunnable;
-import com.intellij.util.messages.Topic;
-import com.intellij.util.xmlb.XmlSerializerUtil;
-import com.intellij.util.xmlb.annotations.Transient;
-import com.perl5.lang.perl.idea.PerlPathMacros;
+import com.perl5.lang.perl.util.PerlConfigurationUtil;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.codeEditor.Editor;
+import consulo.document.FileDocumentManager;
+import consulo.language.file.light.LightVirtualFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.ModuleUtilCore;
+import consulo.module.Module;
+import consulo.perl5.tt2.module.TemplateToolkitModuleExtension;
+import consulo.project.Project;
+import consulo.util.lang.lazy.LazyValue;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileNameMatcher;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Supplier;
 
-
-@State(
-  name = "TemplateToolkitSettings",
-  storages = @Storage(PerlPathMacros.PERL5_PROJECT_SHARED_SETTINGS_FILE),
-  perClient = true
-)
-public class TemplateToolkitSettings implements PersistentStateComponent<TemplateToolkitSettings> {
-  public static final Topic<SettingsListener> TT2_SETTINGS_TOPIC =
-    Topic.create("TT2 settings topiec", SettingsListener.class, Topic.BroadcastDirection.NONE);
+/**
+ * Template Toolkit settings of a module.
+ * <p>
+ * TODO consulo: upstream is a project-level persistent service, edited on a tab of the Perl5 settings page, which fires
+ *  {@code TT2_SETTINGS_TOPIC} on change. In Consulo the settings are per module: the state of the Template Toolkit module extension
+ *  ({@link TemplateToolkitModuleExtension}, a child of the Perl module extension), edited in the module settings. Instances are immutable;
+ *  the settings of a file are the settings of its module if the extension is enabled there, {@link #DEFAULT} otherwise. Changes are
+ *  handled by {@code TemplateToolkitSettingsChangeListener}.
+ */
+public final class TemplateToolkitSettings {
   public static final String DEFAULT_START_TAG = "[%";
   public static final String DEFAULT_END_TAG = "%]";
   public static final String DEFAULT_OUTLINE_TAG = "%%";
+  public static final TemplateToolkitSettings DEFAULT =
+    new TemplateToolkitSettings(DEFAULT_START_TAG, DEFAULT_END_TAG, DEFAULT_OUTLINE_TAG, false, List.of());
 
-  public final @NotNull List<String> substitutedExtensions = new ArrayList<>();
-  public String START_TAG = DEFAULT_START_TAG;
-  public String END_TAG = DEFAULT_END_TAG;
-  public String OUTLINE_TAG = DEFAULT_OUTLINE_TAG;
-  public boolean ENABLE_ANYCASE = false;
+  private final @NotNull String myStartTag;
+  private final @NotNull String myEndTag;
+  private final @NotNull String myOutlineTag;
+  private final boolean myAnycaseEnabled;
+  private final @NotNull List<String> mySubstitutedExtensions;
+  private final Supplier<List<FileNameMatcher>> myMatchers;
 
-  @Transient
-  private final transient @Nullable Project myProject;
-
-  public TemplateToolkitSettings() {
-    myProject = null;
+  /**
+   * @param outlineTag            empty string disables outline tags
+   * @param substitutedExtensions file name matchers (presentable strings) of files which should be handled as templates under templates
+   *                              roots
+   */
+  public TemplateToolkitSettings(@NotNull String startTag,
+                                 @NotNull String endTag,
+                                 @NotNull String outlineTag,
+                                 boolean anycaseEnabled,
+                                 @NotNull List<String> substitutedExtensions) {
+    myStartTag = startTag;
+    myEndTag = endTag;
+    myOutlineTag = outlineTag;
+    myAnycaseEnabled = anycaseEnabled;
+    mySubstitutedExtensions = List.copyOf(substitutedExtensions);
+    myMatchers = LazyValue.atomicNotNull(() -> PerlConfigurationUtil.getSubstitutedExtensionsMatchers(mySubstitutedExtensions));
   }
 
-  public TemplateToolkitSettings(@NotNull Project project) {
-    myProject = project;
+  public @NotNull String getStartTag() {
+    return myStartTag;
   }
 
-  public @NotNull Project getProject() {
-    return Objects.requireNonNull(myProject);
+  public @NotNull String getEndTag() {
+    return myEndTag;
   }
 
-  public void settingsUpdated() {
-    getProject().getMessageBus().syncPublisher(TT2_SETTINGS_TOPIC).settingsUpdated();
-    ApplicationManager.getApplication().invokeLater(() -> WriteAction.run(
-      () -> ProjectRootManagerEx.getInstanceEx(getProject()).makeRootsChange(
-        EmptyRunnable.getInstance(), RootsChangeRescanningInfo.TOTAL_RESCAN)));
+  public @NotNull String getOutlineTag() {
+    return myOutlineTag;
+  }
+
+  public boolean isAnycaseEnabled() {
+    return myAnycaseEnabled;
   }
 
   public @NotNull List<String> getSubstitutedExtensions() {
-    return substitutedExtensions;
+    return mySubstitutedExtensions;
+  }
+
+  /**
+   * @return true iff the {@code file} name matches one of the {@link #getSubstitutedExtensions() substituted extensions}
+   */
+  public boolean isVirtualFileNameMatches(@NotNull VirtualFile file) {
+    for (FileNameMatcher matcher : myMatchers.get()) {
+      if (matcher.acceptsCharSequence(file.getName())) {
+        return true;
+      }
+    }
+    return false;
   }
 
   @Override
-  public @Nullable TemplateToolkitSettings getState() {
-    return this;
+  public boolean equals(Object o) {
+    return this == o ||
+           o instanceof TemplateToolkitSettings settings &&
+           myAnycaseEnabled == settings.myAnycaseEnabled &&
+           myStartTag.equals(settings.myStartTag) &&
+           myEndTag.equals(settings.myEndTag) &&
+           myOutlineTag.equals(settings.myOutlineTag) &&
+           mySubstitutedExtensions.equals(settings.mySubstitutedExtensions);
   }
 
   @Override
-  public void loadState(@NotNull TemplateToolkitSettings state) {
-    XmlSerializerUtil.copyBean(state, this);
+  public int hashCode() {
+    return Objects.hash(myStartTag, myEndTag, myOutlineTag, myAnycaseEnabled, mySubstitutedExtensions);
   }
 
-  @Override
-  public void noStateLoaded() {
-    loadState(new TemplateToolkitSettings());
+  /**
+   * @return settings of the {@code module} if the Template Toolkit module extension is enabled for it, {@link #DEFAULT} otherwise
+   */
+  public static @NotNull TemplateToolkitSettings forModule(@Nullable Module module) {
+    TemplateToolkitModuleExtension extension =
+      module == null || module.isDisposed() ? null : module.getExtension(TemplateToolkitModuleExtension.class);
+    return extension == null ? DEFAULT : extension.getSettings();
   }
 
-  public static @NotNull TemplateToolkitSettings getInstance(@NotNull Project project) {
-    return project.getService(TemplateToolkitSettings.class);
+  /**
+   * @return settings of the module of the {@code file}, {@link #DEFAULT} if the file is not in a module with the Template Toolkit module
+   * extension enabled
+   */
+  public static @NotNull TemplateToolkitSettings forFile(@Nullable Project project, @Nullable VirtualFile file) {
+    if (file instanceof LightVirtualFile lightVirtualFile && lightVirtualFile.getOriginalFile() != null) {
+      return forFile(project, lightVirtualFile.getOriginalFile());
+    }
+    if (project == null || project.isDisposed() || file == null) {
+      return DEFAULT;
+    }
+    return forModule(ModuleUtilCore.findModuleForFile(file, project));
   }
 
-  public interface SettingsListener {
-    void settingsUpdated();
+  /**
+   * @return settings of the module of the {@code element}, {@link #DEFAULT} if it is not in a module with the Template Toolkit module
+   * extension enabled
+   */
+  @RequiredReadAction
+  public static @NotNull TemplateToolkitSettings forPsiElement(@Nullable PsiElement element) {
+    return element == null || !element.isValid() ? DEFAULT : forModule(element.getModule());
+  }
+
+  /**
+   * @return settings of the module of the file edited in the {@code editor}
+   */
+  public static @NotNull TemplateToolkitSettings forEditor(@Nullable Project project, @Nullable Editor editor) {
+    return editor == null ? DEFAULT : forFile(project, FileDocumentManager.getInstance().getFile(editor.getDocument()));
   }
 }

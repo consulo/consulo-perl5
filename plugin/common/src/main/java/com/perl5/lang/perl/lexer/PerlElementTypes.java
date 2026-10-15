@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.lexer;
 
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 import com.perl5.lang.perl.PerlLanguage;
 import com.perl5.lang.pod.elementTypes.PodTemplatingElementType;
 

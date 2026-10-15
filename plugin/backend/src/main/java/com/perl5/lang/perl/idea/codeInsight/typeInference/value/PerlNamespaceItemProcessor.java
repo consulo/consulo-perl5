@@ -16,12 +16,12 @@
 
 package com.perl5.lang.perl.idea.codeInsight.typeInference.value;
 
-import com.intellij.psi.PsiNamedElement;
+import consulo.language.psi.PsiNamedElement;
 import com.perl5.lang.perl.extensions.packageprocessor.PerlExportDescriptor;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * @see com.intellij.util.Processor
+ * @see consulo.application.util.function.Processor
  */
 public interface PerlNamespaceItemProcessor<T extends PsiNamedElement> {
   /**

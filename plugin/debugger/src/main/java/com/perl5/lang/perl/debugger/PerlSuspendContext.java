@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.debugger;
 
-import com.intellij.xdebugger.XDebugSession;
-import com.intellij.xdebugger.frame.XExecutionStack;
-import com.intellij.xdebugger.frame.XSuspendContext;
+import consulo.execution.debug.XDebugSession;
+import consulo.execution.debug.frame.XExecutionStack;
+import consulo.execution.debug.frame.XSuspendContext;
 import com.perl5.lang.perl.debugger.protocol.PerlStackFrameDescriptor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

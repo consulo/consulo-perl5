@@ -16,18 +16,23 @@
 
 package com.perl5.lang.perl.idea.configuration.settings;
 
-import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
-import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.components.State;
-import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.ClearableLazyValue;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiManager;
-import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.xmlb.XmlSerializerUtil;
-import com.intellij.util.xmlb.annotations.Tag;
-import com.intellij.util.xmlb.annotations.Transient;
+import consulo.language.editor.DaemonCodeAnalyzer;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
+import consulo.component.persist.PersistentStateComponent;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
+import consulo.project.Project;
+import consulo.util.lang.lazy.ClearableLazyValue;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiManager;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.xml.serializer.XmlSerializerUtil;
+import consulo.util.xml.serializer.annotation.Tag;
+import consulo.util.xml.serializer.annotation.Transient;
 import com.perl5.lang.perl.idea.PerlPathMacros;
 import com.perl5.lang.perl.internals.PerlVersion;
 import com.perl5.lang.perl.util.PerlUtil;
@@ -45,9 +50,11 @@ import static com.perl5.lang.perl.util.PerlScalarUtilCore.DEFAULT_SELF_NAME;
 
 @State(
   name = "Perl5Settings",
-  storages = @Storage(PerlPathMacros.PERL5_PROJECT_SHARED_SETTINGS_FILE),
-  perClient = true
+  storages = @Storage(PerlPathMacros.PERL5_PROJECT_SHARED_SETTINGS_FILE)
 )
+@ServiceAPI(ComponentScope.PROJECT)
+@ServiceImpl
+@Singleton
 public final class PerlSharedSettings implements PersistentStateComponent<PerlSharedSettings> {
   public List<String> selfNames = PerlUtil.mutableList(DEFAULT_SELF_NAME, "this", "class", "proto");
 
@@ -69,8 +76,8 @@ public final class PerlSharedSettings implements PersistentStateComponent<PerlSh
   @Transient
   private Set<String> SELF_NAMES_SET = null;
 
-  private final ClearableLazyValue<Set<String>> myWarningsProvidersSet = ClearableLazyValue.create(() -> Set.copyOf(myWarningsProviders));
-  private final ClearableLazyValue<Set<String>> myStrictProvidersSet = ClearableLazyValue.create(() -> Set.copyOf(myStrictProviders));
+  private final ClearableLazyValue<Set<String>> myWarningsProvidersSet = ClearableLazyValue.notNull(() -> Set.copyOf(myWarningsProviders));
+  private final ClearableLazyValue<Set<String>> myStrictProvidersSet = ClearableLazyValue.notNull(() -> Set.copyOf(myStrictProviders));
 
   @Transient
   private final Project myProject;
@@ -80,6 +87,7 @@ public final class PerlSharedSettings implements PersistentStateComponent<PerlSh
     this(null);
   }
 
+  @Inject
   public PerlSharedSettings(Project project) {
     myProject = project;
     setWarningsProviders(ContainerUtil.concat(PerlStrictWarningsDefaults.DEFAULT_STRICT_AND_WARNINGS_PROVIDERS,
@@ -123,23 +131,23 @@ public final class PerlSharedSettings implements PersistentStateComponent<PerlSh
   public void setStrictProviders(@NotNull List<String> strictProviders) {
     myStrictProviders.clear();
     myStrictProviders.addAll(ContainerUtil.sorted(strictProviders));
-    myStrictProvidersSet.drop();
+    myStrictProvidersSet.clear();
   }
 
   @Contract("null->false")
   public boolean isStrictProvider(@Nullable String packageName) {
-    return packageName != null && myStrictProvidersSet.getValue().contains(packageName);
+    return packageName != null && myStrictProvidersSet.get().contains(packageName);
   }
 
   public void setWarningsProviders(@NotNull List<String> warningsProviders) {
     myWarningsProviders.clear();
     myWarningsProviders.addAll(ContainerUtil.sorted(warningsProviders));
-    myWarningsProvidersSet.drop();
+    myWarningsProvidersSet.clear();
   }
 
   @Contract("null->false")
   public boolean isWarningsProvider(@Nullable String packageName) {
-    return packageName != null && myWarningsProvidersSet.getValue().contains(packageName);
+    return packageName != null && myWarningsProvidersSet.get().contains(packageName);
   }
 
   public void setDeparseOptions(String optionsString) {
@@ -149,7 +157,7 @@ public final class PerlSharedSettings implements PersistentStateComponent<PerlSh
     PERL_DEPARSE_ARGUMENTS = optionsString;
   }
 
-  @Override
+  // TODO consulo: PersistentStateComponent has no noStateLoaded() callback, so this is never called
   public void noStateLoaded() {
     loadState(new PerlSharedSettings());
   }

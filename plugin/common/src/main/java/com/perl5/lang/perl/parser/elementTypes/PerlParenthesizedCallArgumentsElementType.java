@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.parser.elementTypes;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.PsiUtilCore;
 import com.perl5.lang.perl.lexer.PerlTemplatingLexer;
 import org.jetbrains.annotations.NotNull;
 

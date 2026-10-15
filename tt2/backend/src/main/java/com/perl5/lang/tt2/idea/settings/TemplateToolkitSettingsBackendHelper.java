@@ -16,71 +16,64 @@
 
 package com.perl5.lang.tt2.idea.settings;
 
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.components.Service;
-import com.intellij.openapi.fileTypes.FileNameMatcher;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.fileTypes.LanguageFileType;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.AtomicNotNullLazyValue;
-import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiFileSystemItem;
-import com.intellij.psi.PsiManager;
 import com.perl5.lang.perl.idea.project.PerlProjectManager;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
+import consulo.application.util.AtomicNotNullLazyValue;
+import consulo.disposer.Disposable;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiFileSystemItem;
+import consulo.language.psi.PsiManager;
+import consulo.module.content.layer.event.ModuleRootEvent;
+import consulo.module.content.layer.event.ModuleRootListener;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@Service(Service.Level.PROJECT)
-public final class TemplateToolkitSettingsBackendHelper implements Disposable, TemplateToolkitSettings.SettingsListener {
-  private AtomicNotNullLazyValue<List<FileNameMatcher>> myLazyMatchers;
-  private AtomicNotNullLazyValue<Collection<PsiFileSystemItem>> myLazyPsiDirsRoots;
+/**
+ * Template Toolkit templates roots of the project.
+ * <p>
+ * consulo: upstream also caches file name matchers of the substituted extensions of the project settings and is reset by
+ * {@code TT2_SETTINGS_TOPIC}. In Consulo the settings are per module ({@link TemplateToolkitSettings} has the matchers) and templates
+ * roots are module content folders, so the cache is reset on roots changes (which include module extensions changes).
+ */
+@ServiceAPI(ComponentScope.PROJECT)
+@ServiceImpl
+@Singleton
+public final class TemplateToolkitSettingsBackendHelper implements Disposable {
+  private volatile AtomicNotNullLazyValue<Collection<PsiFileSystemItem>> myLazyPsiDirsRoots;
   private final @NotNull Project myProject;
 
+  @Inject
   public TemplateToolkitSettingsBackendHelper(@NotNull Project project) {
     myProject = project;
     createLazyObjects();
-    myProject.getMessageBus().connect(this).subscribe(TemplateToolkitSettings.TT2_SETTINGS_TOPIC, this);
+    myProject.getMessageBus().connect(this).subscribe(ModuleRootListener.class, new ModuleRootListener() {
+      @Override
+      public void rootsChanged(ModuleRootEvent event) {
+        createLazyObjects();
+      }
+    });
   }
 
   @Override
   public void dispose() {
   }
 
-  @Override
-  public void settingsUpdated() {
-    createLazyObjects();
-  }
-
   private void createLazyObjects() {
-    myLazyMatchers = AtomicNotNullLazyValue.createValue(() -> {
-      List<FileNameMatcher> result = new ArrayList<>();
-      var substitutedExtensions = TemplateToolkitSettings.getInstance(myProject).getSubstitutedExtensions();
-      FileTypeManager fileTypeManager = FileTypeManager.getInstance();
-      for (FileType fileType : fileTypeManager.getRegisteredFileTypes()) {
-        if (fileType instanceof LanguageFileType) {
-          for (FileNameMatcher matcher : fileTypeManager.getAssociations(fileType)) {
-            if (substitutedExtensions.contains(matcher.getPresentableString())) {
-              result.add(matcher);
-            }
-          }
-        }
-      }
-      return result;
-    });
-
     myLazyPsiDirsRoots = AtomicNotNullLazyValue.createValue(() -> {
       Collection<PsiFileSystemItem> result = new ArrayDeque<>();
 
       PsiManager psiManager = PsiManager.getInstance(myProject);
-      for (VirtualFile virtualFile : PerlProjectManager.getInstance(myProject)
-        .getModulesRootsOfType(TemplateToolkitSourceRootType.INSTANCE)) {
+      for (VirtualFile virtualFile : getTemplateRoots()) {
         PsiDirectory directory = psiManager.findDirectory(virtualFile);
         if (directory != null) {
           result.add(directory);
@@ -94,19 +87,12 @@ public final class TemplateToolkitSettingsBackendHelper implements Disposable, T
     return myLazyPsiDirsRoots.getValue();
   }
 
+  /**
+   * @return templates roots of the modules with the Template Toolkit module extension enabled
+   */
   public @NotNull List<VirtualFile> getTemplateRoots() {
     return PerlProjectManager.getInstance(myProject).getModulesRootsOfType(TemplateToolkitSourceRootType.INSTANCE);
   }
-
-  public boolean isVirtualFileNameMatches(@NotNull VirtualFile file) {
-    for (FileNameMatcher matcher : myLazyMatchers.getValue()) {
-      if (matcher.acceptsCharSequence(file.getName())) {
-        return true;
-      }
-    }
-    return false;
-  }
-
 
   /**
    * Checks if virtualFile is under configured root
@@ -114,8 +100,8 @@ public final class TemplateToolkitSettingsBackendHelper implements Disposable, T
    * @return true or false
    */
   public boolean isVirtualFileUnderRoot(@NotNull VirtualFile file) {
-    for (VirtualFile root : PerlProjectManager.getInstance(myProject).getModulesRootsOfType(TemplateToolkitSourceRootType.INSTANCE)) {
-      if (VfsUtilCore.isAncestor(root, file, true)) {
+    for (VirtualFile root : getTemplateRoots()) {
+      if (VirtualFileUtil.isAncestor(root, file, true)) {
         return true;
       }
     }

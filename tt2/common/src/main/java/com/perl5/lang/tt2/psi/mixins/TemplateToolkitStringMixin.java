@@ -16,8 +16,8 @@
 
 package com.perl5.lang.tt2.psi.mixins;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.tree.TokenSet;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.TokenSet;
 import com.perl5.lang.tt2.psi.TemplateToolkitString;
 import com.perl5.lang.tt2.psi.impl.TemplateToolkitCompositeElementImpl;
 import org.jetbrains.annotations.NotNull;

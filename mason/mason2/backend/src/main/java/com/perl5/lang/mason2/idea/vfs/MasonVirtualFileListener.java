@@ -16,19 +16,22 @@
 
 package com.perl5.lang.mason2.idea.vfs;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
-import com.intellij.openapi.vfs.*;
-import com.intellij.util.indexing.FileBasedIndex;
-import com.perl5.lang.htmlmason.idea.configuration.AbstractMasonSettings;
+import consulo.project.Project;
+import consulo.util.dataholder.Key;
+
+import consulo.language.psi.stub.FileBasedIndex;
 import com.perl5.lang.mason2.filetypes.MasonPurePerlComponentFileType;
-import com.perl5.lang.mason2.idea.configuration.MasonSettings;
-import com.perl5.lang.perl.idea.project.PerlProjectManager;
+import com.perl5.lang.mason2.Mason2Util;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.event.VirtualFileListener;
+import consulo.virtualFileSystem.event.VirtualFileMoveEvent;
+import consulo.virtualFileSystem.event.VirtualFilePropertyEvent;
 
 
 public final class MasonVirtualFileListener implements VirtualFileListener {
@@ -65,7 +68,7 @@ public final class MasonVirtualFileListener implements VirtualFileListener {
     Set<VirtualFile> rootsSet = new HashSet<>(componentsRoots);
     if (changedFile.isDirectory()) {
       if (changedFile.getUserData(FORCE_REINDEX) != null ||
-          VfsUtilCore.isUnder(changedFile, rootsSet) ||        // moved to component root
+          VirtualFileUtil.isUnder(changedFile, rootsSet) ||        // moved to component root
           containsAtLeastOneFile(changedFile, componentsRoots)
       ) {
         FileBasedIndex.getInstance().requestReindex(changedFile);
@@ -74,15 +77,11 @@ public final class MasonVirtualFileListener implements VirtualFileListener {
     else if (changedFile.getFileType() instanceof MasonPurePerlComponentFileType)    // Mason file has been moved
     {
       if (changedFile.getUserData(FORCE_REINDEX) != null ||
-          VfsUtilCore.isUnder(changedFile, rootsSet)
+          VirtualFileUtil.isUnder(changedFile, rootsSet)
       ) {
         FileBasedIndex.getInstance().requestReindex(changedFile);
       }
     }
-  }
-
-  private @NotNull MasonSettings getSettings() {
-    return MasonSettings.getInstance(getProject());
   }
 
   /**
@@ -122,8 +121,7 @@ public final class MasonVirtualFileListener implements VirtualFileListener {
   }
 
   private @NotNull List<VirtualFile> getComponentsRoots() {
-    AbstractMasonSettings settings = getSettings();
-    return PerlProjectManager.getInstance(settings.getProject()).getModulesRootsOfType(settings.getSourceRootType());
+    return Mason2Util.getComponentRoots(getProject());
   }
 
   /**
@@ -142,7 +140,7 @@ public final class MasonVirtualFileListener implements VirtualFileListener {
 
     Set<VirtualFile> rootsSet = new HashSet<>(componentsRoots);
     if (movedFile.isDirectory()) {
-      if (VfsUtilCore.isUnder(movedFile, rootsSet) ||    // moved from component root
+      if (VirtualFileUtil.isUnder(movedFile, rootsSet) ||    // moved from component root
           containsAtLeastOneFile(movedFile, componentsRoots) // contains component root
       ) {
         movedFile.putUserData(FORCE_REINDEX, true);
@@ -150,7 +148,7 @@ public final class MasonVirtualFileListener implements VirtualFileListener {
     }
     else if (movedFile.getFileType() instanceof MasonPurePerlComponentFileType)    // Mason file has been moved
     {
-      if (VfsUtilCore.isUnder(movedFile, rootsSet)) {
+      if (VirtualFileUtil.isUnder(movedFile, rootsSet)) {
         movedFile.putUserData(FORCE_REINDEX, true);
       }
     }
@@ -162,7 +160,7 @@ public final class MasonVirtualFileListener implements VirtualFileListener {
 
   private static boolean containsAtLeastOneFile(VirtualFile root, List<? extends VirtualFile> files) {
     for (VirtualFile file : files) {
-      if (VfsUtilCore.isAncestor(root, file, false)) {
+      if (VirtualFileUtil.isAncestor(root, file, false)) {
         return true;
       }
     }

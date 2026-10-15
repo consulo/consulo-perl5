@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.lexer;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

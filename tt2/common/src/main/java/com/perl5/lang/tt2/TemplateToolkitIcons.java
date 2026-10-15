@@ -16,22 +16,17 @@
 
 package com.perl5.lang.tt2;
 
-import com.intellij.openapi.util.IconLoader;
-import com.intellij.ui.LayeredIcon;
 import com.perl5.PerlIcons;
-import org.jetbrains.annotations.NotNull;
+import consulo.perl5.tt2.icon.TemplateToolkitIconGroup;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 
-import javax.swing.*;
-
+// consulo: icons are generated from consulo/tt2/src/main/resources/ICON-LIB (TemplateToolkitIconGroup) instead of IconLoader
 public final class TemplateToolkitIcons {
-  public static final Icon TTK2_ICON = load("/icons/template_toolkit_gutter_icon.png");
-  public static final Icon TTK2_MODIFIER = load("/icons/tt-modifier.png");
-  public static final Icon TTK2_BLOCK_ICON = load("/icons/template_toolkit_block_gutter_icon.png");
-  public static final Icon TTK2_ROOT = LayeredIcon.layeredIcon(() -> new Icon[]{PerlIcons.TEMPLATE_ROOT, TTK2_MODIFIER});
-
-  private static @NotNull Icon load(@NotNull String resourcePath) {
-    return IconLoader.getIcon(resourcePath, TemplateToolkitIcons.class);
-  }
+  public static final Image TTK2_ICON = TemplateToolkitIconGroup.template_toolkit_gutter_icon();
+  public static final Image TTK2_MODIFIER = TemplateToolkitIconGroup.tt_modifier();
+  public static final Image TTK2_BLOCK_ICON = TemplateToolkitIconGroup.template_toolkit_block_gutter_icon();
+  public static final Image TTK2_ROOT = ImageEffects.layered(PerlIcons.TEMPLATE_ROOT, TTK2_MODIFIER);
 
   private TemplateToolkitIcons() {
   }

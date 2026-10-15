@@ -16,10 +16,10 @@
 
 package com.perl5.lang.perl.idea;
 
-import com.intellij.psi.PsiDirectoryContainer;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiNamedElement;
-import com.intellij.usageView.UsageViewUtil;
+import consulo.language.psi.PsiDirectoryContainer;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiNamedElement;
+import consulo.usage.UsageViewUtil;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.PerlLanguage;
 import com.perl5.lang.perl.parser.Class.Accessor.psi.impl.PerlClassAccessorMethod;

@@ -16,28 +16,27 @@
 
 package com.perl5.lang.perl.debugger.run.run.debugger.remote;
 
-import com.intellij.execution.Executor;
-import com.intellij.execution.configurations.ConfigurationFactory;
-import com.intellij.execution.configurations.RunConfiguration;
-import com.intellij.execution.configurations.RunConfigurationBase;
-import com.intellij.execution.configurations.RunConfigurationOptions;
-import com.intellij.execution.executors.DefaultDebugExecutor;
-import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.execution.runners.RunConfigurationWithSuppressedDefaultRunAction;
-import com.intellij.openapi.options.SettingsEditor;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.NlsSafe;
-import com.intellij.openapi.util.WriteExternalException;
-import com.intellij.util.xmlb.XmlSerializer;
-import com.intellij.util.xmlb.annotations.Tag;
+import consulo.execution.executor.Executor;
+import consulo.execution.configuration.ConfigurationFactory;
+import consulo.execution.configuration.RunConfiguration;
+import consulo.execution.configuration.RunConfigurationBase;
+import consulo.execution.debug.DefaultDebugExecutor;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.execution.configuration.RunConfigurationWithSuppressedDefaultRunAction;
+import consulo.execution.configuration.ui.SettingsEditor;
+import consulo.project.Project;
+import consulo.util.xml.serializer.InvalidDataException;
+import consulo.util.xml.serializer.WriteExternalException;
+import consulo.util.xml.serializer.XmlSerializer;
+import consulo.util.xml.serializer.annotation.Tag;
 import com.perl5.lang.perl.idea.run.debugger.PerlDebugOptions;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
-public class PerlRemoteDebuggingConfiguration extends RunConfigurationBase<RunConfigurationOptions>
+// consulo: Consulo RunConfigurationBase is not parameterized with RunConfigurationOptions
+public class PerlRemoteDebuggingConfiguration extends RunConfigurationBase
   implements RunConfigurationWithSuppressedDefaultRunAction, PerlDebugOptions {
   public String debugHost = LOCALHOST;
 
@@ -59,7 +58,8 @@ public class PerlRemoteDebuggingConfiguration extends RunConfigurationBase<RunCo
 
   @Override
   public @NotNull SettingsEditor<? extends RunConfiguration> getConfigurationEditor() {
-    return new PerlRemoteDebuggingConfigurationEditor(getProject());
+    // consulo: unified UI editor, upstream Swing PerlRemoteDebuggingConfigurationEditor can't be shown in Consulo Web
+    return new PerlRemoteDebuggingConfigurationUIEditor(getProject());
   }
 
   @Override
@@ -106,7 +106,7 @@ public class PerlRemoteDebuggingConfiguration extends RunConfigurationBase<RunCo
   }
 
   @Override
-  public @NlsSafe String getRemoteProjectRoot() {
+  public String getRemoteProjectRoot() {
     return remoteProjectRoot;
   }
 
@@ -114,7 +114,7 @@ public class PerlRemoteDebuggingConfiguration extends RunConfigurationBase<RunCo
     this.remoteProjectRoot = remoteWorkingDirectory;
   }
 
-  public @NotNull @NlsSafe String getLocalProjectRoot() {
+  public @NotNull String getLocalProjectRoot() {
     return localProjectRoot;
   }
 
@@ -143,7 +143,7 @@ public class PerlRemoteDebuggingConfiguration extends RunConfigurationBase<RunCo
   }
 
   @Override
-  public @NlsSafe String getPerlRole() {
+  public String getPerlRole() {
     return perlRole;
   }
 

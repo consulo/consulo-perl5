@@ -16,9 +16,9 @@
 
 package com.perl5.lang.mason2.psi.impl;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiElement;
+import consulo.language.ast.IElementType;
 import com.perl5.lang.mason2.psi.MasonAugmentMethodModifier;
 import com.perl5.lang.perl.parser.moose.psi.impl.PerlMooseAugmentStatementImpl;
 import com.perl5.lang.perl.parser.moose.stubs.augment.PerlMooseAugmentStatementStub;

@@ -16,7 +16,7 @@
 
 package com.perl5.lang.mason2;
 
-import com.intellij.openapi.vfs.VfsUtil;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import com.perl5.lang.perl.util.PerlPackageUtilCore;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,6 +26,6 @@ public final class Mason2UtilCore {
 
   public static @NotNull String getClassnameFromPath(@NotNull String path) {
     return "/MC0::" +
-           path.replaceAll("[^\\p{L}\\d_\\/]", "_").replace("" + VfsUtil.VFS_SEPARATOR_CHAR, PerlPackageUtilCore.NAMESPACE_SEPARATOR);
+           path.replaceAll("[^\\p{L}\\d_\\/]", "_").replace("" + VirtualFileUtil.VFS_SEPARATOR_CHAR, PerlPackageUtilCore.NAMESPACE_SEPARATOR);
   }
 }

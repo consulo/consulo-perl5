@@ -16,23 +16,26 @@
 
 package com.perl5.lang.perl.idea.annotators;
 
-import com.intellij.execution.process.BaseProcessHandler;
-import com.intellij.lang.annotation.AnnotationHolder;
-import com.intellij.lang.annotation.ExternalAnnotator;
-import com.intellij.lang.annotation.HighlightSeverity;
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationType;
-import com.intellij.notification.Notifications;
-import com.intellij.openapi.application.ReadAction;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.util.concurrency.annotations.RequiresReadLock;
+import consulo.process.BaseProcessHandler;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.Language;
+import com.perl5.lang.perl.PerlLanguage;
+import consulo.language.editor.annotation.AnnotationHolder;
+import consulo.language.editor.annotation.ExternalAnnotator;
+import consulo.language.editor.annotation.HighlightSeverity;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.notification.Notifications;
+import consulo.application.ReadAction;
+import consulo.logging.Logger;
+import consulo.document.Document;
+import consulo.document.util.TextRange;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiUtilCore;
+import consulo.annotation.access.RequiredReadAction;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.idea.configuration.settings.PerlSharedSettings;
 import com.perl5.lang.perl.idea.execution.PerlCommandLine;
@@ -49,6 +52,7 @@ import java.util.List;
 import java.util.Objects;
 
 
+@ExtensionImpl
 public class PerlCriticAnnotator extends ExternalAnnotator<PerlFile, List<PerlCriticErrorDescriptor>> {
   private static final String SCRIPT_NAME = "perlcritic";
   private static final String PACKAGE_NAME = "Perl::Critic";
@@ -60,12 +64,12 @@ public class PerlCriticAnnotator extends ExternalAnnotator<PerlFile, List<PerlCr
       ? perlFile : null;
   }
 
-  @RequiresReadLock
+  @RequiredReadAction
   protected @Nullable PerlCommandLine getPerlCriticCommandLine(@NotNull PsiFile fileToLint) {
     var project = fileToLint.getProject();
     PerlSharedSettings sharedSettings = PerlSharedSettings.getInstance(project);
     VirtualFile perlCriticScript =
-      ReadAction.computeBlocking(() -> PerlRunUtil.findLibraryScriptWithNotification(project, SCRIPT_NAME, PACKAGE_NAME));
+      ReadAction.compute(() -> PerlRunUtil.findLibraryScriptWithNotification(project, SCRIPT_NAME, PACKAGE_NAME));
     if (perlCriticScript == null) {
       return null;
     }
@@ -96,24 +100,24 @@ public class PerlCriticAnnotator extends ExternalAnnotator<PerlFile, List<PerlCr
       return null;
     }
 
-    VirtualFile virtualFile = ReadAction.computeBlocking(() -> PsiUtilCore.getVirtualFile(sourcePsiFile));
+    VirtualFile virtualFile = ReadAction.compute(() -> PsiUtilCore.getVirtualFile(sourcePsiFile));
     if (virtualFile == null) {
       return null;
     }
 
-    byte[] sourceBytes = ReadAction.computeBlocking(sourcePsiFile::getPerlContentInBytes);
+    byte[] sourceBytes = ReadAction.compute(sourcePsiFile::getPerlContentInBytes);
     if (sourceBytes == null) {
       return null;
     }
 
     try {
-      PerlCommandLine criticCommandLine = ReadAction.computeBlocking(() -> getPerlCriticCommandLine(sourcePsiFile));
+      PerlCommandLine criticCommandLine = ReadAction.compute(() -> getPerlCriticCommandLine(sourcePsiFile));
       if (criticCommandLine == null) {
         PerlSharedSettings.getInstance(sourcePsiFile.getProject()).PERL_CRITIC_ENABLED = false;
         return null;
       }
 
-      BaseProcessHandler<?> processHandler = PerlHostData.createProcessHandler(
+      BaseProcessHandler processHandler = PerlHostData.createProcessHandler(
         criticCommandLine.withCharset(virtualFile.getCharset())
       );
 
@@ -141,7 +145,7 @@ public class PerlCriticAnnotator extends ExternalAnnotator<PerlFile, List<PerlCr
       LOG.warn("Error running perlcritic", e);
 
       Notifications.Bus.notify(new Notification(
-        PerlBundle.message("perl.critic.notification.group"),
+        PerlCriticNotificationGroupContributor.PERL_CRITIC,
         PerlBundle.message("perl.critic.execution.error.title"),
         PerlBundle.message("perl.critic.execution.error.message", e.getMessage()),
         NotificationType.ERROR
@@ -185,5 +189,11 @@ public class PerlCriticAnnotator extends ExternalAnnotator<PerlFile, List<PerlCr
         }
       }
     }
+  }
+
+  // consulo: language from upstream <externalAnnotator language="Perl5"> registration
+  @Override
+  public @NotNull Language getLanguage() {
+    return PerlLanguage.INSTANCE;
   }
 }

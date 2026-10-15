@@ -16,14 +16,16 @@
 
 package com.perl5.lang.perl.cpanminus;
 
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.module.Module;
+import consulo.virtualFileSystem.VirtualFile;
 import com.perl5.lang.perl.idea.project.PerlDirectoryConfigurationProvider;
 import com.perl5.lang.perl.idea.project.PerlDirectoryInfoCollector;
 import org.jetbrains.annotations.NotNull;
 
 import static com.perl5.lang.perl.cpanminus.cpanfile.PerlFileTypeCpanfile.CPANFILE;
 
+@ExtensionImpl
 public class PerlCpanminusDirectoryConfigurationProvider implements PerlDirectoryConfigurationProvider {
   @Override
   public void configureContentRoot(@NotNull Module module,

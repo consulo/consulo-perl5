@@ -15,8 +15,8 @@ limitations under the License.
 */
 package com.perl5.lang.pod.lexer;
 
-import com.intellij.psi.TokenType;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.TokenType;
+import consulo.language.ast.IElementType;
 import com.perl5.lang.perl.lexer.PerlProtoLexer;
 import org.jetbrains.annotations.NotNull;
 import static com.perl5.lang.pod.parser.PodElementTypesGenerated.*;
@@ -33,6 +33,11 @@ import static com.perl5.lang.pod.parser.PodElementTypesGenerated.*;
 %type IElementType
 
 %{
+        // consulo: maven-consulo-plugin does not generate the constructor when a custom skeleton is used
+        public PodLexerGenerated(java.io.Reader in) {
+          this.zzReader = in;
+        }
+
         protected abstract IElementType parseExample();
         protected abstract IElementType parseCutToken();
         protected abstract void pushAngle();

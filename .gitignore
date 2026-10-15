@@ -20,3 +20,5 @@ tmp/
 temp/
 icons/*.psd
 .intellijPlatform/
+.consulo/
+target/

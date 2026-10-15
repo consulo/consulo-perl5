@@ -16,12 +16,12 @@
 
 package com.perl5.lang.perl.idea.completion.providers;
 
-import com.intellij.codeInsight.completion.CompletionParameters;
-import com.intellij.codeInsight.completion.CompletionResultSet;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiLanguageInjectionHost;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.ProcessingContext;
+import consulo.language.editor.completion.CompletionParameters;
+import consulo.language.editor.completion.CompletionResultSet;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiLanguageInjectionHost;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.util.ProcessingContext;
 import com.perl5.lang.perl.idea.completion.providers.processors.PerlSimpleCompletionProcessor;
 import com.perl5.lang.perl.idea.completion.providers.processors.PerlVariableCompletionProcessorImpl;
 import com.perl5.lang.perl.idea.completion.util.PerlPackageCompletionUtil;
@@ -40,7 +40,7 @@ import static com.perl5.lang.perl.idea.PerlElementPatterns.*;
 
 public class PerlStringContentCompletionProvider extends PerlCompletionProvider {
   @Override
-  protected void addCompletions(@NotNull CompletionParameters parameters,
+  public void addCompletions(@NotNull CompletionParameters parameters,
                                 @NotNull ProcessingContext context,
                                 final @NotNull CompletionResultSet result) {
     PsiElement element = parameters.getPosition();

@@ -16,11 +16,11 @@
 
 package com.perl5.lang.perl.psi;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.util.ObjectUtils;
+import consulo.language.psi.PsiElement;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.psi.PsiUtilCore;
+import consulo.util.lang.ObjectUtil;
 import com.perl5.lang.perl.psi.impl.PsiPerlStatementImpl;
 import com.perl5.lang.perl.psi.utils.PerlPsiUtil;
 import org.jetbrains.annotations.NotNull;
@@ -39,12 +39,12 @@ import static com.perl5.lang.perl.psi.PerlBlock.LOOPS_CONTAINERS;
  */
 public interface PerlFlowControlExpr extends PsiPerlExpr {
   default @Nullable PsiPerlLabelExpr getLabelExpr() {
-    return ObjectUtils.tryCast(getExpr(), PsiPerlLabelExpr.class);
+    return ObjectUtil.tryCast(getExpr(), PsiPerlLabelExpr.class);
   }
 
   /**
    * @return target scope for this control flow: loop, statement with for modifier, sub or file
-   * @implNote partially duplicates logic in {@link PerlLoopControlInspection#buildVisitor(com.intellij.codeInspection.ProblemsHolder, boolean)}
+   * @implNote partially duplicates logic in {@link PerlLoopControlInspection#buildVisitor(consulo.language.editor.inspection.ProblemsHolder, boolean)}
    * but this logic more like real life
    * We also have labels reference resolve logic, which duplicates too. Need to unite.
    */
@@ -59,7 +59,7 @@ public interface PerlFlowControlExpr extends PsiPerlExpr {
     while (true) {
       PerlBlock closestBlock = PerlBlock.getClosestTo(closestBlockContainer);
       if (closestBlock == null) {
-        return ObjectUtils.notNull(containingStatementWithForModifier, getContainingFile());
+        return ObjectUtil.notNull(containingStatementWithForModifier, getContainingFile());
       }
 
       closestBlockContainer = closestBlock.getCompoundContainer();
@@ -104,7 +104,7 @@ public interface PerlFlowControlExpr extends PsiPerlExpr {
   static @Nullable PsiPerlStatementImpl getWrappingStatementWithForModifier(@NotNull PsiElement element) {
     PsiPerlStatementImpl containingStatementWithForModifier = PsiTreeUtil.getParentOfType(element, PsiPerlStatementImpl.class);
     if (containingStatementWithForModifier != null &&
-        ObjectUtils.tryCast(containingStatementWithForModifier.getModifier(), PsiPerlForStatementModifier.class) == null) {
+        ObjectUtil.tryCast(containingStatementWithForModifier.getModifier(), PsiPerlForStatementModifier.class) == null) {
       return null;
     }
     return containingStatementWithForModifier;

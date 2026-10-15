@@ -16,21 +16,20 @@
 
 package com.perl5.lang.perl.adapters;
 
-import com.intellij.execution.process.ProcessEvent;
-import com.intellij.execution.process.ProcessListener;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.util.AtomicNotNullLazyValue;
-import com.intellij.openapi.util.NlsSafe;
-import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.ui.update.MergingUpdateQueue;
-import com.intellij.util.ui.update.Update;
+import consulo.process.event.ProcessEvent;
+import consulo.process.event.ProcessListener;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.application.ApplicationManager;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.content.bundle.Sdk;
+import consulo.application.util.AtomicNotNullLazyValue;
+import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.ui.ex.awt.util.MergingUpdateQueue;
+import consulo.ui.ex.awt.util.Update;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.idea.actions.PerlDumbAwareAction;
 import com.perl5.lang.perl.idea.execution.PerlCommandLine;
@@ -48,7 +47,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 public abstract class PackageManagerAdapter {
-  public static final @NlsSafe String CPANMINUS_PACKAGE_NAME = "App::cpanminus";
+  public static final String CPANMINUS_PACKAGE_NAME = "App::cpanminus";
 
   private static final Logger LOG = Logger.getInstance(PackageManagerAdapter.class);
   private static final AtomicNotNullLazyValue<MergingUpdateQueue> QUEUE_PROVIDER = AtomicNotNullLazyValue.createValue(() ->
@@ -270,6 +269,21 @@ public abstract class PackageManagerAdapter {
 
   @TestOnly
   public static void waitForAllExecuted() throws TimeoutException {
-    QUEUE_PROVIDER.getValue().waitForAllExecuted(2, TimeUnit.MINUTES);
+    // TODO consulo: MergingUpdateQueue#waitForAllExecuted is missing in Consulo, emulated by flushing and polling the queue
+    MergingUpdateQueue queue = QUEUE_PROVIDER.getValue();
+    long deadline = System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(2);
+    queue.sendFlush();
+    while (!queue.isEmpty() || queue.isFlushing()) {
+      if (System.currentTimeMillis() > deadline) {
+        throw new TimeoutException();
+      }
+      try {
+        //noinspection BusyWait
+        Thread.sleep(10);
+      }
+      catch (InterruptedException e) {
+        throw new TimeoutException(e.getMessage());
+      }
+    }
   }
 }

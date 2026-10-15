@@ -16,18 +16,17 @@
 
 package com.perl5.lang.perl.idea.sdk.host.wsl;
 
-import com.intellij.execution.wsl.WSLDistribution;
-import com.intellij.execution.wsl.WSLUtil;
+import consulo.ide.impl.idea.execution.wsl.WSLDistribution;
+import consulo.ide.impl.idea.execution.wsl.WSLUtil;
 import com.intellij.execution.wsl.WslDistributionManager;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.progress.ProgressManager;
+import consulo.application.ApplicationManager;
+import consulo.logging.Logger;
+import consulo.application.progress.ProgressManager;
 import com.intellij.openapi.ui.messages.MessagesService;
-import com.intellij.openapi.util.NlsActions.ActionText;
-import com.intellij.openapi.util.ThrowableComputable;
-import com.intellij.util.ArrayUtil;
-import com.intellij.util.TimeoutUtil;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.application.util.function.ThrowableComputable;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.lang.TimeoutUtil;
+import consulo.util.collection.ContainerUtil;
 import com.perl5.PerlIcons;
 import com.perl5.lang.perl.idea.sdk.PerlHandlerBean;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostWithFileSystemHandler;
@@ -74,7 +73,7 @@ class PerlWslHandler extends PerlHostWithFileSystemHandler<PerlWslData, PerlWslH
   }
 
   @Override
-  public @NotNull @ActionText String getMenuItemTitle() {
+  public @NotNull String getMenuItemTitle() {
     return PerlWslBundle.message("perl.host.handler.wsl.menu.title");
   }
 

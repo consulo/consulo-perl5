@@ -16,17 +16,17 @@
 
 package com.perl5.lang.perl.idea.sdk.host;
 
-import com.intellij.openapi.vfs.DeprecatedVirtualFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileSystem;
-import com.intellij.testFramework.LightVirtualFile;
+import consulo.virtualFileSystem.BaseVirtualFileSystem;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileSystem;
+import consulo.language.file.light.LightVirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public abstract class PerlPluggableVirtualFileSystem extends DeprecatedVirtualFileSystem {
+public abstract class PerlPluggableVirtualFileSystem extends BaseVirtualFileSystem {
   /**
    * Should clean the data if necessary
    */

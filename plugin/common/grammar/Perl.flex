@@ -15,8 +15,8 @@
 */
 package com.perl5.lang.perl.lexer;
 
-import com.intellij.psi.TokenType;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.TokenType;
+import consulo.language.ast.IElementType;
 import static com.perl5.lang.perl.parser.PerlElementTypesGenerated.*;
 import static com.perl5.lang.perl.parser.moose.MooseElementTypes.*;
 
@@ -33,6 +33,13 @@ import static com.perl5.lang.perl.parser.moose.MooseElementTypes.*;
 
 %function perlAdvance
 %type IElementType
+
+%{
+  // consulo: maven-consulo-plugin does not generate the constructor when a custom skeleton is used
+  public PerlLexer(java.io.Reader in) {
+    this.zzReader = in;
+  }
+%}
 
 
 /*

@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.psi.stubs.variables;
 
-import com.intellij.psi.stubs.StubBase;
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.psi.stub.IStubElementType;
+import consulo.language.psi.stub.StubBase;
+import consulo.language.psi.stub.StubElement;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlValue;
 import com.perl5.lang.perl.psi.PerlVariableDeclaration;
 import com.perl5.lang.perl.psi.PerlVariableDeclarationElement;
@@ -35,7 +35,7 @@ public class PerlVariableDeclarationStub extends StubBase<PerlVariableDeclaratio
 
   public PerlVariableDeclarationStub(
     StubElement parent,
-    @NotNull IElementType elementType,
+    @NotNull IStubElementType<?, ?> elementType,
     @NotNull String namespaceName,
     @NotNull String variableName,
     @NotNull PerlValue declaredValue,

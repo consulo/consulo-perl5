@@ -16,7 +16,7 @@
 
 package base;
 
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.perl5.lang.htmlmason.filetypes.HTMLMasonFileType;
 import com.perl5.lang.htmlmason.idea.configuration.HTMLMasonSourceRootType;
 import org.jetbrains.annotations.NotNull;

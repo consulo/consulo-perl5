@@ -16,7 +16,7 @@
 
 package com.perl5.lang.htmlmason.parser.psi.references;
 
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.perl5.lang.perl.psi.PerlString;
 import com.perl5.lang.perl.psi.references.PerlCachingReference;
 import org.jetbrains.annotations.NotNull;

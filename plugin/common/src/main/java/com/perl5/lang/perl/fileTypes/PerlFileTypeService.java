@@ -16,23 +16,31 @@
 
 package com.perl5.lang.perl.fileTypes;
 
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ReadAction;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.PlainTextFileType;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.util.NotNullLazyValue;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.newvfs.impl.FakeVirtualFile;
-import com.intellij.util.indexing.LightDirectoryIndex;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
+import consulo.disposer.Disposable;
+import jakarta.inject.Singleton;
+import consulo.application.ApplicationManager;
+import consulo.application.ReadAction;
+import consulo.logging.Logger;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.language.plain.PlainTextFileType;
+import consulo.project.Project;
+import consulo.project.ProjectManager;
+import consulo.application.util.NotNullLazyValue;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.NullVirtualFile;
+import consulo.virtualFileSystem.StubVirtualFile;
+import consulo.ide.impl.idea.util.indexing.LightDirectoryIndex;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
 
 
+@ServiceAPI(ComponentScope.APPLICATION)
+@ServiceImpl
+@Singleton
 public class PerlFileTypeService implements Disposable {
   private static final Logger LOG = Logger.getInstance(PerlFileTypeService.class);
 
@@ -40,7 +48,7 @@ public class PerlFileTypeService implements Disposable {
     NotNullLazyValue.createValue(() -> new LightDirectoryIndex<>(
       this,
       virtualFile -> PlainTextFileType.INSTANCE,
-      directoryIndex -> ReadAction.runBlocking(() -> {
+      directoryIndex -> ReadAction.run(() -> {
         for (Project project : ProjectManager.getInstance().getOpenProjects()) {
           if (project.isDisposed()) {
             continue;
@@ -63,8 +71,9 @@ public class PerlFileTypeService implements Disposable {
     ));
 
   public PerlFileTypeService() {
+    // TODO consulo: no extension point change listeners (dynamic plugins); upstream resets the index on PerlFileTypeProvider changes
     //noinspection deprecation
-    PerlFileTypeProvider.EP_NAME.addChangeListener(this::reset, this);
+    //PerlFileTypeProvider.EP_NAME.addChangeListener(this::reset, this);
   }
 
   @Override
@@ -81,7 +90,9 @@ public class PerlFileTypeService implements Disposable {
   }
 
   public static @Nullable FileType getFileType(@Nullable VirtualFile virtualFile) {
-    VirtualFile fileForAncestryCheck = virtualFile instanceof FakeVirtualFile ? virtualFile.getParent() : virtualFile;
+    // consulo: FakeVirtualFile (a file which is not created yet) is internal; it's the only platform StubVirtualFile with a parent
+    VirtualFile fileForAncestryCheck =
+      virtualFile instanceof StubVirtualFile && !(virtualFile instanceof NullVirtualFile) ? virtualFile.getParent() : virtualFile;
     var fileTypeFromIndex = getInstance().myDirectoryIndexProvider.get().getInfoForFile(fileForAncestryCheck).apply(virtualFile);
     return fileTypeFromIndex == PlainTextFileType.INSTANCE ? null : fileTypeFromIndex;
   }

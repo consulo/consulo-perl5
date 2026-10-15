@@ -16,9 +16,11 @@
 
 package com.perl5.lang.perl.idea.sdk.versionManager;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.projectRoots.Sdk;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.application.dumb.DumbAware;
+import consulo.content.bundle.Sdk;
+import consulo.project.Project;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.idea.actions.PerlActionBase;
 import com.perl5.lang.perl.idea.project.PerlProjectManager;
@@ -37,7 +39,7 @@ public class PerlInstallAction extends PerlActionBase implements DumbAware {
   public void update(@NotNull AnActionEvent event) {
     super.update(event);
     InstallPerlHandler installHandler = getHandler(event);
-    event.getPresentation().setIcon(installHandler == null ? null : installHandler.getVersionManageHandler().getIcon());
+    event.getPresentation().setIcon(installHandler == null ? null : TargetAWT.from(installHandler.getVersionManageHandler().getIcon()));
   }
 
   @Override
@@ -59,7 +61,7 @@ public class PerlInstallAction extends PerlActionBase implements DumbAware {
   public void actionPerformed(@NotNull AnActionEvent e) {
     InstallPerlHandler handler = getHandler(e);
     if (handler != null) {
-      handler.install(Objects.requireNonNull(PerlHostData.from(PerlProjectManager.getSdk(e))), Objects.requireNonNull(e.getProject()));
+      handler.install(Objects.requireNonNull(PerlHostData.from(PerlProjectManager.getSdk(e))), Objects.requireNonNull(e.getData(Project.KEY)));
     }
   }
 }

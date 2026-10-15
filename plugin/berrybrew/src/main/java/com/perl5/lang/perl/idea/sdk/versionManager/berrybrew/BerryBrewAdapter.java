@@ -16,13 +16,13 @@
 
 package com.perl5.lang.perl.idea.sdk.versionManager.berrybrew;
 
-import com.intellij.execution.process.ProcessListener;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.NlsContexts;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.process.event.ProcessListener;
+import consulo.project.Project;
+import consulo.util.lang.StringUtil;
+import consulo.util.collection.ContainerUtil;
 import com.perl5.PerlBundle;
 import com.perl5.PerlIcons;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import com.perl5.lang.perl.idea.execution.PerlCommandLine;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostData;
 import com.perl5.lang.perl.idea.sdk.versionManager.PerlVersionManagerAdapter;
@@ -69,7 +69,7 @@ class BerryBrewAdapter extends PerlVersionManagerAdapter {
 
   @Override
   protected @Nullable Icon getIcon() {
-    return PerlIcons.STRAWBERRY_ICON;
+    return TargetAWT.to(PerlIcons.STRAWBERRY_ICON);
   }
 
   @Override
@@ -97,7 +97,7 @@ class BerryBrewAdapter extends PerlVersionManagerAdapter {
   }
 
   @Override
-  protected @NlsContexts.DialogTitle @NotNull String getErrorNotificationTitle() {
+  protected @NotNull String getErrorNotificationTitle() {
     return PerlBundle.message("perl.vm.berrybrew.notification.title");
   }
 }

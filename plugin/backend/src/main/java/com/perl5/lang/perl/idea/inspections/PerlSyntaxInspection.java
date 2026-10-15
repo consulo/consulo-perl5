@@ -16,20 +16,19 @@
 
 package com.perl5.lang.perl.idea.inspections;
 
-import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
-import com.intellij.codeInsight.intention.FileModifier;
-import com.intellij.codeInsight.intention.HighPriorityAction;
-import com.intellij.codeInsight.intention.preview.IntentionPreviewInfo;
-import com.intellij.codeInspection.LocalQuickFix;
-import com.intellij.codeInspection.ProblemDescriptor;
-import com.intellij.codeInspection.ProblemHighlightType;
-import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.lang.ASTNode;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.*;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.util.ArrayUtil;
+import consulo.language.editor.DaemonCodeAnalyzer;
+import consulo.language.editor.inspection.FileModifier;
+import consulo.language.editor.intention.HighPriorityAction;
+import consulo.language.editor.inspection.LocalQuickFix;
+import consulo.language.editor.inspection.ProblemDescriptor;
+import consulo.language.editor.inspection.ProblemHighlightType;
+import consulo.language.editor.inspection.ProblemsHolder;
+import consulo.language.ast.ASTNode;
+import consulo.project.Project;
+
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.psi.PsiUtilCore;
+import consulo.util.collection.ArrayUtil;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.idea.configuration.settings.PerlSharedSettings;
 import com.perl5.lang.perl.idea.configuration.settings.sdk.Perl5SettingsConfigurable;
@@ -53,7 +52,18 @@ import java.util.function.Predicate;
 import static com.perl5.lang.perl.internals.PerlVersion.*;
 import static com.perl5.lang.perl.lexer.PerlTokenSets.*;
 import static com.perl5.lang.perl.parser.PerlElementTypesGenerated.*;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiElementVisitor;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.SmartPointerManager;
+import consulo.language.psi.SmartPsiElementPointer;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.Language;
+import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
+import consulo.localize.LocalizeValue;
+import com.perl5.lang.perl.PerlLanguage;
 
+@ExtensionImpl
 public class PerlSyntaxInspection extends PerlInspection {
   @Override
   public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly) {
@@ -311,8 +321,8 @@ public class PerlSyntaxInspection extends PerlInspection {
           SmartPointerManager.getInstance(attributes.getProject()).createSmartPsiElementPointer(attributes);
         return new MyTopQuickFix() {
           @Override
-          public @Nls @NotNull String getFamilyName() {
-            return PerlBundle.message("perl.quickfix.switch.signature.with.attributes");
+          public @NotNull LocalizeValue getName() {
+            return LocalizeValue.localizeTODO(PerlBundle.message("perl.quickfix.switch.signature.with.attributes"));
           }
 
           @Override
@@ -357,13 +367,14 @@ public class PerlSyntaxInspection extends PerlInspection {
         List<LocalQuickFix> result = new ArrayList<>();
         result.add(new LocalQuickFix() {
           @Override
-          public @Nls @NotNull String getFamilyName() {
-            return PerlBundle.message("perl.quickfix.change.language.level");
+          public @NotNull LocalizeValue getName() {
+            return LocalizeValue.localizeTODO(PerlBundle.message("perl.quickfix.change.language.level"));
           }
 
+          // TODO consulo: no IntentionPreviewInfo/generatePreview in Consulo; upstream returned IntentionPreviewInfo.EMPTY, null disables preview
           @Override
-          public @NotNull IntentionPreviewInfo generatePreview(@NotNull Project project, @NotNull ProblemDescriptor previewDescriptor) {
-            return IntentionPreviewInfo.EMPTY;
+          public @Nullable FileModifier getFileModifierForPreview(@NotNull PsiFile target) {
+            return null;
           }
 
           @Override
@@ -374,8 +385,8 @@ public class PerlSyntaxInspection extends PerlInspection {
 
         PerlVersion.ALL_VERSIONS.stream().filter(versionPredicate).forEach(it -> result.add(new LocalQuickFix() {
           @Override
-          public @Nls @NotNull String getFamilyName() {
-            return PerlBundle.message("perl.quickfix.set.language.level", it.getStrictDottedVersion());
+          public @NotNull LocalizeValue getName() {
+            return LocalizeValue.localizeTODO(PerlBundle.message("perl.quickfix.set.language.level", it.getStrictDottedVersion()));
           }
 
           @Override
@@ -391,5 +402,26 @@ public class PerlSyntaxInspection extends PerlInspection {
   }
 
   private interface MyTopQuickFix extends LocalQuickFix, HighPriorityAction {
+  }
+
+  // consulo: metadata from upstream <localInspection> registration in perl5.plugin.backend.main.xml
+  @Override
+  public @Nullable Language getLanguage() {
+    return PerlLanguage.INSTANCE;
+  }
+
+  @Override
+  public @NotNull LocalizeValue getDisplayName() {
+    return LocalizeValue.localizeTODO(PerlBundle.message("inspection.perl.syntax.display.name"));
+  }
+
+  @Override
+  public @NotNull LocalizeValue getGroupDisplayName() {
+    return LocalizeValue.localizeTODO(PerlBundle.message("inspection.group.perl"));
+  }
+
+  @Override
+  public @NotNull HighlightDisplayLevel getDefaultLevel() {
+    return HighlightDisplayLevel.ERROR;
   }
 }

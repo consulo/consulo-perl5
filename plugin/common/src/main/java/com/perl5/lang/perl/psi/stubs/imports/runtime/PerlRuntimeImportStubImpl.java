@@ -16,15 +16,15 @@
 
 package com.perl5.lang.perl.psi.stubs.imports.runtime;
 
-import com.intellij.psi.stubs.StubBase;
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.psi.stub.IStubElementType;
+import consulo.language.psi.stub.StubBase;
+import consulo.language.psi.stub.StubElement;
 import com.perl5.lang.perl.psi.PerlDoExpr;
 
 public class PerlRuntimeImportStubImpl extends StubBase<PerlDoExpr> implements PerlRuntimeImportStub {
   private final String myRelativePath;
 
-  public PerlRuntimeImportStubImpl(StubElement parent, IElementType elementType, String myRelativePath) {
+  public PerlRuntimeImportStubImpl(StubElement parent, IStubElementType<?, ?> elementType, String myRelativePath) {
     super(parent, elementType);
     this.myRelativePath = myRelativePath;
   }

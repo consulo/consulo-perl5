@@ -16,20 +16,24 @@
 
 package com.perl5.lang.perl.fileTypes;
 
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.FileTypeRegistry;
-import com.intellij.openapi.util.io.ByteSequence;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.util.io.ByteSequence;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.HashBangFileTypeDetector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
-public class PerlFileTypeDetector implements FileTypeRegistry.FileTypeDetector {
+// consulo: FileUtil.isHashBangLine is not an API in Consulo, the check is done by HashBangFileTypeDetector
+public class PerlFileTypeDetector extends HashBangFileTypeDetector {
+  public PerlFileTypeDetector() {
+    super(PerlFileTypeScript.INSTANCE, "perl", PerlFileTypeScript.INSTANCE.getDescription());
+  }
+
   @Override
   public FileType detect(@NotNull VirtualFile file, @NotNull ByteSequence firstBytes, @Nullable CharSequence firstCharsIfText) {
     // todo add some detections for xs/pod/pm
-    return FileUtil.isHashBangLine(firstCharsIfText, "perl") ? PerlFileTypeScript.INSTANCE : null;
+    return super.detect(file, firstBytes, firstCharsIfText);
   }
 }
 

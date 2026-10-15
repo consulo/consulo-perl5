@@ -17,13 +17,13 @@
 package com.perl5.lang.perl.idea.completion.inserthandlers;
 
 
-import com.intellij.codeInsight.completion.CodeCompletionHandlerBase;
-import com.intellij.codeInsight.completion.CompletionType;
-import com.intellij.codeInsight.completion.InsertHandler;
-import com.intellij.codeInsight.completion.InsertionContext;
-import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.EditorModificationUtilEx;
+import consulo.ide.impl.idea.codeInsight.completion.CodeCompletionHandlerBase;
+import consulo.language.editor.completion.CompletionType;
+import consulo.language.editor.completion.lookup.InsertHandler;
+import consulo.language.editor.completion.lookup.InsertionContext;
+import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.util.EditorModificationUtil;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -37,7 +37,7 @@ public class PerlAnnotationInsertHandler implements InsertHandler<LookupElement>
 
     final Editor editor = context.getEditor();
     if ("returns".equals(item.getLookupString())) {
-      EditorModificationUtilEx.insertStringAtCaret(editor, " ");
+      EditorModificationUtil.insertStringAtCaret(editor, " ");
 
       context.setLaterRunnable(() -> new CodeCompletionHandlerBase(CompletionType.BASIC).invokeCompletion(context.getProject(), editor, 1));
     }

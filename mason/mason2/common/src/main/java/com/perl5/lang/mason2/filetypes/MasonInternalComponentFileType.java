@@ -21,7 +21,8 @@ import com.perl5.lang.mason2.Mason2Icons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
+import consulo.localize.LocalizeValue;
+import consulo.ui.image.Image;
 
 
 public class MasonInternalComponentFileType extends MasonTopLevelComponentFileType {
@@ -29,13 +30,13 @@ public class MasonInternalComponentFileType extends MasonTopLevelComponentFileTy
   public static final String INTERNAL_COMPONENT_EXTENSION = "mi";
 
   @Override
-  public @NotNull String getName() {
+  public @NotNull String getId() {
     return "Mason2 Internal Component";
   }
 
   @Override
-  public @NotNull String getDescription() {
-    return Mason2Bundle.message("label.mason2.internal.component");
+  public @NotNull LocalizeValue getDescription() {
+    return LocalizeValue.localizeTODO(Mason2Bundle.message("label.mason2.internal.component"));
   }
 
   @Override
@@ -44,7 +45,7 @@ public class MasonInternalComponentFileType extends MasonTopLevelComponentFileTy
   }
 
   @Override
-  public @Nullable Icon getIcon() {
+  public @Nullable Image getIcon() {
     return Mason2Icons.MASON_INTERNAL_COMPONENT_ICON;
   }
 }

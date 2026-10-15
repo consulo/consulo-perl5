@@ -16,20 +16,21 @@
 
 package com.perl5.lang.perl.idea.sdk.versionManager;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.process.ProcessEvent;
-import com.intellij.execution.process.ProcessListener;
-import com.intellij.execution.process.ProcessOutput;
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationType;
-import com.intellij.notification.Notifications;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.NlsContexts.DialogMessage;
-import com.intellij.openapi.util.NlsContexts.DialogTitle;
+import consulo.process.ExecutionException;
+import consulo.process.event.ProcessEvent;
+import consulo.process.event.ProcessListener;
+import consulo.process.util.ProcessOutput;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.notification.Notifications;
+import consulo.application.ApplicationManager;
+import consulo.ui.ModalityState;
+import consulo.project.ui.notification.NotificationGroup;
+import com.perl5.lang.perl.idea.sdk.PerlSdkNotificationGroups;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.ui.MessageBoxes;
+import consulo.localize.LocalizeValue;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.idea.execution.PerlCommandLine;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostData;
@@ -172,18 +173,19 @@ public abstract class PerlVersionManagerAdapter {
     return getOutput(Arrays.asList(parameters));
   }
 
-  protected @NotNull String getNotificationGroup() {
-    return PerlBundle.message("perl.vm.notification.group");
+  protected @NotNull NotificationGroup getNotificationGroup() {
+    return PerlSdkNotificationGroups.VERSION_MANAGERS;
   }
 
-  protected abstract @DialogTitle @NotNull String getErrorNotificationTitle();
+  protected abstract @NotNull String getErrorNotificationTitle();
 
-  private void notifyUser(@DialogMessage @NotNull String message) {
+  private void notifyUser(@NotNull String message) {
     ApplicationManager.getApplication().invokeLater(() -> {
       //noinspection DialogTitleCapitalization
       var dialogTitle = getErrorNotificationTitle();
-      if (ModalityState.current() != ModalityState.nonModal()) {
-        Messages.showErrorDialog(message, dialogTitle);
+      if (ApplicationManager.getApplication().getCurrentModalityState() != ModalityState.nonModal()) {
+        // consulo: Messages are Swing dialogs (not available in web), the unified message box is shown asynchronously
+        MessageBoxes.okError(LocalizeValue.of(message)).title(LocalizeValue.of(dialogTitle)).showAsync();
       }
       else {
         Notifications.Bus.notify(new Notification(

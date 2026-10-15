@@ -16,12 +16,12 @@
 
 package com.perl5.lang.pod.idea.surroundWith;
 
-import com.intellij.codeInsight.AutoPopupController;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiElement;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.editor.AutoPopupController;
+import consulo.codeEditor.Editor;
+import consulo.project.Project;
+import consulo.document.util.TextRange;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.IncorrectOperationException;
 import com.perl5.PerlBundle;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

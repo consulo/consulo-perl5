@@ -16,10 +16,10 @@
 
 package com.perl5.lang.perl.idea.completion.providers;
 
-import com.intellij.codeInsight.completion.CompletionParameters;
-import com.intellij.codeInsight.completion.CompletionResultSet;
-import com.intellij.psi.PsiElement;
-import com.intellij.util.ProcessingContext;
+import consulo.language.editor.completion.CompletionParameters;
+import consulo.language.editor.completion.CompletionResultSet;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.ProcessingContext;
 import com.perl5.lang.perl.idea.completion.providers.processors.PerlVariableCompletionProcessor;
 import com.perl5.lang.perl.idea.completion.providers.processors.PerlVariableCompletionProcessorImpl;
 import com.perl5.lang.perl.psi.PerlAnnotationType;
@@ -32,7 +32,7 @@ import static com.perl5.lang.perl.idea.completion.util.PerlVariableCompletionUti
 
 public class PerlAnnotationVariablesCompletionProvider extends PerlCompletionProvider {
   @Override
-  protected void addCompletions(@NotNull CompletionParameters parameters,
+  public void addCompletions(@NotNull CompletionParameters parameters,
                                 @NotNull ProcessingContext context,
                                 @NotNull CompletionResultSet result) {
     var currentPosition = parameters.getPosition();

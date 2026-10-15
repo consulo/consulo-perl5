@@ -16,12 +16,12 @@
 
 package com.perl5.lang.tt2.elementTypes;
 
-import com.intellij.psi.templateLanguages.TemplateDataElementType;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.IFileElementType;
+import consulo.language.impl.psi.template.TemplateDataElementType;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.IFileElementType;
+import consulo.language.ast.TokenSet;
 import com.perl5.lang.tt2.TemplateToolkitLanguage;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import static com.perl5.lang.tt2.parser.TemplateToolkitElementTypesGenerated.*;
 
@@ -35,9 +35,10 @@ public interface TemplateToolkitElementTypes {
     TT2_HTML,
     TT2_OUTER
   ) {
+    // consulo: Consulo TemplateDataElementType has no isInsertionToken(IElementType, CharSequence), insertion tokens are a TokenSet
     @Override
-    protected boolean isInsertionToken(@Nullable IElementType tokenType, @NotNull CharSequence tokenSequence) {
-      return tokenType == TT2_OPEN_TAG || tokenType == TT2_OUTLINE_TAG;
+    protected @NotNull TokenSet getTemplateDataInsertionTokens() {
+      return TokenSet.create(TT2_OPEN_TAG, TT2_OUTLINE_TAG);
     }
   };
 

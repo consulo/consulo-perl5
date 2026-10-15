@@ -16,22 +16,30 @@
 
 package com.perl5.lang.mason2;
 
-import com.intellij.lang.PsiParser;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.tree.IFileElementType;
-import com.intellij.psi.tree.TokenSet;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.Language;
+import consulo.language.parser.PsiParser;
+import consulo.language.version.LanguageVersion;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.PsiFile;
+import consulo.language.ast.IFileElementType;
+import consulo.language.ast.TokenSet;
 import com.perl5.lang.mason2.elementType.Mason2TokenSets;
 import com.perl5.lang.mason2.psi.impl.MasonFileImpl;
 import com.perl5.lang.perl.PerlParserDefinition;
-import com.perl5.lang.perl.parser.Mason2ParserImpl;
+import com.perl5.lang.mason2.parser.Mason2ParserImpl;
 import org.jetbrains.annotations.NotNull;
 
 import static com.perl5.lang.mason2.elementType.Mason2ElementTypes.PP_FILE;
 
 
+@ExtensionImpl
 public class Mason2ParserDefinition extends PerlParserDefinition {
+  @Override
+  public @NotNull Language getLanguage() {
+    return Mason2Language.INSTANCE;
+  }
+
   @Override
   public @NotNull IFileElementType getFileNodeType() {
     return PP_FILE;
@@ -43,12 +51,12 @@ public class Mason2ParserDefinition extends PerlParserDefinition {
   }
 
   @Override
-  public @NotNull TokenSet getCommentTokens() {
+  public @NotNull TokenSet getCommentTokens(LanguageVersion languageVersion) {
     return Mason2TokenSets.COMMENTS;
   }
 
   @Override
-  public @NotNull PsiParser createParser(Project project) {
+  public @NotNull PsiParser createParser(LanguageVersion languageVersion) {
     return new Mason2ParserImpl();
   }
 }

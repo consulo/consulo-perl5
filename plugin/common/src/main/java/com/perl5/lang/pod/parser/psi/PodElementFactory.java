@@ -16,10 +16,10 @@
 
 package com.perl5.lang.pod.parser.psi;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFileFactory;
-import com.intellij.psi.PsiWhiteSpace;
+import consulo.project.Project;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFileFactory;
+import consulo.language.psi.PsiWhiteSpace;
 import com.perl5.lang.pod.filetypes.PodFileType;
 import com.perl5.lang.pod.parser.psi.impl.PodFileImpl;
 import com.perl5.lang.pod.parser.psi.mixin.PodSectionH1;

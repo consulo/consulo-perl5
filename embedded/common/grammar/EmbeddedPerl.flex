@@ -1,12 +1,19 @@
 package com.perl5.lang.embedded.lexer;
 
-import com.intellij.psi.TokenType;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.TokenType;
+import consulo.language.ast.IElementType;
 import static com.perl5.lang.embedded.psi.EmbeddedPerlElementTypes.*;
 
 %%
 
 %class EmbeddedPerlLexer
+
+%{
+  // consulo: maven-consulo-plugin does not generate the constructor when a custom skeleton is used
+  public EmbeddedPerlLexer(java.io.Reader in) {
+    this.zzReader = in;
+  }
+%}
 %extends EmbeddedPerlBaseLexer
 //%abstract
 %unicode

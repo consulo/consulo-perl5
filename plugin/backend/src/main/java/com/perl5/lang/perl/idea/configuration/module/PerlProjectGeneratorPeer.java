@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.idea.configuration.module;
 
-import com.intellij.openapi.ui.VerticalFlowLayout;
+import consulo.ui.ex.awt.VerticalFlowLayout;
 
 import javax.swing.*;
 

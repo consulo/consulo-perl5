@@ -16,28 +16,29 @@
 
 package com.perl5.lang.pod.idea.livetemplates;
 
-import com.intellij.codeInsight.template.TemplateSubstitutor;
-import com.intellij.codeInsight.template.impl.TemplateImpl;
-import com.intellij.codeInsight.template.impl.TemplateSubstitutionContext;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.editor.template.Template;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiUtilCore;
 import com.perl5.lang.pod.PodLanguage;
 import com.perl5.lang.pod.parser.psi.PodSyntaxElements;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class PodSmartEndLiveTemplateSubstitutor implements TemplateSubstitutor {
+// TODO consulo: Consulo has no TemplateSubstitutor extension point (IntelliJ <liveTemplateSubstitutor>), so this is never invoked:
+//  POD templates expanded outside of POD do not get the trailing =cut. TemplateSubstitutionContext is replaced by its file and offset,
+//  internal TemplateImpl by the public Template.
+public class PodSmartEndLiveTemplateSubstitutor {
   private static final String POD_GROUP = "Perl5: POD";
 
-  @Override
-  public @Nullable TemplateImpl substituteTemplate(@NotNull TemplateSubstitutionContext substitutionContext,
-                                                   @NotNull TemplateImpl template) {
-    int caretOffset = substitutionContext.getOffset();
+  public @Nullable Template substituteTemplate(@NotNull PsiFile psiFile,
+                                               int caretOffset,
+                                               @NotNull Template template) {
     if (!POD_GROUP.equals(template.getGroupName()) ||
         caretOffset > 0 &&
-        PsiUtilCore.getLanguageAtOffset(substitutionContext.getPsiFile(), caretOffset - 1).isKindOf(PodLanguage.INSTANCE)) {
+        PsiUtilCore.getLanguageAtOffset(psiFile, caretOffset - 1).isKindOf(PodLanguage.INSTANCE)) {
       return null;
     }
-    TemplateImpl copy = template.copy();
+    Template copy = template.copy();
     copy.setString(copy.getString() + "\n" + PodSyntaxElements.CUT_COMMAND + "\n");
     return copy;
   }

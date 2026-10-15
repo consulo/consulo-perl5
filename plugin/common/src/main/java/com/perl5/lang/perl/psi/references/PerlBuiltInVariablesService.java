@@ -16,12 +16,17 @@
 
 package com.perl5.lang.perl.psi.references;
 
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiManager;
-import com.intellij.util.Processor;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
+import jakarta.inject.Singleton;
+import jakarta.inject.Inject;
+import consulo.disposer.Disposable;
+import consulo.application.progress.ProgressManager;
+import consulo.project.Project;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiManager;
+import consulo.application.util.function.Processor;
 import com.perl5.lang.perl.psi.PerlVariableDeclarationElement;
 import com.perl5.lang.perl.psi.impl.PerlBuiltInVariable;
 import com.perl5.lang.perl.psi.utils.PerlVariableType;
@@ -36,12 +41,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+@ServiceAPI(ComponentScope.PROJECT)
+@ServiceImpl
+@Singleton
 public class PerlBuiltInVariablesService implements Disposable {
   private final PsiManager myPsiManager;
   private final Map<String, PerlBuiltInVariable> myScalars = new HashMap<>();
   private final Map<String, PerlBuiltInVariable> myArrays = new HashMap<>();
   private final Map<String, PerlBuiltInVariable> myHashes = new HashMap<>();
   private final Map<String, PerlBuiltInVariable> myGlobs = new HashMap<>();
+
+  @Inject
 
   public PerlBuiltInVariablesService(Project project) {
     myPsiManager = PsiManager.getInstance(project);

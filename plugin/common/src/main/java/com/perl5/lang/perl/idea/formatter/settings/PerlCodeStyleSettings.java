@@ -16,12 +16,12 @@
 
 package com.perl5.lang.perl.idea.formatter.settings;
 
-import com.intellij.openapi.application.ApplicationBundle;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
-import com.intellij.psi.codeStyle.CustomCodeStyleSettings;
+import consulo.application.ApplicationBundle;
+import consulo.language.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.CustomCodeStyleSettings;
 import com.perl5.PerlBundle;
 
-import static com.intellij.psi.codeStyle.CommonCodeStyleSettings.DO_NOT_WRAP;
+import static consulo.language.codeStyle.CommonCodeStyleSettings.DO_NOT_WRAP;
 import static com.perl5.lang.perl.idea.formatter.settings.PerlCodeStyleSettings.OptionalConstructions.SAME_LINE;
 import static com.perl5.lang.perl.idea.formatter.settings.PerlCodeStyleSettings.OptionalConstructions.WHATEVER;
 import static com.perl5.lang.perl.util.PerlPackageUtilCore.MAIN_NAMESPACE_FULL;

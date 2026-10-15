@@ -16,44 +16,50 @@
 
 package com.perl5.lang.perl.xsubs;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.process.ProcessOutput;
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationType;
-import com.intellij.notification.Notifications;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ReadAction;
-import com.intellij.openapi.application.WriteAction;
-import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.components.State;
-import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.progress.ProcessCanceledException;
-import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.openapi.progress.Task;
-import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectUtil;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.NlsContexts.NotificationContent;
-import com.intellij.openapi.util.NlsContexts.NotificationTitle;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.search.FilenameIndex;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.search.GlobalSearchScopesCore;
-import com.intellij.testFramework.LightVirtualFile;
-import com.intellij.util.FileContentUtilCore;
-import com.intellij.util.Function;
-import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.xmlb.XmlSerializerUtil;
-import com.intellij.util.xmlb.annotations.Transient;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
+import jakarta.inject.Singleton;
+import jakarta.inject.Inject;
+import consulo.process.ExecutionException;
+import consulo.process.util.ProcessOutput;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.notification.Notifications;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.application.ReadAction;
+import consulo.application.WriteAction;
+import consulo.component.persist.PersistentStateComponent;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
+import consulo.logging.Logger;
+import consulo.component.ProcessCanceledException;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.Task;
+// TODO consulo: Consulo keeps ProgressIndicatorUtils/ReadTask in a non-exported internal package, plugin-side replacements
+//  are used (upstream uses the deprecated IntelliJ equivalents too, "this requires migration to kotlin")
+import consulo.perl5.core.progress.ProgressIndicatorUtils;
+import consulo.perl5.core.progress.ReadTask;
+import consulo.project.Project;
+import consulo.content.bundle.Sdk;
+import consulo.module.content.ProjectRootManager;
+import consulo.ui.MessageBoxes;
+import consulo.localize.LocalizeValue;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.psi.search.FilenameIndex;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.scope.GlobalSearchScopesCore;
+import consulo.language.file.light.LightVirtualFile;
+import consulo.document.util.FileContentUtilCore;
+import java.util.function.Function;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.xml.serializer.XmlSerializerUtil;
+import consulo.util.xml.serializer.annotation.Transient;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.idea.PerlPathMacros;
 import com.perl5.lang.perl.idea.actions.PerlActionBase;
@@ -78,6 +84,9 @@ import java.util.*;
   name = "Perl5XSubsState",
   storages = @Storage(PerlPathMacros.PERL5_PROJECT_SETTINGS_FILE)
 )
+@ServiceAPI(ComponentScope.PROJECT)
+@ServiceImpl
+@Singleton
 public class PerlXSubsState implements PersistentStateComponent<PerlXSubsState> {
   private static final Logger LOG = Logger.getInstance(PerlXSubsState.class);
   public boolean isActual = true;
@@ -93,6 +102,7 @@ public class PerlXSubsState implements PersistentStateComponent<PerlXSubsState> 
   }
 
   @SuppressWarnings("unused")
+  @Inject
   public PerlXSubsState(@NotNull Project project) {
     myProject = project;
   }
@@ -140,7 +150,7 @@ public class PerlXSubsState implements PersistentStateComponent<PerlXSubsState> 
 
   public void rescanFiles(@Nullable Runnable callback) {
     //noinspection deprecation this requires migration to kotlin
-    ProgressIndicatorUtils.scheduleWithWriteActionPriority(new com.intellij.openapi.progress.util.ReadTask() {
+    ProgressIndicatorUtils.scheduleWithWriteActionPriority(new ReadTask() {
       @Override
       public void computeInReadAction(@NotNull ProgressIndicator indicator) throws ProcessCanceledException {
         if (!PerlProjectManager.isPerlEnabled(myProject)) {
@@ -214,7 +224,8 @@ public class PerlXSubsState implements PersistentStateComponent<PerlXSubsState> 
 
   private @NotNull Iterable<VirtualFile> getPossibleFileLocations() {
     var contentRoots = PerlUtil.mutableList(ProjectRootManager.getInstance(getProject()).getContentRoots());
-    contentRoots.add(ProjectUtil.guessProjectDir(getProject()));
+    // consulo: IntelliJ ProjectUtil.guessProjectDir -> Project.getBaseDir()
+    contentRoots.add(getProject().getBaseDir());
     return ContainerUtil.filter(contentRoots, it -> it != null && it.isValid() && it.exists() && it.isDirectory());
   }
 
@@ -242,7 +253,7 @@ public class PerlXSubsState implements PersistentStateComponent<PerlXSubsState> 
 
     if (path != null) {
       Long modificationStamp = myFilesMap.get(path);
-      return modificationStamp != null && modificationStamp == VfsUtilCore.virtualToIoFile(virtualFile).lastModified();
+      return modificationStamp != null && modificationStamp == VirtualFileUtil.virtualToIoFile(virtualFile).lastModified();
     }
     return false;
   }
@@ -253,11 +264,10 @@ public class PerlXSubsState implements PersistentStateComponent<PerlXSubsState> 
     }
 
     if (myParserTask != null) {
-      Messages.showErrorDialog(
-        myProject,
-        PerlBundle.message("perl.deparsing.in.progress.message"),
-        PerlBundle.message("perl.deparsing.in.progress.title")
-      );
+      // consulo: Messages are Swing dialogs (not available in web), the unified message box is shown asynchronously
+      MessageBoxes.okError(LocalizeValue.of(PerlBundle.message("perl.deparsing.in.progress.message")))
+        .title(LocalizeValue.of(PerlBundle.message("perl.deparsing.in.progress.title")))
+        .showAsync(myProject);
       return;
     }
 
@@ -276,7 +286,7 @@ public class PerlXSubsState implements PersistentStateComponent<PerlXSubsState> 
       public void run(@NotNull ProgressIndicator indicator) {
         indicator.setIndeterminate(true);
         var project = PerlXSubsState.this.myProject;
-        Map<String, Long> newFilesMap = ReadAction.computeBlocking(() -> {
+        Map<String, Long> newFilesMap = ReadAction.compute(() -> {
           if (project.isDisposed()) {
             return null;
           }
@@ -285,7 +295,7 @@ public class PerlXSubsState implements PersistentStateComponent<PerlXSubsState> 
             if (virtualFile.isValid()) {
               String filePath = virtualFile.getCanonicalPath();
               if (filePath != null) {
-                result.put(filePath, VfsUtilCore.virtualToIoFile(virtualFile)
+                result.put(filePath, VirtualFileUtil.virtualToIoFile(virtualFile)
                   .lastModified());
               }
             }
@@ -367,20 +377,21 @@ public class PerlXSubsState implements PersistentStateComponent<PerlXSubsState> 
     myParserTask.queue();
   }
 
-  private void showNotification(@NotNull @NotificationTitle String title,
-                                @NotNull @NotificationContent String message,
+  private void showNotification(@NotNull String title,
+                                @NotNull String message,
                                 @NotNull NotificationType type) {
     showNotification(title, message, type, null);
   }
 
-  private void showNotification(@NotNull @NotificationTitle String title,
-                                @NotNull @NotificationContent String message,
+  private void showNotification(@NotNull String title,
+                                @NotNull String message,
                                 @NotNull NotificationType type,
                                 @Nullable Function<? super Notification, ? extends List<AnAction>> actionsProvider) {
-    Notification notification = new Notification(PerlBundle.message("perl.deparsing.notification"), title, message, type);
+    // consulo: Consulo requires a registered NotificationGroup instead of the group display id
+    Notification notification = new Notification(PerlXSubsNotificationGroupContributor.DEPARSING, title, message, type);
 
     if (actionsProvider != null) {
-      List<AnAction> actions = actionsProvider.fun(notification);
+      List<AnAction> actions = actionsProvider.apply(notification);
       if (actions != null) {
         actions.forEach(notification::addAction);
       }

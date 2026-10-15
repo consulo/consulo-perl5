@@ -16,12 +16,12 @@
 
 package com.perl5.lang.perl.idea.manipulators;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.AbstractElementManipulator;
-import com.intellij.psi.impl.source.tree.LeafPsiElement;
-import com.intellij.util.IncorrectOperationException;
+import consulo.logging.Logger;
+import consulo.document.util.TextRange;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.AbstractElementManipulator;
+import consulo.language.impl.psi.LeafPsiElement;
+import consulo.language.util.IncorrectOperationException;
 import com.perl5.lang.perl.psi.PerlVariableNameElement;
 import org.jetbrains.annotations.NotNull;
 
@@ -50,5 +50,10 @@ public class PerlVariableNameManipulator extends AbstractElementManipulator<Perl
   public PerlVariableNameElement handleContentChange(@NotNull PerlVariableNameElement element, @NotNull TextRange range, String newContent)
     throws IncorrectOperationException {
     return (PerlVariableNameElement)((LeafPsiElement)element).replaceWithText(range.replace(element.getText(), newContent));
+  }
+
+  @Override
+  public @NotNull Class<PerlVariableNameElement> getElementClass() {
+    return PerlVariableNameElement.class;
   }
 }

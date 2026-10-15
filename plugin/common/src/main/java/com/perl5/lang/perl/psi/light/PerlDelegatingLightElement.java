@@ -16,20 +16,26 @@
 
 package com.perl5.lang.perl.psi.light;
 
-import com.intellij.lang.Language;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.*;
-import com.intellij.psi.impl.light.LightElement;
-import com.intellij.psi.scope.PsiScopeProcessor;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.search.SearchScope;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.Language;
+import consulo.project.Project;
+import consulo.document.util.TextRange;
+
+import consulo.language.impl.psi.LightElement;
+import consulo.language.psi.resolve.PsiScopeProcessor;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.content.scope.SearchScope;
+import consulo.language.ast.IElementType;
+import consulo.language.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
+import consulo.language.icon.IconDescriptorUpdaters;
+import consulo.ui.image.Image;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
+import consulo.language.psi.PsiReference;
+import consulo.language.psi.resolve.ResolveState;
 
 
 public class PerlDelegatingLightElement<Delegate extends PsiElement> extends LightElement {
@@ -139,9 +145,10 @@ public class PerlDelegatingLightElement<Delegate extends PsiElement> extends Lig
     return getDelegate().isEquivalentTo(another);
   }
 
-  @Override
-  public @Nullable Icon getIcon(int flags) {
-    return getDelegate().getIcon(flags);
+  // TODO consulo: PsiElement#getIcon(int) does not exist in Consulo (element icons come from IconDescriptorUpdater),
+  //  so this is no longer an override and is not called by the platform
+  public @Nullable Image getIcon(int flags) {
+    return IconDescriptorUpdaters.getIcon(getDelegate(), flags);
   }
 
   @Override

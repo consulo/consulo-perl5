@@ -16,7 +16,7 @@
 
 package com.perl5.lang.mojolicious.lexer;
 
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import com.perl5.lang.perl.lexer.PerlTemplatingLexer;
 import org.jetbrains.annotations.Nullable;
 

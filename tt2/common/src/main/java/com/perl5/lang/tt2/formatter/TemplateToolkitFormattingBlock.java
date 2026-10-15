@@ -16,12 +16,12 @@
 
 package com.perl5.lang.tt2.formatter;
 
-import com.intellij.formatting.Alignment;
-import com.intellij.formatting.Indent;
-import com.intellij.formatting.Wrap;
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
-import com.intellij.psi.formatter.xml.XmlFormattingPolicy;
+import consulo.language.codeStyle.Alignment;
+import consulo.language.codeStyle.Indent;
+import consulo.language.codeStyle.Wrap;
+import consulo.language.ast.ASTNode;
+import consulo.language.codeStyle.CodeStyleSettings;
+import consulo.xml.psi.formatter.xml.XmlFormattingPolicy;
 import com.perl5.lang.perl.idea.formatter.PerlTemplateLanguageBlock;
 import com.perl5.lang.perl.idea.formatter.PerlXmlTemplateFormattingModelBuilder;
 import org.jetbrains.annotations.NotNull;

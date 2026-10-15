@@ -16,11 +16,14 @@
 
 package com.perl5.lang.perl.idea.codeInsight;
 
-import com.intellij.lang.parameterInfo.*;
-import com.intellij.openapi.util.Ref;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiUtilCore;
+
+import com.perl5.lang.perl.PerlLanguage;
+import consulo.language.Language;
+import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.util.lang.ref.Ref;
+import consulo.language.psi.PsiElement;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.PsiUtilCore;
 import com.perl5.lang.perl.lexer.PerlTokenSets;
 import com.perl5.lang.perl.psi.*;
 import com.perl5.lang.perl.psi.impl.PerlCompositeElementImpl;
@@ -37,6 +40,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import static com.perl5.lang.perl.parser.PerlElementTypesGenerated.*;
+import consulo.language.editor.parameterInfo.CreateParameterInfoContext;
+import consulo.language.editor.parameterInfo.ParameterInfoContext;
+import consulo.language.editor.parameterInfo.ParameterInfoHandler;
+import consulo.language.editor.parameterInfo.ParameterInfoUIContext;
+import consulo.language.editor.parameterInfo.ParameterInfoUtils;
+import consulo.language.editor.parameterInfo.UpdateParameterInfoContext;
 
 
 public class PerlParameterInfoHandler implements ParameterInfoHandler<PsiPerlCallArgumentsImpl, PerlParameterInfo> {
@@ -74,6 +83,22 @@ public class PerlParameterInfoHandler implements ParameterInfoHandler<PsiPerlCal
   @Override
   public void updateUI(PerlParameterInfo parameterInfo, @NotNull ParameterInfoUIContext context) {
     parameterInfo.setUpUIPresentation(context);
+  }
+
+  // consulo: these are default methods in IntelliJ, abstract in Consulo
+  @Override
+  public boolean couldShowInLookup() {
+    return false;
+  }
+
+  @Override
+  public @Nullable Object[] getParametersForLookup(LookupElement item, ParameterInfoContext context) {
+    return null;
+  }
+
+  @Override
+  public @NotNull Language getLanguage() {
+    return PerlLanguage.INSTANCE;
   }
 
   /**

@@ -16,8 +16,8 @@
 
 package com.perl5.lang.pod.parser.psi;
 
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiFile;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiFile;
 import com.perl5.lang.pod.parser.psi.mixin.PodFormatterL;
 import com.perl5.lang.pod.parser.psi.util.PodRenderUtil;
 import com.perl5.lang.pod.psi.PsiLinkName;

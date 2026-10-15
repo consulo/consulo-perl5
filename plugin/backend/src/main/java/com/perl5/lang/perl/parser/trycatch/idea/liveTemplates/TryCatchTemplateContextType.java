@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.parser.trycatch.idea.liveTemplates;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.idea.livetemplates.PerlTemplateContextType;
 
@@ -25,7 +25,8 @@ import static com.perl5.lang.perl.parser.trycatch.TryCatchElementPatterns.ELEMEN
 
 public class TryCatchTemplateContextType extends PerlTemplateContextType.Prefix {
   public TryCatchTemplateContextType() {
-    super(PerlBundle.message("perl.template.context.catch"));
+    // consulo: context id from upstream <liveTemplateContext contextId="PERL5_TRY_CATCH_CATCH">
+    super("PERL5_TRY_CATCH_CATCH", PerlBundle.message("perl.template.context.catch"));
   }
 
   @Override

@@ -16,7 +16,7 @@
 
 package com.perl5.lang.mojolicious.idea.formatter;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.perl5.lang.mojolicious.MojoliciousLanguage;
 import com.perl5.lang.perl.idea.formatter.PerlPreFormatProcessor;
 

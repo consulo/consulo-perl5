@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.psi.impl;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.IElementType;
 import com.perl5.lang.perl.extensions.packageprocessor.PerlPackageProcessor;
 import com.perl5.lang.perl.extensions.packageprocessor.PerlPackageProcessorDefault;
 import com.perl5.lang.perl.extensions.packageprocessor.PerlPackageProcessorService;

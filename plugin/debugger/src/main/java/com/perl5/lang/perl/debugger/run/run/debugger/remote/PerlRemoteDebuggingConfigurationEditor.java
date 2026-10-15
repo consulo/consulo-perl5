@@ -16,17 +16,18 @@
 
 package com.perl5.lang.perl.debugger.run.run.debugger.remote;
 
-import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
-import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.ComboBox;
-import com.intellij.openapi.ui.LabeledComponent;
-import com.intellij.openapi.ui.TextComponentAccessor;
-import com.intellij.openapi.ui.TextFieldWithBrowseButton;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.CollectionComboBoxModel;
-import com.intellij.ui.ColoredListCellRenderer;
-import com.intellij.ui.DocumentAdapter;
+import consulo.fileChooser.FileChooserDescriptorFactory;
+import consulo.configurable.ConfigurationException;
+import consulo.localize.LocalizeValue;
+import consulo.project.Project;
+import consulo.ui.ex.awt.ComboBox;
+import consulo.ui.ex.awt.LabeledComponent;
+import consulo.ui.ex.awt.TextComponentAccessor;
+import consulo.ui.ex.awt.TextFieldWithBrowseButton;
+import consulo.util.lang.StringUtil;
+import consulo.ui.ex.awt.CollectionComboBoxModel;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
+import consulo.ui.ex.awt.event.DocumentAdapter;
 import com.perl5.lang.perl.debugger.PerlDebuggerBundle;
 import com.perl5.lang.perl.idea.run.PerlConfigurationEditorBase;
 import com.perl5.lang.perl.idea.run.debugger.PerlDebugOptionsSets;
@@ -98,7 +99,10 @@ class PerlRemoteDebuggingConfigurationEditor extends PerlConfigurationEditorBase
     }
 
     myLocalProjectRootComponent = new TextFieldWithBrowseButton();
+    // consulo: Consulo TextFieldWithBrowseButton has no (project, descriptor, accessor) overload, title/description come from the descriptor
     myLocalProjectRootComponent.addBrowseFolderListener(
+      LocalizeValue.empty(),
+      LocalizeValue.empty(),
       myProject,
       FileChooserDescriptorFactory.createSingleFolderDescriptor()
         .withTitle(PerlDebuggerBundle.message("perl.run.option.select.local.root")),

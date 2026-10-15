@@ -16,11 +16,10 @@
 
 package com.perl5.lang.perl.cpanminus.adapter;
 
-import com.intellij.openapi.application.ReadAction;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.util.NlsSafe;
-import com.intellij.util.concurrency.annotations.RequiresReadLock;
+import consulo.application.ReadAction;
+import consulo.project.Project;
+import consulo.content.bundle.Sdk;
+import consulo.annotation.access.RequiredReadAction;
 import com.perl5.lang.perl.adapters.PackageManagerAdapter;
 import com.perl5.lang.perl.adapters.PackageManagerAdapterFactory;
 import com.perl5.lang.perl.idea.project.PerlProjectManager;
@@ -35,8 +34,8 @@ import java.util.Collection;
 import java.util.List;
 
 public class CpanminusAdapter extends PackageManagerAdapter {
-  public static final @NlsSafe String SCRIPT_NAME = "cpanm";
-  private static final @NlsSafe String NO_TEST_ARGUMENT = "--notest";
+  public static final String SCRIPT_NAME = "cpanm";
+  private static final String NO_TEST_ARGUMENT = "--notest";
 
   private CpanminusAdapter(@NotNull Sdk sdk, @Nullable Project project) {
     super(sdk, project);
@@ -71,7 +70,7 @@ public class CpanminusAdapter extends PackageManagerAdapter {
   /**
    * @return true iff App::cpanminus is available in sdk classpath
    */
-  @RequiresReadLock
+  @RequiredReadAction
   @Contract("null->false")
   public static boolean isAvailable(@Nullable Project project) {
     return PerlRunUtil.findScript(project, SCRIPT_NAME) != null;
@@ -82,11 +81,11 @@ public class CpanminusAdapter extends PackageManagerAdapter {
     Sdk sdk = PerlProjectManager.getSdk(project);
     return isAvailable(project) && sdk != null ? new CpanminusAdapter(sdk, project) : null;
   }
-
-  public static final class Factory implements PackageManagerAdapterFactory<CpanminusAdapter> {
+  // consulo: registered by consulo/core CpanminusAdapterFactoryRegistration (the annotation processor does not support nested classes)
+  public static class Factory implements PackageManagerAdapterFactory<CpanminusAdapter> {
     @Override
     public @Nullable CpanminusAdapter createAdapter(@NotNull Sdk sdk, @Nullable Project project) {
-      return ReadAction.computeBlocking(() -> isAvailable(project) ? new CpanminusAdapter(sdk, project) : null);
+      return ReadAction.compute(() -> isAvailable(project) ? new CpanminusAdapter(sdk, project) : null);
     }
 
     @VisibleForTesting

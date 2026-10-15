@@ -16,10 +16,10 @@
 
 package com.perl5.lang.perl.psi.stubs;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.util.Processor;
+import consulo.project.Project;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.application.util.function.Processor;
 import com.perl5.lang.perl.psi.impl.PerlPolyNamedElement;
 import com.perl5.lang.perl.psi.light.PerlDelegatingLightNamedElement;
 import org.jetbrains.annotations.NotNull;

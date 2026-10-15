@@ -16,14 +16,15 @@
 
 package com.perl5.lang.pod.idea.editor;
 
-import com.intellij.codeInsight.TargetElementUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.spellchecker.tokenizer.SpellcheckingStrategy;
-import com.intellij.spellchecker.tokenizer.Tokenizer;
+import consulo.language.Language;
+import consulo.language.editor.TargetElementUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiReference;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.PsiUtilCore;
+import consulo.language.spellcheker.SpellcheckingStrategy;
+import consulo.language.spellcheker.tokenizer.Tokenizer;
 import com.perl5.lang.pod.PodLanguage;
 import org.jetbrains.annotations.NotNull;
 
@@ -31,10 +32,15 @@ import static com.perl5.lang.pod.parser.PodElementTypesGenerated.POD_IDENTIFIER;
 
 public class PodSpellCheckingStrategy extends SpellcheckingStrategy {
   @Override
+  public @NotNull Language getLanguage() {
+    return PodLanguage.INSTANCE;
+  }
+
+  @Override
   public @NotNull Tokenizer<?> getTokenizer(PsiElement element) {
     IElementType elementType = PsiUtilCore.getElementType(element);
     if (elementType == POD_IDENTIFIER) {
-      PsiElement namedElement = TargetElementUtil.getInstance().getNamedElement(element, 0);
+      PsiElement namedElement = TargetElementUtil.getNamedElement(element, 0);
       if (namedElement != null) {
         return EMPTY_TOKENIZER;
       }

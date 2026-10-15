@@ -16,13 +16,16 @@
 
 package com.perl5.lang.perl.idea.editor;
 
-import com.intellij.lang.BracePair;
-import com.intellij.lang.PairedBraceMatcher;
-import com.intellij.psi.PsiComment;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiWhiteSpace;
-import com.intellij.psi.tree.IElementType;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.BracePair;
+import consulo.language.Language;
+import consulo.language.PairedBraceMatcher;
+import consulo.language.psi.PsiComment;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiWhiteSpace;
+import consulo.language.ast.IElementType;
+import com.perl5.lang.perl.PerlLanguage;
 import com.perl5.lang.perl.psi.PerlSubDefinitionElement;
 import com.perl5.lang.perl.psi.PsiPerlBlock;
 import com.perl5.lang.perl.psi.PsiPerlConditionalBlock;
@@ -37,6 +40,7 @@ import java.util.stream.Collectors;
 import static com.perl5.lang.perl.parser.PerlElementTypesGenerated.*;
 
 
+@ExtensionImpl
 public class PerlBraceMatcher implements PairedBraceMatcher {
   public static final Map<IElementType, IElementType> PERL_BRACES_MAP = Map.of(
     LEFT_BRACE, RIGHT_BRACE,
@@ -112,5 +116,10 @@ public class PerlBraceMatcher implements PairedBraceMatcher {
     }
 
     return keyword != null ? keyword.getTextOffset() : openingBraceOffset;
+  }
+
+  @Override
+  public @NotNull Language getLanguage() {
+    return PerlLanguage.INSTANCE;
   }
 }

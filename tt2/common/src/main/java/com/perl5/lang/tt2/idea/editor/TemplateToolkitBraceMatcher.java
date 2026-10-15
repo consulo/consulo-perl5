@@ -16,10 +16,12 @@
 
 package com.perl5.lang.tt2.idea.editor;
 
-import com.intellij.lang.BracePair;
-import com.intellij.lang.PairedBraceMatcher;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.tree.IElementType;
+import com.perl5.lang.tt2.TemplateToolkitLanguage;
+import consulo.language.BracePair;
+import consulo.language.Language;
+import consulo.language.PairedBraceMatcher;
+import consulo.language.psi.PsiFile;
+import consulo.language.ast.IElementType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,6 +35,11 @@ public class TemplateToolkitBraceMatcher implements PairedBraceMatcher {
     new BracePair(TT2_LEFT_BRACKET, TT2_RIGHT_BRACKET, true),
     new BracePair(TT2_LEFT_PAREN, TT2_RIGHT_PAREN, true),
   };
+
+  @Override
+  public @NotNull Language getLanguage() {
+    return TemplateToolkitLanguage.INSTANCE;
+  }
 
   @Override
   public BracePair @NotNull [] getPairs() {

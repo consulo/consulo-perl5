@@ -16,23 +16,22 @@
 
 package com.perl5.lang.htmlmason.idea.completion;
 
-import com.intellij.codeInsight.completion.CompletionResultSet;
-import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
-import com.intellij.util.Processor;
+import consulo.language.editor.completion.CompletionResultSet;
+import consulo.language.icon.IconDescriptorUpdaters;
+import consulo.language.editor.completion.lookup.LookupElementBuilder;
+import consulo.project.Project;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
+import consulo.application.util.function.Processor;
 import com.perl5.lang.htmlmason.HTMLMasonUtil;
 import com.perl5.lang.htmlmason.filetypes.HTMLMasonFileType;
-import com.perl5.lang.htmlmason.idea.configuration.HTMLMasonSettings;
 import com.perl5.lang.htmlmason.parser.psi.HTMLMasonCompositeElement;
 import com.perl5.lang.htmlmason.parser.psi.HTMLMasonParametrizedEntity;
 import com.perl5.lang.htmlmason.parser.psi.HTMLMasonSubcomponentDefitnition;
 import com.perl5.lang.htmlmason.parser.psi.impl.HTMLMasonFileImpl;
-import com.perl5.lang.perl.idea.project.PerlProjectManager;
 import org.jetbrains.annotations.NotNull;
 
 import static com.perl5.lang.htmlmason.HTMLMasonSyntaxElements.*;
@@ -56,7 +55,7 @@ public final class HTMLMasonCompletionUtil {
       if (name != null) {
         resultSet.addElement(LookupElementBuilder
                                .create(element, name)
-                               .withIcon(element.getIcon(0))
+                               .withIcon(IconDescriptorUpdaters.getIcon(element, 0))
                                .withTailText(HTMLMasonUtil.getArgumentsListAsString((HTMLMasonParametrizedEntity)element))
         );
       }
@@ -69,7 +68,7 @@ public final class HTMLMasonCompletionUtil {
       if (name != null) {
         resultSet.addElement(LookupElementBuilder
                                .create(element, name)
-                               .withIcon(element.getIcon(0))
+                               .withIcon(IconDescriptorUpdaters.getIcon(element, 0))
                                .withTailText(HTMLMasonUtil.getArgumentsListAsString(element))
         );
       }
@@ -83,16 +82,13 @@ public final class HTMLMasonCompletionUtil {
     VirtualFile containingFile = HTMLMasonUtil.getComponentVirtualFile(component);
     VirtualFile root;
     if (containingFile != null && (root = containingFile.getParent()) != null) {
-      VfsUtilCore.processFilesRecursively(root, new ComponentsFilesCollector("", root, resultSet, project));
+      VirtualFileUtil.processFilesRecursively(root, new ComponentsFilesCollector("", root, resultSet, project));
     }
   }
 
   public static void fillWithAbsoluteSubcomponents(final @NotNull CompletionResultSet resultSet, @NotNull Project project) {
-    HTMLMasonSettings masonSettings = HTMLMasonSettings.getInstance(project);
-
-    for (VirtualFile componentRoot : PerlProjectManager.getInstance(masonSettings.getProject())
-      .getModulesRootsOfType(masonSettings.getSourceRootType())) {
-      VfsUtilCore.processFilesRecursively(componentRoot, new ComponentsFilesCollector("/", componentRoot, resultSet, project));
+    for (VirtualFile componentRoot : HTMLMasonUtil.getComponentRoots(project)) {
+      VirtualFileUtil.processFilesRecursively(componentRoot, new ComponentsFilesCollector("/", componentRoot, resultSet, project));
     }
   }
 
@@ -115,7 +111,7 @@ public final class HTMLMasonCompletionUtil {
     @Override
     public boolean process(VirtualFile virtualFile) {
       if (virtualFile.getFileType() == HTMLMasonFileType.INSTANCE) {
-        String relPath = VfsUtilCore.getRelativePath(virtualFile, myRoot);
+        String relPath = VirtualFileUtil.getRelativePath(virtualFile, myRoot);
         if (StringUtil.isNotEmpty(relPath)) {
           LookupElementBuilder newElement = LookupElementBuilder
             .create(virtualFile, myPrefix + relPath)

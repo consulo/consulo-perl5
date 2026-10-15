@@ -16,11 +16,11 @@
 
 package com.perl5.lang.pod.parser.psi.util;
 
-import com.intellij.codeInsight.documentation.DocumentationManagerProtocol;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.xml.util.XmlStringUtil;
+import consulo.language.editor.documentation.DocumentationManagerProtocol;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.util.lang.xml.XmlStringUtil;
 import com.perl5.lang.pod.parser.psi.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

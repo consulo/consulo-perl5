@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.psi.mixins;
 
-import com.intellij.lang.ASTNode;
+import consulo.language.ast.ASTNode;
 import com.perl5.lang.perl.psi.PerlCastExpression;
 import com.perl5.lang.perl.psi.impl.PsiPerlExprImpl;
 

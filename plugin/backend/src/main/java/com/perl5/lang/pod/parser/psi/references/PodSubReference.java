@@ -16,13 +16,13 @@
 
 package com.perl5.lang.pod.parser.psi.references;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.*;
-import com.intellij.psi.search.searches.ReferencesSearch;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.IncorrectOperationException;
+import consulo.project.Project;
+import consulo.document.util.TextRange;
+import consulo.util.lang.StringUtil;
+
+import consulo.language.psi.search.ReferencesSearch;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.util.IncorrectOperationException;
 import com.perl5.lang.perl.psi.PerlSubDeclarationElement;
 import com.perl5.lang.perl.psi.PerlSubDefinitionElement;
 import com.perl5.lang.perl.psi.references.PerlCachingReference;
@@ -38,6 +38,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiElementResolveResult;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiReference;
+import consulo.language.psi.ResolveResult;
 
 public class PodSubReference extends PerlCachingReference<PodIdentifierImpl> {
   public PodSubReference(PodIdentifierImpl element) {

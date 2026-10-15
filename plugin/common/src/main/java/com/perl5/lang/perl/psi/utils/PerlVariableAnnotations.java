@@ -16,14 +16,17 @@
 
 package com.perl5.lang.perl.psi.utils;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.stubs.StubBuildCachedValuesManager.StubBuildCachedValueProvider;
-import com.intellij.psi.util.CachedValueProvider;
-import com.intellij.psi.util.PsiModificationTracker;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.util.Processor;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.language.psi.PsiElement;
+import consulo.application.util.CachedValue;
+import consulo.application.util.CachedValueProvider;
+import consulo.application.util.ParameterizedCachedValueProvider;
+import consulo.language.psi.util.LanguageCachedValueUtil;
+import consulo.util.dataholder.Key;
+import consulo.language.psi.PsiModificationTracker;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.psi.PsiUtilCore;
+import consulo.application.util.function.Processor;
+import consulo.util.collection.ContainerUtil;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlValue;
 import com.perl5.lang.perl.lexer.PerlTokenSetsEx;
 import com.perl5.lang.perl.parser.PerlElementTypesGenerated;
@@ -32,7 +35,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static com.intellij.psi.stubs.StubBuildCachedValuesManager.getCachedValueStubBuildOptimized;
 import static com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlValues.UNKNOWN_VALUE;
 
 public class PerlVariableAnnotations {
@@ -113,9 +115,9 @@ public class PerlVariableAnnotations {
     return annotations.isEmpty() ? EMPTY : annotations;
   }
 
-  private static final StubBuildCachedValueProvider<List<PerlAnnotation>, PerlVariableDeclarationElement> ANNOTATIONS_PROVIDER =
-    new StubBuildCachedValueProvider<>(
-      "perl.variable.annotations",
+  // TODO consulo: StubBuildCachedValuesManager is missing in Consulo, a regular cached value is used (no stub building optimization)
+  private static final Key<CachedValue<List<PerlAnnotation>>> ANNOTATIONS_KEY = Key.create("perl.variable.annotations");
+  private static final ParameterizedCachedValueProvider<List<PerlAnnotation>, PerlVariableDeclarationElement> ANNOTATIONS_PROVIDER =
       variableDeclarationElement -> {
         List<PerlAnnotation> perlAnnotations = PerlAnnotations.collectAnnotations(variableDeclarationElement);
         var declarationExpression = variableDeclarationElement.getDeclarationExpression();
@@ -134,11 +136,11 @@ public class PerlVariableAnnotations {
             it -> !(it instanceof PsiPerlAnnotationDeprecated));
         }
         return CachedValueProvider.Result.create(perlAnnotations, PsiModificationTracker.MODIFICATION_COUNT);
-      }
-    );
+      };
 
   private static @NotNull List<PerlAnnotation> collectAnnotationsInScope(@NotNull PerlVariableDeclarationElement variableDeclarationElement) {
-    return getCachedValueStubBuildOptimized(variableDeclarationElement, ANNOTATIONS_PROVIDER);
+    return LanguageCachedValueUtil.getCachedValue(
+      variableDeclarationElement, ANNOTATIONS_KEY, () -> ANNOTATIONS_PROVIDER.compute(variableDeclarationElement));
   }
 
   public static boolean processAnnotations(@NotNull PerlVariableDeclarationElement variableDeclarationElement,

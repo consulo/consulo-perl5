@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.debugger.values;
 
-import com.intellij.xdebugger.frame.XCompositeNode;
+import consulo.execution.debug.frame.XCompositeNode;
 import com.perl5.PerlIcons;
 import com.perl5.lang.perl.debugger.PerlDebugUtil;
 import com.perl5.lang.perl.debugger.PerlStackFrame;

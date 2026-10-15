@@ -16,17 +16,24 @@
 
 package com.perl5.lang.perl.idea.completion;
 
-import com.intellij.codeInsight.completion.*;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiUtilCore;
+
+import com.perl5.lang.perl.PerlLanguage;
+import consulo.language.Language;
+import consulo.logging.Logger;
+import consulo.language.psi.PsiElement;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.PsiUtilCore;
 import com.perl5.lang.perl.idea.completion.providers.*;
 import com.perl5.lang.perl.lexer.PerlTokenSets;
 import org.jetbrains.annotations.NotNull;
 
 import static com.perl5.lang.perl.idea.PerlElementPatterns.*;
 import static com.perl5.lang.perl.parser.PerlElementTypesGenerated.*;
+import consulo.language.editor.completion.CompletionContributor;
+import consulo.language.editor.completion.CompletionInitializationContext;
+import consulo.language.editor.completion.CompletionParameters;
+import consulo.language.editor.completion.CompletionResultSet;
+import consulo.language.editor.completion.CompletionType;
 
 
 public class PerlCompletionContributor extends CompletionContributor {
@@ -121,6 +128,11 @@ public class PerlCompletionContributor extends CompletionContributor {
       SUB_NAME_PATTERN,
       new PerlVariableCompletionProvider()
     );
+  }
+
+  @Override
+  public @NotNull Language getLanguage() {
+    return PerlLanguage.INSTANCE;
   }
 
   @Override

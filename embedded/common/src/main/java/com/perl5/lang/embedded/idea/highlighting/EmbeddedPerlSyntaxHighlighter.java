@@ -16,9 +16,9 @@
 
 package com.perl5.lang.embedded.idea.highlighting;
 
-import com.intellij.lexer.Lexer;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.tree.TokenSet;
+import consulo.language.lexer.Lexer;
+import consulo.project.Project;
+import consulo.language.ast.TokenSet;
 import com.perl5.lang.embedded.lexer.EmbeddedPerlLexerAdapter;
 import com.perl5.lang.perl.idea.highlighter.PerlSyntaxHighlighterEmbedded;
 import org.jetbrains.annotations.NotNull;

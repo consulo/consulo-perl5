@@ -16,9 +16,9 @@
 
 package com.perl5.lang.htmlmason.idea.editor;
 
-import com.intellij.lang.folding.FoldingDescriptor;
-import com.intellij.openapi.editor.Document;
-import com.intellij.psi.PsiElement;
+import consulo.language.editor.folding.FoldingDescriptor;
+import consulo.document.Document;
+import consulo.language.psi.PsiElement;
 import com.perl5.lang.perl.idea.folding.PerlFoldingBuilder;
 
 import java.util.List;

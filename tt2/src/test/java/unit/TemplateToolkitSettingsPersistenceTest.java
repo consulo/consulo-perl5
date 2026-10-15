@@ -17,7 +17,7 @@
 package unit;
 
 import base.TemplateToolkitLightTestCase;
-import com.intellij.configurationStore.XmlSerializer;
+import consulo.util.xml.serializer.XmlSerializer;
 import com.perl5.lang.tt2.idea.settings.TemplateToolkitSettings;
 import org.junit.Test;
 

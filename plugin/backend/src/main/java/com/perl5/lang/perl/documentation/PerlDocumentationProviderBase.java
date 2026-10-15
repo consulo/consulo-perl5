@@ -16,11 +16,11 @@
 
 package com.perl5.lang.perl.documentation;
 
-import com.intellij.lang.documentation.AbstractDocumentationProvider;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
+import consulo.language.editor.documentation.AbstractDocumentationProvider;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
 import com.perl5.lang.perl.psi.impl.PerlFileImpl;
 import com.perl5.lang.pod.filetypes.PodFileType;
 

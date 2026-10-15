@@ -16,9 +16,9 @@
 
 package com.perl5.lang.embedded.idea.editor.smartkeys;
 
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.EditorModificationUtilEx;
-import com.intellij.openapi.editor.highlighter.HighlighterIterator;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.util.EditorModificationUtil;
+import consulo.codeEditor.HighlighterIterator;
 import org.jetbrains.annotations.NotNull;
 
 import static com.perl5.lang.embedded.psi.EmbeddedPerlElementTypes.EMBED_MARKER_CLOSE;
@@ -39,7 +39,7 @@ public final class EmbeddedPerlSmartKeysUtil {
       var highlighter = editor.getHighlighter();
       var highlighterIterator = highlighter.createIterator(offset - 2);
       if (highlighterIterator.getTokenType() == EMBED_MARKER_OPEN && !hasCloseMarkerAhead(highlighterIterator)) {
-        EditorModificationUtilEx.insertStringAtCaret(editor, marker, false, false);
+        EditorModificationUtil.insertStringAtCaret(editor, marker, false, false);
       }
     }
   }

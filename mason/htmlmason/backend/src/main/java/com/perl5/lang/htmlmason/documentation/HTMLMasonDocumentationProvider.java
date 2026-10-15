@@ -16,9 +16,9 @@
 
 package com.perl5.lang.htmlmason.documentation;
 
-import com.intellij.lang.documentation.AbstractDocumentationProvider;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
+import consulo.language.editor.documentation.AbstractDocumentationProvider;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiElement;
 import com.perl5.lang.htmlmason.HTMLMasonUtil;
 import com.perl5.lang.htmlmason.HtmlMasonBundle;
 import com.perl5.lang.htmlmason.parser.psi.impl.HTMLMasonFileImpl;

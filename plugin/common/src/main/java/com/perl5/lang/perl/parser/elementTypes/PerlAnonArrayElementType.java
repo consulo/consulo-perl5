@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.parser.elementTypes;
 
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 import com.perl5.lang.perl.lexer.PerlTemplatingLexer;
 import org.jetbrains.annotations.NotNull;
 

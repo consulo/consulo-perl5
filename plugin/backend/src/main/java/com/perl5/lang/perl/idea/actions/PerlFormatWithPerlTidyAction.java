@@ -16,25 +16,26 @@
 
 package com.perl5.lang.perl.idea.actions;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.process.BaseProcessHandler;
-import com.intellij.execution.process.ProcessOutput;
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationType;
-import com.intellij.notification.Notifications;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.Presentation;
-import com.intellij.openapi.application.ReadAction;
-import com.intellij.openapi.command.WriteCommandAction;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.openapi.progress.Task;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiFile;
+import consulo.process.ExecutionException;
+import consulo.process.BaseProcessHandler;
+import consulo.process.util.ProcessOutput;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationGroup;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.notification.Notifications;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
+import consulo.application.ReadAction;
+import consulo.language.editor.WriteCommandAction;
+import consulo.logging.Logger;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.Task;
+import consulo.project.Project;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.psi.PsiFile;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.idea.configuration.settings.PerlSharedSettings;
 import com.perl5.lang.perl.idea.execution.PerlCommandLine;
@@ -57,8 +58,9 @@ public class PerlFormatWithPerlTidyAction extends PurePerlActionBase {
     super(PerlBundle.message("perl.action.reformat.perl.tidy"));
   }
 
-  private @NotNull String getGroup() {
-    return PerlBundle.message("perl.action.perl.tidy.notification.group");
+  // consulo: notification groups must be registered, see PerlActionsNotificationGroupContributor
+  private @NotNull NotificationGroup getGroup() {
+    return PerlActionsNotificationGroupContributor.PERL_TIDY;
   }
 
   @Override
@@ -80,7 +82,7 @@ public class PerlFormatWithPerlTidyAction extends PurePerlActionBase {
   private @Nullable PerlCommandLine getPerlTidyCommandLine(@NotNull Project project) {
     PerlSharedSettings sharedSettings = PerlSharedSettings.getInstance(project);
     VirtualFile perlTidyScript =
-      ReadAction.computeBlocking(() -> PerlRunUtil.findLibraryScriptWithNotification(project, SCRIPT_NAME, PERL_TIDY_PACKAGE_NAME));
+      ReadAction.compute(() -> PerlRunUtil.findLibraryScriptWithNotification(project, SCRIPT_NAME, PERL_TIDY_PACKAGE_NAME));
     if (perlTidyScript == null) {
       return null;
     }
@@ -130,7 +132,7 @@ public class PerlFormatWithPerlTidyAction extends PurePerlActionBase {
             if (perlTidyCommandLine == null) {
               return;
             }
-            BaseProcessHandler<?> processHandler = PerlHostData.createProcessHandler(
+            BaseProcessHandler processHandler = PerlHostData.createProcessHandler(
               perlTidyCommandLine.withCharset(virtualFile.getCharset()));
 
             final OutputStream outputStream = Objects.requireNonNull(processHandler.getProcessInput());

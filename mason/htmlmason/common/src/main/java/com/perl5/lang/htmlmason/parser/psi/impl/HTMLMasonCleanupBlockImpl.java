@@ -16,7 +16,7 @@
 
 package com.perl5.lang.htmlmason.parser.psi.impl;
 
-import com.intellij.lang.ASTNode;
+import consulo.language.ast.ASTNode;
 import com.perl5.lang.htmlmason.parser.psi.HTMLMasonCleanupBlock;
 import org.jetbrains.annotations.NotNull;
 

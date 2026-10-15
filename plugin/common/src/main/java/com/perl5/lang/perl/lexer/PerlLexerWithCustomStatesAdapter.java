@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.lexer;
 
-import com.intellij.lexer.LexerBase;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.lexer.LexerBase;
+import consulo.language.ast.IElementType;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;

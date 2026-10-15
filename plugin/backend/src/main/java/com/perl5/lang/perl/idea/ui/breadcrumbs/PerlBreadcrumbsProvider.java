@@ -16,13 +16,13 @@
 
 package com.perl5.lang.perl.idea.ui.breadcrumbs;
 
-import com.intellij.lang.Language;
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.ui.breadcrumbs.BreadcrumbsProvider;
+import consulo.language.Language;
+import consulo.navigation.ItemPresentation;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.icon.IconDescriptorUpdaters;
 import com.perl5.lang.perl.PerlLanguage;
 import com.perl5.lang.perl.psi.*;
 import com.perl5.lang.perl.psi.impl.PerlPolyNamedElement;
@@ -31,17 +31,17 @@ import com.perl5.lang.perl.psi.properties.PerlBlockOwner;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
+import consulo.ui.image.Image;
 import java.util.Objects;
 
-public class PerlBreadcrumbsProvider implements BreadcrumbsProvider {
+// TODO consulo: Consulo has no breadcrumbs API (BreadcrumbsProvider was dropped in favour of the navigation bar), so this
+//  class is not an extension; the methods are kept (getStructuralParentElement is used by usage grouping rules)
+public class PerlBreadcrumbsProvider {
 
-  @Override
   public Language[] getLanguages() {
     return PerlLanguage.ARRAY;
   }
 
-  @Override
   public boolean acceptElement(@NotNull PsiElement element) {
     return element instanceof PerlFile ||
            element instanceof PerlMethodModifier ||
@@ -51,7 +51,6 @@ public class PerlBreadcrumbsProvider implements BreadcrumbsProvider {
            namespaceDefinitionElement.getNamespaceName() != null;
   }
 
-  @Override
   public @Nullable PsiElement getParent(@NotNull PsiElement element) {
     PsiElement structuralParent = getStructuralParentElement(element);
     return structuralParent instanceof PsiFile ? null : structuralParent;
@@ -102,12 +101,10 @@ public class PerlBreadcrumbsProvider implements BreadcrumbsProvider {
     return nearestParent;
   }
 
-  @Override
-  public @Nullable Icon getElementIcon(@NotNull PsiElement element) {
-    return element.getIcon(0);
+  public @Nullable Image getElementIcon(@NotNull PsiElement element) {
+    return IconDescriptorUpdaters.getIcon(element, 0);
   }
 
-  @Override
   public @NotNull String getElementInfo(@NotNull PsiElement element) {
     switch (element) {
       case PerlFile file -> {

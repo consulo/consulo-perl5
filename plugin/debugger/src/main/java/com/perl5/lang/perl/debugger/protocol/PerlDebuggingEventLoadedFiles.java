@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.debugger.protocol;
 
-import com.perl5.lang.perl.debugger.ui.PerlScriptsPanel;
+import com.perl5.lang.perl.debugger.ui.PerlUnifiedScriptsPanel; // consulo: unified replacement of the Swing PerlScriptsPanel (not available in web)
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,8 +28,8 @@ public class PerlDebuggingEventLoadedFiles extends PerlDebuggingEventBase {
 
   @Override
   public void run() {
-    PerlScriptsPanel evalsListPanel = getDebugThread().getEvalsListPanel();
-    PerlScriptsPanel scriptListPanel = getDebugThread().getScriptListPanel();
+    PerlUnifiedScriptsPanel evalsListPanel = getDebugThread().getEvalsListPanel();
+    PerlUnifiedScriptsPanel scriptListPanel = getDebugThread().getScriptListPanel();
     List<PerlLoadedFileDescriptor> evalRemove = new ArrayList<>();
     List<PerlLoadedFileDescriptor> evalAdd = new ArrayList<>();
     List<PerlLoadedFileDescriptor> scriptRemove = new ArrayList<>();

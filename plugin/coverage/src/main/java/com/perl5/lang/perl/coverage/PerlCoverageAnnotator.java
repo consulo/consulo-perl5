@@ -16,14 +16,24 @@
 
 package com.perl5.lang.perl.coverage;
 
-import com.intellij.coverage.SimpleCoverageAnnotator;
-import com.intellij.openapi.project.Project;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
+import consulo.execution.coverage.SimpleCoverageAnnotator;
+import consulo.project.Project;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
-import java.nio.file.Path;
+import java.io.File;
 
+// consulo: upstream <projectService> registration in perl5.plugin.coverage.main.xml
+@ServiceAPI(ComponentScope.PROJECT)
+@ServiceImpl
+@Singleton
 public class PerlCoverageAnnotator extends SimpleCoverageAnnotator {
+  @Inject
   public PerlCoverageAnnotator(Project project) {
     super(project);
   }
@@ -32,8 +42,9 @@ public class PerlCoverageAnnotator extends SimpleCoverageAnnotator {
     return project.getService(PerlCoverageAnnotator.class);
   }
 
+  // consulo: Consulo SimpleCoverageAnnotator#fillInfoForUncoveredFile accepts a File
   @Override
-  protected @Nullable FileCoverageInfo fillInfoForUncoveredFile(@NotNull Path file) {
+  protected @Nullable FileCoverageInfo fillInfoForUncoveredFile(@NotNull File file) {
     return new FileCoverageInfo();
   }
 

@@ -16,11 +16,11 @@
 
 package com.perl5.lang.perl.intellilang;
 
-import com.intellij.patterns.InitialPatternCondition;
-import com.intellij.psi.ElementManipulators;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiLanguageInjectionHost;
-import com.intellij.util.ProcessingContext;
+import consulo.language.pattern.InitialPatternCondition;
+import consulo.language.psi.ElementManipulators;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiLanguageInjectionHost;
+import consulo.language.util.ProcessingContext;
 import com.perl5.lang.perl.idea.intellilang.PerlElementPatterns;
 import com.perl5.lang.perl.psi.PerlCompositeElement;
 import org.jetbrains.annotations.NotNull;

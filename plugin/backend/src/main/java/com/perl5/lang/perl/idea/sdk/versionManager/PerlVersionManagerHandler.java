@@ -16,10 +16,9 @@
 
 package com.perl5.lang.perl.idea.sdk.versionManager;
 
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.util.NlsActions.ActionText;
+import consulo.disposer.Disposable;
+import consulo.project.Project;
+import consulo.content.bundle.Sdk;
 import com.perl5.lang.perl.idea.sdk.AbstractPerlHandler;
 import com.perl5.lang.perl.idea.sdk.PerlHandlerBean;
 import com.perl5.lang.perl.idea.sdk.PerlHandlerCollector;
@@ -61,7 +60,7 @@ public abstract class PerlVersionManagerHandler<Data extends PerlVersionManagerD
   /**
    * @return title for menu item in add interpreter dialog
    */
-  public abstract @NotNull @ActionText String getMenuItemTitle();
+  public abstract @NotNull String getMenuItemTitle();
 
   /**
    * @return short lowercased name, for interpreters list

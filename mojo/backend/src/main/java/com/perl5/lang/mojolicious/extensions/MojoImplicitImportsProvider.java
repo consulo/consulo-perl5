@@ -16,9 +16,10 @@
 
 package com.perl5.lang.mojolicious.extensions;
 
-import com.intellij.psi.util.CachedValueProvider;
-import com.intellij.psi.util.CachedValuesManager;
-import com.intellij.psi.util.PsiModificationTracker;
+import consulo.application.util.CachedValueProvider;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.psi.util.LanguageCachedValueUtil;
+import consulo.language.psi.PsiModificationTracker;
 import com.perl5.lang.mojolicious.psi.impl.MojoHelperDefinition;
 import com.perl5.lang.mojolicious.psi.impl.MojoliciousFile;
 import com.perl5.lang.mojolicious.psi.impl.MojoliciousFileImpl;
@@ -35,6 +36,7 @@ import java.util.List;
 
 import static com.perl5.lang.mojolicious.psi.impl.MojoliciousFile.MOJO_CONTROLLER_NS;
 
+@ExtensionImpl
 public class MojoImplicitImportsProvider implements PerlImportsProvider {
   public static final List<PerlExportDescriptor> HARDCODED_DESCRIPTORS = Arrays.asList(
 
@@ -92,7 +94,7 @@ public class MojoImplicitImportsProvider implements PerlImportsProvider {
 
   @Override
   public @NotNull List<PerlExportDescriptor> getExportDescriptors(@NotNull PerlNamespaceDefinitionElement namespaceElement) {
-    return CachedValuesManager.getCachedValue(namespaceElement, () -> {
+    return LanguageCachedValueUtil.getCachedValue(namespaceElement, () -> {
       List<PerlExportDescriptor> result = new ArrayList<>(MojoImplicitImportsProvider.HARDCODED_DESCRIPTORS);
       PerlLightSubDefinitionsReverseIndex.getInstance().processLightElements(
         namespaceElement.getProject(), MOJO_CONTROLLER_NS, namespaceElement.getResolveScope(), sub -> {

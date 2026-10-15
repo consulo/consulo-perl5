@@ -16,10 +16,10 @@
 
 package com.perl5.lang.perl.psi;
 
-import com.intellij.navigation.NavigationItem;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiInvalidElementAccessException;
-import com.intellij.psi.PsiNamedElement;
+import consulo.navigation.NavigationItem;
+import consulo.project.Project;
+import consulo.language.psi.PsiInvalidElementAccessException;
+import consulo.language.psi.PsiNamedElement;
 import com.perl5.lang.perl.extensions.packageprocessor.PerlExportDescriptor;
 import com.perl5.lang.perl.util.processors.*;
 import org.jetbrains.annotations.Contract;

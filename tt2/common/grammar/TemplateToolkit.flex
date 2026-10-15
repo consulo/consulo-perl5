@@ -1,7 +1,7 @@
 package com.perl5.lang.tt2.lexer;
 
-import com.intellij.psi.TokenType;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.TokenType;
+import consulo.language.ast.IElementType;
 import com.perl5.lang.perl.lexer.PerlProtoLexer;
 import com.perl5.lang.tt2.elementTypes.TemplateToolkitElementTypes;
 import static com.perl5.lang.tt2.parser.TemplateToolkitElementTypesGenerated.*;
@@ -20,6 +20,11 @@ import static com.perl5.lang.tt2.parser.TemplateToolkitElementTypesGenerated.*;
 
 
 %{
+  // consulo: maven-consulo-plugin does not generate the constructor when a custom skeleton is used
+  public TemplateToolkitLexerGenerated(java.io.Reader in) {
+    this.zzReader = in;
+  }
+
     public abstract IElementType parseIdentifier();
 %}
 

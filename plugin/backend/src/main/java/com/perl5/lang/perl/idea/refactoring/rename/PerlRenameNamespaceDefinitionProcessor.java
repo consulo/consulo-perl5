@@ -16,14 +16,14 @@
 
 package com.perl5.lang.perl.idea.refactoring.rename;
 
-import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.search.searches.ReferencesSearch;
-import com.intellij.refactoring.listeners.RefactoringElementListener;
-import com.intellij.util.IncorrectOperationException;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiReference;
+import consulo.language.psi.search.ReferencesSearch;
+import consulo.language.editor.refactoring.event.RefactoringElementListener;
+import consulo.language.util.IncorrectOperationException;
 import com.perl5.lang.perl.fileTypes.PerlFileTypePackage;
 import com.perl5.lang.perl.psi.PerlNamespaceDefinitionWithIdentifier;
 import com.perl5.lang.perl.psi.utils.PerlPsiUtil;
@@ -53,7 +53,7 @@ public class PerlRenameNamespaceDefinitionProcessor extends PerlRenamePolyRefere
       VirtualFile classRoot = PerlPackageUtil.getClosestIncRoot(namespaceDefinition.getProject(), virtualFile);
 
       return classRoot != null &&
-             currentPackageName.equals(PerlPackageUtilCore.getPackageNameByPath(VfsUtilCore.getRelativePath(virtualFile, classRoot)));
+             currentPackageName.equals(PerlPackageUtilCore.getPackageNameByPath(VirtualFileUtil.getRelativePath(virtualFile, classRoot)));
     }
     return false;
   }

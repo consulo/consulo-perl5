@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.psi.properties;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.util.PsiTreeUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiElementVisitor;
+import consulo.language.psi.util.PsiTreeUtil;
 import com.perl5.lang.perl.psi.impl.PerlImplicitVariableDeclaration;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;

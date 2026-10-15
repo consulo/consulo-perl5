@@ -16,8 +16,8 @@
 
 package com.perl5.lang.tt2.elementTypes;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiElement;
 import com.perl5.lang.tt2.psi.impl.TemplateToolkitRawPerlBlockElementImpl;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;

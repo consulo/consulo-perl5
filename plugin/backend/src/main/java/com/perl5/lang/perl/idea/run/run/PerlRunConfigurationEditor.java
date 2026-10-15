@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.idea.run.run;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.perl5.lang.perl.idea.run.GenericPerlRunConfigurationEditor;
 import com.perl5.lang.perl.idea.run.GenericPerlRunConfigurationEditorPanel;
 import com.perl5.lang.perl.idea.run.GenericPerlRunConfigurationProducer;

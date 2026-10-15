@@ -16,12 +16,12 @@
 
 package com.perl5.lang.perl.idea.editor;
 
-import com.intellij.codeInsight.editorActions.ExtendWordSelectionHandlerBase;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.templateLanguages.OuterLanguageElementImpl;
+import consulo.language.editor.action.ExtendWordSelectionHandlerBase;
+import consulo.codeEditor.Editor;
+import consulo.util.lang.function.Condition;
+import consulo.document.util.TextRange;
+import consulo.language.psi.PsiElement;
+import consulo.language.impl.psi.template.OuterLanguageElementImpl;
 import com.perl5.lang.perl.PerlLanguage;
 import com.perl5.lang.perl.psi.impl.PerlVariableNameElementImpl;
 import org.jetbrains.annotations.NotNull;

@@ -16,11 +16,11 @@
 
 package com.perl5.lang.mojolicious.idea.liveTemplates;
 
-import com.intellij.lang.Language;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiWhiteSpace;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.Language;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiWhiteSpace;
+import consulo.language.psi.PsiUtilCore;
 import com.perl5.lang.mojolicious.MojoliciousElementTypes;
 import com.perl5.lang.mojolicious.MojoliciousLanguage;
 import com.perl5.lang.mojolicious.psi.impl.MojoliciousFileImpl;

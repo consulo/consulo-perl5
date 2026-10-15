@@ -16,12 +16,12 @@
 
 package com.perl5.lang.pod.idea.inspections;
 
-import com.intellij.codeInspection.LocalInspectionTool;
-import com.intellij.codeInspection.ProblemHighlightType;
-import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.PsiPolyVariantReference;
-import com.intellij.psi.PsiReference;
+import consulo.language.editor.inspection.LocalInspectionTool;
+import consulo.language.editor.inspection.ProblemHighlightType;
+import consulo.language.editor.inspection.ProblemsHolder;
+import consulo.language.psi.PsiElementVisitor;
+import consulo.language.psi.PsiPolyVariantReference;
+import consulo.language.psi.PsiReference;
 import com.perl5.PerlBundle;
 import com.perl5.lang.pod.parser.psi.PodLinkDescriptor;
 import com.perl5.lang.pod.parser.psi.PodVisitor;
@@ -30,8 +30,15 @@ import com.perl5.lang.pod.parser.psi.references.PodLinkToFileReference;
 import com.perl5.lang.pod.parser.psi.references.PodLinkToSectionReference;
 import com.perl5.lang.pod.psi.PsiPodFormatLink;
 import org.jetbrains.annotations.NotNull;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.Language;
+import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
+import consulo.localize.LocalizeValue;
+import com.perl5.lang.pod.PodLanguage;
+import org.jetbrains.annotations.Nullable;
 
 
+@ExtensionImpl
 public class PodUnresolvableLinkInspection extends LocalInspectionTool {
   @Override
   public @NotNull PsiElementVisitor buildVisitor(final @NotNull ProblemsHolder holder, boolean isOnTheFly) {
@@ -74,5 +81,26 @@ public class PodUnresolvableLinkInspection extends LocalInspectionTool {
         super.visitPodFormatLink(o);
       }
     };
+  }
+
+  // consulo: metadata from upstream <localInspection> registration in perl5.plugin.backend.main.xml
+  @Override
+  public @Nullable Language getLanguage() {
+    return PodLanguage.INSTANCE;
+  }
+
+  @Override
+  public @NotNull LocalizeValue getDisplayName() {
+    return LocalizeValue.localizeTODO(PerlBundle.message("inspection.pod.unresolvable.link.display.name"));
+  }
+
+  @Override
+  public @NotNull LocalizeValue getGroupDisplayName() {
+    return LocalizeValue.localizeTODO(PerlBundle.message("perl5.pod.group"));
+  }
+
+  @Override
+  public @NotNull HighlightDisplayLevel getDefaultLevel() {
+    return HighlightDisplayLevel.WARNING;
   }
 }

@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.idea.configuration.settings.sdk.wrappers;
 
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.ui.ColoredListCellRenderer;
+import consulo.content.bundle.Sdk;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

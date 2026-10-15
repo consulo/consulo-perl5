@@ -16,29 +16,26 @@
 
 package com.perl5.lang.perl.intellilang;
 
-import com.intellij.lang.injection.MultiHostInjector;
-import com.intellij.lang.injection.MultiHostRegistrar;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiLanguageInjectionHost;
-import com.intellij.psi.impl.source.tree.PsiCommentImpl;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.inject.MultiHostInjector;
+import consulo.language.inject.MultiHostRegistrar;
+import consulo.document.util.TextRange;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiLanguageInjectionHost;
+import consulo.language.impl.psi.PsiCommentImpl;
+import consulo.language.psi.PsiUtilCore;
 import com.perl5.lang.perl.idea.intellilang.PerlInjectionMarkersService;
 import com.perl5.lang.perl.psi.PerlAnnotationInject;
 import com.perl5.lang.perl.psi.utils.PerlAnnotations;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
-import java.util.List;
-
 import static com.perl5.lang.perl.parser.PerlElementTypesGenerated.COMMENT_BLOCK;
 import static com.perl5.lang.perl.parser.PerlElementTypesGenerated.TAG_DATA;
 
+@ExtensionImpl
 public final class PerlDataLanguageInjector implements MultiHostInjector {
-  private static final List<? extends Class<? extends PsiElement>> INJECTABLES = Collections.singletonList(PsiCommentImpl.class);
-
   @Override
-  public void getLanguagesToInject(@NotNull MultiHostRegistrar registrar, @NotNull PsiElement context) {
+  public void injectLanguages(@NotNull MultiHostRegistrar registrar, @NotNull PsiElement context) {
     if (PsiUtilCore.getElementType(context) != COMMENT_BLOCK) {
       return;
     }
@@ -62,8 +59,9 @@ public final class PerlDataLanguageInjector implements MultiHostInjector {
     registrar.doneInjecting();
   }
 
+  // consulo: single element class instead of upstream elementsToInjectIn() list
   @Override
-  public @NotNull List<? extends Class<? extends PsiElement>> elementsToInjectIn() {
-    return INJECTABLES;
+  public @NotNull Class<? extends PsiElement> getElementClass() {
+    return PsiCommentImpl.class;
   }
 }

@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.moduleBuild.run;
 
-import com.intellij.execution.configurations.ConfigurationFactory;
-import com.intellij.openapi.module.Module;
+import consulo.execution.configuration.ConfigurationFactory;
+import consulo.module.Module;
 import com.perl5.lang.perl.idea.run.prove.PerlAbstractTestRunConfigurationProducer;
 import com.perl5.lang.perl.moduleBuild.PerlModuleBuildUtil;
 import org.jetbrains.annotations.NotNull;
@@ -25,6 +25,10 @@ import org.jetbrains.annotations.Nullable;
 
 public class PerlModuleBuildTestRunConfigurationProducer
   extends PerlAbstractTestRunConfigurationProducer<PerlModuleBuildTestRunConfiguration> {
+  public PerlModuleBuildTestRunConfigurationProducer() {
+    super(PerlModuleBuildTestRunConfigurationType.getInstance().getTestConfigurationFactory());
+  }
+
   @Override
   public @NotNull ConfigurationFactory getConfigurationFactory() {
     return PerlModuleBuildTestRunConfigurationType.getInstance().getTestConfigurationFactory();

@@ -16,21 +16,22 @@
 
 package com.perl5.lang.perl.parser.elementTypes;
 
-import com.intellij.lang.*;
-import com.intellij.lexer.DelegateLexer;
-import com.intellij.lexer.Lexer;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.ClearableLazyValue;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.TokenType;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.IReparseableElementType;
-import com.intellij.psi.tree.TokenSet;
-import com.intellij.psi.util.PsiUtilCore;
+
+import consulo.language.lexer.DelegateLexer;
+import consulo.language.lexer.Lexer;
+import consulo.logging.Logger;
+import consulo.application.progress.ProgressManager;
+import consulo.project.Project;
+import consulo.util.lang.lazy.ClearableLazyValue;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.ast.TokenType;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.IReparseableElementType;
+import consulo.language.ast.TokenSet;
+import consulo.language.psi.PsiUtilCore;
+import consulo.language.version.LanguageVersionUtil;
 import com.perl5.lang.perl.PerlLanguage;
 import com.perl5.lang.perl.parser.PerlParserImpl;
 import com.perl5.lang.perl.parser.builder.PerlPsiBuilderFactory;
@@ -45,10 +46,15 @@ import java.util.Stack;
 import static com.perl5.lang.perl.idea.editor.PerlBraceMatcher.PERL_BRACES_MAP;
 import static com.perl5.lang.perl.idea.editor.PerlBraceMatcher.PERL_BRACES_MAP_REVERSED;
 import static com.perl5.lang.perl.parser.PerlElementTypesGenerated.*;
+import consulo.language.impl.ast.LazyParseableElement;
+import consulo.language.ast.ASTNode;
+import consulo.language.Language;
+import consulo.language.parser.ParserDefinition;
+import consulo.language.parser.PsiBuilder;
 
 
 public abstract class PerlReparseableElementType extends IReparseableElementType {
-  private static final ClearableLazyValue<TokenSet> REPARSING_PREVENTING_CONTAINERS = ClearableLazyValue.create(
+  private static final ClearableLazyValue<TokenSet> REPARSING_PREVENTING_CONTAINERS = ClearableLazyValue.notNull(
     () -> TokenSet.create(
       HEREDOC_QQ, HEREDOC_QX, STRING_DQ, STRING_XQ, MATCH_REGEX, COMPILE_REGEX, REPLACEMENT_REGEX
     ));
@@ -60,7 +66,8 @@ public abstract class PerlReparseableElementType extends IReparseableElementType
 
   @Override
   public @Nullable ASTNode createNode(CharSequence text) {
-    return ASTFactory.DefaultFactoryHolder.DEFAULT.createLazy(this, text);
+    // consulo: IntelliJ ASTFactory.DefaultFactoryHolder.DEFAULT.createLazy() creates a plain LazyParseableElement for this type
+    return new LazyParseableElement(this, text);
   }
 
   @Override
@@ -76,7 +83,8 @@ public abstract class PerlReparseableElementType extends IReparseableElementType
       getLanguage(),
       newChars);
 
-    ASTNode result = PerlParserImpl.INSTANCE.parse(this, builder).getFirstChildNode();
+    ASTNode result =
+      PerlParserImpl.INSTANCE.parse(this, builder, LanguageVersionUtil.findLanguageVersion(getLanguage(), parentElement)).getFirstChildNode();
     logger.trace("Parsed: ", PerlTimeLogger.kb(newChars.length()), " kb of ", this);
     return result;
   }
@@ -95,7 +103,7 @@ public abstract class PerlReparseableElementType extends IReparseableElementType
   protected boolean isParentOk(@NotNull ASTNode parent) {
     ASTNode run = parent;
     while (run != null) {
-      if (REPARSING_PREVENTING_CONTAINERS.getValue().contains(PsiUtilCore.getElementType(run))) {
+      if (REPARSING_PREVENTING_CONTAINERS.get().contains(PsiUtilCore.getElementType(run))) {
         return false;
       }
       run = run.getTreeParent();
@@ -167,8 +175,9 @@ public abstract class PerlReparseableElementType extends IReparseableElementType
     PsiFile containingFile = psiElement.getContainingFile();
     FileViewProvider fileViewProvider = containingFile.getViewProvider();
     Language baseLanguage = fileViewProvider.getBaseLanguage();
-    ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(baseLanguage);
-    Lexer lexer = parserDefinition.createLexer(psiElement.getProject());
+    ParserDefinition parserDefinition = ParserDefinition.forLanguage(baseLanguage);
+    // TODO consulo: no project in ParserDefinition.createLexer(LanguageVersion); upstream passes psiElement.getProject() here
+    Lexer lexer = parserDefinition.createLexer(LanguageVersionUtil.findLanguageVersion(baseLanguage, containingFile));
     int alternativeInitialState = parserDefinition instanceof PerlLexerAwareParserDefinition lexerAwareParserDefinition ?
       lexerAwareParserDefinition.getLexerStateFor(context, elementType) : 0;
     return alternativeInitialState == 0 ? lexer : createLexerWithCustomInitialState(alternativeInitialState, lexer);

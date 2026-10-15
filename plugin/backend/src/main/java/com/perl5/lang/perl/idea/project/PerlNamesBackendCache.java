@@ -16,25 +16,26 @@
 
 package com.perl5.lang.perl.idea.project;
 
-import com.intellij.ide.lightEdit.LightEdit;
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ReadAction;
-import com.intellij.openapi.application.WriteAction;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.project.DumbService;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ModuleRootEvent;
-import com.intellij.openapi.roots.ModuleRootListener;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.PsiTreeChangeAdapter;
-import com.intellij.psi.PsiTreeChangeEvent;
-import com.intellij.psi.impl.source.resolve.ResolveCache;
-import com.intellij.util.concurrency.AppExecutorUtil;
-import com.intellij.util.messages.MessageBusConnection;
-import com.intellij.util.ui.update.MergingUpdateQueue;
-import com.intellij.util.ui.update.Update;
+import consulo.annotation.component.ServiceImpl;
+import jakarta.inject.Singleton;
+import jakarta.inject.Inject;
+import consulo.disposer.Disposable;
+import consulo.application.ApplicationManager;
+import consulo.application.ReadAction;
+import consulo.application.WriteAction;
+import consulo.logging.Logger;
+import consulo.application.progress.ProgressManager;
+import consulo.project.event.DumbModeListener;
+import consulo.project.Project;
+import consulo.module.content.layer.event.ModuleRootEvent;
+import consulo.module.content.layer.event.ModuleRootListener;
+import consulo.language.psi.PsiManager;
+import consulo.language.psi.event.PsiTreeChangeAdapter;
+import consulo.language.psi.event.PsiTreeChangeEvent;
+import consulo.application.util.concurrent.AppExecutorUtil;
+import consulo.component.messagebus.MessageBusConnection;
+import consulo.ui.ex.awt.util.MergingUpdateQueue;
+import consulo.ui.ex.awt.util.Update;
 import com.perl5.lang.perl.psi.stubs.namespaces.PerlLightNamespaceIndex;
 import com.perl5.lang.perl.psi.stubs.namespaces.PerlNamespaceIndex;
 import com.perl5.lang.perl.psi.stubs.subsdeclarations.PerlSubDeclarationIndex;
@@ -42,8 +43,6 @@ import com.perl5.lang.perl.psi.stubs.subsdefinitions.PerlLightSubDefinitionsInde
 import com.perl5.lang.perl.psi.stubs.subsdefinitions.PerlSubDefinitionsIndex;
 import com.perl5.lang.perl.util.PerlPackageUtilCore;
 import com.perl5.lang.perl.util.PerlTimeLogger;
-import kotlin.Unit;
-import kotlin.jvm.functions.Function0;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
@@ -54,6 +53,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 
+@ServiceImpl
+@Singleton
 public class PerlNamesBackendCache implements PerlNamesCache {
   private static final Logger LOG = Logger.getInstance(PerlNamesBackendCache.class);
   private final MergingUpdateQueue myQueue = new MergingUpdateQueue("Perl names cache updater", 1000, true, null, this, null, false);
@@ -62,21 +63,24 @@ public class PerlNamesBackendCache implements PerlNamesCache {
   private volatile Set<String> myKnownNamespaces = Collections.emptySet();
   private final AtomicBoolean myIsDisposed = new AtomicBoolean(false);
   private @Nullable Disposable myTestDisposable = null;
-  private final Queue<Function0<Unit>> myPendingCallbacks = new ConcurrentLinkedQueue<>();
+  private final Queue<Runnable> myPendingCallbacks = new ConcurrentLinkedQueue<>();
+
+  @Inject
 
   public PerlNamesBackendCache(Project project) {
     myProject = project;
-    if (LightEdit.owns(myProject) || project.isDefault()) {
+    // TODO consulo: there is no LightEdit mode in Consulo, upstream also checks LightEdit.owns(project)
+    if (project.isDefault()) {
       return;
     }
     MessageBusConnection connection = project.getMessageBus().connect(this);
-    connection.subscribe(ModuleRootListener.TOPIC, new ModuleRootListener() {
+    connection.subscribe(ModuleRootListener.class, new ModuleRootListener() {
       @Override
       public void rootsChanged(@NotNull ModuleRootEvent event) {
         queueUpdate();
       }
     });
-    connection.subscribe(DumbService.DUMB_MODE, new DumbService.DumbModeListener() {
+    connection.subscribe(DumbModeListener.class, new DumbModeListener() {
       @Override
       public void exitDumbMode() {
         queueUpdate();
@@ -117,12 +121,13 @@ public class PerlNamesBackendCache implements PerlNamesCache {
 
   private void queueUpdate() {
     if (!myProject.isDefault()) {
-      myQueue.queue(Update.create(this, () -> doUpdateCache(() -> Unit.INSTANCE)));
+      myQueue.queue(Update.create(this, () -> doUpdateCache(() -> { })));
     }
   }
 
-  private void doUpdateCache(kotlin.jvm.functions.@NonNull Function0<kotlin.Unit> callback) {
-    if (myProject.isDefault() || LightEdit.owns(myProject)) {
+  private void doUpdateCache(@NonNull Runnable callback) {
+    // TODO consulo: there is no LightEdit mode in Consulo, upstream also checks LightEdit.owns(project)
+    if (myProject.isDefault()) {
       return;
     }
     myPendingCallbacks.add(callback);
@@ -150,7 +155,8 @@ public class PerlNamesBackendCache implements PerlNamesCache {
       var newSubSet = Collections.unmodifiableSet(subsSet);
       if (!newSubSet.equals(myKnownSubs)) {
         myKnownSubs = newSubSet;
-        ResolveCache.getInstance(myProject).clearCache(true);
+        // TODO consulo: ResolveCache#clearCache(boolean) is not an API in Consulo, PsiManager#dropResolveCaches clears physical resolve caches
+        PsiManager.getInstance(myProject).dropResolveCaches();
       }
 
       Set<String> namespacesSet = new HashSet<>(PerlPackageUtilCore.CORE_PACKAGES_ALL);
@@ -168,14 +174,15 @@ public class PerlNamesBackendCache implements PerlNamesCache {
       var newNamespaceSet = Collections.unmodifiableSet(namespacesSet);
       if (!newNamespaceSet.equals(myKnownNamespaces)) {
         myKnownNamespaces = newNamespaceSet;
-        ResolveCache.getInstance(myProject).clearCache(true);
+        // TODO consulo: ResolveCache#clearCache(boolean) is not an API in Consulo, PsiManager#dropResolveCaches clears physical resolve caches
+        PsiManager.getInstance(myProject).dropResolveCaches();
       }
 
       logger.debug("Names cache updated");
 
-        Function0<kotlin.Unit> pending;
+        Runnable pending;
         while ((pending = myPendingCallbacks.poll()) != null) {
-          pending.invoke();
+          pending.run();
         }
       //noinspection ReturnOfNull
       return null;
@@ -196,7 +203,7 @@ public class PerlNamesBackendCache implements PerlNamesCache {
   }
 
   @Override
-  public void forceCacheUpdate(kotlin.jvm.functions.@NonNull Function0<kotlin.Unit> callback) {
+  public void forceCacheUpdate(@NonNull Runnable callback) {
     var application = ApplicationManager.getApplication();
     if (application.isDispatchThread()) {
       application.executeOnPooledThread(() -> doUpdateCache(callback));

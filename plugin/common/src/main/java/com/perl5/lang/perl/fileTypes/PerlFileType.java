@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.fileTypes;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.perl5.lang.perl.PerlLanguage;
 
 

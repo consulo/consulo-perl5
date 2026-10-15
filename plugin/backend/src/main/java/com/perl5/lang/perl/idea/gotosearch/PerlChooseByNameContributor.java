@@ -16,23 +16,54 @@
 
 package com.perl5.lang.perl.idea.gotosearch;
 
-import com.intellij.navigation.ChooseByNameContributor;
-import com.intellij.navigation.NavigationItem;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Condition;
-import com.intellij.util.ArrayUtilRt;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.application.util.function.Processor;
+import consulo.content.scope.SearchScope;
+import consulo.ide.navigation.ChooseByNameContributorEx;
+import consulo.language.psi.search.FindSymbolParameters;
+import consulo.language.psi.stub.IdFilter;
+import consulo.navigation.NavigationItem;
+import consulo.project.Project;
+import consulo.project.content.scope.ProjectAwareSearchScope;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.lang.function.Condition;
+import consulo.util.collection.ContainerUtil;
 import com.perl5.lang.perl.psi.impl.PerlImplicitElement;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 
-abstract class PerlChooseByNameContributor implements ChooseByNameContributor {
+// consulo: Consulo goto contributors (GotoClassOrTypeContributor, GotoSymbolContributor) are ChooseByNameContributorEx
+abstract class PerlChooseByNameContributor implements ChooseByNameContributorEx {
   private static final Condition<NavigationItem> FILTER = it -> !(it instanceof PerlImplicitElement);
 
   @Override
   public final String @NotNull [] getNames(Project project, boolean includeNonProjectItems) {
-    return ArrayUtilRt.toStringArray(getNamesCollection(project, includeNonProjectItems));
+    return ArrayUtil.toStringArray(getNamesCollection(project, includeNonProjectItems));
+  }
+
+  // consulo: adapter to the upstream getNames(Project, boolean)
+  @Override
+  public void processNames(@NotNull Processor<String> processor, @NotNull SearchScope scope, @Nullable IdFilter filter) {
+    ProjectAwareSearchScope projectAwareScope = (ProjectAwareSearchScope)scope;
+    for (String name : getNames(projectAwareScope.getProject(), projectAwareScope.isSearchInLibraries())) {
+      if (!processor.process(name)) {
+        return;
+      }
+    }
+  }
+
+  // consulo: adapter to the upstream getItemsByName(String, String, Project, boolean)
+  @Override
+  public void processElementsWithName(@NotNull String name,
+                                      @NotNull Processor<NavigationItem> processor,
+                                      @NotNull FindSymbolParameters parameters) {
+    for (NavigationItem item : getItemsByName(name, parameters.getLocalPatternName(), parameters.getProject(),
+                                              parameters.isSearchInLibraries())) {
+      if (!processor.process(item)) {
+        return;
+      }
+    }
   }
 
   protected abstract @NotNull Collection<String> getNamesCollection(Project project,

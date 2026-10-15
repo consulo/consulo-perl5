@@ -16,12 +16,12 @@
 
 package com.perl5.lang.perl.debugger.breakpoints;
 
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.xdebugger.XExpression;
-import com.intellij.xdebugger.XSourcePosition;
-import com.intellij.xdebugger.breakpoints.SuspendPolicy;
-import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.execution.debug.breakpoint.XExpression;
+import consulo.execution.debug.XSourcePosition;
+import consulo.execution.debug.breakpoint.SuspendPolicy;
+import consulo.execution.debug.breakpoint.XLineBreakpoint;
 import com.perl5.lang.perl.debugger.PerlDebugThread;
 import org.jetbrains.annotations.Nullable;
 

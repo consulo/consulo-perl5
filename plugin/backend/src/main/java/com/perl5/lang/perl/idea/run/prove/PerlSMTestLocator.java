@@ -16,15 +16,15 @@
 
 package com.perl5.lang.perl.idea.run.prove;
 
-import com.intellij.execution.Location;
-import com.intellij.execution.PsiLocation;
-import com.intellij.execution.testframework.sm.runner.SMTestLocator;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.search.GlobalSearchScope;
+import consulo.execution.action.Location;
+import consulo.execution.action.PsiLocation;
+import consulo.execution.test.sm.runner.SMTestLocator;
+import consulo.project.Project;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
+import consulo.language.psi.scope.GlobalSearchScope;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostData;
 import org.jetbrains.annotations.NotNull;
 
@@ -50,7 +50,7 @@ class PerlSMTestLocator implements SMTestLocator {
     if (FILE_PROTOCOL.equals(protocol)) {
       String localPath = myHostData.getLocalPath(path);
       if (localPath != null) {
-        VirtualFile virtualFile = VfsUtil.findFileByIoFile(new File(localPath), true);
+        VirtualFile virtualFile = VirtualFileUtil.findFileByIoFile(new File(localPath), true);
         if (virtualFile != null) {
           PsiFile psiFile = PsiManager.getInstance(project).findFile(virtualFile);
           if (psiFile != null) {

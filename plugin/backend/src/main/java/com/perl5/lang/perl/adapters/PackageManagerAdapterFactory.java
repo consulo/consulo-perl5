@@ -16,16 +16,20 @@
 
 package com.perl5.lang.perl.adapters;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.component.extension.ExtensionPointName;
+import consulo.project.Project;
+import consulo.content.bundle.Sdk;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface PackageManagerAdapterFactory<T extends PackageManagerAdapter> {
-  ExtensionPointName<PackageManagerAdapterFactory<?>> EP_NAME = ExtensionPointName.create("com.perl5.packageManagerAdapterFactory");
+  @SuppressWarnings({"unchecked", "rawtypes"})
+  ExtensionPointName<PackageManagerAdapterFactory<?>> EP_NAME = ExtensionPointName.create((Class)PackageManagerAdapterFactory.class);
 
   @Nullable T createAdapter(@NotNull Sdk sdk, @Nullable Project project);
 
@@ -43,6 +47,6 @@ public interface PackageManagerAdapterFactory<T extends PackageManagerAdapter> {
   }
 
   static <F extends PackageManagerAdapterFactory<? extends PackageManagerAdapter>> @NotNull F findInstance(@NotNull Class<F> cls) {
-    return Objects.requireNonNull(EP_NAME.findFirstAssignableExtension(cls));
+    return Objects.requireNonNull(EP_NAME.findExtension(cls));
   }
 }

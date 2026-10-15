@@ -18,20 +18,19 @@ package com.perl5.lang.perl.debugger;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
-import com.intellij.icons.AllIcons;
-import com.intellij.openapi.application.ReadAction;
-import com.intellij.openapi.util.NlsSafe;
-import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.ui.ColoredTextContainer;
-import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.xdebugger.XSourcePosition;
-import com.intellij.xdebugger.evaluation.XDebuggerEvaluator;
-import com.intellij.xdebugger.frame.XCompositeNode;
-import com.intellij.xdebugger.frame.XStackFrame;
-import com.intellij.xdebugger.frame.XValueChildrenList;
-import com.intellij.xdebugger.impl.XSourcePositionImpl;
+import consulo.application.ReadAction;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.ui.ex.ColoredTextContainer;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.execution.debug.XSourcePosition;
+import consulo.execution.debug.evaluation.XDebuggerEvaluator;
+import consulo.execution.debug.frame.XCompositeNode;
+import consulo.execution.debug.frame.XStackFrame;
+import consulo.execution.debug.frame.XValueChildrenList;
+import consulo.execution.debug.XDebuggerUtil;
+import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import com.perl5.PerlIcons;
 import com.perl5.lang.perl.debugger.protocol.*;
 import com.perl5.lang.perl.debugger.values.PerlXMainGroup;
@@ -60,7 +59,7 @@ public class PerlStackFrame extends XStackFrame {
     myVirtualFile = ReadAction.nonBlocking(() -> {
       String remoteFilePath = myFrameDescriptor.getFileDescriptor().getPath();
       String localFilePath = myDebugThread.getDebugProfileState().mapPathToLocal(remoteFilePath);
-      VirtualFile result = VfsUtil.findFileByIoFile(new File(localFilePath), false);
+      VirtualFile result = VirtualFileUtil.findFileByIoFile(new File(localFilePath), false);
 
       if (result == null) {
         String remoteFileUrl = PerlRemoteFileSystem.PROTOCOL_PREFIX + remoteFilePath;
@@ -95,10 +94,10 @@ public class PerlStackFrame extends XStackFrame {
     var fqn = fileDescriptor.getName();
     var nameChunks = PerlPackageUtilCore.splitNames(fqn);
     var filePath = fileDescriptor.getPath();
-    @NlsSafe var namespaceName = nameChunks == null ? null : nameChunks.getFirst();
+    var namespaceName = nameChunks == null ? null : nameChunks.getFirst();
     var subName = nameChunks == null ? null : nameChunks.getSecond();
     var firstName = subName == null ? filePath : subName;
-    @NlsSafe var frameName =
+    var frameName =
       String.join(":", firstName, String.valueOf(frameDescriptor.getOneBasedLine()));
     component.append(frameName, SimpleTextAttributes.REGULAR_ATTRIBUTES);
     if (namespaceName != null) {
@@ -107,14 +106,14 @@ public class PerlStackFrame extends XStackFrame {
     if (subName != null) {
       component.append(" (" + filePath + ")", SimpleTextAttributes.GRAYED_ATTRIBUTES);
     }
-    component.setIcon(AllIcons.Debugger.Frame);
+    component.setIcon(ExecutionDebugIconGroup.nodeFrame());
   }
 
   @Override
   public @Nullable XSourcePosition getSourcePosition() {
     VirtualFile virtualFile = myVirtualFile;
     if (virtualFile != null) {
-      return XSourcePositionImpl.create(virtualFile, myFrameDescriptor.getZeroBasedLine());
+      return XDebuggerUtil.getInstance().createPosition(virtualFile, myFrameDescriptor.getZeroBasedLine());
     }
     return super.getSourcePosition();
   }

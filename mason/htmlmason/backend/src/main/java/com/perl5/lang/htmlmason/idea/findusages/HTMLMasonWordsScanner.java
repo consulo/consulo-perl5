@@ -16,14 +16,14 @@
 
 package com.perl5.lang.htmlmason.idea.findusages;
 
-import com.intellij.lang.cacheBuilder.DefaultWordsScanner;
+import consulo.language.cacheBuilder.DefaultWordsScanner;
 import com.perl5.lang.htmlmason.lexer.HTMLMasonLexerAdapter;
 import com.perl5.lang.perl.lexer.PerlTokenSetsEx;
 
 
 public class HTMLMasonWordsScanner extends DefaultWordsScanner {
   public HTMLMasonWordsScanner() {
-    super(new HTMLMasonLexerAdapter(null, false),
+    super(new HTMLMasonLexerAdapter(null, null, false),
           PerlTokenSetsEx.getIDENTIFIERS(),
           PerlTokenSetsEx.getCOMMENTS(),
           PerlTokenSetsEx.getLITERALS());

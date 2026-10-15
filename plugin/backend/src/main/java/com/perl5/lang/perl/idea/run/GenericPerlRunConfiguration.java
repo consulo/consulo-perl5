@@ -16,33 +16,32 @@
 
 package com.perl5.lang.perl.idea.run;
 
-import com.intellij.execution.CommonProgramRunConfigurationParameters;
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.Executor;
-import com.intellij.execution.configurations.*;
-import com.intellij.execution.process.ProcessHandler;
-import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.execution.runners.RunConfigurationWithSuppressedDefaultRunAction;
-import com.intellij.execution.ui.ConsoleView;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ReadAction;
-import com.intellij.openapi.components.PathMacroManager;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
+import consulo.execution.CommonProgramRunConfigurationParameters;
+import consulo.process.ExecutionException;
+import consulo.execution.executor.Executor;
+
+import consulo.process.ProcessHandler;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.execution.configuration.RunConfigurationWithSuppressedDefaultRunAction;
+import consulo.execution.ui.console.ConsoleView;
+import consulo.application.ApplicationManager;
+import consulo.application.ReadAction;
+import consulo.project.macro.ProjectPathMacroManager;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.content.bundle.Sdk;
 import com.intellij.openapi.projectRoots.impl.PerlSdkTable;
-import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.util.NlsSafe;
-import com.intellij.openapi.util.WriteExternalException;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.Function;
-import com.intellij.util.concurrency.annotations.RequiresReadLock;
-import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.execution.ParametersListUtil;
-import com.intellij.util.net.NetUtils;
-import com.intellij.util.xmlb.XmlSerializer;
+import consulo.util.xml.serializer.InvalidDataException;
+import consulo.util.xml.serializer.WriteExternalException;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import java.util.function.Function;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.util.collection.ContainerUtil;
+import consulo.process.cmd.ParametersListUtil;
+import consulo.util.io.NetUtil;
+import consulo.util.xml.serializer.XmlSerializer;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.idea.execution.PerlCommandLine;
 import com.perl5.lang.perl.idea.execution.PerlTerminalExecutionConsole;
@@ -64,10 +63,15 @@ import java.nio.charset.UnsupportedCharsetException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.intellij.execution.configurations.GeneralCommandLine.ParentEnvironmentType.CONSOLE;
-import static com.intellij.execution.configurations.GeneralCommandLine.ParentEnvironmentType.NONE;
+import static consulo.process.cmd.GeneralCommandLine.ParentEnvironmentType.CONSOLE;
+import static consulo.process.cmd.GeneralCommandLine.ParentEnvironmentType.NONE;
+import consulo.execution.configuration.ConfigurationFactory;
+import consulo.process.cmd.GeneralCommandLine;
+import consulo.execution.configuration.LocatableConfigurationBase;
+import consulo.execution.configuration.RunProfile;
+import consulo.execution.RuntimeConfigurationException;
 
-public abstract class GenericPerlRunConfiguration extends LocatableConfigurationBase<LocatableRunConfigurationOptions>
+public abstract class GenericPerlRunConfiguration extends LocatableConfigurationBase
   implements CommonProgramRunConfigurationParameters,
              RunConfigurationWithSuppressedDefaultRunAction,
              PerlDebugOptions {
@@ -111,7 +115,7 @@ public abstract class GenericPerlRunConfiguration extends LocatableConfiguration
   public void readExternal(@NotNull Element element) throws InvalidDataException {
     // this is actually redundant thing. For some reason expanding done by the platform, but collapsing need to be done manually. But this
     // feels really unreliable and bad for testing. So, we'll do it manually.
-    PathMacroManager.getInstance(getProject()).expandPaths(element);
+    ProjectPathMacroManager.getInstance(getProject()).expandPaths(element);
     super.readExternal(element);
     XmlSerializer.deserializeInto(this, element);
   }
@@ -120,7 +124,7 @@ public abstract class GenericPerlRunConfiguration extends LocatableConfiguration
   public void writeExternal(@NotNull Element element) throws WriteExternalException {
     super.writeExternal(element);
     XmlSerializer.serializeInto(this, element);
-    PathMacroManager.getInstance(getProject()).collapsePathsRecursively(element);
+    ProjectPathMacroManager.getInstance(getProject()).collapsePathsRecursively(element);
   }
 
   @Override
@@ -162,7 +166,9 @@ public abstract class GenericPerlRunConfiguration extends LocatableConfiguration
       return perlSdk;
     }
     else {
-      perlSdk = PerlProjectManager.getSdk(getProject());
+      // consulo: interpreter of the script module (Perl module extension), the project one for scripts outside of modules
+      List<VirtualFile> targetFiles = computeTargetFiles();
+      perlSdk = PerlProjectManager.getSdk(getProject(), targetFiles.isEmpty() ? null : targetFiles.getFirst());
       if (perlSdk == null) {
         throw new ExecutionException(PerlBundle.message("perl.run.error.no.sdk", getProject().getName()));
       }
@@ -193,14 +199,14 @@ public abstract class GenericPerlRunConfiguration extends LocatableConfiguration
   }
 
   public @NotNull List<String> getRequiredModulesList() {
-    return PREREQUISITES_PARSER.fun(myRequiredModules);
+    return PREREQUISITES_PARSER.apply(myRequiredModules);
   }
 
   public void setRequiredModules(@NotNull String requiredModules) {
-    myRequiredModules = PREREQUISITES_JOINER.fun(PREREQUISITES_PARSER.fun(requiredModules));
+    myRequiredModules = PREREQUISITES_JOINER.apply(PREREQUISITES_PARSER.apply(requiredModules));
   }
 
-  public @NlsSafe String getConsoleCharset() {
+  public String getConsoleCharset() {
     return myConsoleCharset;
   }
 
@@ -255,7 +261,7 @@ public abstract class GenericPerlRunConfiguration extends LocatableConfiguration
     if (StringUtil.isEmpty(workingDirectory)) {
       return null;
     }
-    return VfsUtil.findFileByIoFile(new File(workingDirectory), true);
+    return VirtualFileUtil.findFileByIoFile(new File(workingDirectory), true);
   }
 
   @Override
@@ -319,7 +325,7 @@ public abstract class GenericPerlRunConfiguration extends LocatableConfiguration
   @Override
   public int getDebugPort() throws ExecutionException {
     if (myDebugPort == null) {
-      myDebugPort = NetUtils.tryToFindAvailableSocketPort();
+      myDebugPort = NetUtil.tryToFindAvailableSocketPort();
       if (myDebugPort == -1) {
         throw new ExecutionException(PerlBundle.message("dialog.message.no.free.port.to.work.on"));
       }
@@ -399,7 +405,7 @@ public abstract class GenericPerlRunConfiguration extends LocatableConfiguration
     if (StringUtil.isNotEmpty(workDirectory)) {
       return workDirectory;
     }
-    return ReadAction.computeBlocking(() -> computeWorkingDirectory(project, computeNonNullScriptFile()));
+    return ReadAction.compute(() -> computeWorkingDirectory(project, computeNonNullScriptFile()));
   }
 
   protected @NotNull PerlCommandLine createBaseCommandLine(@NotNull PerlRunProfileState perlRunProfileState) throws ExecutionException {
@@ -422,7 +428,7 @@ public abstract class GenericPerlRunConfiguration extends LocatableConfiguration
     return commandLine;
   }
 
-  @RequiresReadLock
+  @RequiredReadAction
   protected static @Nullable String computeWorkingDirectory(@NotNull Project project, @NotNull VirtualFile virtualFile) {
     var fileContentRoot = PerlFileUtil.getContentRoot(project, virtualFile);
     if (fileContentRoot != null) {
@@ -453,7 +459,7 @@ public abstract class GenericPerlRunConfiguration extends LocatableConfiguration
     if (StringUtil.isEmpty(paths)) {
       return Collections.emptyList();
     }
-    List<String> pathNames = FILES_PARSER.fun(paths);
+    List<String> pathNames = FILES_PARSER.apply(paths);
     if (pathNames.isEmpty()) {
       return Collections.emptyList();
     }
@@ -462,7 +468,7 @@ public abstract class GenericPerlRunConfiguration extends LocatableConfiguration
       if (StringUtil.isEmpty(pathName)) {
         continue;
       }
-      ContainerUtil.addIfNotNull(virtualFiles, VfsUtil.findFileByIoFile(new File(pathName), false));
+      ContainerUtil.addIfNotNull(virtualFiles, VirtualFileUtil.findFileByIoFile(new File(pathName), false));
     }
     return virtualFiles;
   }
@@ -471,7 +477,7 @@ public abstract class GenericPerlRunConfiguration extends LocatableConfiguration
    * @return paths of {@code virtualFiles} joined with pipe, reverse of {@link #computeVirtualFilesFromPaths(String)}
    */
   public static @Unmodifiable @NotNull String computePathsFromVirtualFiles(@NotNull List<? extends VirtualFile> virtualFiles) {
-    return FILES_JOINER.fun(ContainerUtil.map(virtualFiles, VirtualFile::getPath));
+    return FILES_JOINER.apply(ContainerUtil.map(virtualFiles, VirtualFile::getPath));
   }
 
   public @NotNull ConsoleView createConsole(@NotNull PerlRunProfileState runProfileState) throws ExecutionException {

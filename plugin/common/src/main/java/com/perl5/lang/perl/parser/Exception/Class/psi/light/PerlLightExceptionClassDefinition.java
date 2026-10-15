@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.parser.Exception.Class.psi.light;
 
-import com.intellij.icons.AllIcons;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
+import consulo.application.AllIcons;
+import consulo.language.psi.PsiElement;
+import consulo.language.ast.IElementType;
 import com.perl5.lang.perl.psi.impl.PerlPolyNamedElement;
 import com.perl5.lang.perl.psi.light.PerlLightNamespaceDefinitionElement;
 import com.perl5.lang.perl.psi.mro.PerlMroType;
@@ -27,7 +27,7 @@ import com.perl5.lang.perl.psi.utils.PerlNamespaceAnnotations;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
+import consulo.ui.image.Image;
 import java.util.List;
 import java.util.Map;
 
@@ -50,7 +50,7 @@ public class PerlLightExceptionClassDefinition extends PerlLightNamespaceDefinit
   }
 
   @Override
-  public @Nullable Icon getIcon(int flags) {
+  public @Nullable Image getIcon(int flags) {
     return AllIcons.Nodes.ExceptionClass;
   }
 }

@@ -16,18 +16,21 @@
 
 package com.perl5.lang.tt2;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.ParserDefinition;
-import com.intellij.lang.PsiParser;
-import com.intellij.lexer.Lexer;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.tree.IFileElementType;
-import com.intellij.psi.tree.TokenSet;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.Language;
+import consulo.language.ast.ASTNode;
+import consulo.language.parser.ParserDefinition;
+import consulo.language.parser.PsiParser;
+import consulo.language.lexer.Lexer;
+import consulo.language.version.LanguageVersion;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.ast.IFileElementType;
+import consulo.language.ast.TokenSet;
 import com.perl5.lang.perl.parser.elementTypes.PerlPsiElementFactory;
 import com.perl5.lang.tt2.elementTypes.TemplateToolkitTokenSets;
+import com.perl5.lang.tt2.idea.settings.TemplateToolkitSettings;
 import com.perl5.lang.tt2.lexer.TemplateToolkitLexerAdapter;
 import com.perl5.lang.tt2.parser.TemplateToolkitParser;
 import com.perl5.lang.tt2.psi.impl.TemplateToolkitFileImpl;
@@ -36,15 +39,22 @@ import org.jetbrains.annotations.NotNull;
 import static com.perl5.lang.tt2.elementTypes.TemplateToolkitElementTypes.TT2_FILE;
 
 
+@ExtensionImpl
 public class TemplateToolkitParserDefinition implements ParserDefinition {
-
   @Override
-  public @NotNull Lexer createLexer(Project project) {
-    return new TemplateToolkitLexerAdapter(project);
+  public @NotNull Language getLanguage() {
+    return TemplateToolkitLanguage.INSTANCE;
   }
 
   @Override
-  public @NotNull PsiParser createParser(Project project) {
+  public @NotNull Lexer createLexer(LanguageVersion languageVersion) {
+    // TODO consulo: no project/file in ParserDefinition.createLexer(LanguageVersion); upstream passes the project to the lexer to read
+    //  custom start/end/outline tags from the project settings, here the settings are per module, so the parser always uses the defaults
+    return new TemplateToolkitLexerAdapter(TemplateToolkitSettings.DEFAULT);
+  }
+
+  @Override
+  public @NotNull PsiParser createParser(LanguageVersion languageVersion) {
     return new TemplateToolkitParser();
   }
 
@@ -54,17 +64,17 @@ public class TemplateToolkitParserDefinition implements ParserDefinition {
   }
 
   @Override
-  public @NotNull TokenSet getWhitespaceTokens() {
+  public @NotNull TokenSet getWhitespaceTokens(LanguageVersion languageVersion) {
     return TemplateToolkitTokenSets.WHITE_SPACES;
   }
 
   @Override
-  public @NotNull TokenSet getCommentTokens() {
+  public @NotNull TokenSet getCommentTokens(LanguageVersion languageVersion) {
     return TemplateToolkitTokenSets.COMMENTS;
   }
 
   @Override
-  public @NotNull TokenSet getStringLiteralElements() {
+  public @NotNull TokenSet getStringLiteralElements(LanguageVersion languageVersion) {
     return TemplateToolkitTokenSets.LITERALS;
   }
 

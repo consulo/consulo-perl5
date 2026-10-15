@@ -16,9 +16,11 @@
 
 package com.perl5.lang.perl.debugger.run.run.debugger.remote;
 
-import com.intellij.execution.configurations.ConfigurationTypeBase;
-import com.intellij.execution.configurations.RunConfiguration;
-import com.intellij.openapi.project.Project;
+import consulo.execution.configuration.ConfigurationTypeBase;
+import consulo.execution.configuration.ConfigurationTypeUtil;
+import consulo.execution.configuration.RunConfiguration;
+import consulo.localize.LocalizeValue;
+import consulo.project.Project;
 import com.perl5.PerlIcons;
 import com.perl5.lang.perl.debugger.PerlDebuggerBundle;
 import com.perl5.lang.perl.idea.run.PerlRunConfigurationFactory;
@@ -29,7 +31,8 @@ import java.util.Objects;
 
 public class PerlRemoteDebuggingConfigurationType extends ConfigurationTypeBase {
   public PerlRemoteDebuggingConfigurationType() {
-    super("#PerlRemoteDebuggingConfigurationType", PerlDebuggerBundle.message("perl.remote.debugging"), "", PerlIcons.PERL_LANGUAGE_ICON);
+    super("#PerlRemoteDebuggingConfigurationType", LocalizeValue.localizeTODO(PerlDebuggerBundle.message("perl.remote.debugging")),
+          LocalizeValue.empty(), PerlIcons.PERL_LANGUAGE_ICON);
 
     addFactory(new PerlRunConfigurationFactory(this) {
       @Override
@@ -45,6 +48,6 @@ public class PerlRemoteDebuggingConfigurationType extends ConfigurationTypeBase 
   }
 
   public static @NotNull PerlRemoteDebuggingConfigurationType getInstance() {
-    return Objects.requireNonNull(CONFIGURATION_TYPE_EP.findExtension(PerlRemoteDebuggingConfigurationType.class));
+    return Objects.requireNonNull(ConfigurationTypeUtil.findConfigurationType(PerlRemoteDebuggingConfigurationType.class));
   }
 }

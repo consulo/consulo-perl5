@@ -16,13 +16,16 @@
 
 package com.perl5.lang.perl.idea.sdk.host.docker;
 
-import com.intellij.openapi.options.UnnamedConfigurable;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.RawCommandLineEditor;
-import com.intellij.util.ui.FormBuilder;
-import com.intellij.util.ui.UIUtil;
+import consulo.configurable.UnnamedConfigurable;
+import consulo.project.Project;
+import consulo.util.lang.StringUtil;
+import consulo.execution.ui.awt.RawCommandLineEditor;
+import consulo.ui.util.FormBuilder;
+import consulo.ui.ex.awt.UIUtil;
 import com.perl5.lang.perl.idea.execution.PerlCommandLine;
+import consulo.disposer.Disposable;
+import consulo.ui.Component;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -41,7 +44,7 @@ class PerlDockerProjectSettingsConfigurable implements UnnamedConfigurable {
   }
 
   @Override
-  public @Nullable JComponent createComponent() {
+  public @Nullable Component createUIComponent(Disposable parentDisposable) {
     FormBuilder builder = FormBuilder.createFormBuilder();
 
     myArgumentsEditor = new RawCommandLineEditor();
@@ -71,7 +74,7 @@ class PerlDockerProjectSettingsConfigurable implements UnnamedConfigurable {
     });
     updatePreview();
 
-    return builder.getPanel();
+    return TargetAWT.wrap(builder.getPanel());
   }
 
   private void updatePreview() {

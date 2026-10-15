@@ -16,23 +16,27 @@
 
 package com.perl5.lang.perl.idea.sdk.versionManager.perlbrew;
 
-import com.intellij.execution.process.ProcessOutput;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.openapi.progress.Task;
-import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.ObjectUtils;
+import consulo.process.util.ProcessOutput;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.application.ApplicationManager;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.Task;
+import consulo.application.dumb.DumbAware;
+import consulo.content.bundle.Sdk;
+import consulo.project.Project;
+import consulo.ui.InputBoxBuilder;
+import consulo.ui.MessageBoxes;
+import consulo.localize.LocalizeValue;
+import consulo.util.lang.StringUtil;
+import consulo.util.lang.ObjectUtil;
 import com.perl5.PerlBundle;
 import com.perl5.PerlIcons;
 import com.perl5.lang.perl.idea.project.PerlProjectManager;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostData;
 import com.perl5.lang.perl.idea.sdk.versionManager.PerlVersionManagerData;
+import consulo.perl5.core.ui.PerlDialogUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class PerlBrewCreateLibraryAction extends PerlBrewActionBase implements DumbAware {
 
@@ -43,7 +47,7 @@ public class PerlBrewCreateLibraryAction extends PerlBrewActionBase implements D
   @Override
   public void actionPerformed(@NotNull AnActionEvent e) {
     Sdk perlSdk = PerlProjectManager.getSdk(e);
-    PerlBrewData perlBrewData = ObjectUtils.tryCast(PerlVersionManagerData.from(perlSdk), PerlBrewData.class);
+    PerlBrewData perlBrewData = ObjectUtil.tryCast(PerlVersionManagerData.from(perlSdk), PerlBrewData.class);
     if (perlBrewData == null) {
       return;
     }
@@ -54,16 +58,26 @@ public class PerlBrewCreateLibraryAction extends PerlBrewActionBase implements D
     }
 
     final String perlVersionString = perlBrewData.getPerlVersionString();
-    String libraryName = Messages.showInputDialog(getEventProject(e),
-                                                  PerlBundle.message("perl.vm.perlbrew.create.lib.message"),
-                                                  PerlBundle.message("perl.vm.perlbrew.create.lib.title",
-                                                                     perlVersionString),
-                                                  null);
+    // consulo: no AnAction#getEventProject/AnActionEvent#getProject, project is taken from the event data
+    Project project = e.getData(Project.KEY);
+    // consulo: Messages are Swing dialogs (not available in web), the unified input box is asynchronous, the library is
+    // created when the name arrives
+    InputBoxBuilder.text()
+      .title(LocalizeValue.of(PerlBundle.message("perl.vm.perlbrew.create.lib.title", perlVersionString)))
+      .text(LocalizeValue.of(PerlBundle.message("perl.vm.perlbrew.create.lib.message")))
+      .showAsync(project)
+      .whenComplete((libraryName, error) -> createLibrary(project, perlBrewData, hostData, perlVersionString, libraryName));
+  }
 
+  private static void createLibrary(@Nullable Project project,
+                                    @NotNull PerlBrewData perlBrewData,
+                                    @NotNull PerlHostData<?, ?> hostData,
+                                    @NotNull String perlVersionString,
+                                    @Nullable String libraryName) {
     if (StringUtil.isEmpty(libraryName)) {
       return;
     }
-    new Task.Backgroundable(e.getProject(), PerlBundle.message("perl.vm.perlbrew.create.lib.progress", libraryName,
+    new Task.Backgroundable(project, PerlBundle.message("perl.vm.perlbrew.create.lib.progress", libraryName,
                                                                perlVersionString)) {
       @Override
       public void run(@NotNull ProgressIndicator indicator) {
@@ -79,30 +93,41 @@ public class PerlBrewCreateLibraryAction extends PerlBrewActionBase implements D
         }
 
         if (StringUtil.contains(processOutput.getStderr(), "is already there")) {
-          Ref<Integer> resultRef = Ref.create(-1);
-          ApplicationManager.getApplication().invokeAndWait(() -> resultRef.set(Messages.showYesNoDialog(
-            PerlBundle.message("perl.vm.perlbrew.library.exists", distirbutionId),
-            PerlBundle.message("perl.vm.perlbrew.title"),
-            PerlIcons.PERLBREW_ICON)));
-          if (Messages.YES == resultRef.get()) {
-            doCreateSdk(perlBrewAdapter, distirbutionId);
-          }
+          // consulo: the unified message box is asynchronous, this background task waits for the answer
+          PerlDialogUtil.showAndThen(
+            () -> MessageBoxes.yesNo()
+              .title(LocalizeValue.of(PerlBundle.message("perl.vm.perlbrew.title")))
+              .text(LocalizeValue.of(PerlBundle.message("perl.vm.perlbrew.library.exists", distirbutionId)))
+              .icon(PerlIcons.PERLBREW_ICON)
+              .showAsync(),
+            useExisting -> {
+              if (Boolean.TRUE.equals(useExisting)) {
+                doCreateSdk(perlBrewAdapter, distirbutionId);
+              }
+            });
         }
       }
 
       // fixme we could avoid creating duplicated sdks here
+      // consulo: Task#myProject is a ComponentManager, the captured project is used instead
       private void doCreateSdk(@NotNull PerlBrewAdapter perlBrewAdapter, @NotNull String distirbutionId) {
         PerlBrewHandler.getInstance().createInterpreter(
           distirbutionId, perlBrewAdapter, sdk -> ApplicationManager.getApplication().invokeLater(
             () -> {
               PerlBrewData perlBrewData = PerlBrewData.from(sdk);
-              if (perlBrewData != null && myProject != null && Messages.showYesNoDialog(
-                myProject,
-                PerlBundle.message("perl.vm.perlbrew.create.lib.select", perlBrewData.getDistributionId()),
-                PerlBundle.message("perl.vm.perlbrew.create.lib.title", perlBrewData.getPerlVersionString()), null) == Messages.YES) {
-                PerlProjectManager.getInstance(myProject).setProjectSdk(sdk);
+              if (perlBrewData != null && project != null) {
+                // consulo: the unified message box is asynchronous
+                MessageBoxes.yesNo()
+                  .title(LocalizeValue.of(PerlBundle.message("perl.vm.perlbrew.create.lib.title", perlBrewData.getPerlVersionString())))
+                  .text(LocalizeValue.of(PerlBundle.message("perl.vm.perlbrew.create.lib.select", perlBrewData.getDistributionId())))
+                  .showAsync(project)
+                  .whenComplete((select, error) -> {
+                    if (Boolean.TRUE.equals(select)) {
+                      PerlProjectManager.getInstance(project).setProjectSdk(sdk);
+                    }
+                  });
               }
-            }), myProject);
+            }), project);
       }
     }.queue();
   }

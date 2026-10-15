@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.debugger.breakpoints;
 
-import com.intellij.util.xmlb.XmlSerializerUtil;
-import com.intellij.xdebugger.breakpoints.XBreakpointProperties;
+import consulo.util.xml.serializer.XmlSerializerUtil;
+import consulo.execution.debug.breakpoint.XBreakpointProperties;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

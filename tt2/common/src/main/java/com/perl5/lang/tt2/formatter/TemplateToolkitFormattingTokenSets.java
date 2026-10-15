@@ -16,7 +16,7 @@
 
 package com.perl5.lang.tt2.formatter;
 
-import com.intellij.psi.tree.TokenSet;
+import consulo.language.ast.TokenSet;
 
 import static com.perl5.lang.tt2.elementTypes.TemplateToolkitElementTypes.*;
 import static com.perl5.lang.tt2.parser.TemplateToolkitElementTypesGenerated.*;

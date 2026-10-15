@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.profiler.configuration;
 
-import com.intellij.ui.EnumComboBoxModel;
-import com.intellij.ui.SimpleListCellRenderer;
-import com.intellij.util.ui.FormBuilder;
+import consulo.ui.ex.awt.EnumComboBoxModel;
+import consulo.ui.ex.awt.SimpleListCellRenderer;
+import consulo.ui.ex.awt.FormBuilder;
 import com.perl5.lang.perl.profiler.PerlProfilerBundle;
 import com.perl5.lang.perl.profiler.run.PerlProfilerStartupMode;
 import org.jetbrains.annotations.NotNull;
@@ -32,7 +32,8 @@ public class PerlProfilerConfigurationEditor {
   final @NotNull JPanel myPanel = new JPanel(new BorderLayout());
 
   public PerlProfilerConfigurationEditor() {
-    var formBuilder = new FormBuilder();
+    // consulo: Consulo FormBuilder constructor is private
+    var formBuilder = FormBuilder.createFormBuilder();
     myStartModeComboBox.setModel(new EnumComboBoxModel<>(PerlProfilerStartupMode.class));
     myStartModeComboBox.setRenderer(new SimpleListCellRenderer<>() {
       @Override

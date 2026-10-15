@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.idea.codeInsight;
 
-import com.intellij.codeInsight.hint.DeclarationRangeHandler;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiElement;
+import consulo.language.editor.hint.DeclarationRangeHandler;
+import consulo.document.util.TextRange;
+import consulo.language.psi.PsiElement;
 import com.perl5.lang.perl.psi.PerlNamespaceDefinitionWithIdentifier;
 import com.perl5.lang.perl.psi.PerlSubDefinitionElement;
 import com.perl5.lang.perl.psi.PsiPerlBlock;
@@ -26,6 +26,14 @@ import com.perl5.lang.perl.psi.PsiPerlNamespaceContent;
 import org.jetbrains.annotations.NotNull;
 
 public class PerlDeclarationRangeHandler implements DeclarationRangeHandler<PsiElement> {
+  // consulo: Consulo DeclarationRangeHandler is bound to a single element class, upstream registers this handler for
+  //  PerlSubDefinitionElement and PerlNamespaceDefinitionWithIdentifier; each registration (*Registration subclass) overrides this
+  @SuppressWarnings({"unchecked", "rawtypes"})
+  @Override
+  public @NotNull Class<PsiElement> getElementClass() {
+    return (Class)PerlSubDefinitionElement.class;
+  }
+
   @Override
   public @NotNull TextRange getDeclarationRange(@NotNull PsiElement container) {
     if (container instanceof PerlSubDefinitionElement subDefinitionElement) {

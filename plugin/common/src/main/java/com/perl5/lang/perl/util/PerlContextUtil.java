@@ -16,11 +16,11 @@
 
 package com.perl5.lang.perl.util;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.logging.Logger;
+import consulo.language.psi.PsiElement;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
+import consulo.language.psi.PsiUtilCore;
 import com.perl5.lang.perl.psi.PerlVariableDeclarationExpr;
 import com.perl5.lang.perl.psi.utils.PerlContextType;
 import org.jetbrains.annotations.NotNull;

@@ -16,25 +16,26 @@
 
 package com.perl5.lang.perl.idea.run;
 
-import com.intellij.execution.CommonProgramRunConfigurationParameters;
-import com.intellij.execution.ui.CommonProgramParametersPanel;
-import com.intellij.ide.HelpTooltipKt;
-import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
+import consulo.execution.CommonProgramRunConfigurationParameters;
+import consulo.execution.ui.awt.CommonProgramParametersPanel;
+import consulo.fileChooser.FileChooserDescriptorFactory;
+import consulo.project.Project;
+import consulo.content.bundle.Sdk;
 import com.intellij.openapi.projectRoots.impl.PerlSdkTable;
-import com.intellij.openapi.ui.*;
-import com.intellij.openapi.util.NlsContexts;
-import com.intellij.openapi.util.NotNullLazyValue;
-import com.intellij.openapi.util.text.HtmlChunk;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.ui.*;
-import com.intellij.ui.components.JBCheckBox;
-import com.intellij.ui.components.fields.ExpandableTextField;
-import com.intellij.util.ObjectUtils;
-import com.intellij.util.ui.UIUtil;
+
+import consulo.application.util.NotNullLazyValue;
+import consulo.application.util.HtmlChunk;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.virtualFileSystem.VirtualFile;
+
+import consulo.ui.ex.awt.JBCheckBox;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.TextBoxWithExpandAction;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.util.lang.ObjectUtil;
+import consulo.ui.ex.awt.UIUtil;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.idea.configuration.settings.sdk.Perl5SdkConfigurable;
 import com.perl5.lang.perl.idea.configuration.settings.sdk.Perl5SdkManipulator;
@@ -55,6 +56,16 @@ import java.util.List;
 
 import static com.perl5.lang.perl.idea.run.GenericPerlRunConfiguration.PREREQUISITES_JOINER;
 import static com.perl5.lang.perl.idea.run.GenericPerlRunConfiguration.PREREQUISITES_PARSER;
+import consulo.ui.ex.awt.ComboBox;
+import consulo.ui.ex.awt.LabeledComponent;
+import consulo.ui.ex.awt.TextComponentAccessor;
+import consulo.ui.ex.awt.TextFieldWithBrowseButton;
+import consulo.ui.ex.awt.VerticalFlowLayout;
+import consulo.ui.ex.awt.CollectionComboBoxModel;
+import consulo.ui.ex.awt.event.DocumentAdapter;
+import consulo.ui.ex.awt.PanelWithAnchor;
+import consulo.execution.ui.awt.RawCommandLineEditor;
+import consulo.ui.ex.awt.TextAccessor;
 
 public abstract class GenericPerlRunConfigurationEditorPanel<Configuration extends GenericPerlRunConfiguration>
   extends CommonProgramParametersPanel implements Perl5SdkManipulator {
@@ -74,10 +85,13 @@ public abstract class GenericPerlRunConfigurationEditorPanel<Configuration exten
   private @NotNull JBCheckBox myAlternativeSdkCheckbox;
   private @NotNull Perl5SdkConfigurable mySdkConfigurable;
 
-  private LabeledComponent<ExpandableTextField> myRequiredModulesLabeledField;
+  // TODO consulo: no Swing ExpandableTextField in Consulo API, uni UI TextBoxWithExpandAction is embedded into the Swing form
+  private TextBoxWithExpandAction myRequiredModulesField;
+  private LabeledComponent<JComponent> myRequiredModulesLabeledField;
 
   public GenericPerlRunConfigurationEditorPanel(@NotNull Project project) {
-    super(project);
+    // TODO consulo: CommonProgramParametersPanel has no project-aware constructor in Consulo
+    super();
     myProject = project;
     mySdkConfigurable.setProject(project);
   }
@@ -102,19 +116,21 @@ public abstract class GenericPerlRunConfigurationEditorPanel<Configuration exten
   }
 
   protected void createPrerequisitesField() {
+    myRequiredModulesField = TextBoxWithExpandAction.create(
+      PlatformIconGroup.actionsShow(), PerlBundle.message("label.required.modules"), PREREQUISITES_PARSER, PREREQUISITES_JOINER);
     myRequiredModulesLabeledField = createLabeledComponent(
-      new ExpandableTextField(PREREQUISITES_PARSER, PREREQUISITES_JOINER),
+      (JComponent)TargetAWT.to(myRequiredModulesField),
       PerlBundle.message("label.required.modules"),
       PerlBundle.message("tooltip.comma.separated.list.modules.required.to.run.configuration"));
   }
 
   protected static @NotNull <T extends JComponent> LabeledComponent<T> createLabeledComponent(@NotNull T component,
-                                                                                              @NotNull @NlsContexts.Label String label,
-                                                                                              @Nullable @NlsContexts.Tooltip String tooltip) {
-    var labeledComponent = LabeledComponent.create(component, label, BorderLayout.WEST);
+                                                                                              @NotNull String label,
+                                                                                              @Nullable String tooltip) {
+    var labeledComponent = LabeledComponent.create(component, label).setLabelLocation(BorderLayout.WEST);
     if (tooltip != null) {
-      HelpTooltipKt.setToolTipText(labeledComponent, HtmlChunk.text(tooltip));
-      HelpTooltipKt.setToolTipText(component, HtmlChunk.text(tooltip));
+      labeledComponent.setToolTipText(HtmlChunk.text(tooltip).toString());
+      component.setToolTipText(HtmlChunk.text(tooltip).toString());
     }
     return labeledComponent;
   }
@@ -143,6 +159,8 @@ public abstract class GenericPerlRunConfigurationEditorPanel<Configuration exten
   protected @NotNull TextFieldWithBrowseButton createTextFieldForScript() {
     TextFieldWithBrowseButton fieldWithBrowseButton = new TextFieldWithBrowseButton();
     fieldWithBrowseButton.addBrowseFolderListener(
+      LocalizeValue.empty(),
+      LocalizeValue.empty(),
       myProject,
       FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor()
         .withFileFilter(getRunConfigurationProducer()::isOurFile)
@@ -170,7 +188,7 @@ public abstract class GenericPerlRunConfigurationEditorPanel<Configuration exten
     return scriptField;
   }
 
-  protected @NlsContexts.Label @NotNull String getScriptFieldLabelText() {
+  protected @NotNull String getScriptFieldLabelText() {
     return PerlBundle.message("perl.run.option.script");
   }
 
@@ -188,7 +206,7 @@ public abstract class GenericPerlRunConfigurationEditorPanel<Configuration exten
     myAlternativeSdkCheckbox = new JBCheckBox();
     mySdkConfigurable = new Perl5SdkConfigurable(this, null);
     alternativeSdkPanel.add(myAlternativeSdkCheckbox, "shrinkx");
-    JComponent sdkComponent = mySdkConfigurable.createComponent();
+    JComponent sdkComponent = mySdkConfigurable.getComponent();
     mySdkConfigurable.setLabelText(PerlBundle.message("perl.run.config.use.alternative.label"));
     alternativeSdkPanel.add(sdkComponent, "growx, pushx");
     myAlternativeSdkCheckbox.addChangeListener(e -> mySdkConfigurable.setEnabled(myAlternativeSdkCheckbox.isSelected()));
@@ -206,7 +224,7 @@ public abstract class GenericPerlRunConfigurationEditorPanel<Configuration exten
 
   protected void reset(Configuration runConfiguration) {
     ((TextAccessor)myScriptField).setText(runConfiguration.getScriptPath());
-    myRequiredModulesLabeledField.getComponent().setText(runConfiguration.getRequiredModules());
+    myRequiredModulesField.setValue(runConfiguration.getRequiredModules());
     myConsoleCharset.setSelectedItem(runConfiguration.getConsoleCharset());
     myPerlArgumentsPanel.setText(runConfiguration.getPerlArguments());
     myAlternativeSdkCheckbox.setSelected(runConfiguration.isUseAlternativeSdk());
@@ -217,13 +235,13 @@ public abstract class GenericPerlRunConfigurationEditorPanel<Configuration exten
   }
 
   protected void applyTo(Configuration runConfiguration) {
-    runConfiguration.setRequiredModules(myRequiredModulesLabeledField.getComponent().getText());
+    runConfiguration.setRequiredModules(StringUtil.notNullize(myRequiredModulesField.getValue()));
     runConfiguration.setScriptPath(((TextAccessor)myScriptField).getText());
     runConfiguration.setConsoleCharset(StringUtil.nullize((String)myConsoleCharset.getSelectedItem(), true));
     runConfiguration.setPerlArguments(myPerlArgumentsPanel.getText());
     runConfiguration.setUseAlternativeSdk(myAlternativeSdkCheckbox.isSelected());
     mySdkConfigurable.apply();
-    runConfiguration.setAlternativeSdkName(ObjectUtils.doIfNotNull(mySdkProxy, Sdk::getName));
+    runConfiguration.setAlternativeSdkName(ObjectUtil.doIfNotNull(mySdkProxy, Sdk::getName));
     super.applyTo(runConfiguration);
   }
 

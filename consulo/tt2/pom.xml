@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>consulo</groupId>
+        <artifactId>arch.bind.java</artifactId>
+        <version>3-SNAPSHOT</version>
+        <relativePath/>
+    </parent>
+
+    <groupId>consulo.plugin</groupId>
+    <artifactId>consulo.perl5-tt2</artifactId>
+    <version>3-SNAPSHOT</version>
+    <packaging>consulo-plugin</packaging>
+
+    <repositories>
+        <repository>
+            <id>consulo</id>
+            <url>https://maven.consulo.dev/repository/snapshots/</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>interval:60</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <properties>
+        <repo.dir>${project.basedir}/../..</repo.dir>
+    </properties>
+
+    <!-- com.perl5.lang.tt2: aggregate of upstream projects tt2/common, tt2/backend (they share packages, so one JPMS module) -->
+    <build>
+        <sourceDirectory>${repo.dir}/tt2/common/src/main/java</sourceDirectory>
+
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.6.0</version>
+                <executions>
+                    <execution>
+                        <id>upstream-sources</id>
+                        <!-- initialize: must run before generate-lexers scans compile source roots for *.flex -->
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <!-- Consulo-only sources -->
+                                <source>${project.basedir}/src/main/java</source>
+                                <source>${repo.dir}/tt2/backend/src/main/java</source>
+                                <source>${repo.dir}/tt2/common/grammar</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>upstream-resources</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>add-resource</goal>
+                        </goals>
+                        <configuration>
+                            <resources>
+                                <resource>
+                                    <directory>${repo.dir}/tt2/common/src/main/resources</directory>
+                                    <excludes>
+                                        <exclude>META-INF/**</exclude>
+                                    </excludes>
+                                </resource>
+                                <resource>
+                                    <directory>${repo.dir}/tt2/backend/src/main/resources</directory>
+                                    <excludes>
+                                        <exclude>META-INF/**</exclude>
+                                    </excludes>
+                                </resource>
+                                <resource>
+                                    <directory>${repo.dir}/tt2/frontend/src/main/resources</directory>
+                                    <excludes>
+                                        <exclude>META-INF/**</exclude>
+                                    </excludes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <!-- TODO consulo: replace with a real module-info.java; until then the jar is an automatic module -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Automatic-Module-Name>consulo.perl5.tt2</Automatic-Module-Name>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <compilerArgs combine.children="append">
+                        <arg>-Xmaxerrs</arg>
+                        <arg>100000</arg>
+                    </compilerArgs>
+                    <excludes>
+                        <!-- IntelliJ split mode (remote development) settings sync -->
+                        <exclude>**/*RemoteInfoProvider.java</exclude>
+                        <!-- JPS model serialization, Consulo has no JPS -->
+                        <exclude>com/perl5/lang/tt2/idea/settings/TemplateToolkitSourceTypesSerializationExtension.java</exclude>
+                        <!-- YouTrack error reporter: Consulo has no plugin error report submitter extension point (core excludes com/perl5/errorHandler/**) -->
+                        <exclude>com/perl5/lang/tt2/TemplateToolkitYoutrackErrorHandler.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>consulo.maven</groupId>
+                <artifactId>maven-consulo-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration>
+                    <packaging>
+                        <skip>${dev.mode}</skip>
+                        <version>${build.number}</version>
+                    </packaging>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>icons</id>
+                        <!-- validate: before build-helper adds upstream resource dirs; generate-icon stops at the first resource dir without ICON-LIB -->
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>generate-icon</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>gen</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate-lexers</goal>
+                            <goal>generate-parsers</goal>
+                        </goals>
+                        <configuration>
+                            <externalGrammars>
+                                <externalGrammar>${repo.dir}/tt2/common/grammar/TemplateToolkit.bnf</externalGrammar>
+                            </externalGrammars>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>pack</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>workspace</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>consulo.perl5-core</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- platform -->
+        <dependency>
+            <groupId>consulo</groupId>
+            <artifactId>consulo-ide-api</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>consulo</groupId>
+            <artifactId>consulo-language-impl</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>consulo</groupId>
+            <artifactId>consulo-language-editor-impl</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>consulo</groupId>
+            <artifactId>consulo-execution-api</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>consulo</groupId>
+            <artifactId>consulo-execution-impl</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>consulo</groupId>
+            <artifactId>consulo-execution-debug-api</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>consulo</groupId>
+            <artifactId>consulo-execution-test-api</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>consulo</groupId>
+            <artifactId>consulo-execution-test-sm-api</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>consulo</groupId>
+            <artifactId>consulo-process-api</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>consulo</groupId>
+            <artifactId>consulo-language-spellchecker-api</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- legacy: allowed only where the API is not opened elsewhere -->
+        <dependency>
+            <groupId>consulo</groupId>
+            <artifactId>consulo-ide-impl</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- plugins -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>com.intellij.xml</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>com.intellij.regexp</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- libraries -->
+        <!-- upstream @NotNull/@Nullable are kept as is (compile-only) to keep diff with upstream small -->
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>26.1.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>it.unimi.dsi</groupId>
+            <artifactId>fastutil</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jdom</groupId>
+            <artifactId>jdom-core</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+</project>

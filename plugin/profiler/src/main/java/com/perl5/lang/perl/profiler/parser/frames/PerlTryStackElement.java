@@ -16,12 +16,12 @@
 
 package com.perl5.lang.perl.profiler.parser.frames;
 
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.psi.NavigatablePsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.search.GlobalSearchScope;
+import consulo.application.progress.ProgressManager;
+import consulo.project.Project;
+import consulo.content.bundle.Sdk;
+import consulo.language.psi.NavigatablePsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.scope.GlobalSearchScope;
 import com.perl5.lang.perl.psi.PerlRecursiveVisitor;
 import com.perl5.lang.perl.psi.PsiPerlTryExpr;
 import com.perl5.lang.perl.psi.PsiPerlTrycatchCompound;

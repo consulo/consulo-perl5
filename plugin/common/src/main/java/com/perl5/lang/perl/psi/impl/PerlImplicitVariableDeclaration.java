@@ -16,10 +16,10 @@
 
 package com.perl5.lang.perl.psi.impl;
 
-import com.intellij.openapi.editor.Document;
-import com.intellij.psi.*;
-import com.intellij.psi.stubs.IStubElementType;
-import com.intellij.util.IncorrectOperationException;
+import consulo.document.Document;
+
+import consulo.language.psi.stub.IStubElementType;
+import consulo.language.util.IncorrectOperationException;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlScalarValue;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlValue;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlValues;
@@ -36,8 +36,14 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
+import consulo.language.icon.IconDescriptorUpdaters;
+import consulo.ui.image.Image;
 import java.util.Objects;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiElementVisitor;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
 
 
 public class PerlImplicitVariableDeclaration extends PerlImplicitElement
@@ -210,10 +216,11 @@ public class PerlImplicitVariableDeclaration extends PerlImplicitElement
     return isLocalDeclaration() ? getName() : getCanonicalName();
   }
 
-  @Override
-  public @Nullable Icon getIcon(int flags) {
-    Icon iconByType = getIconByType(getActualType());
-    return iconByType == null ? super.getIcon(flags) : iconByType;
+  // TODO consulo: PsiElement#getIcon(int) does not exist in Consulo (element icons come from IconDescriptorUpdater),
+  //  so this is no longer an override and is not called by the platform
+  public @Nullable Image getIcon(int flags) {
+    Image iconByType = getIconByType(getActualType());
+    return iconByType == null ? IconDescriptorUpdaters.getIcon(this, flags) : iconByType;
   }
 
   @Override

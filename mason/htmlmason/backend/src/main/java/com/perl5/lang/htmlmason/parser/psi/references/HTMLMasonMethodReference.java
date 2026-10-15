@@ -16,16 +16,21 @@
 
 package com.perl5.lang.htmlmason.parser.psi.references;
 
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.*;
-import com.intellij.util.IncorrectOperationException;
+import consulo.document.util.TextRange;
+import consulo.util.lang.StringUtil;
+
+import consulo.language.util.IncorrectOperationException;
 import com.perl5.lang.htmlmason.HTMLMasonUtil;
 import com.perl5.lang.htmlmason.parser.psi.HTMLMasonMethodDefinition;
 import com.perl5.lang.htmlmason.parser.psi.HTMLMasonNamedElement;
 import com.perl5.lang.htmlmason.parser.psi.impl.HTMLMasonFileImpl;
 import com.perl5.lang.perl.psi.PerlString;
 import org.jetbrains.annotations.NotNull;
+import consulo.language.psi.ElementManipulators;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiElementResolveResult;
+import consulo.language.psi.PsiReference;
+import consulo.language.psi.ResolveResult;
 
 
 public class HTMLMasonMethodReference extends HTMLMasonStringReference {

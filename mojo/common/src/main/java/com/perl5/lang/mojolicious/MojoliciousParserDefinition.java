@@ -16,25 +16,27 @@
 
 package com.perl5.lang.mojolicious;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.PsiParser;
-import com.intellij.lexer.Lexer;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.impl.source.DummyHolder;
-import com.intellij.psi.impl.source.tree.TreeUtil;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.IFileElementType;
-import com.intellij.psi.tree.TokenSet;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.Language;
+import consulo.language.ast.ASTNode;
+import consulo.language.parser.PsiParser;
+import consulo.language.lexer.Lexer;
+import consulo.util.lang.StringUtil;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.impl.psi.DummyHolder;
+import consulo.language.impl.ast.TreeUtil;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.IFileElementType;
+import consulo.language.ast.TokenSet;
+import consulo.language.version.LanguageVersion;
 import com.perl5.lang.mojolicious.lexer.MojoliciousLexer;
 import com.perl5.lang.mojolicious.lexer.MojoliciousLexerAdapter;
 import com.perl5.lang.mojolicious.psi.impl.MojoliciousFileImpl;
 import com.perl5.lang.perl.PerlParserDefinition;
 import com.perl5.lang.perl.lexer.PerlTemplatingLexer;
-import com.perl5.lang.perl.parser.MojoliciousParser;
+import com.perl5.lang.mojolicious.parser.MojoliciousParser;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -42,15 +44,22 @@ import java.util.Objects;
 import static com.perl5.lang.mojolicious.MojoliciousElementTypes.FILE;
 
 
+@ExtensionImpl
 public class MojoliciousParserDefinition extends PerlParserDefinition {
   @Override
-  public @NotNull TokenSet getCommentTokens() {
+  public @NotNull Language getLanguage() {
+    return MojoliciousLanguage.INSTANCE;
+  }
+
+  @Override
+  public @NotNull TokenSet getCommentTokens(LanguageVersion languageVersion) {
     return MojoTokenSets.COMMENTS;
   }
 
   @Override
-  public @NotNull Lexer createLexer(Project project) {
-    return new MojoliciousLexerAdapter(project, false);
+  public @NotNull Lexer createLexer(LanguageVersion languageVersion) {
+    // TODO consulo: no project in ParserDefinition.createLexer(LanguageVersion); upstream passes it to the lexer
+    return new MojoliciousLexerAdapter(null, false);
   }
 
   @Override
@@ -64,7 +73,7 @@ public class MojoliciousParserDefinition extends PerlParserDefinition {
   }
 
   @Override
-  public @NotNull PsiParser createParser(Project project) {
+  public @NotNull PsiParser createParser(LanguageVersion languageVersion) {
     return new MojoliciousParser();
   }
 

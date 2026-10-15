@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.idea.filetemplates;
 
-import com.intellij.ide.fileTemplates.FileTemplate;
+import consulo.fileTemplate.FileTemplate;
 import com.perl5.lang.perl.fileTypes.PerlFileTypePackage;
 import com.perl5.lang.perl.util.PerlPackageUtilCore;
 import org.jetbrains.annotations.NotNull;

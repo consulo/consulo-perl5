@@ -16,13 +16,13 @@
 
 package com.perl5.lang.pod.idea.findusages;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.usages.PsiNamedElementUsageGroupBase;
-import com.intellij.usages.Usage;
-import com.intellij.usages.UsageGroup;
-import com.intellij.usages.UsageTarget;
-import com.intellij.usages.rules.PsiElementUsage;
-import com.intellij.usages.rules.SingleParentUsageGroupingRule;
+import consulo.language.psi.PsiElement;
+import consulo.usage.PsiNamedElementUsageGroupBase;
+import consulo.usage.Usage;
+import consulo.usage.UsageGroup;
+import consulo.usage.UsageTarget;
+import consulo.usage.rule.PsiElementUsage;
+import consulo.usage.rule.SingleParentUsageGroupingRule;
 import com.perl5.lang.pod.PodLanguage;
 import com.perl5.lang.pod.idea.ui.breadcrumbs.PodBreadCrumbsProvider;
 import com.perl5.lang.pod.parser.psi.PodTitledSection;

@@ -16,14 +16,14 @@
 
 package com.perl5.lang.tt2.psi.references;
 
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.newvfs.ManagingFS;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiFileSystemItem;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceHelper;
+import consulo.module.Module;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.ManagingFS;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiFileSystemItem;
+import consulo.language.psi.PsiManager;
+import consulo.language.psi.path.FileReferenceHelper;
 import com.perl5.lang.tt2.filetypes.TemplateToolkitFileType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -51,8 +51,9 @@ public class TemplateToolkitFileReferenceHelper extends FileReferenceHelper {
     return item == null ? Collections.emptyList() : Collections.singleton(item);
   }
 
+  // consulo: Consulo FileReferenceHelper#getRoots has no VirtualFile parameter (unused here)
   @Override
-  public @NotNull Collection<PsiFileSystemItem> getRoots(@NotNull Module module, @NotNull VirtualFile file) {
+  public @NotNull Collection<PsiFileSystemItem> getRoots(@NotNull Module module) {
     Collection<PsiFileSystemItem> result = new ArrayList<>();
     PsiManager psiManager = PsiManager.getInstance(module.getProject());
     for (VirtualFile root : ManagingFS.getInstance().getLocalRoots()) {

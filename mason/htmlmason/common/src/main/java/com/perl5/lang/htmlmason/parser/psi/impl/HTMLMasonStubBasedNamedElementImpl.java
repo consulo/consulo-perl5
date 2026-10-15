@@ -16,13 +16,13 @@
 
 package com.perl5.lang.htmlmason.parser.psi.impl;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.impl.source.tree.LeafPsiElement;
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiElement;
+import consulo.language.impl.psi.LeafPsiElement;
+import consulo.language.psi.stub.StubElement;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.util.IncorrectOperationException;
 import com.perl5.lang.htmlmason.parser.psi.HTMLMasonArgsBlock;
 import com.perl5.lang.htmlmason.parser.psi.HTMLMasonBlock;
 import com.perl5.lang.htmlmason.parser.psi.HTMLMasonCompositeElement;

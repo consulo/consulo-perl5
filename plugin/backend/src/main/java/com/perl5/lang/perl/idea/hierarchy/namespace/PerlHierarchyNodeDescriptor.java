@@ -16,16 +16,16 @@
 
 package com.perl5.lang.perl.idea.hierarchy.namespace;
 
-import com.intellij.ide.IdeBundle;
-import com.intellij.ide.hierarchy.HierarchyNodeDescriptor;
-import com.intellij.ide.util.treeView.NodeDescriptor;
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.openapi.roots.ui.util.CompositeAppearance;
-import com.intellij.openapi.util.Comparing;
-import com.intellij.psi.NavigatablePsiElement;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.SmartPointerManager;
-import com.intellij.psi.SmartPsiElementPointer;
+import consulo.ide.IdeBundle;
+import consulo.language.editor.hierarchy.HierarchyNodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.navigation.ItemPresentation;
+import consulo.ui.ex.util.CompositeAppearance;
+import consulo.util.lang.Comparing;
+import consulo.language.psi.NavigatablePsiElement;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.SmartPointerManager;
+import consulo.language.psi.SmartPsiElementPointer;
 import com.perl5.lang.perl.psi.PerlNamespaceDefinitionElement;
 
 
@@ -34,7 +34,7 @@ public class PerlHierarchyNodeDescriptor extends HierarchyNodeDescriptor {
 
   public PerlHierarchyNodeDescriptor(NodeDescriptor parentDescriptor, PsiElement element, boolean isBase) {
     super(element.getProject(), parentDescriptor, element, isBase);
-    myPerlElementPointer = SmartPointerManager.getInstance(myProject).createSmartPsiElementPointer(element);
+    myPerlElementPointer = SmartPointerManager.getInstance(getProject()).createSmartPsiElementPointer(element);
   }
 
   @Override

@@ -16,7 +16,7 @@
 
 package com.perl5.lang.mason2.idea.findusages;
 
-import com.intellij.lang.cacheBuilder.DefaultWordsScanner;
+import consulo.language.cacheBuilder.DefaultWordsScanner;
 import com.perl5.lang.mason2.lexer.Mason2TemplatingLexerAdapter;
 import com.perl5.lang.perl.lexer.PerlTokenSetsEx;
 

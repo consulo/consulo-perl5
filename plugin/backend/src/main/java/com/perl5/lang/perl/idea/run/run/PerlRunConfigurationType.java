@@ -16,9 +16,11 @@
 
 package com.perl5.lang.perl.idea.run.run;
 
-import com.intellij.execution.configurations.ConfigurationTypeBase;
-import com.intellij.execution.configurations.RunConfiguration;
-import com.intellij.openapi.project.Project;
+import consulo.execution.configuration.ConfigurationTypeBase;
+import consulo.execution.configuration.ConfigurationTypeUtil;
+import consulo.execution.configuration.RunConfiguration;
+import consulo.localize.LocalizeValue;
+import consulo.project.Project;
 import com.perl5.PerlBundle;
 import com.perl5.PerlIcons;
 import com.perl5.lang.perl.idea.run.PerlRunConfigurationFactory;
@@ -30,7 +32,8 @@ public class PerlRunConfigurationType extends ConfigurationTypeBase {
   private final @NotNull PerlRunConfigurationFactory myScriptConfigurationFactory;
 
   public PerlRunConfigurationType() {
-    super("#PerlConfigurationType", PerlBundle.message("perl"), PerlBundle.message("runs.perl5.scripts"), PerlIcons.PERL_LANGUAGE_ICON);
+    super("#PerlConfigurationType", LocalizeValue.localizeTODO(PerlBundle.message("perl")),
+          LocalizeValue.localizeTODO(PerlBundle.message("runs.perl5.scripts")), PerlIcons.PERL_LANGUAGE_ICON);
 
     myScriptConfigurationFactory = new PerlRunConfigurationFactory(this) {
       @Override
@@ -51,6 +54,6 @@ public class PerlRunConfigurationType extends ConfigurationTypeBase {
   }
 
   public static @NotNull PerlRunConfigurationType getInstance() {
-    return Objects.requireNonNull(CONFIGURATION_TYPE_EP.findExtension(PerlRunConfigurationType.class));
+    return Objects.requireNonNull(ConfigurationTypeUtil.findConfigurationType(PerlRunConfigurationType.class));
   }
 }

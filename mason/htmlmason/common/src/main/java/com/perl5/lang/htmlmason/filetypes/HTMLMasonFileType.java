@@ -16,8 +16,8 @@
 
 package com.perl5.lang.htmlmason.filetypes;
 
-import com.intellij.openapi.fileTypes.ex.FileTypeIdentifiableByVirtualFile;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileTypeIdentifiableByVirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.perl5.lang.htmlmason.HTMLMasonIcons;
 import com.perl5.lang.htmlmason.HTMLMasonLanguage;
 import com.perl5.lang.htmlmason.HtmlMasonBundle;
@@ -26,7 +26,8 @@ import com.perl5.lang.perl.fileTypes.PerlFileTypeService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
+import consulo.localize.LocalizeValue;
+import consulo.ui.image.Image;
 
 
 public class HTMLMasonFileType extends PerlFileType implements FileTypeIdentifiableByVirtualFile {
@@ -38,13 +39,13 @@ public class HTMLMasonFileType extends PerlFileType implements FileTypeIdentifia
   }
 
   @Override
-  public @NotNull String getName() {
+  public @NotNull String getId() {
     return "HTML::Mason Component";
   }
 
   @Override
-  public @NotNull String getDescription() {
-    return HtmlMasonBundle.message("label.html.mason.component");
+  public @NotNull LocalizeValue getDescription() {
+    return LocalizeValue.localizeTODO(HtmlMasonBundle.message("label.html.mason.component"));
   }
 
   @Override
@@ -53,7 +54,7 @@ public class HTMLMasonFileType extends PerlFileType implements FileTypeIdentifia
   }
 
   @Override
-  public @Nullable Icon getIcon() {
+  public @Nullable Image getIcon() {
     return HTMLMasonIcons.HTML_MASON_COMPONENT_ICON;
   }
 

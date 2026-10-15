@@ -16,10 +16,10 @@
 
 package com.perl5.lang.perl.idea.formatter.blocks;
 
-import com.intellij.formatting.Block;
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.injection.InjectedLanguageManager;
-import com.intellij.openapi.util.TextRange;
+import consulo.language.codeStyle.Block;
+import consulo.language.ast.ASTNode;
+import consulo.language.inject.InjectedLanguageManager;
+import consulo.document.util.TextRange;
 import com.perl5.lang.perl.idea.formatter.PerlInjectedLanguageBlocksBuilder;
 import com.perl5.lang.perl.idea.formatter.PurePerlFormattingContext;
 import com.perl5.lang.perl.psi.PerlHeredocTerminatorElement;

@@ -16,10 +16,14 @@
 
 package com.perl5.lang.perl.intellilang;
 
-import com.intellij.psi.PsiElement;
+import jakarta.inject.Singleton;
+import consulo.annotation.component.ServiceImpl;
+import consulo.language.psi.PsiElement;
 import com.perl5.lang.perl.psi.references.PerlFileContextSubstitutor;
 import org.jetbrains.annotations.Nullable;
 
+@ServiceImpl
+@Singleton
 public class PerlInjectionFileContextSubstitutor implements PerlFileContextSubstitutor {
   @Override
   public @Nullable PsiElement computeSubstitutedContext(@Nullable PsiElement originalFileContext) {

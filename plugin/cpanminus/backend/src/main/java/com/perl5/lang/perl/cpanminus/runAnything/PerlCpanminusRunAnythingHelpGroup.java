@@ -16,21 +16,24 @@
 
 package com.perl5.lang.perl.cpanminus.runAnything;
 
-import com.intellij.ide.actions.runAnything.activity.RunAnythingProvider;
-import com.intellij.ide.actions.runAnything.groups.RunAnythingHelpGroup;
-import com.intellij.ide.actions.runAnything.items.RunAnythingItem;
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.Application;
+import consulo.ide.runAnything.RunAnythingProvider;
+import consulo.ide.runAnything.RunAnythingHelpGroup;
+import consulo.ide.runAnything.RunAnythingItem;
+import consulo.dataContext.DataContext;
+import consulo.util.collection.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
 
+@ExtensionImpl
 public class PerlCpanminusRunAnythingHelpGroup extends RunAnythingHelpGroup<PerlCpanminusRunAnythingProvider> {
 
   public PerlCpanminusRunAnythingHelpGroup() {
-    super(Objects.requireNonNull(RunAnythingProvider.EP_NAME.findExtension(PerlCpanminusRunAnythingProvider.class)).getHelpGroupTitle(),
+    super(Objects.requireNonNull(Application.get().getExtensionPoint(RunAnythingProvider.class).findExtension(PerlCpanminusRunAnythingProvider.class)).getHelpGroupTitle(),
           Collections.emptyList());
   }
 
@@ -42,7 +45,7 @@ public class PerlCpanminusRunAnythingHelpGroup extends RunAnythingHelpGroup<Perl
   @Override
   public @NotNull Collection<RunAnythingItem> getGroupItems(@NotNull DataContext dataContext, @NotNull String pattern) {
     return ContainerUtil.filter(
-      Objects.requireNonNull(RunAnythingProvider.EP_NAME.findExtension(PerlCpanminusRunAnythingProvider.class)).getHelpItems(),
+      Objects.requireNonNull(Application.get().getExtensionPoint(RunAnythingProvider.class).findExtension(PerlCpanminusRunAnythingProvider.class)).getHelpItems(),
       Objects::nonNull);
   }
 }

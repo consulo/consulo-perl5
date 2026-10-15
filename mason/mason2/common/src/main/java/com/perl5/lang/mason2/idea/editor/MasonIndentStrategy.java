@@ -16,15 +16,23 @@
 
 package com.perl5.lang.mason2.idea.editor;
 
-import com.intellij.openapi.editor.IndentStrategy;
-import com.intellij.psi.PsiElement;
+import consulo.language.Language;
+import com.perl5.lang.mason2.Mason2Language;
+import consulo.language.editor.IndentStrategy;
+import consulo.language.psi.PsiElement;
 import com.perl5.lang.mason2.idea.formatter.MasonIndentProcessor;
 import org.jetbrains.annotations.NotNull;
 
 
 public class MasonIndentStrategy implements IndentStrategy {
   @Override
-  public boolean canIndent(int indentationStartOffset, int indentationEndOffset, @NotNull PsiElement element) {
+  public @NotNull Language getLanguage() {
+    return Mason2Language.INSTANCE;
+  }
+
+  // consulo: Consulo IndentStrategy has no indentationStartOffset/indentationEndOffset parameters (unused here)
+  @Override
+  public boolean canIndent(@NotNull PsiElement element) {
     return !MasonIndentProcessor.INSTANCE.getAbsoluteUnindentableTokens().contains(element.getNode().getElementType());
   }
 }

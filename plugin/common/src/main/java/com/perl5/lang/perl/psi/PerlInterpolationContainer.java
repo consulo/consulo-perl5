@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.psi;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 
 /**
  * Elements implementing this interface may contain interpolatable entities

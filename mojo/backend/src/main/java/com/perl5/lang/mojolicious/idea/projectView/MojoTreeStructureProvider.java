@@ -16,32 +16,37 @@
 
 package com.perl5.lang.mojolicious.idea.projectView;
 
-import com.intellij.ide.projectView.PresentationData;
-import com.intellij.ide.projectView.TreeStructureProvider;
-import com.intellij.ide.projectView.ViewSettings;
-import com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode;
-import com.intellij.ide.util.treeView.AbstractTreeNode;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.ui.ex.tree.PresentationData;
+import consulo.project.ui.view.tree.TreeStructureProvider;
+import consulo.project.ui.view.tree.ViewSettings;
+import consulo.project.ui.view.tree.PsiDirectoryNode;
+import consulo.project.ui.view.tree.AbstractTreeNode;
+import consulo.project.Project;
+import consulo.util.lang.StringUtil;
+import consulo.util.collection.ContainerUtil;
 import com.perl5.lang.mojolicious.model.MojoProject;
 import com.perl5.lang.mojolicious.model.MojoProjectManager;
+import jakarta.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.Collection;
 
+@ExtensionImpl
 public class MojoTreeStructureProvider implements TreeStructureProvider {
   private final @NotNull MojoProjectManager myMojoProjectManager;
 
+  @Inject
   public MojoTreeStructureProvider(@NotNull Project project) {
     myMojoProjectManager = MojoProjectManager.getInstance(project);
   }
 
   @Override
-  public @Unmodifiable @NotNull Collection<AbstractTreeNode<?>> modify(@NotNull AbstractTreeNode<?> parent,
-                                                                       @NotNull Collection<AbstractTreeNode<?>> children,
-                                                                       ViewSettings settings) {
+  @SuppressWarnings("rawtypes")
+  public @Unmodifiable @NotNull Collection<AbstractTreeNode> modify(@NotNull AbstractTreeNode parent,
+                                                                    @NotNull Collection<AbstractTreeNode> children,
+                                                                    ViewSettings settings) {
     if (!myMojoProjectManager.isMojoAvailable()) {
       return children;
     }

@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.debugger.protocol;
 
-import com.intellij.xdebugger.frame.XSuspendContext;
+import consulo.execution.debug.frame.XSuspendContext;
 import com.perl5.lang.perl.debugger.PerlSuspendContext;
 
 

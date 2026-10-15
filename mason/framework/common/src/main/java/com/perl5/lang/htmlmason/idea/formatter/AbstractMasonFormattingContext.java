@@ -16,14 +16,14 @@
 
 package com.perl5.lang.htmlmason.idea.formatter;
 
-import com.intellij.formatting.FormattingContext;
-import com.intellij.lang.ASTNode;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.codeStyle.FormattingContext;
+import consulo.language.ast.ASTNode;
+import consulo.document.Document;
+import consulo.document.util.TextRange;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.ast.IElementType;
 import com.perl5.lang.perl.idea.formatter.PurePerlFormattingContext;
 import org.jetbrains.annotations.NotNull;
 

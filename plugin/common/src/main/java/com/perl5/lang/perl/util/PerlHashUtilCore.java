@@ -16,12 +16,12 @@
 
 package com.perl5.lang.perl.util;
 
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.ElementManipulators;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.TokenSet;
-import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.util.PairProcessor;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.ElementManipulators;
+import consulo.language.psi.PsiElement;
+import consulo.language.ast.TokenSet;
+import consulo.language.psi.PsiUtilCore;
+import consulo.util.lang.function.PairProcessor;
 import com.perl5.lang.perl.parser.PerlElementTypesGenerated;
 import com.perl5.lang.perl.psi.PerlString;
 import com.perl5.lang.perl.psi.PerlStringContentElement;

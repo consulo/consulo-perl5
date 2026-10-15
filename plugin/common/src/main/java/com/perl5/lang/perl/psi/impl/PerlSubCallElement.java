@@ -16,10 +16,10 @@
 
 package com.perl5.lang.perl.psi.impl;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.ASTNode;
+import consulo.logging.Logger;
+import consulo.language.psi.PsiElement;
+import consulo.language.ast.IElementType;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlValue;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlValues;
 import com.perl5.lang.perl.psi.*;

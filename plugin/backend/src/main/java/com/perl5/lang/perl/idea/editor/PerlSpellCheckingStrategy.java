@@ -16,15 +16,17 @@
 
 package com.perl5.lang.perl.idea.editor;
 
-import com.intellij.psi.ElementManipulators;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiLanguageInjectionHost;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.spellchecker.inspections.IdentifierSplitter;
-import com.intellij.spellchecker.tokenizer.SpellcheckingStrategy;
-import com.intellij.spellchecker.tokenizer.TokenConsumer;
-import com.intellij.spellchecker.tokenizer.Tokenizer;
+import consulo.language.Language;
+import com.perl5.lang.perl.PerlLanguage;
+import consulo.language.psi.ElementManipulators;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiLanguageInjectionHost;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.psi.PsiUtilCore;
+import consulo.language.spellcheker.SpellcheckingStrategy;
+import consulo.language.spellcheker.tokenizer.TokenConsumer;
+import consulo.language.spellcheker.tokenizer.Tokenizer;
+import consulo.language.spellcheker.tokenizer.splitter.IdentifierTokenSplitter;
 import com.perl5.lang.perl.psi.mixins.PerlStringBareMixin;
 import com.perl5.lang.perl.psi.utils.PerlPsiUtil;
 import com.perl5.lang.perl.util.PerlInjectionUtil;
@@ -33,6 +35,11 @@ import org.jetbrains.annotations.NotNull;
 import static com.perl5.lang.perl.lexer.PerlTokenSets.STRING_CONTENT_TOKENSET;
 
 public class PerlSpellCheckingStrategy extends SpellcheckingStrategy {
+  @Override
+  public @NotNull Language getLanguage() {
+    return PerlLanguage.INSTANCE;
+  }
+
   private static final Tokenizer<PsiElement> IDENTIFIER_TOKENIZER = new Tokenizer<>() {
     @Override
     public void tokenize(@NotNull PsiElement element, TokenConsumer consumer) {
@@ -42,7 +49,7 @@ public class PerlSpellCheckingStrategy extends SpellcheckingStrategy {
                             true,
                             ElementManipulators.getOffsetInElement(element),
                             ElementManipulators.getValueTextRange(element),
-                            IdentifierSplitter.getInstance());
+                            IdentifierTokenSplitter.getInstance());
     }
   };
 

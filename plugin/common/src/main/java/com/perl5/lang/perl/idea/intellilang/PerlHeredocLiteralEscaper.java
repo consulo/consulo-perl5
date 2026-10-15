@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.idea.intellilang;
 
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.ElementManipulators;
-import com.intellij.psi.LiteralTextEscaper;
+import consulo.document.util.TextRange;
+import consulo.language.psi.ElementManipulators;
+import consulo.language.psi.LiteralTextEscaper;
 import com.perl5.lang.perl.psi.impl.PerlHeredocElementImpl;
 import org.jetbrains.annotations.NotNull;
 

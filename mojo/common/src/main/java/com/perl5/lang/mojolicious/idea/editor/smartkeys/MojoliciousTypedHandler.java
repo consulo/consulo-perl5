@@ -16,10 +16,10 @@
 
 package com.perl5.lang.mojolicious.idea.editor.smartkeys;
 
-import com.intellij.codeInsight.editorActions.TypedHandlerDelegate;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiFile;
+import consulo.language.editor.action.TypedHandlerDelegate;
+import consulo.codeEditor.Editor;
+import consulo.project.Project;
+import consulo.language.psi.PsiFile;
 import com.perl5.lang.mojolicious.psi.MojoliciousFileViewProvider;
 import org.jetbrains.annotations.NotNull;
 

@@ -16,10 +16,12 @@
 
 package com.perl5.lang.perl.extensions.parser;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.util.Pair;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.component.extension.ExtensionPointName;
+import consulo.util.lang.Pair;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
 import com.perl5.lang.perl.parser.builder.PerlBuilder;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,8 +29,9 @@ import java.util.Collections;
 import java.util.List;
 
 
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class PerlParserExtension {
-  public static final ExtensionPointName<PerlParserExtension> EP_NAME = ExtensionPointName.create("com.perl5.parserExtension");
+  public static final ExtensionPointName<PerlParserExtension> EP_NAME = ExtensionPointName.create(PerlParserExtension.class);
 
   /**
    * Returns list of extendable tokensets. Loader will attempt to add them into builder

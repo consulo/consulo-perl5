@@ -16,10 +16,10 @@
 
 package com.perl5.lang.perl.debugger.run.run.debugger;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.process.ProcessHandler;
-import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.openapi.util.Key;
+import consulo.process.ExecutionException;
+import consulo.process.ProcessHandler;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.util.dataholder.Key;
 import com.perl5.lang.perl.idea.run.PerlRunProfileState;
 import com.perl5.lang.perl.idea.run.debugger.PerlDebugOptions;
 import org.jetbrains.annotations.NotNull;

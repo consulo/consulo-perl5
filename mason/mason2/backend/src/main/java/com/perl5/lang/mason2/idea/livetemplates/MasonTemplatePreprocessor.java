@@ -16,7 +16,7 @@
 
 package com.perl5.lang.mason2.idea.livetemplates;
 
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.perl5.lang.htmlmason.idea.livetemplates.AbstractMasonTemplatePreprocessor;
 import com.perl5.lang.mason2.psi.impl.MasonTemplatingFileImpl;
 

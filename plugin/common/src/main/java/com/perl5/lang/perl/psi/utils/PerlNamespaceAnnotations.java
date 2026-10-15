@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.psi.utils;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.perl5.lang.perl.psi.PerlAnnotation;
 import com.perl5.lang.perl.psi.PsiPerlAnnotationDeprecated;
 import org.jetbrains.annotations.NotNull;

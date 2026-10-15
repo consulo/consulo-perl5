@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.idea.sdk.host;
 
-import com.intellij.execution.ui.ConsoleView;
-import com.intellij.openapi.Disposable;
+import consulo.execution.ui.console.ConsoleView;
+import consulo.disposer.Disposable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

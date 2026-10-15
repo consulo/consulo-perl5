@@ -16,13 +16,13 @@
 
 package com.perl5.lang.perl.psi.stubs;
 
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.stubs.StringStubIndexExtension;
-import com.intellij.psi.stubs.StubIndex;
-import com.intellij.util.Processor;
+import consulo.application.progress.ProgressManager;
+import consulo.project.Project;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.stub.StringStubIndexExtension;
+import consulo.language.psi.stub.StubIndex;
+import consulo.application.util.function.Processor;
 import com.perl5.lang.perl.extensions.packageprocessor.PerlPackageProcessorService;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.serialization.PerlValueBackendHelper;
 import com.perl5.lang.perl.psi.PerlSubCallHandlerVersionService;

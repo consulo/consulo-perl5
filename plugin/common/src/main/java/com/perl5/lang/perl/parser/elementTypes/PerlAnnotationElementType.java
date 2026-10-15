@@ -16,10 +16,10 @@
 
 package com.perl5.lang.perl.parser.elementTypes;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.Language;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.language.ast.ASTNode;
+import consulo.language.Language;
+import consulo.project.Project;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 

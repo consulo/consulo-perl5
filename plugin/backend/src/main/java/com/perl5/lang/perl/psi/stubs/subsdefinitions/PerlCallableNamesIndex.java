@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.psi.stubs.subsdefinitions;
 
-import com.intellij.psi.stubs.StubIndexExtension;
-import com.intellij.psi.stubs.StubIndexKey;
+import consulo.language.psi.stub.StubIndexExtension;
+import consulo.language.psi.stub.StubIndexKey;
 import com.perl5.lang.perl.psi.PerlCallableElement;
 import com.perl5.lang.perl.psi.stubs.PerlStubIndexBase;
 import org.jetbrains.annotations.NotNull;

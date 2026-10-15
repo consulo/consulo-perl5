@@ -16,21 +16,31 @@
 
 package com.perl5.lang.embedded;
 
-import com.intellij.lang.ASTFactory;
-import com.intellij.psi.impl.source.tree.LeafElement;
-import com.intellij.psi.templateLanguages.OuterLanguageElementImpl;
-import com.intellij.psi.tree.IElementType;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.impl.ast.ASTFactory;
+import consulo.language.impl.ast.ASTLeafFactory;
+import consulo.language.impl.ast.LeafElement;
+import consulo.language.impl.psi.template.OuterLanguageElementImpl;
+import consulo.language.ast.IElementType;
+import consulo.language.version.LanguageVersion;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import static com.perl5.lang.embedded.psi.EmbeddedPerlElementTypes.EMBED_OUTER_ELEMENT_TYPE;
 
-public class EmbeddedPerlAstFactory extends ASTFactory {
+// consulo: IntelliJ language ASTFactory -> Consulo ASTLeafFactory, selected by test(IElementType)
+@ExtensionImpl
+public class EmbeddedPerlAstFactory implements ASTLeafFactory {
   @Override
-  public @Nullable LeafElement createLeaf(@NotNull IElementType type, @NotNull CharSequence text) {
+  public @Nullable LeafElement createLeaf(@NotNull IElementType type, @NotNull LanguageVersion languageVersion, @NotNull CharSequence text) {
     if (type == EMBED_OUTER_ELEMENT_TYPE) {
       return new OuterLanguageElementImpl(type, text);
     }
-    return super.createLeaf(type, text);
+    return ASTFactory.leaf(type, languageVersion, text);
+  }
+
+  @Override
+  public boolean test(IElementType type) {
+    return type == EMBED_OUTER_ELEMENT_TYPE;
   }
 }

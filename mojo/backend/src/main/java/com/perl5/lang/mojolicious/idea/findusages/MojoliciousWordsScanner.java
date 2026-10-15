@@ -16,7 +16,7 @@
 
 package com.perl5.lang.mojolicious.idea.findusages;
 
-import com.intellij.lang.cacheBuilder.DefaultWordsScanner;
+import consulo.language.cacheBuilder.DefaultWordsScanner;
 import com.perl5.lang.mojolicious.lexer.MojoliciousLexerAdapter;
 import com.perl5.lang.perl.lexer.PerlTokenSetsEx;
 

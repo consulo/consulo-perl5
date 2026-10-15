@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.psi;
 
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiElement;
 import com.perl5.lang.perl.parser.PerlParserUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;

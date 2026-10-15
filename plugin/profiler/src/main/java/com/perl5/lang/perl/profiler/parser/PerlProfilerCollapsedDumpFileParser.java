@@ -16,10 +16,10 @@
 
 package com.perl5.lang.perl.profiler.parser;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.profiler.api.*;
-import com.intellij.profiler.ui.NativeCallStackElementRenderer;
+import consulo.logging.Logger;
+import consulo.application.progress.ProgressIndicator;
+
+import consulo.execution.profiler.ui.NativeCallStackElementRenderer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,6 +27,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.zip.GZIPInputStream;
+import consulo.execution.profiler.Failure;
+import consulo.execution.profiler.NewCallTreeOnlyProfilerData;
+import consulo.execution.profiler.ProfilerDumpFileParser;
+import consulo.execution.profiler.ProfilerDumpFileParsingResult;
+import consulo.execution.profiler.Success;
 
 /**
  * Parser for backed up files with serialized collapsed dump
@@ -53,6 +58,6 @@ public class PerlProfilerCollapsedDumpFileParser implements ProfilerDumpFilePars
       return new Failure(e.getMessage());
     }
     return new Success(
-      new NewCallTreeOnlyProfilerData(dumpParser.getCallTreeBuilder(), NativeCallStackElementRenderer.Companion.getINSTANCE()));
+      new NewCallTreeOnlyProfilerData(dumpParser.getCallTreeBuilder(), NativeCallStackElementRenderer.INSTANCE));
   }
 }

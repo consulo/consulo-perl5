@@ -16,28 +16,38 @@
 
 package com.perl5.lang.perl.coverage;
 
-import com.intellij.coverage.*;
-import com.intellij.coverage.view.CoverageViewExtension;
-import com.intellij.coverage.view.DirectoryCoverageViewExtension;
-import com.intellij.execution.configurations.RunConfigurationBase;
-import com.intellij.execution.configurations.coverage.CoverageEnabledConfiguration;
-import com.intellij.execution.testframework.AbstractTestProxy;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.Application;
+import consulo.execution.coverage.CoverageViewManager;
+import consulo.execution.coverage.view.CoverageViewExtension;
+import consulo.execution.coverage.view.DirectoryCoverageViewExtension;
+import consulo.execution.configuration.RunConfigurationBase;
+import consulo.execution.coverage.CoverageEnabledConfiguration;
+import consulo.execution.test.AbstractTestProxy;
+import consulo.module.Module;
+import consulo.project.Project;
+import consulo.util.io.FileUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import com.perl5.lang.perl.fileTypes.PurePerlFileType;
 import com.perl5.lang.perl.idea.run.GenericPerlRunConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.nio.file.Path;
+import java.io.File;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import consulo.execution.coverage.CoverageAnnotator;
+import consulo.execution.coverage.CoverageEngine;
+import consulo.execution.coverage.CoverageFileProvider;
+import consulo.execution.coverage.CoverageRunner;
+import consulo.execution.coverage.CoverageSuite;
+import consulo.execution.coverage.CoverageSuitesBundle;
 
+// consulo: upstream <coverageEngine> registration in perl5.plugin.coverage.main.xml
+@ExtensionImpl
 public class PerlCoverageEngine extends CoverageEngine {
 
   @Override
@@ -55,7 +65,8 @@ public class PerlCoverageEngine extends CoverageEngine {
     return new PerlCoverageEnabledConfiguration(conf);
   }
 
-  @Override
+  // consulo: not an override, Consulo CoverageEngine has no createCoverageSuite(CoverageEnabledConfiguration);
+  // Consulo CoverageDataManager calls createCoverageSuite(runner, name, fileProvider, config), which delegates here
   public @Nullable CoverageSuite createCoverageSuite(@NotNull CoverageEnabledConfiguration config) {
     if (config instanceof PerlCoverageEnabledConfiguration perlConfig) {
       return new PerlCoverageSuite(perlConfig);
@@ -84,7 +95,9 @@ public class PerlCoverageEngine extends CoverageEngine {
                                                      @NotNull String name,
                                                      @NotNull CoverageFileProvider coverageDataFileProvider,
                                                      @NotNull CoverageEnabledConfiguration config) {
-    throw new UnsupportedOperationException("Use createCoverageSuite(CoverageEnabledConfiguration)");
+    // consulo: this is the suite factory method used by Consulo CoverageDataManager (upstream throws UnsupportedOperationException
+    // here and uses createCoverageSuite(CoverageEnabledConfiguration)); name and file provider are computed by the suite itself
+    return createCoverageSuite(config);
   }
 
   @Override
@@ -107,9 +120,18 @@ public class PerlCoverageEngine extends CoverageEngine {
     return isOurFile(fileOrDir);
   }
 
+  // consulo: Consulo passes the coverage view state to the view extension
   @Override
-  public CoverageViewExtension createCoverageViewExtension(Project project, CoverageSuitesBundle suiteBundle) {
-    return new DirectoryCoverageViewExtension(project, getCoverageAnnotator(project), suiteBundle);
+  public CoverageViewExtension createCoverageViewExtension(Project project,
+                                                           CoverageSuitesBundle suiteBundle,
+                                                           CoverageViewManager.StateBean stateBean) {
+    return new DirectoryCoverageViewExtension(project, getCoverageAnnotator(project), suiteBundle, stateBean);
+  }
+
+  // consulo: IntelliJ CoverageEngine#acceptedByFilters default implementation, abstract in Consulo
+  @Override
+  public boolean acceptedByFilters(@NotNull PsiFile psiFile, @NotNull CoverageSuitesBundle suite) {
+    return true;
   }
 
   @Override
@@ -124,8 +146,9 @@ public class PerlCoverageEngine extends CoverageEngine {
     return Collections.singleton(buildQualifiedName(sourceFile));
   }
 
+  // consulo: Consulo CoverageEngine#getQualifiedName is public and accepts a File
   @Override
-  protected @Nullable String getQualifiedName(@NotNull Path outputFile, @NotNull PsiFile sourceFile) {
+  public @Nullable String getQualifiedName(@NotNull File outputFile, @NotNull PsiFile sourceFile) {
     return buildQualifiedName(sourceFile);
   }
 
@@ -149,7 +172,7 @@ public class PerlCoverageEngine extends CoverageEngine {
   }
 
   public static PerlCoverageEngine getInstance() {
-    return CoverageEngine.EP_NAME.findExtension(PerlCoverageEngine.class);
+    return Application.get().getExtensionPoint(CoverageEngine.class).findExtension(PerlCoverageEngine.class);
   }
 
   private static boolean isOurFile(@Nullable VirtualFile virtualFile) {

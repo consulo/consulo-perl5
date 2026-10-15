@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.psi.stubs.globs;
 
-import com.intellij.psi.stubs.StubBase;
-import com.intellij.psi.stubs.StubElement;
+import consulo.language.psi.stub.StubBase;
+import consulo.language.psi.stub.StubElement;
 import com.perl5.lang.perl.psi.PerlGlobVariable;
 import com.perl5.lang.perl.psi.PsiPerlGlobVariable;
 import com.perl5.lang.perl.psi.stubs.PerlStubElementTypes;

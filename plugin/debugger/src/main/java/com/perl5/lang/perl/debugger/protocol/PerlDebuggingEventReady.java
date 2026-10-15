@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.debugger.protocol;
 
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import com.perl5.lang.perl.debugger.PerlDebuggerBundle;
 
 

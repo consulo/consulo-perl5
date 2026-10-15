@@ -16,8 +16,8 @@
 
 package com.perl5.lang.mason2.psi;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.StubBasedPsiElement;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.StubBasedPsiElement;
 import com.perl5.lang.mason2.Mason2Constants;
 import com.perl5.lang.perl.extensions.PerlImplicitVariablesProvider;
 import com.perl5.lang.perl.psi.PerlCompositeElement;

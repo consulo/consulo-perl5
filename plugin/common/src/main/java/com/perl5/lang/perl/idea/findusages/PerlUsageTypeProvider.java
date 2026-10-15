@@ -16,16 +16,17 @@
 
 package com.perl5.lang.perl.idea.findusages;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.usages.impl.rules.UsageType;
-import com.intellij.usages.impl.rules.UsageTypeProvider;
+import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
+import consulo.usage.UsageType;
+import consulo.usage.UsageTypeProvider;
 import com.perl5.PerlBundle;
 import com.perl5.lang.pod.PodLanguage;
 import org.jetbrains.annotations.Nullable;
 
 
 public class PerlUsageTypeProvider implements UsageTypeProvider {
-  public static final UsageType DOCUMENT_USAGE = new UsageType(() -> PerlBundle.message("perl.usage.type.documentation"));
+  public static final UsageType DOCUMENT_USAGE = new UsageType(LocalizeValue.localizeTODO(PerlBundle.message("perl.usage.type.documentation")));
 
   @Override
   public @Nullable UsageType getUsageType(PsiElement element) {

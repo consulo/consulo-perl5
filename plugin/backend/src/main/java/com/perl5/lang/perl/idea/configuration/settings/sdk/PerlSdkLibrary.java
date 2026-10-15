@@ -16,31 +16,35 @@
 
 package com.perl5.lang.perl.idea.configuration.settings.sdk;
 
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.SdkType;
-import com.intellij.openapi.roots.SyntheticLibrary;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.navigation.ItemPresentation;
+import consulo.content.bundle.Sdk;
+import consulo.content.bundle.SdkType;
+import consulo.ui.image.Image;
+import consulo.virtualFileSystem.VirtualFile;
 import com.perl5.lang.perl.idea.project.PerlProjectManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
-public class PerlSdkLibrary extends SyntheticLibrary implements ItemPresentation {
+/**
+ * TODO consulo: upstream extends IntelliJ {@code SyntheticLibrary} (missing in Consulo); it's a plain holder of library roots now.
+ *  Sdk is null for the library of the external roots only (upstream {@code SyntheticLibrary.newImmutableLibrary})
+ */
+public class PerlSdkLibrary implements ItemPresentation {
   private final List<VirtualFile> myRoots;
-  private final Sdk mySdk;
+  private final @Nullable Sdk mySdk;
 
-  public PerlSdkLibrary(@NotNull Sdk sdk, @NotNull List<VirtualFile> roots) {
+  public PerlSdkLibrary(@Nullable Sdk sdk, @NotNull List<VirtualFile> roots) {
     mySdk = sdk;
     myRoots = roots;
   }
 
   @Override
   public @Nullable String getPresentableText() {
-    return mySdk.getName();
+    return mySdk == null ? null : mySdk.getName();
   }
 
   @Override
@@ -49,11 +53,10 @@ public class PerlSdkLibrary extends SyntheticLibrary implements ItemPresentation
   }
 
   @Override
-  public @Nullable Icon getIcon(boolean unused) {
-    return ((SdkType)mySdk.getSdkType()).getIcon();
+  public @Nullable Image getIcon(boolean unused) {
+    return mySdk == null ? null : ((SdkType)mySdk.getSdkType()).getIcon();
   }
 
-  @Override
   public @NotNull Collection<VirtualFile> getSourceRoots() {
     return myRoots;
   }
@@ -68,13 +71,13 @@ public class PerlSdkLibrary extends SyntheticLibrary implements ItemPresentation
     if (!myRoots.equals(library.myRoots)) {
       return false;
     }
-    return mySdk.equals(library.mySdk);
+    return Objects.equals(mySdk, library.mySdk);
   }
 
   @Override
   public int hashCode() {
     int result = myRoots.hashCode();
-    result = 31 * result + mySdk.hashCode();
+    result = 31 * result + Objects.hashCode(mySdk);
     return result;
   }
 }

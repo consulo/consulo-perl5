@@ -16,10 +16,9 @@
 
 package com.perl5.lang.perl.internals;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.NlsSafe;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.xmlb.annotations.Tag;
+import consulo.logging.Logger;
+import consulo.util.lang.StringUtil;
+import consulo.util.xml.serializer.annotation.Tag;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.util.PerlUtil;
 import org.jetbrains.annotations.Nls;
@@ -209,7 +208,7 @@ public final class PerlVersion implements Comparable<PerlVersion> {
     return version;
   }
 
-  public @NlsSafe String getStrictDottedVersion() {
+  public String getStrictDottedVersion() {
     List<String> result = new ArrayList<>(Collections.singletonList(Integer.toString(myRevision)));
 
     if (myMajor > 0 || myMinor > 0 || !myExtraChunks.isEmpty()) {

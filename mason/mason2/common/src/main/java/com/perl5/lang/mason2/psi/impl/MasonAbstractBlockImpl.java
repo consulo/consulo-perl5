@@ -16,8 +16,8 @@
 
 package com.perl5.lang.mason2.psi.impl;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElementVisitor;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiElementVisitor;
 import com.perl5.lang.mason2.psi.Mason2Visitor;
 import com.perl5.lang.mason2.psi.MasonAbstractBlock;
 import com.perl5.lang.perl.psi.impl.PerlCompositeElementImpl;

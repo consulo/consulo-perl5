@@ -16,11 +16,13 @@
 
 package com.perl5.lang.perl.psi;
 
-import com.intellij.openapi.extensions.ExtensionPoint;
-import com.intellij.openapi.util.KeyedExtensionCollector;
-import com.intellij.psi.stubs.StubInputStream;
-import com.intellij.psi.stubs.StubOutputStream;
-import com.intellij.util.KeyedLazyInstance;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.application.Application;
+import consulo.component.extension.ExtensionPoint;
+import consulo.component.extension.ExtensionPointCacheKey;
+import consulo.language.psi.stub.StubInputStream;
+import consulo.language.psi.stub.StubOutputStream;
 import com.perl5.lang.perl.psi.impl.PerlSubCallElement;
 import com.perl5.lang.perl.psi.stubs.calls.PerlSubCallElementData;
 import com.perl5.lang.perl.psi.stubs.calls.PerlSubCallElementStub;
@@ -29,13 +31,16 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public abstract class PerlSubCallHandler<CallData extends PerlSubCallElementData>
   implements PerlLightElementProvider<PerlSubCallElement, PerlSubCallElementStub>,
              PerlSelfHinter {
-  private static final KeyedExtensionCollector<PerlSubCallHandler<?>, String> EP =
-    new KeyedExtensionCollector<>("com.perl5.subCallHandler");
+  // TODO consulo: IntelliJ KeyedExtensionCollector (keys declared in plugin.xml) is missing in Consulo; handlers are bound to sub names
+  //  by @ExtensionImpl of PerlSubCallHandler.KeyedLazyInstance instead, upstream xml registrations are not ported yet
+  private static final KeyedExtensionCollector EP = new KeyedExtensionCollector();
 
   public final @NotNull CallData getCallData(@NotNull PerlSubCallElement subCallElement) {
     PerlSubCallElementStub stub = subCallElement.getGreenStub();
@@ -61,7 +66,42 @@ public abstract class PerlSubCallHandler<CallData extends PerlSubCallElementData
     return EP.findSingle(subName);
   }
 
-  static @NotNull ExtensionPoint<@NotNull KeyedLazyInstance<PerlSubCallHandler<?>>> getExtensionPoint() {
+  static @NotNull ExtensionPoint<@NotNull KeyedLazyInstance> getExtensionPoint() {
     return Objects.requireNonNull(EP.getPoint());
+  }
+
+  /**
+   * consulo: replacement of IntelliJ {@code KeyedLazyInstanceEP} for the {@code com.perl5.subCallHandler} extension point,
+   * binds a sub name ({@code key}) to the handler
+   */
+  @ExtensionAPI(ComponentScope.APPLICATION)
+  public interface KeyedLazyInstance {
+    @NotNull
+    String getKey();
+
+    @NotNull
+    PerlSubCallHandler<?> getInstance();
+  }
+
+  /**
+   * consulo: replacement of IntelliJ {@code KeyedExtensionCollector} over {@link KeyedLazyInstance} extensions
+   */
+  private static final class KeyedExtensionCollector {
+    private static final ExtensionPointCacheKey<KeyedLazyInstance, Map<String, PerlSubCallHandler<?>>> CACHE_KEY =
+      ExtensionPointCacheKey.create("PerlSubCallHandler.EP", walker -> {
+        Map<String, PerlSubCallHandler<?>> result = new HashMap<>();
+        walker.walk(instance -> result.putIfAbsent(instance.getKey(), instance.getInstance()));
+        return result;
+      });
+
+    @NotNull
+    ExtensionPoint<KeyedLazyInstance> getPoint() {
+      return Application.get().getExtensionPoint(KeyedLazyInstance.class);
+    }
+
+    @Nullable
+    PerlSubCallHandler<?> findSingle(@NotNull String key) {
+      return getPoint().getOrBuildCache(CACHE_KEY).get(key);
+    }
   }
 }

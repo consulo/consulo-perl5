@@ -16,37 +16,86 @@
 
 package com.perl5.lang.perl.extensions.packageprocessor;
 
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.Service;
-import com.intellij.openapi.util.ClearableLazyValue;
-import com.intellij.openapi.util.KeyedExtensionCollector;
-import com.intellij.util.KeyedLazyInstance;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
+import consulo.component.extension.ExtensionPoint;
+import consulo.component.extension.ExtensionPointCacheKey;
+import consulo.disposer.Disposable;
+import consulo.application.ApplicationManager;
+import consulo.util.lang.lazy.ClearableLazyValue;
+import jakarta.inject.Singleton;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
-@Service
+@ServiceAPI(ComponentScope.APPLICATION)
+@ServiceImpl
+@Singleton
 public final class PerlPackageProcessorService implements Disposable {
-  public static final KeyedExtensionCollector<PerlPackageProcessor, String> EP =
-    new KeyedExtensionCollector<>("com.perl5.packageProcessor");
+  // TODO consulo: IntelliJ KeyedExtensionCollector (keys declared in plugin.xml) is missing in Consulo; package processors are bound
+  //  to package names by @ExtensionImpl of PerlPackageProcessorService.KeyedLazyInstance instead, upstream xml registrations are not ported yet
+  public static final KeyedExtensionCollector EP = new KeyedExtensionCollector();
 
-  private final ClearableLazyValue<Integer> myVersionProvider = ClearableLazyValue.createAtomic(() -> {
+  private final ClearableLazyValue<Integer> myVersionProvider = ClearableLazyValue.atomicNotNull(() -> {
     int version = 0;
-    for (KeyedLazyInstance<PerlPackageProcessor> instance : Objects.requireNonNull(EP.getPoint()).getExtensionList()) {
+    for (KeyedLazyInstance instance : Objects.requireNonNull(EP.getPoint()).getExtensionList()) {
       version += instance.getInstance().getVersion();
     }
     return version;
   });
 
   public PerlPackageProcessorService() {
-    Objects.requireNonNull(EP.getPoint()).addChangeListener(myVersionProvider::drop, this);
+    // TODO consulo: no extension point change listeners (no dynamic plugins); upstream drops the version on packageProcessor EP changes
+    //Objects.requireNonNull(EP.getPoint()).addChangeListener(myVersionProvider::drop, this);
   }
 
   public static int getVersion() {
-    return ApplicationManager.getApplication().getService(PerlPackageProcessorService.class).myVersionProvider.getValue();
+    return ApplicationManager.getApplication().getService(PerlPackageProcessorService.class).myVersionProvider.get();
   }
 
   @Override
   public void dispose() {
+  }
+
+  /**
+   * consulo: replacement of IntelliJ {@code KeyedLazyInstanceEP} for the {@code com.perl5.packageProcessor} extension point,
+   * binds a package name ({@code key}) to the processor
+   */
+  @ExtensionAPI(ComponentScope.APPLICATION)
+  public interface KeyedLazyInstance {
+    @NotNull
+    String getKey();
+
+    @NotNull
+    PerlPackageProcessor getInstance();
+  }
+
+  /**
+   * consulo: replacement of IntelliJ {@code KeyedExtensionCollector} over {@link KeyedLazyInstance} extensions
+   */
+  public static final class KeyedExtensionCollector {
+    private static final ExtensionPointCacheKey<KeyedLazyInstance, Map<String, PerlPackageProcessor>> CACHE_KEY =
+      ExtensionPointCacheKey.create("PerlPackageProcessorService.EP", walker -> {
+        Map<String, PerlPackageProcessor> result = new HashMap<>();
+        walker.walk(instance -> result.putIfAbsent(instance.getKey(), instance.getInstance()));
+        return result;
+      });
+
+    private KeyedExtensionCollector() {
+    }
+
+    public @NotNull ExtensionPoint<KeyedLazyInstance> getPoint() {
+      return Application.get().getExtensionPoint(KeyedLazyInstance.class);
+    }
+
+    public @Nullable PerlPackageProcessor findSingle(@NotNull String key) {
+      return getPoint().getOrBuildCache(CACHE_KEY).get(key);
+    }
   }
 }

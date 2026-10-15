@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.idea.sdk.host.docker;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.openapi.util.NullableLazyValue;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.process.ExecutionException;
+import consulo.application.util.NullableLazyValue;
+import consulo.virtualFileSystem.VirtualFile;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostFileTransfer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -28,7 +28,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static com.intellij.openapi.util.NullableLazyValue.atomicLazyNullable;
+import static consulo.application.util.NullableLazyValue.atomicLazyNullable;
 
 class PerlDockerFileTransfer extends PerlHostFileTransfer<PerlDockerData> {
   private final @NotNull PerlDockerAdapter myAdapter;

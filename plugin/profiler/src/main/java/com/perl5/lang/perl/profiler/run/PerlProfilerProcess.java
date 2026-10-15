@@ -16,13 +16,13 @@
 
 package com.perl5.lang.perl.profiler.run;
 
-import com.intellij.execution.configurations.RunProfile;
-import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.execution.ui.RunContentDescriptor;
-import com.intellij.openapi.progress.ProcessCanceledException;
-import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.profiler.FileBasedProfilerProcess;
-import com.intellij.profiler.api.ProfilerState;
+import consulo.execution.configuration.RunProfile;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.execution.ui.RunContentDescriptor;
+import consulo.component.ProcessCanceledException;
+import consulo.application.progress.ProgressIndicator;
+import consulo.execution.profiler.FileBasedProfilerProcess;
+import consulo.execution.profiler.ProfilerState;
 import com.perl5.lang.perl.profiler.configuration.PerlProfilerConfigurationState;
 import com.perl5.lang.perl.profiler.parser.PerlProfilerDumpFileParser;
 import com.perl5.lang.perl.profiler.parser.PerlProfilerDumpWriter;

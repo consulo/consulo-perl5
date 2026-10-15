@@ -16,17 +16,19 @@
 
 package com.perl5.lang.perl.idea.findusages;
 
-import com.intellij.lang.cacheBuilder.DefaultWordsScanner;
-import com.intellij.lang.cacheBuilder.WordOccurrence;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.impl.source.tree.TreeUtil;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
-import com.intellij.util.Processor;
+import consulo.language.cacheBuilder.DefaultWordsScanner;
+import consulo.language.cacheBuilder.WordOccurrence;
+import consulo.language.psi.PsiFile;
+import consulo.language.impl.ast.TreeUtil;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
+import consulo.application.util.function.Processor;
 import com.perl5.lang.perl.lexer.PerlLexingContext;
 import com.perl5.lang.perl.lexer.PerlTokenSetsEx;
 import com.perl5.lang.perl.lexer.adapters.PerlMergingLexerAdapter;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.function.Predicate;
 
 import static com.perl5.lang.perl.lexer.PerlTokenSets.*;
 import static com.perl5.lang.perl.parser.PerlElementTypesGenerated.*;
@@ -80,7 +82,7 @@ public class PerlWordsScanner extends DefaultWordsScanner implements PsiBasedWor
   }
 
   @Override
-  public void processWords(final @NotNull CharSequence fileText, final @NotNull Processor<? super WordOccurrence> processor) {
+  public void processWords(final @NotNull CharSequence fileText, final @NotNull Predicate<WordOccurrence> processor) {
     var lexer = createLexer();
     lexer.start(fileText);
     WordOccurrence occurrence = new WordOccurrence(fileText, 0, 0, WordOccurrence.Kind.CODE); // shared occurrence
@@ -95,7 +97,7 @@ public class PerlWordsScanner extends DefaultWordsScanner implements PsiBasedWor
 
   @SuppressWarnings("BooleanMethodIsAlwaysInverted")
   protected static boolean processToken(@NotNull CharSequence fileText,
-                                        @NotNull Processor<? super WordOccurrence> processor,
+                                        @NotNull Predicate<? super WordOccurrence> processor,
                                         @NotNull IElementType type,
                                         int start,
                                         int end,
@@ -116,6 +118,7 @@ public class PerlWordsScanner extends DefaultWordsScanner implements PsiBasedWor
     else {
       return true;
     }
-    return stripWords(processor, fileText, start, end, kind, occurrence, false);
+    //noinspection unchecked
+    return stripWords((Predicate<WordOccurrence>)processor, fileText, start, end, kind, occurrence, false);
   }
 }

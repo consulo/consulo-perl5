@@ -16,21 +16,32 @@
 
 package com.perl5.lang.htmlmason;
 
-import com.intellij.lang.ASTFactory;
-import com.intellij.psi.impl.source.tree.LeafElement;
-import com.intellij.psi.templateLanguages.OuterLanguageElementImpl;
-import com.intellij.psi.tree.IElementType;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.impl.ast.ASTFactory;
+import consulo.language.impl.ast.ASTLeafFactory;
+import consulo.language.impl.ast.LeafElement;
+import consulo.language.impl.psi.template.OuterLanguageElementImpl;
+import consulo.language.ast.IElementType;
+import consulo.language.version.LanguageVersion;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import static com.perl5.lang.htmlmason.elementType.HTMLMasonElementTypes.HTML_MASON_OUTER_ELEMENT_TYPE;
 
-public class HtmlMasonAstFactory extends ASTFactory {
+// consulo: IntelliJ language ASTFactory -> Consulo ASTLeafFactory, selected by test(IElementType)
+//  (upstream: lang.ast.factory for HTML::Mason Templating Language)
+@ExtensionImpl
+public class HtmlMasonAstFactory implements ASTLeafFactory {
   @Override
-  public @Nullable LeafElement createLeaf(@NotNull IElementType type, @NotNull CharSequence text) {
+  public @Nullable LeafElement createLeaf(@NotNull IElementType type, @NotNull LanguageVersion languageVersion, @NotNull CharSequence text) {
     if (type == HTML_MASON_OUTER_ELEMENT_TYPE) {
       return new OuterLanguageElementImpl(type, text);
     }
-    return super.createLeaf(type, text);
+    return ASTFactory.leaf(type, languageVersion, text);
+  }
+
+  @Override
+  public boolean test(IElementType type) {
+    return type == HTML_MASON_OUTER_ELEMENT_TYPE;
   }
 }

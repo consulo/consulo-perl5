@@ -18,27 +18,29 @@ package com.perl5.lang.perl.coverage;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
-import com.intellij.coverage.*;
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.process.ProcessOutput;
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationType;
-import com.intellij.notification.Notifications;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ReadAction;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.util.NlsSafe;
-import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.rt.coverage.data.ClassData;
-import com.intellij.rt.coverage.data.LineCoverage;
-import com.intellij.rt.coverage.data.LineData;
-import com.intellij.rt.coverage.data.ProjectData;
+
+import consulo.process.ExecutionException;
+import consulo.process.util.ProcessOutput;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.notification.Notifications;
+import consulo.application.ApplicationManager;
+import consulo.application.ReadAction;
+import consulo.logging.Logger;
+import consulo.application.progress.ProgressManager;
+import consulo.project.Project;
+import consulo.content.bundle.Sdk;
+import consulo.util.lang.ref.Ref;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.execution.coverage.data.CoverageLine;
+import consulo.execution.coverage.data.CoverageLineImpl;
+import consulo.execution.coverage.data.CoverageProjectData;
+import consulo.execution.coverage.data.CoverageProjectDataImpl;
+import consulo.execution.coverage.data.CoverageUnit;
+import consulo.execution.coverage.data.LineStatus;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.idea.execution.PerlCommandLine;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostData;
@@ -47,27 +49,35 @@ import com.perl5.lang.perl.util.PerlRunUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
+import consulo.execution.coverage.CoverageEngine;
+import consulo.execution.coverage.CoverageRunner;
+import consulo.execution.coverage.CoverageSuite;
 
+// consulo: upstream <coverageRunner> registration in perl5.plugin.coverage.main.xml
+@ExtensionImpl
 public class PerlCoverageRunner extends CoverageRunner {
   private static final String COVER = "cover";
   private static final String COVER_LIB = "Devel::Cover";
   private static final Logger LOG = Logger.getInstance(PerlCoverageRunner.class);
 
+  // consulo: Consulo CoverageRunner#loadCoverageData accepts a File and returns the nullable coverage data instead of
+  // CoverageLoadingResult; failures are logged and reported as null
   @Override
-  protected @NotNull CoverageLoadingResult loadCoverageData(@NotNull Path sessionDataFile,
-                                                            @Nullable CoverageSuite baseCoverageSuite,
-                                                            @NotNull CoverageLoadErrorReporter reporter) {
+  public @Nullable CoverageProjectData loadCoverageData(@NotNull File sessionDataIoFile, @Nullable CoverageSuite baseCoverageSuite) {
+    Path sessionDataFile = sessionDataIoFile.toPath();
     if (!(baseCoverageSuite instanceof PerlCoverageSuite perlCoverageSuite)) {
-      return new FailedCoverageLoadingResult(
+      LOG.warn(
         "Wrong type of coverage suite: " +
         (baseCoverageSuite == null ? "null" : baseCoverageSuite.getClass().getCanonicalName()));
+      return null;
     }
-    final Ref<ProjectData> projectDataRef = new Ref<>();
+    final Ref<CoverageProjectData> projectDataRef = new Ref<>();
     if (ApplicationManager.getApplication().isDispatchThread()) {
 
       ProgressManager.getInstance().runProcessWithProgressSynchronously(
@@ -78,10 +88,10 @@ public class PerlCoverageRunner extends CoverageRunner {
     else {
       projectDataRef.set(doLoadCoverageData(sessionDataFile, perlCoverageSuite));
     }
-    return new SuccessCoverageLoadingResult(Objects.requireNonNull(projectDataRef.get()));
+    return projectDataRef.get();
   }
 
-  private static @Nullable ProjectData doLoadCoverageData(@NotNull Path sessionDataFile, @NotNull PerlCoverageSuite perlCoverageSuite) {
+  private static @Nullable CoverageProjectData doLoadCoverageData(@NotNull Path sessionDataFile, @NotNull PerlCoverageSuite perlCoverageSuite) {
     Project project = perlCoverageSuite.getProject();
     Sdk effectiveSdk;
     try {
@@ -104,7 +114,7 @@ public class PerlCoverageRunner extends CoverageRunner {
       LOG.warn("Error fixing permissions for " + sessionDataFile);
     }
 
-    PerlCommandLine perlCommandLine = ReadAction.computeBlocking(() -> {
+    PerlCommandLine perlCommandLine = ReadAction.compute(() -> {
       if (project.isDisposed()) {
         LOG.debug("Project disposed");
         return null;
@@ -184,8 +194,10 @@ public class PerlCoverageRunner extends CoverageRunner {
     return null;
   }
 
-  private static @NotNull ProjectData parsePerlFileData(@NotNull PerlHostData<?, ?> hostData, @NotNull PerlFileCoverageData[] filesData) {
-    ProjectData projectData = new ProjectData();
+  // consulo: Consulo coverage data model (CoverageProjectData/CoverageUnit/CoverageLine) instead of IntelliJ coverage rt
+  // ProjectData/ClassData/LineData; line status is computed once and stored instead of overriding LineData#getStatus
+  private static @NotNull CoverageProjectData parsePerlFileData(@NotNull PerlHostData<?, ?> hostData, @NotNull PerlFileCoverageData[] filesData) {
+    CoverageProjectData projectData = new CoverageProjectDataImpl();
     for (PerlFileCoverageData perlFileCoverageData : filesData) {
       if (StringUtil.isEmpty(perlFileCoverageData.name) || perlFileCoverageData.lines == null) {
         LOG.warn("Name or lines is null in " + perlFileCoverageData);
@@ -195,42 +207,41 @@ public class PerlCoverageRunner extends CoverageRunner {
       if (localPath == null) {
         continue;
       }
-      ClassData classData = projectData.getOrCreateClassData(FileUtil.toSystemIndependentName(localPath));
+      CoverageUnit classData = projectData.getOrCreateUnit(FileUtil.toSystemIndependentName(localPath));
       Set<Map.Entry<Integer, PerlLineData>> linesEntries = perlFileCoverageData.lines.entrySet();
       Integer maxLineNumber = linesEntries.stream().map(Map.Entry::getKey).max(Integer::compare).orElse(0);
-      LineData[] linesData = new LineData[maxLineNumber + 1];
+      CoverageLine[] linesData = new CoverageLine[maxLineNumber + 1];
       for (Map.Entry<Integer, PerlLineData> lineEntry : linesEntries) {
         PerlLineData perlLineData = lineEntry.getValue();
         final Integer lineNumber = lineEntry.getKey();
-        LineData lineData = new LineData(lineNumber, null) {
-          @Override
-          public int getStatus() {
-            if (perlLineData.cover == 0) {
-              return LineCoverage.NONE;
-            }
-            else if (perlLineData.cover < perlLineData.data) {
-              return LineCoverage.PARTIAL;
-            }
-            return LineCoverage.FULL;
-          }
-        };
+        CoverageLineImpl lineData = new CoverageLineImpl(lineNumber, null);
+        if (perlLineData.cover == 0) {
+          lineData.setStatus(LineStatus.NOT_COVERED);
+        }
+        else if (perlLineData.cover < perlLineData.data) {
+          lineData.setStatus(LineStatus.PARTIALLY_COVERED);
+        }
+        else {
+          lineData.setStatus(LineStatus.COVERED);
+        }
         lineData.setHits(perlLineData.cover);
         linesData[lineNumber] = lineData;
       }
 
-      classData.setLines(linesData);
+      classData.setLines(Arrays.asList(linesData));
     }
 
     return projectData;
   }
 
-  private static void showError(@NotNull Project project, @NlsSafe @NotNull String message) {
-    ReadAction.runBlocking(() -> {
+  private static void showError(@NotNull Project project, @NotNull String message) {
+    ReadAction.run(() -> {
       if (!project.isDisposed()) {
         LOG.warn("Error loading coverage: " + message);
         Notifications.Bus.notify(
+          // consulo: Consulo requires a registered NotificationGroup instead of the group id, see PerlCoverageNotificationGroupContributor
           new Notification(
-            PerlBundle.message("perl.coverage.loading.error"),
+            PerlCoverageNotificationGroupContributor.COVERAGE_LOADING_ERROR,
             PerlBundle.message("perl.coverage.loading.error"),
             message,
             NotificationType.ERROR

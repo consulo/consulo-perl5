@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.idea.sdk.versionManager.plenv;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.util.ObjectUtils;
+import consulo.project.Project;
+import consulo.content.bundle.Sdk;
+import consulo.util.lang.ObjectUtil;
 import com.perl5.lang.perl.idea.execution.PerlCommandLine;
 import com.perl5.lang.perl.idea.sdk.versionManager.PerlRealVersionManagerData;
 import com.perl5.lang.perl.idea.sdk.versionManager.PerlVersionManagerData;
@@ -64,7 +64,7 @@ class PlenvData extends PerlRealVersionManagerData<PlenvData, PlenvHandler> {
 
   @Contract("null->null")
   public static @Nullable PlenvData from(@Nullable Sdk sdk) {
-    return ObjectUtils.tryCast(PerlVersionManagerData.from(sdk), PlenvData.class);
+    return ObjectUtil.tryCast(PerlVersionManagerData.from(sdk), PlenvData.class);
   }
 
   @Override

@@ -16,7 +16,7 @@
 
 package com.perl5.lang.tt2.elementTypes;
 
-import com.intellij.psi.tree.IFileElementType;
+import consulo.language.ast.IFileElementType;
 import com.perl5.lang.tt2.TemplateToolkitLanguage;
 
 

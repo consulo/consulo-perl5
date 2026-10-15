@@ -16,14 +16,14 @@
 
 package com.perl5.lang.perl.profiler.parser.frames;
 
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.psi.NavigatablePsiElement;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.navigation.OpenFileDescriptorFactory;
+import consulo.project.Project;
+import consulo.content.bundle.Sdk;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import consulo.language.psi.NavigatablePsiElement;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.psi.PsiUtilCore;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostData;
 import com.perl5.lang.perl.psi.PerlDelegatingFakeElement;
 import com.perl5.lang.perl.psi.impl.PsiPerlExprImpl;
@@ -100,7 +100,7 @@ class PerlAnonStubStackElement extends PerlCallStackElement {
     if (localPath == null) {
       return Collections.emptyList();
     }
-    var virtualFile = VfsUtil.findFileByIoFile(new File(localPath), false);
+    var virtualFile = VirtualFileUtil.findFileByIoFile(new File(localPath), false);
     if (virtualFile == null) {
       return Collections.emptyList();
     }
@@ -131,7 +131,8 @@ class PerlAnonStubStackElement extends PerlCallStackElement {
           subExpr.navigate(requestFocus);
         }
         else {
-          new OpenFileDescriptor(project, virtualFile, startOffset).navigate(requestFocus);
+          // consulo: OpenFileDescriptor is an interface in Consulo, created by OpenFileDescriptorFactory
+          OpenFileDescriptorFactory.getInstance(project).newBuilder(virtualFile).offset(startOffset).build().navigate(requestFocus);
         }
       }
     });

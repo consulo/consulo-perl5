@@ -16,43 +16,48 @@
 
 package com.perl5.lang.perl.util;
 
-import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.Executor;
-import com.intellij.execution.executors.DefaultRunExecutor;
-import com.intellij.execution.process.ProcessEvent;
-import com.intellij.execution.process.ProcessHandler;
-import com.intellij.execution.process.ProcessListener;
-import com.intellij.execution.ui.ConsoleViewContentType;
-import com.intellij.execution.ui.RunContentDescriptor;
-import com.intellij.execution.ui.RunContentManager;
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationType;
-import com.intellij.notification.Notifications;
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ReadAction;
-import com.intellij.openapi.application.WriteAction;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.progress.Task;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.RootsChangeRescanningInfo;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.EmptyRunnable;
-import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.NlsSafe;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.ObjectUtils;
-import com.intellij.util.concurrency.Semaphore;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.language.editor.DaemonCodeAnalyzer;
+import consulo.process.ExecutionException;
+import consulo.execution.executor.Executor;
+import consulo.execution.executor.DefaultRunExecutor;
+import consulo.process.event.ProcessEvent;
+import consulo.process.ProcessHandler;
+import consulo.process.event.ProcessListener;
+import consulo.execution.ui.console.ConsoleViewContentType;
+import consulo.execution.ui.RunContentDescriptor;
+import consulo.execution.runner.RunContentBuilder;
+import consulo.execution.ui.layout.RunnerLayoutUi;
+import consulo.execution.ui.layout.RunnerLayoutUiFactory;
+import consulo.execution.ui.RunContentManager;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationType;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import com.perl5.lang.perl.idea.sdk.PerlConfig;
+import com.perl5.lang.perl.idea.sdk.PerlSdkNotificationGroups;
+import consulo.project.ui.notification.Notifications;
+import consulo.disposer.Disposable;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.application.ApplicationManager;
+import consulo.application.ReadAction;
+import consulo.application.WriteAction;
+import consulo.logging.Logger;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
+import consulo.application.progress.Task;
+import consulo.project.Project;
+import consulo.project.RootsChangeRescanningInfo;
+import consulo.content.bundle.Sdk;
+import consulo.perl5.core.roots.RootsChangeUtil;
+import consulo.disposer.Disposer;
+import consulo.util.lang.EmptyRunnable;
+import consulo.util.dataholder.Key;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.util.lang.ObjectUtil;
+import consulo.application.util.Semaphore;
+import consulo.util.collection.ContainerUtil;
 import com.perl5.PerlBundle;
 import com.perl5.PerlIcons;
 import com.perl5.lang.perl.adapters.PackageManagerAdapter;
@@ -88,7 +93,7 @@ public final class PerlRunUtil {
   private static Semaphore ourTestSdkRefreshSemaphore;
   private static Disposable ourTestDisposable;
   // should be synchronized with https://github.com/Camelcade/Bundle-Camelcade/blob/master/dist.ini
-  private static final Set<String> BUNDLED_MODULE_PARTS = Collections.unmodifiableSet(ContainerUtil.newHashSet(
+  private static final Set<String> BUNDLED_MODULE_PARTS = Collections.unmodifiableSet(new HashSet<>(List.of(
     "App::cpanminus",
     "App::Prove::Plugin::PassEnv",
     "B::Deparse",
@@ -102,7 +107,7 @@ public final class PerlRunUtil {
     "Perl::Tidy",
     PerlPackageUtilCore.TAP_FORMATTER_MODULE,
     PerlPackageUtilCore.TEST_HARNESS_MODULE
-  ));
+  )));
 
   private PerlRunUtil() {
   }
@@ -127,7 +132,7 @@ public final class PerlRunUtil {
     if (perlSdk == null) {
       perlSdk = PerlProjectManager.getSdk(project, scriptFile);
     }
-    return getPerlCommandLine(project, perlSdk, ObjectUtils.doIfNotNull(scriptFile, VirtualFile::getPath), perlParameters,
+    return getPerlCommandLine(project, perlSdk, ObjectUtil.doIfNotNull(scriptFile, VirtualFile::getPath), perlParameters,
                               scriptParameters);
   }
 
@@ -201,7 +206,7 @@ public final class PerlRunUtil {
   public static @Nullable VirtualFile findLibraryScriptWithNotification(@NotNull Project project,
                                                                         @NotNull String scriptName,
                                                                         @Nullable String libraryName) {
-    return ObjectUtils.doIfNotNull(
+    return ObjectUtil.doIfNotNull(
       PerlProjectManager.getSdkWithNotification(project),
       it -> findLibraryScriptWithNotification(it, project, scriptName, libraryName));
   }
@@ -244,7 +249,7 @@ public final class PerlRunUtil {
     }
 
     Notification notification = new Notification(
-      PerlBundle.message("perl.missing.library.notification"),
+      PerlSdkNotificationGroups.MISSING_LIBRARY,
       PerlBundle.message("perl.missing.library.notification.title", packageNames.size()),
       StringUtil.join(ContainerUtil.sorted(packageNames), ", "),
       NotificationType.ERROR
@@ -282,7 +287,7 @@ public final class PerlRunUtil {
 
   private static void showMissingLibraryNotification(@Nullable Project project, @NotNull Sdk sdk, @NotNull String libraryName) {
     Notification notification = new Notification(
-      PerlBundle.message("perl.missing.library.notification"),
+      PerlSdkNotificationGroups.MISSING_LIBRARY,
       PerlBundle.message("perl.missing.library.notification.title", libraryName),
       PerlBundle.message("perl.missing.library.notification.message", libraryName),
       NotificationType.ERROR
@@ -334,10 +339,22 @@ public final class PerlRunUtil {
       File localSdkBinDir = hostData.getLocalPath(new File(
         StringUtil.notNullize(PerlProjectManager.getInterpreterPath(sdk))).getParentFile());
       if (localSdkBinDir != null) {
-        files.add(VfsUtil.findFileByIoFile(localSdkBinDir, false));
+        files.add(VirtualFileUtil.findFileByIoFile(localSdkBinDir, false));
       }
       PerlVersionManagerData.notNullFrom(sdk).getBinDirsPath().forEach(
-        it -> ObjectUtils.doIfNotNull(hostData.getLocalPath(it), localPath -> files.add(VfsUtil.findFileByIoFile(localPath, false))));
+        it -> ObjectUtil.doIfNotNull(hostData.getLocalPath(it), localPath -> files.add(VirtualFileUtil.findFileByIoFile(localPath, false))));
+      // consulo: script directories of the interpreter configuration, e.g. cpan lives in /usr/bin/core_perl on Arch Linux, which is
+      //  neither the interpreter directory nor a bin directory next to the library roots
+      PerlConfig perlConfig = PerlConfig.from(sdk);
+      if (perlConfig != null) {
+        for (String key : List.of("scriptdir", "installscript", "installsitescript", "installvendorscript")) {
+          String scriptDir = perlConfig.get(key);
+          if (StringUtil.isNotEmpty(scriptDir)) {
+            ObjectUtil.doIfNotNull(hostData.getLocalPath(scriptDir),
+                                   localPath -> files.add(VirtualFileUtil.findFileByIoFile(new File(localPath), false)));
+          }
+        }
+      }
     }
     return files.stream().filter(Objects::nonNull).distinct();
   }
@@ -353,7 +370,7 @@ public final class PerlRunUtil {
       return null;
     }
     File binPath = findLibsBin(new File(libraryRoot.getPath()));
-    return binPath == null ? null : VfsUtil.findFileByIoFile(binPath, false);
+    return binPath == null ? null : VirtualFileUtil.findFileByIoFile(binPath, false);
   }
 
   /**
@@ -438,15 +455,22 @@ public final class PerlRunUtil {
       LOG.warn(e);
     }
 
+    // consulo: the console may be a unified one (web) without a Swing component, so the descriptor is built on a runner layout,
+    //  as RunContentBuilder does
+    String consoleTitle = ObjectUtil.notNull(perlCommandLine.getConsoleTitle(), perlCommandLine.getCommandLineString());
+    RunnerLayoutUi runnerLayoutUi = RunnerLayoutUiFactory.getInstance(project).create("PerlConsole", runExecutor.getId(), consoleTitle, consoleView);
+    RunContentBuilder.buildConsoleUiDefault(runnerLayoutUi, consoleView);
     RunContentDescriptor runContentDescriptor = new RunContentDescriptor(
       consoleView,
       processHandler,
-      consoleView.getComponent(),
-      ObjectUtils.notNull(perlCommandLine.getConsoleTitle(), perlCommandLine.getCommandLineString()),
-      ObjectUtils.notNull(perlCommandLine.getConsoleIcon(), PerlIcons.PERL_LANGUAGE_ICON)
+      runnerLayoutUi,
+      consoleTitle,
+      ObjectUtil.notNull(TargetAWT.from(perlCommandLine.getConsoleIcon()), PerlIcons.PERL_LANGUAGE_ICON),
+      null,
+      null
     );
 
-    RunContentManager.getInstance(project).showRunContent(runExecutor, runContentDescriptor);
+    project.getInstance(RunContentManager.class).showRunContent(runExecutor, runContentDescriptor);
     if (processHandler != null) {
       consoleView.attachToProcess(processHandler);
       processHandler.startNotify();
@@ -535,10 +559,10 @@ public final class PerlRunUtil {
    *
    * @return old indicator text
    */
-  public static @NlsSafe @Nullable String setProgressText(@Nullable @Nls String newText) {
+  public static @Nullable String setProgressText(@Nullable @Nls String newText) {
     ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
     if (indicator != null) {
-      String oldText = indicator.getText();
+      String oldText = indicator.getText().get();
       indicator.setText(newText);
       return oldText;
     }
@@ -563,12 +587,12 @@ public final class PerlRunUtil {
     new Task.Backgroundable(project, PerlBundle.message("perl.progress.refreshing.interpreter.information", sdk.getName()), false) {
       @Override
       public void run(@NotNull ProgressIndicator indicator) {
-        PerlSdkType.INSTANCE.setupSdkPaths(sdk);
+        PerlSdkType.getInstance().setupSdkPaths(sdk);
         if (project != null) {
           WriteAction.runAndWait(() -> {
             if (!project.isDisposed()) {
-              ProjectRootManagerEx.getInstanceEx(project)
-                .makeRootsChange(EmptyRunnable.getInstance(), RootsChangeRescanningInfo.TOTAL_RESCAN);
+              RootsChangeUtil
+                .makeRootsChange(project, EmptyRunnable.getInstance(), RootsChangeRescanningInfo.TOTAL_RESCAN);
               DaemonCodeAnalyzer.getInstance(project).restart("Perl interpreter set up: " + sdk);
             }
           });

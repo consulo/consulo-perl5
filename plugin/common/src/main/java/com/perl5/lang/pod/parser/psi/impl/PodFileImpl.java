@@ -16,16 +16,18 @@
 
 package com.perl5.lang.pod.parser.psi.impl;
 
-import com.intellij.extapi.psi.PsiFileBase;
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.util.ObjectUtils;
+import consulo.language.impl.psi.PsiFileBase;
+import consulo.navigation.ItemPresentation;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.util.lang.ObjectUtil;
+import consulo.language.icon.IconDescriptorUpdaters;
+import consulo.ui.image.Image;
 import com.perl5.lang.perl.util.PerlPackageService;
 import com.perl5.lang.pod.PodLanguage;
 import com.perl5.lang.pod.filetypes.PodFileType;
@@ -35,8 +37,6 @@ import com.perl5.lang.pod.parser.psi.PodTitledSection;
 import com.perl5.lang.pod.parser.psi.util.PodRenderUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import javax.swing.*;
 
 public class PodFileImpl extends PsiFileBase implements PodFile {
   public PodFileImpl(@NotNull FileViewProvider viewProvider) {
@@ -53,10 +53,11 @@ public class PodFileImpl extends PsiFileBase implements PodFile {
     return "POD file";
   }
 
-  @Override
-  public Icon getIcon(int flags) {
+  // TODO consulo: PsiElement#getIcon(int) does not exist in Consulo (element icons come from IconDescriptorUpdaters/IconDescriptorUpdater),
+  //  so this is no longer an override and is not called by the platform; base-file icon delegation needs an IconDescriptorUpdater
+  public Image getIcon(int flags) {
     PsiFile baseFile = getViewProvider().getStubBindingRoot();
-    return baseFile == this ? super.getIcon(flags) : baseFile.getIcon(flags);
+    return baseFile == this ? IconDescriptorUpdaters.getIcon(this, flags) : IconDescriptorUpdaters.getIcon(baseFile, flags);
   }
 
   @Override
@@ -117,7 +118,7 @@ public class PodFileImpl extends PsiFileBase implements PodFile {
   }
 
   @Override
-  public @Nullable Icon getIcon(boolean unused) {
+  public @Nullable Image getIcon(boolean unused) {
     return getFileType().getIcon();
   }
 
@@ -136,6 +137,6 @@ public class PodFileImpl extends PsiFileBase implements PodFile {
     if (StringUtil.isNotEmpty(normalizedPackageName)) {
       return normalizedPackageName;
     }
-    return ObjectUtils.doIfNotNull(getVirtualFile(), VirtualFile::getName);
+    return ObjectUtil.doIfNotNull(getVirtualFile(), VirtualFile::getName);
   }
 }

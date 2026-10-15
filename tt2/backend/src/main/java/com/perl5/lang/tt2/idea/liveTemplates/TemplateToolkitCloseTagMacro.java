@@ -16,10 +16,10 @@
 
 package com.perl5.lang.tt2.idea.liveTemplates;
 
-import com.intellij.codeInsight.template.Result;
-import com.intellij.codeInsight.template.TextResult;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.editor.template.Result;
+import consulo.language.editor.template.TextResult;
+import consulo.localize.LocalizeValue;
+import consulo.language.ast.IElementType;
 import com.perl5.lang.tt2.idea.settings.TemplateToolkitSettings;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,15 +33,15 @@ public class TemplateToolkitCloseTagMacro extends TemplateToolkitOpenTagMacro {
   }
 
   @Override
-  public String getPresentableName() {
-    return "tt2CloseMarker()";
+  public LocalizeValue getPresentableName() {
+    return LocalizeValue.of("tt2CloseMarker()");
   }
 
   @Override
-  protected @Nullable Result getResultByTokenType(Project project, IElementType tokenType) {
+  protected @Nullable Result getResultByTokenType(TemplateToolkitSettings settings, IElementType tokenType) {
     if (tokenType == TT2_OUTLINE_TAG) {
       return new TextResult("");
     }
-      return new TextResult(TemplateToolkitSettings.getInstance(project).END_TAG);
+    return new TextResult(settings.getEndTag());
   }
 }

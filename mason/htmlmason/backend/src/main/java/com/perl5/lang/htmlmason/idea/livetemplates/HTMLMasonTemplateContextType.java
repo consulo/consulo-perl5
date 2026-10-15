@@ -16,9 +16,10 @@
 
 package com.perl5.lang.htmlmason.idea.livetemplates;
 
-import com.intellij.codeInsight.template.TemplateActionContext;
-import com.intellij.codeInsight.template.TemplateContextType;
-import com.intellij.psi.PsiElement;
+import consulo.language.editor.template.context.BaseTemplateContextType;
+import consulo.language.editor.template.context.TemplateActionContext;
+import consulo.localize.LocalizeValue;
+import consulo.language.psi.PsiElement;
 import com.perl5.lang.htmlmason.HtmlMasonBundle;
 import com.perl5.lang.htmlmason.parser.psi.impl.HTMLMasonFileImpl;
 import org.jetbrains.annotations.NotNull;
@@ -27,9 +28,10 @@ import static com.perl5.lang.htmlmason.HTMLMasonElementPatterns.HTML_MASON_TEMPL
 import static com.perl5.lang.htmlmason.HTMLMasonElementPatterns.HTML_MASON_TEMPLATE_CONTEXT_PATTERN_BROKEN;
 
 
-public class HTMLMasonTemplateContextType extends TemplateContextType {
+public class HTMLMasonTemplateContextType extends BaseTemplateContextType {
+  // consulo: context id is declared in upstream xml (<liveTemplateContext contextId=...>)
   public HTMLMasonTemplateContextType() {
-    super(HtmlMasonBundle.message("label.html.mason.template"));
+    super("PERL5_HTML_MASON", LocalizeValue.localizeTODO(HtmlMasonBundle.message("label.html.mason.template")));
   }
 
   @Override

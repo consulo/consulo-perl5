@@ -25,7 +25,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Provides capability for a class to generated light psi elements from {@link com.intellij.psi.PsiElement} or {@link com.intellij.psi.stubs.StubElement}
+ * Provides capability for a class to generated light psi elements from {@link consulo.language.psi.PsiElement} or {@link consulo.language.psi.stub.StubElement}
  */
 public interface PerlLightElementProvider<Psi extends PerlPolyNamedElement<Stub>, Stub extends PerlPolyNamedElementStub<Psi>> {
   /**

@@ -16,14 +16,16 @@
 
 package com.perl5.lang.htmlmason.filetypes;
 
-import com.intellij.ide.highlighter.HtmlFileType;
-import com.intellij.openapi.editor.ex.util.LayerDescriptor;
-import com.intellij.openapi.editor.ex.util.LayeredLexerEditorHighlighter;
-import com.intellij.openapi.editor.highlighter.EditorHighlighter;
-import com.intellij.openapi.fileTypes.SyntaxHighlighter;
-import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.html.language.HtmlFileType;
+import consulo.language.editor.highlight.LayerDescriptor;
+import consulo.language.editor.highlight.LayeredLexerEditorHighlighter;
+import consulo.codeEditor.EditorHighlighter;
+import consulo.language.editor.highlight.SyntaxHighlighter;
+import consulo.language.editor.highlight.SyntaxHighlighterFactory;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
+import com.perl5.lang.htmlmason.idea.configuration.HTMLMasonSettings;
 import com.perl5.lang.htmlmason.idea.highlighter.HTMLMasonSyntaxHighlighter;
 import com.perl5.lang.perl.idea.highlighter.PerlEditorHighlighterProviderBase;
 import org.jetbrains.annotations.NotNull;
@@ -34,6 +36,12 @@ import java.util.Objects;
 import static com.perl5.lang.htmlmason.elementType.HTMLMasonElementTypes.HTML_MASON_TEMPLATE_BLOCK_HTML;
 
 public class HTMLMasonEditorHighlighterProvider extends PerlEditorHighlighterProviderBase {
+  // consulo: Consulo keys EditorHighlighterProvider by file type; registrations (one per upstream filetype) override this
+  @Override
+  public @NotNull FileType getFileType() {
+    return HTMLMasonFileType.INSTANCE;
+  }
+
   @Override
   protected @NotNull EditorHighlighter registerAdditionalLayers(@NotNull LayeredLexerEditorHighlighter highlighter,
                                                                 @Nullable Project project,
@@ -44,7 +52,7 @@ public class HTMLMasonEditorHighlighterProvider extends PerlEditorHighlighterPro
   }
 
   @Override
-  protected @NotNull SyntaxHighlighter createBaseSyntaxHighlighter(@Nullable Project project) {
-    return new HTMLMasonSyntaxHighlighter(project);
+  protected @NotNull SyntaxHighlighter createBaseSyntaxHighlighter(@Nullable Project project, @Nullable VirtualFile virtualFile) {
+    return new HTMLMasonSyntaxHighlighter(project, HTMLMasonSettings.forFile(project, virtualFile));
   }
 }

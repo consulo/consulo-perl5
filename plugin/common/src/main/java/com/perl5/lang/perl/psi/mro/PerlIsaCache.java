@@ -16,25 +16,32 @@
 
 package com.perl5.lang.perl.psi.mro;
 
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.components.Service;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.util.PsiModificationTracker;
-import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.Interner;
+import consulo.disposer.Disposable;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
+import jakarta.inject.Singleton;
+import jakarta.inject.Inject;
+import consulo.project.Project;
+import consulo.language.psi.PsiModificationTrackerListener;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.interner.Interner;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
 
-@Service(Service.Level.PROJECT)
-public final class PerlIsaCache implements PsiModificationTracker.Listener, Disposable {
+@ServiceAPI(ComponentScope.PROJECT)
+@ServiceImpl
+@Singleton
+public final class PerlIsaCache implements PsiModificationTrackerListener, Disposable {
   private final Map<String, List<String>> myCache = ContainerUtil.createConcurrentWeakMap();
   private static final Interner<List<String>> INTERNER = Interner.createWeakInterner();
 
+  @Inject
   public PerlIsaCache(@NotNull Project project) {
-    project.getMessageBus().connect(this).subscribe(PsiModificationTracker.TOPIC, this);
+    project.getMessageBus().connect(this).subscribe(PsiModificationTrackerListener.class, this);
   }
 
   public @Nullable List<String> get(@Nullable String namespaceName) {

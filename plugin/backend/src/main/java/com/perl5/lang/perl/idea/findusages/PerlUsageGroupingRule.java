@@ -16,12 +16,12 @@
 
 package com.perl5.lang.perl.idea.findusages;
 
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.usages.*;
-import com.intellij.usages.rules.PsiElementUsage;
-import com.intellij.usages.rules.SingleParentUsageGroupingRule;
+import consulo.navigation.ItemPresentation;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiElement;
+
+import consulo.usage.rule.PsiElementUsage;
+import consulo.usage.rule.SingleParentUsageGroupingRule;
 import com.perl5.lang.perl.PerlLanguage;
 import com.perl5.lang.perl.idea.ui.breadcrumbs.PerlBreadcrumbsProvider;
 import com.perl5.lang.perl.psi.PerlFile;
@@ -30,6 +30,12 @@ import com.perl5.lang.perl.psi.PerlNamespaceDefinitionElement;
 import com.perl5.lang.perl.psi.PerlSubDefinitionElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import consulo.usage.PsiElementUsageGroupBase;
+import consulo.usage.PsiNamedElementUsageGroupBase;
+import consulo.usage.Usage;
+import consulo.usage.UsageGroup;
+import consulo.usage.UsageTarget;
+import consulo.usage.UsageView;
 
 class PerlUsageGroupingRule extends SingleParentUsageGroupingRule {
   @Override
@@ -62,7 +68,7 @@ class PerlUsageGroupingRule extends SingleParentUsageGroupingRule {
       String name = StringUtil.notNullize(subDefinitionElement.getCanonicalName());
       return new PsiNamedElementUsageGroupBase<>((PerlSubDefinitionElement)structuralParentElement) {
         @Override
-        public @NotNull String getPresentableGroupText() {
+        public @NotNull String getText(@Nullable UsageView view) {
           return name;
         }
       };
@@ -75,7 +81,7 @@ class PerlUsageGroupingRule extends SingleParentUsageGroupingRule {
     if (structuralParentElement instanceof PerlMethodModifier) {
       return new PsiElementUsageGroupBase<>((PerlMethodModifier)structuralParentElement) {
         @Override
-        public @NotNull String getPresentableGroupText() {
+        public @NotNull String getText(@Nullable UsageView view) {
           PerlMethodModifier modifier = getElement();
           if (modifier != null) {
             ItemPresentation presentation = modifier.getPresentation();
@@ -83,7 +89,7 @@ class PerlUsageGroupingRule extends SingleParentUsageGroupingRule {
               return StringUtil.notNullize(presentation.getPresentableText());
             }
           }
-          return super.getPresentableGroupText();
+          return super.getText(view);
         }
       };
     }

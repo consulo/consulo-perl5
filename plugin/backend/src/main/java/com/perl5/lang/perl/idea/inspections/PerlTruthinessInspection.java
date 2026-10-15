@@ -16,17 +16,17 @@
 
 package com.perl5.lang.perl.idea.inspections;
 
-import com.intellij.codeInspection.LocalQuickFix;
-import com.intellij.codeInspection.ProblemDescriptor;
-import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Pair;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.editor.inspection.LocalQuickFix;
+import consulo.language.editor.inspection.ProblemDescriptor;
+import consulo.language.editor.inspection.ProblemsHolder;
+import consulo.project.Project;
+import consulo.util.lang.Pair;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiElementVisitor;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.psi.PsiUtilCore;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.psi.*;
 import com.perl5.lang.perl.psi.impl.PerlFileImpl;
@@ -37,7 +37,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import static com.perl5.lang.perl.parser.PerlElementTypesGenerated.*;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.Language;
+import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
+import consulo.localize.LocalizeValue;
+import com.perl5.lang.perl.PerlLanguage;
 
+@ExtensionImpl
 public class PerlTruthinessInspection extends PerlInspection {
   private static final TokenSet AMBIGUOUS_CONDITIONS = TokenSet.create(SCALAR_VARIABLE, SCALAR_CAST_EXPR);
 
@@ -156,8 +162,8 @@ public class PerlTruthinessInspection extends PerlInspection {
     private static final DefinedQuickFix INSTANCE = new DefinedQuickFix();
 
     @Override
-    public @Nls(capitalization = Nls.Capitalization.Sentence) @NotNull String getFamilyName() {
-      return PerlBundle.message("perl.inspection.truthness.add.defined");
+    public @NotNull LocalizeValue getName() {
+      return LocalizeValue.localizeTODO(PerlBundle.message("perl.inspection.truthness.add.defined"));
     }
 
     @Override
@@ -194,8 +200,8 @@ public class PerlTruthinessInspection extends PerlInspection {
     private static final ZeroEqualityFix INSTANCE = new ZeroEqualityFix();
 
     @Override
-    public @Nls(capitalization = Nls.Capitalization.Sentence) @NotNull String getFamilyName() {
-      return PerlBundle.message("perl.inspection.truthness.add.numeric");
+    public @NotNull LocalizeValue getName() {
+      return LocalizeValue.localizeTODO(PerlBundle.message("perl.inspection.truthness.add.numeric"));
     }
 
     @Override
@@ -208,13 +214,39 @@ public class PerlTruthinessInspection extends PerlInspection {
     private static final EmptyStringEqualityFix INSTANCE = new EmptyStringEqualityFix();
 
     @Override
-    public @Nls(capitalization = Nls.Capitalization.Sentence) @NotNull String getFamilyName() {
-      return PerlBundle.message("perl.inspection.truthness.add.string");
+    public @NotNull LocalizeValue getName() {
+      return LocalizeValue.localizeTODO(PerlBundle.message("perl.inspection.truthness.add.string"));
     }
 
     @Override
     protected @NotNull String getReplacementText(@NotNull String baseText, boolean isNegated) {
       return isNegated ? baseText + " eq ''" : baseText + " ne ''";
     }
+  }
+
+  // consulo: metadata from upstream <localInspection> registration in perl5.plugin.backend.main.xml
+  @Override
+  public @NotNull String getShortName() {
+    return "TruthinessInspection";
+  }
+
+  @Override
+  public @Nullable Language getLanguage() {
+    return PerlLanguage.INSTANCE;
+  }
+
+  @Override
+  public @NotNull LocalizeValue getDisplayName() {
+    return LocalizeValue.localizeTODO(PerlBundle.message("inspection.truthiness.inspection.display.name"));
+  }
+
+  @Override
+  public @NotNull LocalizeValue getGroupDisplayName() {
+    return LocalizeValue.localizeTODO(PerlBundle.message("inspection.group.perl"));
+  }
+
+  @Override
+  public @NotNull HighlightDisplayLevel getDefaultLevel() {
+    return HighlightDisplayLevel.WARNING;
   }
 }

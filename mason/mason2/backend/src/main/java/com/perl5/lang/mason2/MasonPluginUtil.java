@@ -16,16 +16,19 @@
 
 package com.perl5.lang.mason2;
 
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.project.Project;
-import com.perl5.lang.mason2.idea.configuration.MasonSettings;
+import consulo.disposer.Disposable;
+import consulo.project.Project;
+import com.perl5.lang.perl.util.PerlPluginUtil;
 import org.jetbrains.annotations.NotNull;
 
 public final class MasonPluginUtil {
   private MasonPluginUtil() {
   }
 
+  /**
+   * consulo: upstream returns the project settings service, which is per module (module extension state) here
+   */
   public static @NotNull Disposable getUnloadAwareDisposable(@NotNull Project project) {
-    return MasonSettings.getInstance(project);
+    return PerlPluginUtil.getUnloadAwareDisposable(project);
   }
 }

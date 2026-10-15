@@ -16,11 +16,10 @@
 
 package com.perl5.lang.perl.idea.sdk.versionManager.system;
 
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.util.NlsActions.ActionText;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.disposer.Disposable;
+import consulo.project.Project;
+import consulo.content.bundle.Sdk;
+import consulo.util.lang.StringUtil;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.idea.sdk.PerlHandlerBean;
 import com.perl5.lang.perl.idea.sdk.PerlSdkType;
@@ -49,7 +48,7 @@ class PerlSystemHandler
   }
 
   @Override
-  public @NotNull @ActionText String getMenuItemTitle() {
+  public @NotNull String getMenuItemTitle() {
     return PerlBundle.message("perl.vm.system.menu.title");
   }
 

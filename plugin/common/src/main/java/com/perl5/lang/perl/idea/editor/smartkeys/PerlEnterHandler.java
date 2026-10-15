@@ -16,13 +16,14 @@
 
 package com.perl5.lang.perl.idea.editor.smartkeys;
 
-import com.intellij.codeInsight.editorActions.enter.EnterHandlerDelegateAdapter;
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
-import com.intellij.openapi.util.Ref;
-import com.intellij.psi.PsiFile;
+import consulo.language.editor.action.EnterHandlerDelegateAdapter;
+import consulo.dataContext.DataContext;
+import consulo.logging.Logger;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.action.EditorActionHandler;
+import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
+import consulo.language.psi.PsiFile;
 import com.perl5.lang.perl.util.PerlTimeLogger;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,12 +36,18 @@ public abstract class PerlEnterHandler extends EnterHandlerDelegateAdapter {
   @Override
   public final Result preprocessEnter(@NotNull PsiFile file,
                                       @NotNull Editor editor,
-                                      @NotNull Ref<Integer> caretOffset,
-                                      @NotNull Ref<Integer> caretAdvance,
+                                      @NotNull SimpleReference<Integer> caretOffset,
+                                      @NotNull SimpleReference<Integer> caretAdvance,
                                       @NotNull DataContext dataContext,
                                       EditorActionHandler originalHandler) {
     PerlTimeLogger logger = PerlTimeLogger.create(LOG);
-    Result result = doPreprocessEnter(file, editor, caretOffset, caretAdvance, dataContext, originalHandler);
+    // consulo: Consulo passes SimpleReference (Ref is its deprecated subclass); subclasses keep upstream Ref signatures,
+    // so values are copied in and back out
+    Ref<Integer> caretOffsetRef = Ref.create(caretOffset.get());
+    Ref<Integer> caretAdvanceRef = Ref.create(caretAdvance.get());
+    Result result = doPreprocessEnter(file, editor, caretOffsetRef, caretAdvanceRef, dataContext, originalHandler);
+    caretOffset.set(caretOffsetRef.get());
+    caretAdvance.set(caretAdvanceRef.get());
     logger.debug("Pre processed enter with " + getClass().getSimpleName());
     return result;
   }

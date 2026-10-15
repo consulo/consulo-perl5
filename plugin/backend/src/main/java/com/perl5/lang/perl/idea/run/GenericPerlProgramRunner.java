@@ -16,33 +16,35 @@
 
 package com.perl5.lang.perl.idea.run;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.ExecutionResult;
-import com.intellij.execution.configurations.RunProfileState;
-import com.intellij.execution.configurations.RunnerSettings;
-import com.intellij.execution.runners.AsyncProgramRunner;
-import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.execution.runners.RunContentBuilder;
-import com.intellij.execution.ui.RunContentDescriptor;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.ui.Messages;
-import com.intellij.util.concurrency.AppExecutorUtil;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.process.ExecutionException;
+import consulo.execution.ExecutionResult;
+import consulo.execution.configuration.RunProfileState;
+import consulo.execution.configuration.RunnerSettings;
+import consulo.execution.runner.AsyncProgramRunner;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.execution.runner.RunContentBuilder;
+import consulo.execution.ui.RunContentDescriptor;
+import consulo.application.ApplicationManager;
+import consulo.ui.ModalityState;
+import consulo.logging.Logger;
+import consulo.document.FileDocumentManager;
+import consulo.ui.MessageBoxes;
+import consulo.localize.LocalizeValue;
+import consulo.content.bundle.Sdk;
+import consulo.application.util.concurrent.AppExecutorUtil;
+import consulo.util.collection.ContainerUtil;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.adapters.PackageManagerAdapterFactory;
 import com.perl5.lang.perl.idea.project.PerlProjectManager;
 import com.perl5.lang.perl.util.PerlPackageUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.concurrency.AsyncPromise;
-import org.jetbrains.concurrency.Promise;
+import consulo.util.concurrent.AsyncPromise;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public abstract class GenericPerlProgramRunner extends AsyncProgramRunner<RunnerSettings> {
@@ -52,24 +54,36 @@ public abstract class GenericPerlProgramRunner extends AsyncProgramRunner<Runner
                                                                                                                    ExecutionException;
 
   @Override
-  protected @NotNull Promise<RunContentDescriptor> execute(@NotNull ExecutionEnvironment environment, @NotNull RunProfileState state) {
+  protected @NotNull CompletableFuture<RunContentDescriptor> executeImpl(@NotNull RunProfileState state, @NotNull ExecutionEnvironment environment) {
     FileDocumentManager.getInstance().saveAllDocuments();
     AsyncPromise<RunContentDescriptor> result = new AsyncPromise<>();
     var missingModules = getMissingModules(environment);
-    if (!missingModules.isEmpty() && handleMissingModules(environment, missingModules)) {
-      result.setResult(null);
+    var project = environment.getProject();
+    var sdk = missingModules.isEmpty() ? null : PerlProjectManager.getSdk(project);
+    if (sdk != null) {
+      // consulo: Messages are Swing dialogs (not available in web), the unified message box is asynchronous
+      MessageBoxes.yesNo()
+        .title(LocalizeValue.of(PerlBundle.message("dialog.title.missing.modules")))
+        .text(LocalizeValue.of(PerlBundle.message("dialog.message.are.missing.in.would.you.like.to.install",
+                                                  missingModules.stream().sorted().collect(Collectors.joining(", ")))))
+        .showAsync(project)
+        .whenComplete((install, error) -> {
+          if (Boolean.TRUE.equals(install)) {
+            installMissingModules(environment, sdk, missingModules);
+            result.setResult(null);
+          }
+          else {
+            executeInBackground(state, environment, result);
+          }
+        });
     }
     else {
-      AppExecutorUtil.getAppExecutorService().execute(() -> {
-        try {
-          doExecute(state, environment, result);
-        }
-        catch (ExecutionException e) {
-          result.setError(e);
-        }
-      });
+      executeInBackground(state, environment, result);
     }
-    return result;
+    // Consulo AsyncProgramRunner works with CompletableFuture
+    CompletableFuture<RunContentDescriptor> future = new CompletableFuture<>();
+    result.onSuccess(future::complete).onError(future::completeExceptionally);
+    return future;
   }
 
   /**
@@ -80,22 +94,25 @@ public abstract class GenericPerlProgramRunner extends AsyncProgramRunner<Runner
    * @param missingModules a list of missing modules
    * @return true iff invoker should not call run configuration itself, because it's going to be handled by the callback
    */
-  private boolean handleMissingModules(@NotNull ExecutionEnvironment environment, List<String> missingModules) {
-    var project = environment.getProject();
-    var sdk = PerlProjectManager.getSdk(project);
-    if (sdk == null) {
-      return false;
-    }
-    var request = Messages.showYesNoDialog(
-      project,
-      PerlBundle.message("dialog.message.are.missing.in.would.you.like.to.install",
-                         missingModules.stream().sorted().collect(Collectors.joining(", "))),
-      PerlBundle.message("dialog.title.missing.modules"),
-      Messages.getQuestionIcon());
-    if (request != Messages.YES) {
-      return false;
-    }
+  private void executeInBackground(@NotNull RunProfileState state,
+                                   @NotNull ExecutionEnvironment environment,
+                                   @NotNull AsyncPromise<RunContentDescriptor> result) {
+    AppExecutorUtil.getAppExecutorService().execute(() -> {
+      try {
+        doExecute(state, environment, result);
+      }
+      catch (ExecutionException e) {
+        result.setError(e);
+      }
+    });
+  }
 
+  /**
+   * Installs missing modules using the package manager adapter. Executes the environment after the installation is complete.
+   * consulo: upstream handleMissingModules, the confirmation is asked asynchronously by the caller
+   */
+  private void installMissingModules(@NotNull ExecutionEnvironment environment, @NotNull Sdk sdk, List<String> missingModules) {
+    var project = environment.getProject();
     AppExecutorUtil.getAppExecutorService().execute(() -> {
       var packageManagerAdapter = PackageManagerAdapterFactory.create(sdk, project);
       ApplicationManager.getApplication().invokeLater(() -> packageManagerAdapter.install(missingModules, () -> {
@@ -112,7 +129,6 @@ public abstract class GenericPerlProgramRunner extends AsyncProgramRunner<Runner
         });
       }, true));
     });
-    return true;
   }
 
   private List<String> getMissingModules(@NotNull ExecutionEnvironment environment) {

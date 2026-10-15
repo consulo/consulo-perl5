@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.parser;
 
-import com.intellij.openapi.util.TextRange;
+import consulo.document.util.TextRange;
 import com.perl5.lang.perl.psi.properties.PerlIdentifierOwner;
 import org.jetbrains.annotations.NotNull;
 

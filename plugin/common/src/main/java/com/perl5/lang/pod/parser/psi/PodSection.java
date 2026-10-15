@@ -16,8 +16,8 @@
 
 package com.perl5.lang.pod.parser.psi;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiTreeUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.util.PsiTreeUtil;
 import com.perl5.lang.pod.parser.psi.util.PodRenderUtil;
 import org.jetbrains.annotations.Nullable;
 

@@ -16,12 +16,12 @@
 
 package com.perl5.lang.perl.psi.mixins;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.psi.ElementManipulators;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.ast.ASTNode;
+import consulo.navigation.ItemPresentation;
+import consulo.language.psi.ElementManipulators;
+import consulo.language.psi.PsiElement;
+import consulo.language.ast.IElementType;
+import consulo.language.util.IncorrectOperationException;
 import com.perl5.PerlIcons;
 import com.perl5.lang.perl.idea.presentations.PerlItemPresentationSimple;
 import com.perl5.lang.perl.psi.PerlStubBasedPsiElementBase;
@@ -35,7 +35,7 @@ import com.perl5.lang.perl.util.PerlPackageUtilCore;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
+import consulo.ui.image.Image;
 
 
 public abstract class PerlGlobVariableMixin extends PerlStubBasedPsiElementBase<PerlGlobStub>
@@ -137,8 +137,9 @@ public abstract class PerlGlobVariableMixin extends PerlStubBasedPsiElementBase<
   }
 
 
-  @Override
-  public @Nullable Icon getIcon(int flags) {
+  // TODO consulo: PsiElement#getIcon(int) does not exist in Consulo (element icons come from IconDescriptorUpdater),
+  //  so this is no longer an override and is not called by the platform
+  public @Nullable Image getIcon(int flags) {
     return PerlIcons.GLOB_GUTTER_ICON;
   }
 

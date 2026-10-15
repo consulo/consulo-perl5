@@ -16,11 +16,11 @@
 
 package com.perl5.lang.pod.parser;
 
-import com.intellij.patterns.PsiElementPattern;
-import com.intellij.psi.PsiElement;
+import consulo.language.pattern.PsiElementPattern;
+import consulo.language.psi.PsiElement;
 import com.perl5.lang.pod.parser.psi.PodSectionTitle;
 
-import static com.intellij.patterns.PlatformPatterns.psiElement;
+import static consulo.language.pattern.PlatformPatterns.psiElement;
 import static com.perl5.lang.pod.parser.PodElementTypesGenerated.FORMATTING_SECTION_CONTENT;
 import static com.perl5.lang.pod.parser.PodElementTypesGenerated.POD_FORMAT_LINK;
 

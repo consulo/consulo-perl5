@@ -16,13 +16,13 @@
 
 package com.perl5.lang.perl.idea.refactoring.move;
 
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.refactoring.move.moveFilesOrDirectories.MoveFilesOrDirectoriesProcessor;
-import com.intellij.refactoring.rename.RenamePsiFileProcessor;
+import consulo.application.ApplicationManager;
+import consulo.project.Project;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.editor.refactoring.move.fileOrDirectory.MoveFilesOrDirectoriesProcessor;
+import consulo.language.editor.refactoring.rename.RenamePsiFileProcessorBase;
 import com.perl5.lang.perl.util.PerlPackageUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -31,7 +31,7 @@ import java.util.Map;
 /**
  * Directory renaming being done using custom way
  */
-public class PerlRenameDirectoryProcessor extends RenamePsiFileProcessor {
+public class PerlRenameDirectoryProcessor extends RenamePsiFileProcessorBase {
   @Override
   public boolean canProcessElement(@NotNull PsiElement element) {
     return element instanceof PsiDirectory directory && canProcessDir(directory);

@@ -16,18 +16,17 @@
 
 package com.perl5.lang.pod.idea.codeInsight.highlighting;
 
-import com.intellij.codeInsight.TargetElementUtil;
-import com.intellij.codeInsight.highlighting.HighlightUsagesHandlerBase;
-import com.intellij.codeInsight.highlighting.HighlightUsagesHandlerFactoryBase;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.search.LocalSearchScope;
-import com.intellij.psi.search.searches.ReferencesSearch;
-import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.util.Consumer;
+import consulo.language.editor.TargetElementUtil;
+import consulo.language.editor.highlight.usage.HighlightUsagesHandlerBase;
+import consulo.language.editor.highlight.usage.HighlightUsagesHandlerFactoryBase;
+import consulo.codeEditor.Editor;
+import consulo.document.util.TextRange;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiReference;
+import consulo.language.psi.scope.LocalSearchScope;
+import consulo.language.psi.search.ReferencesSearch;
+import consulo.language.psi.PsiUtilCore;
 import com.perl5.lang.pod.PodLanguage;
 import com.perl5.lang.pod.parser.psi.PodTitledSection;
 import com.perl5.lang.pod.parser.psi.references.PodLinkToSectionReference;
@@ -37,9 +36,11 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.function.Consumer;
 
-import static com.intellij.codeInsight.TargetElementUtil.ELEMENT_NAME_ACCEPTED;
-import static com.intellij.codeInsight.TargetElementUtil.REFERENCED_ELEMENT_ACCEPTED;
+import static consulo.language.editor.TargetElementUtilExtender.ELEMENT_NAME_ACCEPTED;
+import static consulo.language.editor.TargetElementUtilExtender.REFERENCED_ELEMENT_ACCEPTED;
 
 public class PodUsagesHighlightingFactory extends HighlightUsagesHandlerFactoryBase {
   @Override
@@ -50,7 +51,7 @@ public class PodUsagesHighlightingFactory extends HighlightUsagesHandlerFactoryB
       return null;
     }
 
-    PsiElement targetElement = TargetElementUtil.findTargetElement(editor, REFERENCED_ELEMENT_ACCEPTED | ELEMENT_NAME_ACCEPTED);
+    PsiElement targetElement = TargetElementUtil.findTargetElement(editor, Set.of(REFERENCED_ELEMENT_ACCEPTED, ELEMENT_NAME_ACCEPTED));
 
     if (!(targetElement instanceof PodTitledSection section)) {
       return null;
@@ -62,13 +63,13 @@ public class PodUsagesHighlightingFactory extends HighlightUsagesHandlerFactoryB
       }
 
       @Override
-      protected void selectTargets(@NotNull List<? extends PsiElement> targets,
-                                   @NotNull Consumer<? super List<? extends PsiElement>> selectionConsumer) {
-        selectionConsumer.consume(targets);
+      protected void selectTargets(@NotNull List<PsiElement> targets,
+                                   @NotNull Consumer<List<PsiElement>> selectionConsumer) {
+        selectionConsumer.accept(targets);
       }
 
       @Override
-      public void computeUsages(@NotNull List<? extends PsiElement> targets) {
+      public void computeUsages(@NotNull List<PsiElement> targets) {
         List<PodTitledSection> allTargetSections = PodLinkToSectionReference.getAllSynonymousSections(section);
         if (allTargetSections.isEmpty()) {
           return;

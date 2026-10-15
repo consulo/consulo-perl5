@@ -16,17 +16,18 @@
 
 package com.perl5.lang.perl.idea.actions;
 
-import com.intellij.ide.actions.CreateFileFromTemplateAction;
-import com.intellij.ide.actions.CreateFileFromTemplateDialog;
-import com.intellij.ide.fileTemplates.FileTemplate;
-import com.intellij.ide.fileTemplates.FileTemplateManager;
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.fileTypes.ex.FileTypeManagerEx;
-import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiFile;
+import consulo.ide.action.CreateFileFromTemplateAction;
+import consulo.ide.action.CreateFileFromTemplateDialog;
+import consulo.fileTemplate.FileTemplate;
+import consulo.fileTemplate.FileTemplateManager;
+import consulo.dataContext.DataContext;
+import consulo.language.file.FileTypeManager;
+import consulo.localize.LocalizeValue;
+import consulo.application.dumb.DumbAware;
+import consulo.project.Project;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiFile;
 import com.perl5.PerlBundle;
 import com.perl5.PerlIcons;
 import com.perl5.lang.perl.idea.filetemplates.PerlCreateFileFromTemplateHandler;
@@ -48,17 +49,17 @@ public class PerlFileFromTemplateAction extends CreateFileFromTemplateAction imp
   @Override
   protected void buildDialog(@NotNull Project project, @NotNull PsiDirectory directory, CreateFileFromTemplateDialog.Builder builder) {
     builder
-      .setTitle(PerlBundle.message("dialog.title.new.perl5.file"))
-      .addKind(PerlBundle.message("list.item.package"), PerlIcons.PM_FILE, "Perl5 package")
-      .addKind(PerlBundle.message("list.item.script"), PerlIcons.PERL_SCRIPT_FILE_ICON, "Perl5 script")
-      .addKind(PerlBundle.message("list.item.test"), PerlIcons.TEST_FILE, "Perl5 test")
-      .addKind(PerlBundle.message("list.item.pod.file"), PerlIcons.POD_FILE, "Perl5 pod")
+      .setTitle(LocalizeValue.localizeTODO(PerlBundle.message("dialog.title.new.perl5.file")))
+      .addKind(LocalizeValue.localizeTODO(PerlBundle.message("list.item.package")), PerlIcons.PM_FILE, "Perl5 package")
+      .addKind(LocalizeValue.localizeTODO(PerlBundle.message("list.item.script")), PerlIcons.PERL_SCRIPT_FILE_ICON, "Perl5 script")
+      .addKind(LocalizeValue.localizeTODO(PerlBundle.message("list.item.test")), PerlIcons.TEST_FILE, "Perl5 test")
+      .addKind(LocalizeValue.localizeTODO(PerlBundle.message("list.item.pod.file")), PerlIcons.POD_FILE, "Perl5 pod")
     ;
 
-    FileTypeManagerEx fileTypeManager = FileTypeManagerEx.getInstanceEx();
+    FileTypeManager fileTypeManager = FileTypeManager.getInstance();
     for (FileTemplate fileTemplate : FileTemplateManager.getInstance(project).getAllTemplates()) {
       if (PerlCreateFileFromTemplateHandler.INSTANCE.handlesTemplate(fileTemplate)) {
-        builder.addKind(fileTemplate.getName(), fileTypeManager.getFileTypeByExtension(fileTemplate.getExtension()).getIcon(),
+        builder.addKind(LocalizeValue.of(fileTemplate.getName()), fileTypeManager.getFileTypeByExtension(fileTemplate.getExtension()).getIcon(),
                         fileTemplate.getName());
       }
     }
@@ -70,8 +71,8 @@ public class PerlFileFromTemplateAction extends CreateFileFromTemplateAction imp
   }
 
   @Override
-  protected String getActionName(PsiDirectory directory, @NotNull String newName, String templateName) {
-    return PerlBundle.message("command.name.create.perl5.file", newName);
+  protected LocalizeValue getActionName(PsiDirectory directory, @NotNull String newName, String templateName) {
+    return LocalizeValue.localizeTODO(PerlBundle.message("command.name.create.perl5.file", newName));
   }
 
   @Override

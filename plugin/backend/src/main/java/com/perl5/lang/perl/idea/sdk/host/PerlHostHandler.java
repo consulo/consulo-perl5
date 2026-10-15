@@ -16,26 +16,24 @@
 
 package com.perl5.lang.perl.idea.sdk.host;
 
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.fileChooser.FileChooser;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.options.UnnamedConfigurable;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.ui.InputValidator;
-import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.NlsActions.ActionText;
-import com.intellij.openapi.util.NlsContexts;
-import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileSystem;
+import consulo.disposer.Disposable;
+import consulo.fileChooser.FileChooser;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.configurable.UnnamedConfigurable;
+import consulo.project.Project;
+import consulo.content.bundle.Sdk;
+import consulo.ui.InputBoxBuilder;
+import consulo.ui.InputProblem;
+import consulo.localize.LocalizeValue;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileSystem;
 import com.perl5.lang.perl.idea.sdk.AbstractPerlHandler;
 import com.perl5.lang.perl.idea.sdk.PerlHandlerBean;
 import com.perl5.lang.perl.idea.sdk.PerlHandlerCollector;
 import com.perl5.lang.perl.idea.sdk.host.os.PerlOsHandler;
+import consulo.perl5.core.ui.PerlDialogUtil;
 import org.jdom.Element;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -75,7 +73,7 @@ public abstract class PerlHostHandler<Data extends PerlHostData<Data, Handler>, 
    * @param selectionConsumer   a callback for selected result. Accepts path selected and the host data
    * @param disposable          session-bound things may be attached to this disposable, which is going to be disposed by parent configurable
    */
-  public void chooseFileInteractively(@NlsContexts.DialogTitle @NotNull String dialogTitle,
+  public void chooseFileInteractively(@NotNull String dialogTitle,
                                       @Nullable Function<? super PerlHostData<?, ?>, ? extends File> defaultPathFunction,
                                       boolean useDefaultIfExists,
                                       @NotNull Predicate<? super String> nameValidator,
@@ -102,40 +100,36 @@ public abstract class PerlHostHandler<Data extends PerlHostData<Data, Handler>, 
   /**
    * Choose a file if host does not provide a file system
    */
-  protected void chooseFileInteractively(@NlsContexts.DialogTitle @NotNull String dialogTitle,
+  protected void chooseFileInteractively(@NotNull String dialogTitle,
                                          @Nullable File defaultPath,
                                          @NotNull Predicate<? super String> nameValidator,
                                          @NotNull Function<? super String, @Nullable String> pathValidator,
                                          @NotNull Consumer<? super String> selectionConsumer) {
-    Ref<String> pathRef = Ref.create();
-    ApplicationManager.getApplication().invokeAndWait(
-      () -> pathRef.set(Messages.showInputDialog(
-        (Project)null, null, dialogTitle, null,
-        defaultPath == null ? null : FileUtil.toSystemIndependentName(defaultPath.getPath()),
-        new InputValidator() {
-          @Override
-          public boolean checkInput(String inputString) {
-            if (StringUtil.isEmpty(inputString)) {
-              return false;
-            }
-            return nameValidator.test(new File(inputString).getName());
+    // consulo: Messages are Swing dialogs (not available in web), the unified input box is asynchronous;
+    // the path check of upstream canClose is a validation problem, so the box can't be confirmed with a wrong path
+    PerlDialogUtil.showAndThen(
+      () -> InputBoxBuilder.text()
+        .title(LocalizeValue.of(dialogTitle))
+        .value(defaultPath == null ? "" : FileUtil.toSystemIndependentName(defaultPath.getPath()))
+        .validator(inputString -> {
+          if (StringUtil.isEmpty(inputString) || !nameValidator.test(new File(inputString).getName())) {
+            return InputProblem.error(LocalizeValue.empty());
           }
-
-          @Override
-          public boolean canClose(String inputString) {
-            return StringUtil.isNotEmpty(inputString) && pathValidator.apply(inputString) == null;
-          }
-        })));
-    String chosenPath = pathRef.get();
-    if (StringUtil.isNotEmpty(chosenPath)) {
-      selectionConsumer.accept(chosenPath);
-    }
+          String errorMessage = pathValidator.apply(inputString);
+          return errorMessage == null ? null : InputProblem.error(LocalizeValue.of(errorMessage));
+        })
+        .showAsync(),
+      chosenPath -> {
+        if (StringUtil.isNotEmpty(chosenPath)) {
+          selectionConsumer.accept(chosenPath);
+        }
+      });
   }
 
   /**
    * Choose a file if host provides a file system
    */
-  protected void chooseFileInteractively(@NlsContexts.DialogTitle @NotNull String dialogTitle,
+  protected void chooseFileInteractively(@NotNull String dialogTitle,
                                          @Nullable File defaultPath,
                                          boolean useDefaultIfExists,
                                          @NotNull Predicate<? super String> nameValidator,
@@ -151,19 +145,18 @@ public abstract class PerlHostHandler<Data extends PerlHostData<Data, Handler>, 
 
     final var descriptor = createDescriptor(dialogTitle, nameValidator, pathValidator);
     customizeFileChooser(descriptor, fileSystem);
-    Ref<String> pathRef = Ref.create();
-    ApplicationManager.getApplication().invokeAndWait(() -> FileChooser.chooseFiles(descriptor, null, defaultFile, chosen -> {
-      String selectedPath = chosen.getFirst().getPath();
-      if (StringUtil.isEmpty(pathValidator.apply(selectedPath))) {
-        pathRef.set(selectedPath);
+    // consulo: file chooser is asynchronous in Consulo, the selection is passed on as soon as it's made
+    PerlDialogUtil.showAndThen(() -> FileChooser.chooseFiles(descriptor, null, defaultFile), chosen -> {
+      if (chosen != null && chosen.length > 0) {
+        String selectedPath = chosen[0].getPath();
+        if (StringUtil.isEmpty(pathValidator.apply(selectedPath))) {
+          selectionConsumer.accept(selectedPath);
+        }
       }
-    }));
-    if (!pathRef.isNull()) {
-      selectionConsumer.accept(pathRef.get());
-    }
+    });
   }
 
-  private @NotNull FileChooserDescriptor createDescriptor(@NlsContexts.DialogTitle @NotNull String dialogTitle,
+  private @NotNull FileChooserDescriptor createDescriptor(@NotNull String dialogTitle,
                                                           @NotNull Predicate<? super String> nameValidator,
                                                           @NotNull Function<? super String, @Nullable String> pathValidator) {
     final FileChooserDescriptor descriptor = new FileChooserDescriptor(true, isChooseFolders(), false, false, false, false) {
@@ -208,7 +201,7 @@ public abstract class PerlHostHandler<Data extends PerlHostData<Data, Handler>, 
   /**
    * @return a menu item title for this handler, used in UI. E.g. new interpreter menu item
    */
-  public abstract @NotNull @ActionText String getMenuItemTitle();
+  public abstract @NotNull String getMenuItemTitle();
 
   /**
    * @return short lowercased name, for interpreters list

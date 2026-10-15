@@ -16,14 +16,18 @@
 
 package com.perl5.lang.perl.idea.intellilang;
 
-import com.intellij.lang.Language;
-import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.components.State;
-import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.ClearableLazyValue;
-import com.intellij.util.xmlb.annotations.Tag;
-import com.intellij.util.xmlb.annotations.Transient;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
+import jakarta.inject.Singleton;
+import consulo.language.Language;
+import consulo.component.persist.PersistentStateComponent;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
+import consulo.project.Project;
+import consulo.util.lang.lazy.ClearableLazyValue;
+import consulo.util.xml.serializer.annotation.Tag;
+import consulo.util.xml.serializer.annotation.Transient;
 import com.perl5.lang.perl.idea.PerlPathMacros;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -36,15 +40,17 @@ import static com.perl5.lang.perl.idea.intellilang.PerlDefaultInjectionMarkers.D
 
 @State(
   name = "InjectionMarkers",
-  storages = @Storage(PerlPathMacros.PERL5_PROJECT_SETTINGS_FILE),
-  perClient = true
+  storages = @Storage(PerlPathMacros.PERL5_PROJECT_SETTINGS_FILE)
 )
+@ServiceAPI(ComponentScope.PROJECT)
+@ServiceImpl
+@Singleton
 public class PerlInjectionMarkersService implements PersistentStateComponent<PerlInjectionMarkersService> {
   @Tag("MARKERS_MAP")
   private Map<String, String> myCustomMarkersMap = Collections.emptyMap();
 
   private final transient ClearableLazyValue<Map<String, Language>> myLanguageMapProvider =
-    ClearableLazyValue.create(this::computeMarkersMap);
+    ClearableLazyValue.notNull(this::computeMarkersMap);
 
   @Override
   public @Nullable PerlInjectionMarkersService getState() {
@@ -53,7 +59,7 @@ public class PerlInjectionMarkersService implements PersistentStateComponent<Per
 
   @Transient
   public @NotNull Set<String> getSupportedMarkers() {
-    return new HashSet<>(myLanguageMapProvider.getValue().keySet());
+    return new HashSet<>(myLanguageMapProvider.get().keySet());
   }
 
   @Transient
@@ -72,7 +78,7 @@ public class PerlInjectionMarkersService implements PersistentStateComponent<Per
       }
     });
     myCustomMarkersMap = result;
-    myLanguageMapProvider.drop();
+    myLanguageMapProvider.clear();
   }
 
   /**
@@ -80,7 +86,7 @@ public class PerlInjectionMarkersService implements PersistentStateComponent<Per
    */
   @Contract(value = "null -> null", pure = true)
   public @Nullable Language getLanguageByMarker(@Nullable String marker) {
-    return myLanguageMapProvider.getValue().get(marker);
+    return myLanguageMapProvider.get().get(marker);
   }
 
 
@@ -96,7 +102,7 @@ public class PerlInjectionMarkersService implements PersistentStateComponent<Per
     return result;
   }
 
-  @Override
+  // TODO consulo: PersistentStateComponent has no noStateLoaded() callback, so this is never called
   public void noStateLoaded() {
     loadState(new PerlInjectionMarkersService());
   }

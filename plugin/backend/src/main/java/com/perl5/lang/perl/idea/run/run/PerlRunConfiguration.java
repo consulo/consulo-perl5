@@ -16,10 +16,10 @@
 
 package com.perl5.lang.perl.idea.run.run;
 
-import com.intellij.execution.configurations.ConfigurationFactory;
-import com.intellij.execution.configurations.RunConfiguration;
-import com.intellij.openapi.options.SettingsEditor;
-import com.intellij.openapi.project.Project;
+import consulo.execution.configuration.ConfigurationFactory;
+import consulo.execution.configuration.RunConfiguration;
+import consulo.execution.configuration.ui.SettingsEditor;
+import consulo.project.Project;
 import com.perl5.lang.perl.idea.run.GenericPerlRunConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.VisibleForTesting;
@@ -34,6 +34,7 @@ public class PerlRunConfiguration extends GenericPerlRunConfiguration {
 
   @Override
   public @NotNull SettingsEditor<? extends RunConfiguration> getConfigurationEditor() {
-    return new PerlRunConfigurationEditor(getProject());
+    // consulo: unified UI editor, upstream Swing PerlRunConfigurationEditor can't be shown in Consulo Web
+    return new PerlRunConfigurationUIEditor(getProject());
   }
 }

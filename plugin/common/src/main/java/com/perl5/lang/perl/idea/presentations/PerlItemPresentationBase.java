@@ -16,15 +16,16 @@
 
 package com.perl5.lang.perl.idea.presentations;
 
-import com.intellij.navigation.ColoredItemPresentation;
-import com.intellij.openapi.editor.colors.CodeInsightColors;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.ui.ex.ColoredItemPresentation;
+import consulo.codeEditor.CodeInsightColors;
+import consulo.colorScheme.TextAttributesKey;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import com.perl5.lang.perl.psi.PerlDeprecatable;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
+import consulo.language.icon.IconDescriptorUpdaters;
+import consulo.ui.image.Image;
 
 
 public abstract class PerlItemPresentationBase implements ColoredItemPresentation {
@@ -48,8 +49,8 @@ public abstract class PerlItemPresentationBase implements ColoredItemPresentatio
   }
 
   @Override
-  public @Nullable Icon getIcon(boolean unused) {
-    return myElement.getIcon(0);
+  public @Nullable Image getIcon(boolean unused) {
+    return IconDescriptorUpdaters.getIcon(myElement, 0);
   }
 
   public PsiElement getElement() {

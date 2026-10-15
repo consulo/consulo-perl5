@@ -16,13 +16,16 @@
 
 package com.perl5.lang.htmlmason.filetypes;
 
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.perl5.lang.htmlmason.idea.configuration.HTMLMasonSettings;
+import com.perl5.lang.htmlmason.idea.configuration.HTMLMasonSourceRootType;
 import com.perl5.lang.perl.fileTypes.PerlFileTypeProvider;
-import com.perl5.lang.perl.idea.project.PerlProjectManager;
+import consulo.module.Module;
+import consulo.module.ModuleManager;
+import consulo.perl5.mason.module.HTMLMasonModuleExtension;
+import consulo.project.Project;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,21 +33,30 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public class HTMLMasonFileTypeProvider implements PerlFileTypeProvider {
-
+  /**
+   * consulo: settings are per module (HTML::Mason module extension), components roots of a module use the settings of the module. The
+   * roots index is reset on roots changes, which include module extensions changes.
+   */
   @Override
   public void addRoots(@NotNull Project project, BiConsumer<? super VirtualFile, Function<VirtualFile, @Nullable FileType>> rootConsumer) {
-    HTMLMasonSettings settings = HTMLMasonSettings.getInstance(project);
-    for (VirtualFile root : PerlProjectManager.getInstance(settings.getProject()).getModulesRootsOfType(settings.getSourceRootType())) {
-      rootConsumer.accept(root, virtualFile -> {
-        String virtualFileName = virtualFile.getName();
-        if (StringUtil.equals(settings.autoHandlerName, virtualFileName) ||
-            StringUtil.equals(settings.defaultHandlerName, virtualFileName) ||
-            settings.isVirtualFileNameMatches(virtualFile)
-        ) {
-          return HTMLMasonFileType.INSTANCE;
-        }
-        return null;
-      });
+    for (Module module : ModuleManager.getInstance(project).getModules()) {
+      HTMLMasonModuleExtension extension = module.isDisposed() ? null : module.getExtension(HTMLMasonModuleExtension.class);
+      if (extension == null) {
+        continue;
+      }
+      HTMLMasonSettings settings = extension.getSettings();
+      for (VirtualFile root : HTMLMasonSourceRootType.INSTANCE.getRoots(module)) {
+        rootConsumer.accept(root, virtualFile -> {
+          String virtualFileName = virtualFile.getName();
+          if (StringUtil.equals(settings.getAutoHandlerName(), virtualFileName) ||
+              StringUtil.equals(settings.getDefaultHandlerName(), virtualFileName) ||
+              settings.isVirtualFileNameMatches(virtualFile)
+          ) {
+            return HTMLMasonFileType.INSTANCE;
+          }
+          return null;
+        });
+      }
     }
   }
 }

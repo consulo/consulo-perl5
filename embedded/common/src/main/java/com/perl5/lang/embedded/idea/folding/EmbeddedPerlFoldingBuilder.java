@@ -16,8 +16,8 @@
 
 package com.perl5.lang.embedded.idea.folding;
 
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
 import com.perl5.lang.perl.idea.folding.PerlFoldingBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

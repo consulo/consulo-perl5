@@ -16,14 +16,14 @@
 
 package com.perl5.lang.perl.parser;
 
-import com.intellij.lang.PsiBuilder;
-import com.intellij.lang.PsiParser;
-import com.intellij.lang.WhitespacesAndCommentsBinder;
-import com.intellij.lang.parser.GeneratedParserUtilBase;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.TokenType;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
+import consulo.language.parser.PsiBuilder;
+import consulo.language.parser.PsiParser;
+import consulo.language.parser.WhitespacesAndCommentsBinder;
+import consulo.language.impl.parser.GeneratedParserUtilBase;
+import consulo.util.lang.StringUtil;
+import consulo.language.ast.TokenType;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.lexer.PerlTokenSets;
 import com.perl5.lang.perl.lexer.PerlTokenSetsEx;
@@ -35,7 +35,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.regex.Pattern;
 
-import static com.intellij.lang.WhitespacesBinders.*;
+import static consulo.language.parser.WhitespacesBinders.*;
 import static com.perl5.lang.perl.parser.PerlElementTypesGenerated.*;
 
 

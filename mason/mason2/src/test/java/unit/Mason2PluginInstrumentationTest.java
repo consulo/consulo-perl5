@@ -19,7 +19,7 @@ package unit;
 import base.PerlInstrumentationTestCase;
 import categories.CategoriesFilter;
 import com.perl5.lang.mason2.Mason2ParserDefinition;
-import com.perl5.lang.perl.parser.MasonParserUtil;
+import com.perl5.lang.mason.parser.MasonParserUtil;
 import org.junit.runners.Parameterized;
 
 import java.util.Arrays;

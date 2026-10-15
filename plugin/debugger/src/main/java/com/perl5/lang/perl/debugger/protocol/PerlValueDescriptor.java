@@ -16,7 +16,6 @@
 
 package com.perl5.lang.perl.debugger.protocol;
 
-import com.intellij.openapi.util.NlsSafe;
 import org.jetbrains.annotations.Nullable;
 
 
@@ -48,7 +47,7 @@ public class PerlValueDescriptor {
     return type;
   }
 
-  public @NlsSafe String getValue() {
+  public String getValue() {
     return value;
   }
 

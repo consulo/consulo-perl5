@@ -17,7 +17,7 @@
 package unit;
 
 import base.Mason2LightTestCase;
-import com.intellij.configurationStore.XmlSerializer;
+import consulo.util.xml.serializer.XmlSerializer;
 import com.perl5.lang.mason2.idea.configuration.MasonSettings;
 import com.perl5.lang.mason2.idea.configuration.VariableDescription;
 import org.junit.Test;

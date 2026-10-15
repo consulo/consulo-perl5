@@ -16,9 +16,11 @@
 
 package com.perl5.lang.perl.idea.editor;
 
-import com.intellij.openapi.editor.IndentStrategy;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiUtilCore;
+import com.perl5.lang.perl.PerlLanguage;
+import consulo.language.Language;
+import consulo.language.editor.IndentStrategy;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiUtilCore;
 import com.perl5.lang.perl.idea.formatter.PerlIndentProcessor;
 import com.perl5.lang.perl.psi.impl.PerlHeredocElementImpl;
 import org.jetbrains.annotations.NotNull;
@@ -26,7 +28,13 @@ import org.jetbrains.annotations.NotNull;
 
 public class PerlIndentStrategy implements IndentStrategy {
   @Override
-  public boolean canIndent(int indentationStartOffset, int indentationEndOffset, @NotNull PsiElement element) {
+  public @NotNull Language getLanguage() {
+    return PerlLanguage.INSTANCE;
+  }
+
+  // consulo: Consulo IndentStrategy has no indentationStartOffset/indentationEndOffset parameters (unused here)
+  @Override
+  public boolean canIndent(@NotNull PsiElement element) {
     if (element instanceof PerlHeredocElementImpl heredocElement) {
       return heredocElement.isIndentable();
     }

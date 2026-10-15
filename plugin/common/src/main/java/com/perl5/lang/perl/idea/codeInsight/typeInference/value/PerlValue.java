@@ -16,10 +16,9 @@
 
 package com.perl5.lang.perl.idea.codeInsight.typeInference.value;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.NlsSafe;
-import com.intellij.openapi.util.registry.Registry;
-import com.intellij.psi.PsiElement;
+import consulo.logging.Logger;
+import consulo.application.util.registry.Registry;
+import consulo.language.psi.PsiElement;
 import com.perl5.lang.perl.psi.utils.PerlContextType;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -135,7 +134,7 @@ public abstract class PerlValue {
   /**
    * @return presentable text for tooltips
    */
-  public @NotNull @NlsSafe String getPresentableText() {
+  public @NotNull String getPresentableText() {
     return toString();
   }
 

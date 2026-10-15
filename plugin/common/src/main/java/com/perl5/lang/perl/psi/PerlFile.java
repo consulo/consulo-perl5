@@ -16,12 +16,12 @@
 
 package com.perl5.lang.perl.psi;
 
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.util.CachedValueProvider;
-import com.intellij.psi.util.CachedValuesManager;
+import consulo.navigation.ItemPresentation;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.application.util.CachedValueProvider;
+import consulo.language.psi.util.LanguageCachedValueUtil;
 import com.perl5.lang.perl.psi.impl.PerlBuiltInNamespaceDefinition;
 import com.perl5.lang.perl.psi.impl.PerlImplicitNamespaceDefinition;
 import com.perl5.lang.perl.psi.properties.PerlDieScope;
@@ -49,7 +49,7 @@ public interface PerlFile
     if (namespaceDefinition != null) {
       return namespaceDefinition;
     }
-    return CachedValuesManager.getCachedValue(this, () -> CachedValueProvider.Result.create(
+    return LanguageCachedValueUtil.getCachedValue(this, () -> CachedValueProvider.Result.create(
       new PerlImplicitNamespaceDefinition(getManager(), PerlPackageUtilCore.getCanonicalNamespaceName(packageName), this),
       this));
   }

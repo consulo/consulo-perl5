@@ -16,8 +16,8 @@
 
 package com.perl5.lang.pod.parser.psi;
 
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.psi.PsiFile;
+import consulo.navigation.ItemPresentation;
+import consulo.language.psi.PsiFile;
 
 
 public interface PodFile extends PsiFile, PodRenderableElement, PodCompositeElement, ItemPresentation, PodLinkTarget {

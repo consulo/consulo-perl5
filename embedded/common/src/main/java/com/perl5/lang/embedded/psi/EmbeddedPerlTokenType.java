@@ -16,7 +16,7 @@
 
 package com.perl5.lang.embedded.psi;
 
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 import com.perl5.lang.embedded.EmbeddedPerlLanguage;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;

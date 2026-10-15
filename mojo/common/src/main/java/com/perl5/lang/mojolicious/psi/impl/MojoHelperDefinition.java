@@ -1,0 +1,53 @@
+/*
+ * Copyright 2015-2025 Alexandr Evstigneev
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.perl5.lang.mojolicious.psi.impl;
+
+import consulo.language.psi.PsiElement;
+import consulo.language.ast.IElementType;
+import com.perl5.lang.mojolicious.MojoIcons;
+import com.perl5.lang.perl.psi.PerlSubExpr;
+import com.perl5.lang.perl.psi.impl.PerlSubCallElement;
+import com.perl5.lang.perl.psi.light.PerlLightMethodDefinitionElement;
+import com.perl5.lang.perl.psi.stubs.subsdefinitions.PerlSubDefinitionStub;
+import consulo.ui.image.Image;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+public final class MojoHelperDefinition extends PerlLightMethodDefinitionElement<PerlSubCallElement> {
+  public MojoHelperDefinition(@NotNull PerlSubCallElement wrapper,
+                              @NotNull String name,
+                              @NotNull IElementType elementType,
+                              @NotNull PsiElement nameIdentifier,
+                              @Nullable String packageName,
+                              @NotNull PerlSubExpr elementSub) {
+    super(wrapper, name, elementType, nameIdentifier, packageName, elementSub);
+  }
+
+  public MojoHelperDefinition(@NotNull PerlSubCallElement wrapper, @NotNull PerlSubDefinitionStub stub) {
+    super(wrapper, stub);
+  }
+
+  @Override
+  public boolean isStatic() {
+    return true;
+  }
+
+  @Override
+  public @NotNull Image getIcon(int flags) {
+    return MojoIcons.MOJO_FILE;
+  }
+}

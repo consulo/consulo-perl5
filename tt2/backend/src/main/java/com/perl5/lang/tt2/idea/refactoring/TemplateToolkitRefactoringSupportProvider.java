@@ -16,13 +16,19 @@
 
 package com.perl5.lang.tt2.idea.refactoring;
 
-import com.intellij.lang.refactoring.RefactoringSupportProvider;
-import com.intellij.psi.PsiElement;
+import com.perl5.lang.tt2.TemplateToolkitLanguage;
+import consulo.language.Language;
+import consulo.language.editor.refactoring.RefactoringSupportProvider;
+import consulo.language.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
 public class TemplateToolkitRefactoringSupportProvider extends RefactoringSupportProvider {
+  @Override
+  public @NotNull Language getLanguage() {
+    return TemplateToolkitLanguage.INSTANCE;
+  }
 
   @Override
   public boolean isMemberInplaceRenameAvailable(@NotNull PsiElement element, @Nullable PsiElement context) {

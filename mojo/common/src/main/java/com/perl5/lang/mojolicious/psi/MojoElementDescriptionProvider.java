@@ -16,10 +16,10 @@
 
 package com.perl5.lang.mojolicious.psi;
 
-import com.intellij.psi.ElementDescriptionLocation;
-import com.intellij.psi.ElementDescriptionProvider;
-import com.intellij.psi.PsiElement;
-import com.intellij.usageView.UsageViewTypeLocation;
+import consulo.language.psi.ElementDescriptionLocation;
+import consulo.language.psi.ElementDescriptionProvider;
+import consulo.language.psi.PsiElement;
+import consulo.usage.UsageViewTypeLocation;
 import com.perl5.lang.mojolicious.MojoBundle;
 import com.perl5.lang.mojolicious.psi.impl.MojoHelperDefinition;
 import org.jetbrains.annotations.NotNull;

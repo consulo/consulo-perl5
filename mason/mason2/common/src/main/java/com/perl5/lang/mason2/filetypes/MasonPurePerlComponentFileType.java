@@ -16,7 +16,7 @@
 
 package com.perl5.lang.mason2.filetypes;
 
-import com.intellij.lang.Language;
+import consulo.language.Language;
 import com.perl5.lang.mason2.Mason2Bundle;
 import com.perl5.lang.mason2.Mason2Icons;
 import com.perl5.lang.mason2.Mason2Language;
@@ -24,7 +24,8 @@ import com.perl5.lang.perl.fileTypes.PurePerlFileType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
+import consulo.localize.LocalizeValue;
+import consulo.ui.image.Image;
 
 
 public class MasonPurePerlComponentFileType extends PurePerlFileType {
@@ -40,13 +41,13 @@ public class MasonPurePerlComponentFileType extends PurePerlFileType {
   }
 
   @Override
-  public @NotNull String getName() {
+  public @NotNull String getId() {
     return "Mason2 Pure Perl5 Component";
   }
 
   @Override
-  public @NotNull String getDescription() {
-    return Mason2Bundle.message("label.mason2.pure.perl.component");
+  public @NotNull LocalizeValue getDescription() {
+    return LocalizeValue.localizeTODO(Mason2Bundle.message("label.mason2.pure.perl.component"));
   }
 
   @Override
@@ -55,7 +56,7 @@ public class MasonPurePerlComponentFileType extends PurePerlFileType {
   }
 
   @Override
-  public @Nullable Icon getIcon() {
+  public @Nullable Image getIcon() {
     return Mason2Icons.MASON_PURE_PERL_COMPONENT_ICON;
   }
 

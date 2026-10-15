@@ -16,15 +16,17 @@
 
 package com.perl5.lang.perl.idea.project;
 
-import com.intellij.ide.projectView.PresentationData;
-import com.intellij.ide.projectView.TreeStructureProvider;
-import com.intellij.ide.projectView.ViewSettings;
-import com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode;
-import com.intellij.ide.util.treeView.AbstractTreeNode;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ui.configuration.ModuleSourceRootEditHandler;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.ui.ex.tree.PresentationData;
+import consulo.project.ui.view.tree.TreeStructureProvider;
+import consulo.project.ui.view.tree.ViewSettings;
+import consulo.project.ui.view.tree.PsiDirectoryNode;
+import consulo.project.ui.view.tree.AbstractTreeNode;
+import consulo.project.Project;
+import com.perl5.lang.perl.idea.configuration.settings.sdk.PerlSourceRootEditHandler;
+import consulo.annotation.component.ExtensionImpl;
+import jakarta.inject.Inject;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.util.collection.ContainerUtil;
 import com.perl5.lang.perl.idea.modules.PerlSourceRootType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
@@ -32,17 +34,20 @@ import org.jetbrains.annotations.Unmodifiable;
 import java.util.Collection;
 import java.util.Map;
 
+@ExtensionImpl
 public class PerlTreeStructureProvider implements TreeStructureProvider {
   private final @NotNull PerlProjectManager myProjectManager;
 
+  @Inject
   public PerlTreeStructureProvider(Project project) {
     myProjectManager = PerlProjectManager.getInstance(project);
   }
 
   @Override
-  public @Unmodifiable @NotNull Collection<AbstractTreeNode<?>> modify(@NotNull AbstractTreeNode<?> parent,
-                                                                       @NotNull Collection<AbstractTreeNode<?>> children,
-                                                                       ViewSettings settings) {
+  @SuppressWarnings("rawtypes")
+  public @Unmodifiable @NotNull Collection<AbstractTreeNode> modify(@NotNull AbstractTreeNode parent,
+                                                                    @NotNull Collection<AbstractTreeNode> children,
+                                                                    ViewSettings settings) {
     if (!myProjectManager.isPerlEnabled()) {
       return children;
     }
@@ -62,7 +67,7 @@ public class PerlTreeStructureProvider implements TreeStructureProvider {
       VirtualFile virtualFile = directoryNode.getVirtualFile();
       if (virtualFile != null && roots.containsKey(virtualFile)) {
         PerlSourceRootType rootType = roots.get(virtualFile);
-        ModuleSourceRootEditHandler<?> handler = rootType.getEditHandler();
+        PerlSourceRootEditHandler handler = rootType.getEditHandler();
         node = new PsiDirectoryNode(node.getProject(), directoryNode.getValue(), directoryNode.getSettings()) {
           @Override
           protected void updateImpl(@NotNull PresentationData data) {

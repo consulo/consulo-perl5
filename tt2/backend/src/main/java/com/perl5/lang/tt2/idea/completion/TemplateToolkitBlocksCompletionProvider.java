@@ -16,24 +16,25 @@
 
 package com.perl5.lang.tt2.idea.completion;
 
-import com.intellij.codeInsight.completion.CompletionParameters;
-import com.intellij.codeInsight.completion.CompletionProvider;
-import com.intellij.codeInsight.completion.CompletionResultSet;
-import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.util.ProcessingContext;
+import consulo.language.editor.completion.CompletionParameters;
+import consulo.language.editor.completion.CompletionProvider;
+import consulo.language.editor.completion.CompletionResultSet;
+import consulo.language.editor.completion.lookup.LookupElementBuilder;
+import consulo.language.icon.IconDescriptorUpdaters;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.psi.PsiUtilCore;
+import consulo.language.util.ProcessingContext;
 import com.perl5.lang.tt2.psi.TemplateToolkitNamedBlock;
 import com.perl5.lang.tt2.psi.TemplateToolkitString;
 import com.perl5.lang.tt2.psi.mixins.TemplateToolkitStringMixin;
 import org.jetbrains.annotations.NotNull;
 
 
-public class TemplateToolkitBlocksCompletionProvider extends CompletionProvider<CompletionParameters> {
+public class TemplateToolkitBlocksCompletionProvider implements CompletionProvider {
   @Override
-  protected void addCompletions(@NotNull CompletionParameters parameters,
+  public void addCompletions(@NotNull CompletionParameters parameters,
                                 @NotNull ProcessingContext context,
                                 final @NotNull CompletionResultSet result) {
     PsiElement element = parameters.getOriginalPosition();
@@ -59,7 +60,7 @@ public class TemplateToolkitBlocksCompletionProvider extends CompletionProvider<
           result.addElement(
             LookupElementBuilder.create(element1, blockName)
               .withTypeText("BLOCK", true)
-              .withIcon(element1.getIcon(0))
+              .withIcon(IconDescriptorUpdaters.getIcon(element1, 0))
           );
         }
       }

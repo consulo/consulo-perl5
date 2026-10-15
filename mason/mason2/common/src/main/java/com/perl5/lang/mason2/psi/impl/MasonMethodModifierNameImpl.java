@@ -16,7 +16,7 @@
 
 package com.perl5.lang.mason2.psi.impl;
 
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 import com.perl5.lang.mason2.psi.MasonMethodModifierName;
 import com.perl5.lang.perl.psi.impl.PerlSubNameElementImpl;
 import org.jetbrains.annotations.NotNull;

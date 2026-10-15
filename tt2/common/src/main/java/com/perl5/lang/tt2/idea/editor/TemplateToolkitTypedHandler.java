@@ -16,16 +16,16 @@
 
 package com.perl5.lang.tt2.idea.editor;
 
-import com.intellij.codeInsight.editorActions.TypedHandlerDelegate;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.EditorModificationUtilEx;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.editor.action.TypedHandlerDelegate;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.util.EditorModificationUtil;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.project.Project;
+import consulo.util.lang.StringUtil;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.ast.IElementType;
 import com.perl5.lang.tt2.TemplateToolkitFileViewProvider;
 import com.perl5.lang.tt2.TemplateToolkitLanguage;
 import com.perl5.lang.tt2.idea.settings.TemplateToolkitSettings;
@@ -52,8 +52,8 @@ public class TemplateToolkitTypedHandler extends TypedHandlerDelegate {
       return null;
     }
 
-    TemplateToolkitSettings settings = TemplateToolkitSettings.getInstance(project);
-    String openTag = settings.START_TAG;
+    TemplateToolkitSettings settings = TemplateToolkitSettings.forPsiElement(file);
+    String openTag = settings.getStartTag();
     if (StringUtil.isEmpty(openTag) || c != openTag.charAt(openTag.length() - 1)) {
       return null;
     }
@@ -83,7 +83,7 @@ public class TemplateToolkitTypedHandler extends TypedHandlerDelegate {
     }
 
     if (StringUtil.equals(file.getText().subSequence(startOffset, offset), openTagPrefix)) {
-      EditorModificationUtilEx.insertStringAtCaret(editor, c + "  " + settings.END_TAG, false, true, 2);
+      EditorModificationUtil.insertStringAtCaret(editor, c + "  " + settings.getEndTag(), false, true, 2);
       return Result.STOP;
     }
     return null;

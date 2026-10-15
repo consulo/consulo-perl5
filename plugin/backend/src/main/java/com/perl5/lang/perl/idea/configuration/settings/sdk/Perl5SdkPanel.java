@@ -16,19 +16,15 @@
 
 package com.perl5.lang.perl.idea.configuration.settings.sdk;
 
-import com.intellij.icons.AllIcons;
-import com.intellij.ide.HelpTooltip;
-import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl;
-import com.intellij.openapi.actionSystem.toolbarLayout.ToolbarLayoutStrategy;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.ui.ComboBox;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.ui.popup.ListPopup;
-import com.intellij.openapi.util.NlsContexts;
-import com.intellij.ui.awt.RelativePoint;
-import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.AllIcons;
+import consulo.logging.Logger;
+import consulo.ui.ex.awt.ComboBox;
+import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.ui.ex.popup.ListPopup;
+import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.UIUtil;
+import com.perl5.PerlBundle;
 import com.perl5.lang.perl.idea.actions.PerlDumbAwareAction;
 import com.perl5.lang.perl.idea.configuration.settings.sdk.wrappers.Perl5SdkWrapper;
 import org.jetbrains.annotations.Nls;
@@ -36,7 +32,14 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.ActionPlaces;
+import consulo.ui.ex.action.ActionToolbar;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.action.Presentation;
 
+// TODO consulo: Swing GUI designer form (Perl5SdkPanel.form) kept as is, to be rewritten with uni UI
 public class Perl5SdkPanel {
   private static final Logger LOG = Logger.getInstance(Perl5SdkPanel.class);
   private @NotNull ComboBox<Perl5SdkWrapper> mySdkComboBox;
@@ -44,6 +47,22 @@ public class Perl5SdkPanel {
   private final @NotNull DefaultActionGroup myActionGroup = new DefaultActionGroup();
   private @NotNull JPanel myToolBar;
   private @NotNull JLabel myLabel;
+
+  public Perl5SdkPanel() {
+    //noinspection ConstantValue
+    if (myMainPanel == null) {
+      // TODO consulo: GUI designer form is not instrumented in the Consulo build, same layout as Perl5SdkPanel.form is created in code
+      createUIComponents();
+      myLabel = new JLabel(PerlBundle.message("perl.config.interpreter.label"));
+      mySdkComboBox = new ComboBox<>();
+      myMainPanel = new JPanel(new BorderLayout(5, 0));
+      myMainPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 34));
+      myMainPanel.add(myLabel, BorderLayout.WEST);
+      myMainPanel.add(mySdkComboBox, BorderLayout.CENTER);
+      myToolBar.setBorder(JBUI.Borders.emptyTop(3));
+      myMainPanel.add(myToolBar, BorderLayout.EAST);
+    }
+  }
 
   public @NotNull ComboBox<Perl5SdkWrapper> getSdkComboBox() {
     return mySdkComboBox;
@@ -63,11 +82,11 @@ public class Perl5SdkPanel {
   private void createUIComponents() {
     DefaultActionGroup toolbarActionGroup = new DefaultActionGroup();
 
-    ActionToolbarImpl toolbar =
-      (ActionToolbarImpl)ActionManager.getInstance().createActionToolbar(ActionPlaces.NAVIGATION_BAR_TOOLBAR, toolbarActionGroup, true);
+    ActionToolbar toolbar =
+      ActionManager.getInstance().createActionToolbar(ActionPlaces.NAVIGATION_BAR_TOOLBAR, toolbarActionGroup, true);
     toolbar.setTargetComponent(null);
-    toolbar.setReservePlaceAutoPopupIcon(false);
-    toolbar.setLayoutStrategy(ToolbarLayoutStrategy.NOWRAP_STRATEGY);
+    // TODO consulo: ActionToolbarImpl#setReservePlaceAutoPopupIcon(false) is not an API in Consulo
+    toolbar.setLayoutPolicy(ActionToolbar.NOWRAP_LAYOUT_POLICY);
     toolbar.getComponent().setBorder(JBUI.Borders.empty());
 
     toolbarActionGroup.add(new PerlDumbAwareAction() {
@@ -76,7 +95,7 @@ public class Perl5SdkPanel {
         Presentation p = e.getPresentation();
         p.setIcon(AllIcons.General.GearPlain);
         p.setVisible(true);
-        p.setEnabled(toolbar.isEnabled());
+        p.setEnabled(toolbar.getComponent().isEnabled());
       }
 
       @Override
@@ -88,21 +107,22 @@ public class Perl5SdkPanel {
         if (inputEvent == null) {
           LOG.debug("No input event in action event");
         }
-        else {
-          HelpTooltip.setMasterPopup(inputEvent.getComponent(), actionGroupPopup);
-        }
-        actionGroupPopup.show(new RelativePoint(toolbar, getPopupPoint()));
+        // TODO consulo: HelpTooltip.setMasterPopup(inputEvent.getComponent(), actionGroupPopup) has no Consulo counterpart
+        actionGroupPopup.show(new RelativePoint(toolbar.getComponent(), getPopupPoint()));
       }
 
       /**
-       * @implNote this is a copypaste from {@link com.intellij.openapi.project.DumbAwareAction#getPopupPoint} and seems there is no replacement.
+       * @implNote this is a copypaste from {@link consulo.ui.ex.action.DumbAwareAction#getPopupPoint} and seems there is no replacement.
        */
       private Point getPopupPoint() {
-        @SuppressWarnings("removal") int dH = UIUtil.isUnderWin10LookAndFeel() ? JBUI.scale(1) : 0;
-        return new Point(JBUI.scale(2), toolbar.getHeight() - dH);
+        // TODO consulo: UIUtil.isUnderWin10LookAndFeel() is missing in Consulo
+        int dH = 0;
+        return new Point(JBUI.scale(2), toolbar.getComponent().getHeight() - dH);
       }
     });
-    myToolBar = toolbar;
+    // upstream: ActionToolbarImpl is a JPanel itself
+    myToolBar = new JPanel(new BorderLayout());
+    myToolBar.add(toolbar.getComponent(), BorderLayout.CENTER);
   }
 
   public void setEnabled(boolean isEnabled) {
@@ -111,7 +131,7 @@ public class Perl5SdkPanel {
     myToolBar.setEnabled(isEnabled);
   }
 
-  public void setLabelText(@Nls @NlsContexts.Label String text) {
+  public void setLabelText(@Nls String text) {
     myLabel.setText(text);
   }
 }

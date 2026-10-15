@@ -16,11 +16,11 @@
 
 package com.perl5.lang.htmlmason.parser.psi.references;
 
-import com.intellij.psi.ElementManipulators;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.PsiReferenceProvider;
-import com.intellij.util.ProcessingContext;
+import consulo.language.psi.ElementManipulators;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiReference;
+import consulo.language.psi.PsiReferenceProvider;
+import consulo.language.util.ProcessingContext;
 import com.perl5.lang.perl.psi.PerlString;
 import org.jetbrains.annotations.NotNull;
 

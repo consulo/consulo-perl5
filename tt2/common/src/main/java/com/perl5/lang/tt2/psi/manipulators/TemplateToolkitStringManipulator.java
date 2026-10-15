@@ -16,18 +16,24 @@
 
 package com.perl5.lang.tt2.psi.manipulators;
 
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.AbstractElementManipulator;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.util.IncorrectOperationException;
+import consulo.document.Document;
+import consulo.document.util.TextRange;
+import consulo.language.psi.AbstractElementManipulator;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiUtilCore;
+import consulo.language.util.IncorrectOperationException;
 import com.perl5.lang.perl.lexer.PerlTokenSets;
 import com.perl5.lang.tt2.psi.TemplateToolkitString;
 import org.jetbrains.annotations.NotNull;
 
 
 public class TemplateToolkitStringManipulator extends AbstractElementManipulator<TemplateToolkitString> {
+  // consulo: Consulo keys ElementManipulator by element class (upstream xml forClass)
+  @Override
+  public @NotNull Class<TemplateToolkitString> getElementClass() {
+    return TemplateToolkitString.class;
+  }
+
   @SuppressWarnings("Duplicates")
   @Override
   public TemplateToolkitString handleContentChange(@NotNull TemplateToolkitString element, @NotNull TextRange range, String newContent)

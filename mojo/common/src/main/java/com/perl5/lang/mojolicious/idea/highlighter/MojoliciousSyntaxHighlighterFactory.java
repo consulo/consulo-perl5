@@ -16,15 +16,24 @@
 
 package com.perl5.lang.mojolicious.idea.highlighter;
 
-import com.intellij.openapi.fileTypes.SyntaxHighlighter;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import com.perl5.lang.mojolicious.MojoliciousLanguage;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.Language;
+import consulo.language.editor.highlight.SyntaxHighlighter;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
 import com.perl5.lang.perl.idea.highlighter.PerlSyntaxHighlighterFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
+@ExtensionImpl
 public class MojoliciousSyntaxHighlighterFactory extends PerlSyntaxHighlighterFactory {
+  @Override
+  public @NotNull Language getLanguage() {
+    return MojoliciousLanguage.INSTANCE;
+  }
+
   @Override
   public @NotNull SyntaxHighlighter getSyntaxHighlighter(@Nullable Project project, @Nullable VirtualFile virtualFile) {
     return new MojoliciousSyntaxHighlighter(project);

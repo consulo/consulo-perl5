@@ -16,8 +16,8 @@
 
 package com.perl5.lang.mason2.psi.impl;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.IElementType;
 import com.perl5.lang.htmlmason.MasonCoreUtilCore;
 import com.perl5.lang.mason2.idea.configuration.MasonSettings;
 import com.perl5.lang.mason2.psi.MasonNamespaceDefinition;
@@ -33,7 +33,10 @@ import java.util.List;
 
 public class MasonNamespaceDefinitionImpl extends PsiPerlNamespaceDefinitionImpl implements MasonNamespaceDefinition {
   protected List<PerlVariableDeclarationElement> myImplicitVariables = null;
-  protected int mySettingsChangeCounter;
+  /**
+   * consulo: settings the implicit variables were built for, upstream uses the change counter of the project settings
+   */
+  protected MasonSettings myImplicitVariablesSettings;
 
   public MasonNamespaceDefinitionImpl(ASTNode node) {
     super(node);
@@ -47,7 +50,7 @@ public class MasonNamespaceDefinitionImpl extends PsiPerlNamespaceDefinitionImpl
     List<PerlVariableDeclarationElement> newImplicitVariables = new ArrayList<>();
 
     if (isValid()) {
-      MasonCoreUtilCore.fillVariablesList(this, newImplicitVariables, masonSettings.globalVariables);
+      MasonCoreUtilCore.fillVariablesList(this, newImplicitVariables, masonSettings.getGlobalVariables());
     }
     return newImplicitVariables;
   }
@@ -79,10 +82,10 @@ public class MasonNamespaceDefinitionImpl extends PsiPerlNamespaceDefinitionImpl
 
   @Override
   public @NotNull List<PerlVariableDeclarationElement> getImplicitVariables() {
-    MasonSettings settings = MasonSettings.getInstance(getProject());
-    if (myImplicitVariables == null || mySettingsChangeCounter != settings.getChangeCounter()) {
+    MasonSettings settings = MasonSettings.forPsiElement(this);
+    if (myImplicitVariables == null || myImplicitVariablesSettings != settings) {
       myImplicitVariables = buildImplicitVariables(settings);
-      mySettingsChangeCounter = settings.getChangeCounter();
+      myImplicitVariablesSettings = settings;
     }
     return myImplicitVariables;
   }

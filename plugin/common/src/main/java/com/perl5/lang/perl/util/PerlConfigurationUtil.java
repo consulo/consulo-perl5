@@ -16,40 +16,72 @@
 
 package com.perl5.lang.perl.util;
 
-import com.intellij.openapi.fileTypes.*;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.ui.popup.PopupStep;
-import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
-import com.intellij.ui.AnActionButton;
-import com.intellij.ui.AnActionButtonRunnable;
-import com.intellij.ui.CollectionListModel;
-import com.intellij.ui.ToolbarDecorator;
-import com.intellij.ui.components.JBList;
-import com.intellij.util.ui.JBUI;
+
+import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.ui.ex.popup.PopupStep;
+import consulo.ui.ex.popup.BaseListPopupStep;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.awt.AnActionButton;
+import consulo.ui.ex.awt.CollectionListModel;
+import consulo.ui.ex.awt.ToolbarDecorator;
+import consulo.ui.ex.awt.JBList;
+import consulo.ui.ex.awt.JBUI;
 import com.perl5.PerlBundle;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
+import java.util.function.BiConsumer;
+import consulo.virtualFileSystem.fileType.matcher.ExtensionFileNameMatcher;
+import consulo.virtualFileSystem.fileType.FileNameMatcher;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.language.file.FileTypeManager;
+import consulo.language.file.LanguageFileType;
 
 
 public class PerlConfigurationUtil {
   public static final int WIDGET_HEIGHT = 90;
+
+  /**
+   * consulo: shared by the per-module Template Toolkit and HTML::Mason settings, upstream computes the matchers in each settings service
+   *
+   * @param substitutedExtensions presentable strings of the matchers, as shown by {@link #createSubstituteExtensionPanel}
+   * @return file name matchers of the language file types with the {@code substitutedExtensions} presentable strings
+   */
+  public static @NotNull List<FileNameMatcher> getSubstitutedExtensionsMatchers(@NotNull Collection<String> substitutedExtensions) {
+    List<FileNameMatcher> result = new ArrayList<>();
+    if (substitutedExtensions.isEmpty()) {
+      return result;
+    }
+    FileTypeManager fileTypeManager = FileTypeManager.getInstance();
+    for (FileType fileType : fileTypeManager.getRegisteredFileTypes()) {
+      if (fileType instanceof LanguageFileType) {
+        for (FileNameMatcher matcher : fileTypeManager.getAssociations(fileType)) {
+          if (substitutedExtensions.contains(matcher.getPresentableString())) {
+            result.add(matcher);
+          }
+        }
+      }
+    }
+    return result;
+  }
 
   public static JPanel createSubstituteExtensionPanel(final @NotNull CollectionListModel<String> substitutedExtensionsModel,
                                                       final @NotNull JBList<String> substitutedExtensionsList
   ) {
     return ToolbarDecorator
       .createDecorator(substitutedExtensionsList)
-      .setAddAction(new AnActionButtonRunnable() {
+      // consulo: AnActionButton#getPreferredPopupPoint() does not exist, popup is shown under the action event source instead
+      .setAddAction(new BiConsumer<AnActionButton, AnActionEvent>() {
         @Override
-        public void run(AnActionButton anActionButton) {
+        public void accept(AnActionButton anActionButton, AnActionEvent event) {
           FileTypeManager fileTypeManager = FileTypeManager.getInstance();
           final List<String> currentItems = substitutedExtensionsModel.getItems();
           List<FileNameMatcher> possibleItems = new ArrayList<>();
-          List<Icon> itemsIcons = new ArrayList<>();
+          List<Image> itemsIcons = new ArrayList<>();
 
           for (FileType fileType : fileTypeManager.getRegisteredFileTypes()) {
             if (fileType instanceof LanguageFileType) {
@@ -77,7 +109,7 @@ public class PerlConfigurationUtil {
 
           JBPopupFactory.getInstance()
             .createListPopup(fileNameMatcherBaseListPopupStep)
-            .show(Objects.requireNonNull(anActionButton.getPreferredPopupPoint()));
+            .showUnderneathOf(event);
         }
       })
       .disableDownAction()

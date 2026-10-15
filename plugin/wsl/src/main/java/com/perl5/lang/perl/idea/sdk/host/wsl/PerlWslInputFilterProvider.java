@@ -16,11 +16,11 @@
 
 package com.perl5.lang.perl.idea.sdk.host.wsl;
 
-import com.intellij.execution.filters.ConsoleInputFilterProvider;
-import com.intellij.execution.filters.InputFilter;
-import com.intellij.execution.ui.ConsoleViewContentType;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Pair;
+import consulo.execution.ui.console.ConsoleInputFilterProvider;
+import consulo.execution.ui.console.InputFilter;
+import consulo.execution.ui.console.ConsoleViewContentType;
+import consulo.project.Project;
+import consulo.util.lang.Pair;
 import com.perl5.lang.perl.idea.project.PerlProjectManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

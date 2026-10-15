@@ -16,15 +16,22 @@
 
 package com.perl5.lang.perl.idea.formatter;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
-import com.intellij.psi.formatter.AbstractWhiteSpaceFormattingStrategy;
+import consulo.language.Language;
+import com.perl5.lang.perl.PerlLanguage;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiElement;
+import consulo.language.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.AbstractWhiteSpaceFormattingStrategy;
 import com.perl5.lang.perl.psi.impl.PerlHeredocElementImpl;
 import org.jetbrains.annotations.NotNull;
 
 
 public class PerlWhiteSpaceFormattingStrategy extends AbstractWhiteSpaceFormattingStrategy {
+  @Override
+  public @NotNull Language getLanguage() {
+    return PerlLanguage.INSTANCE;
+  }
+
 
   @Override
   public @NotNull CharSequence adjustWhiteSpaceIfNecessary(@NotNull CharSequence whiteSpaceText,

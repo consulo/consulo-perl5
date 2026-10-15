@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.extensions.packageprocessor;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.perl5.lang.perl.psi.impl.PerlUseStatementElement;
 import com.perl5.lang.perl.util.PerlPackageService;
 import com.perl5.lang.perl.util.PerlTimeLogger;

@@ -16,13 +16,15 @@
 
 package com.perl5.lang.pod.idea.editor;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.folding.FoldingDescriptor;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.templateLanguages.OuterLanguageElementImpl;
+import consulo.language.Language;
+import com.perl5.lang.pod.PodLanguage;
+import consulo.language.ast.ASTNode;
+import consulo.language.editor.folding.FoldingDescriptor;
+import consulo.document.Document;
+import consulo.application.dumb.DumbAware;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.impl.psi.template.OuterLanguageElementImpl;
 import com.perl5.lang.perl.idea.folding.PerlFoldingBuilderBase;
 import com.perl5.lang.pod.parser.psi.PodRecursiveVisitor;
 import com.perl5.lang.pod.parser.psi.PodTitledSection;
@@ -35,17 +37,22 @@ import java.util.List;
 
 public class PodFoldingBuilder extends PerlFoldingBuilderBase implements DumbAware {
   @Override
+  public @NotNull Language getLanguage() {
+    return PodLanguage.INSTANCE;
+  }
+
+  @Override
   public FoldingDescriptor @NotNull [] buildFoldRegions(@NotNull PsiElement root, @NotNull Document document, boolean quick) {
     // @todo handle this
     if (root instanceof OuterLanguageElementImpl) {
-      return FoldingDescriptor.EMPTY_ARRAY;
+      return FoldingDescriptor.EMPTY;
     }
 
     FoldingRegionsCollector collector = new FoldingRegionsCollector(document);
     root.accept(collector);
     List<FoldingDescriptor> descriptors = collector.getDescriptors();
 
-    return descriptors.toArray(FoldingDescriptor.EMPTY_ARRAY);
+    return descriptors.toArray(FoldingDescriptor.EMPTY);
   }
 
   @Override

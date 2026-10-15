@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.debugger.protocol;
 
-import com.intellij.xdebugger.XDebugSession;
-import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
+import consulo.execution.debug.XDebugSession;
+import consulo.execution.debug.breakpoint.XLineBreakpoint;
 import com.perl5.lang.perl.debugger.PerlDebugUtil;
 import org.jetbrains.annotations.NotNull;
 

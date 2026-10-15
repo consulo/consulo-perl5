@@ -16,14 +16,18 @@
 
 package com.perl5.lang.perl.idea.configuration.settings.sdk;
 
-import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.options.UnnamedConfigurable;
-import com.intellij.openapi.project.Project;
-import com.intellij.ui.components.JBScrollPane;
-import com.intellij.ui.components.JBTabbedPane;
-import com.intellij.util.ui.JBEmptyBorder;
-import com.intellij.util.ui.JBUI;
+import consulo.configurable.Configurable;
+import consulo.configurable.ConfigurationException;
+import consulo.configurable.UnnamedConfigurable;
+import consulo.disposer.Disposable;
+import consulo.project.Project;
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.JBScrollPane;
+import consulo.ui.ex.awt.JBTabbedPane;
+import consulo.ui.ex.awt.JBEmptyBorder;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -43,26 +47,27 @@ public class Perl5ProjectConfigurableWrapper implements UnnamedConfigurable {
     assert !myConfigurables.isEmpty();
   }
 
+  @RequiredUIAccess
   @Override
-  public @Nullable JComponent createComponent() {
+  public @Nullable Component createUIComponent(Disposable parentDisposable) {
     if (myConfigurables.size() == 1) {
-      return myConfigurables.getFirst().createComponent();
+      return myConfigurables.getFirst().createUIComponent(parentDisposable);
     }
 
     JBTabbedPane tabbedPane = new JBTabbedPane();
     tabbedPane.setTabComponentInsets(JBUI.emptyInsets());
 
     myConfigurables.forEach(configurable -> {
-      JComponent configurableComponent = configurable.createComponent();
+      JComponent configurableComponent = (JComponent) TargetAWT.to(configurable.createUIComponent(parentDisposable));
 
       JBScrollPane scrollPane = new JBScrollPane(configurableComponent,
                                                  ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
                                                  ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
       scrollPane.setBorder(new JBEmptyBorder(JBUI.emptyInsets()));
 
-      tabbedPane.add(configurable.getDisplayName(), scrollPane);
+      tabbedPane.add(configurable.getDisplayName().get(), scrollPane);
     });
-    return tabbedPane;
+    return TargetAWT.wrap(tabbedPane);
   }
 
   @Override

@@ -16,8 +16,8 @@
 
 package com.perl5.lang.htmlmason;
 
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiElement;
 import com.perl5.lang.mason2.idea.configuration.VariableDescription;
 import com.perl5.lang.perl.psi.PerlVariableDeclarationElement;
 import com.perl5.lang.perl.psi.impl.PerlImplicitVariableDeclaration;

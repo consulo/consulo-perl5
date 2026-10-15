@@ -16,13 +16,13 @@
 
 package com.perl5.lang.pod.idea.codeInsight.navigation;
 
-import com.intellij.codeInsight.TargetElementUtil;
-import com.intellij.codeInsight.navigation.actions.GotoDeclarationHandler;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.ResolveResult;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.language.editor.TargetElementUtil;
+import consulo.language.editor.navigation.GotoDeclarationHandler;
+import consulo.codeEditor.Editor;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiReference;
+import consulo.language.psi.ResolveResult;
+import consulo.util.collection.ContainerUtil;
 import com.perl5.lang.pod.PodLanguage;
 import com.perl5.lang.pod.parser.psi.references.PodLinkToSectionReference;
 import org.jetbrains.annotations.Nullable;

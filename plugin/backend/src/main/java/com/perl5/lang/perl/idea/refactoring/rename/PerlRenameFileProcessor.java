@@ -16,19 +16,19 @@
 
 package com.perl5.lang.perl.idea.refactoring.rename;
 
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.refactoring.RefactoringFactory;
-import com.intellij.refactoring.RenameRefactoring;
-import com.intellij.refactoring.listeners.RefactoringElementListener;
-import com.intellij.refactoring.rename.RenamePsiFileProcessor;
+import consulo.application.ApplicationManager;
+import consulo.project.Project;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.editor.refactoring.RefactoringFactory;
+import consulo.language.editor.refactoring.RenameRefactoring;
+import consulo.language.editor.refactoring.event.RefactoringElementListener;
+import consulo.language.editor.refactoring.rename.RenamePsiFileProcessorBase;
 import com.perl5.lang.perl.fileTypes.PerlFileTypePackage;
 import com.perl5.lang.perl.psi.PerlNamespaceDefinitionElement;
 import com.perl5.lang.perl.psi.impl.PerlFileImpl;
@@ -37,7 +37,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
-public class PerlRenameFileProcessor extends RenamePsiFileProcessor {
+public class PerlRenameFileProcessor extends RenamePsiFileProcessorBase {
   @Override
   public boolean canProcessElement(@NotNull PsiElement element) {
     return element instanceof PerlFileImpl perlFile && perlFile.getVirtualFile().getFileType() == PerlFileTypePackage.INSTANCE;

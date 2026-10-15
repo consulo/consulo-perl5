@@ -16,11 +16,11 @@
 
 package com.perl5.lang.perl.parser.elementTypes;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.Language;
-import com.intellij.lexer.Lexer;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.ASTNode;
+import consulo.language.Language;
+import consulo.language.lexer.Lexer;
+import consulo.project.Project;
+import consulo.language.ast.IElementType;
 import com.perl5.lang.perl.lexer.PerlLexer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

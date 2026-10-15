@@ -16,13 +16,14 @@
 
 package com.perl5.lang.pod.idea.surroundWith;
 
-import com.intellij.lang.surroundWith.SurroundDescriptor;
-import com.intellij.lang.surroundWith.Surrounder;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.tree.TokenSet;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.Language;
+import consulo.language.editor.surroundWith.SurroundDescriptor;
+import consulo.language.editor.surroundWith.Surrounder;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.ast.TokenSet;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.psi.PsiUtilCore;
 import com.perl5.lang.pod.PodLanguage;
 import com.perl5.lang.pod.lexer.PodTokenSets;
 import org.jetbrains.annotations.NotNull;
@@ -86,5 +87,10 @@ public class PodSurroundDescriptor implements SurroundDescriptor {
   @Override
   public boolean isExclusive() {
     return false;
+  }
+
+  @Override
+  public @NotNull Language getLanguage() {
+    return PodLanguage.INSTANCE;
   }
 }

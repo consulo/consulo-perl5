@@ -16,10 +16,10 @@
 
 package com.perl5.lang.htmlmason.idea.livetemplates;
 
-import com.intellij.lang.Language;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.Language;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiUtilCore;
 import com.perl5.lang.htmlmason.HTMLMasonLanguage;
 import com.perl5.lang.htmlmason.elementType.HTMLMasonElementTypes;
 import com.perl5.lang.htmlmason.parser.psi.impl.HTMLMasonFileImpl;

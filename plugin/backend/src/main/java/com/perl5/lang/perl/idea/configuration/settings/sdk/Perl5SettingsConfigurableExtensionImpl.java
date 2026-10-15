@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.idea.configuration.settings.sdk;
 
-import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.project.Project;
+import consulo.configurable.Configurable;
+import consulo.project.Project;
 import com.perl5.lang.perl.idea.modules.PerlLibrarySourceRootType;
 import com.perl5.lang.perl.idea.modules.PerlSourceRootType;
 import org.jetbrains.annotations.NotNull;

@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.idea.manipulators;
 
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.AbstractElementManipulator;
-import com.intellij.util.IncorrectOperationException;
+import consulo.document.util.TextRange;
+import consulo.language.psi.AbstractElementManipulator;
+import consulo.language.util.IncorrectOperationException;
 import com.perl5.lang.perl.psi.impl.PerlStringContentElementImpl;
 import org.jetbrains.annotations.NotNull;
 
@@ -29,5 +29,11 @@ public class PerlStringContentManipulator extends AbstractElementManipulator<Per
                                                           @NotNull TextRange range,
                                                           String newContent) throws IncorrectOperationException {
     return (PerlStringContentElementImpl)element.replaceWithText(newContent);
+  }
+
+  // consulo: upstream registers this manipulator for PerlStringContentElement, PerlStringContentElementImpl is its only implementation
+  @Override
+  public @NotNull Class<PerlStringContentElementImpl> getElementClass() {
+    return PerlStringContentElementImpl.class;
   }
 }

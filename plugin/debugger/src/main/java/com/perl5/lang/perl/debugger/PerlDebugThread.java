@@ -17,28 +17,27 @@
 package com.perl5.lang.perl.debugger;
 
 import com.google.gson.*;
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.ExecutionResult;
-import com.intellij.execution.actions.StopProcessAction;
-import com.intellij.execution.ui.ConsoleView;
-import com.intellij.execution.ui.ConsoleViewContentType;
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationType;
-import com.intellij.notification.Notifications;
-import com.intellij.openapi.application.ReadAction;
-import com.intellij.openapi.application.WriteAction;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.TimeoutUtil;
-import com.intellij.util.concurrency.Semaphore;
-import com.intellij.xdebugger.XDebugSession;
-import com.intellij.xdebugger.impl.XDebugSessionImpl;
+import consulo.process.ExecutionException;
+import consulo.execution.ExecutionResult;
+import consulo.process.ProcessHandlerStopper;
+import consulo.execution.ui.console.ConsoleView;
+import consulo.execution.ui.console.ConsoleViewContentType;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.notification.Notifications;
+import consulo.application.ReadAction;
+import consulo.application.WriteAction;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.util.lang.TimeoutUtil;
+import consulo.application.util.Semaphore;
+import consulo.execution.debug.XDebugSession;
 import com.perl5.lang.perl.debugger.breakpoints.PerlLineBreakPointDescriptor;
 import com.perl5.lang.perl.debugger.protocol.*;
 import com.perl5.lang.perl.debugger.run.run.debugger.PerlDebugProfileStateBase;
 import com.perl5.lang.perl.debugger.run.run.debugger.remote.PerlRemoteDebuggingConfiguration;
-import com.perl5.lang.perl.debugger.ui.PerlScriptsPanel;
+import com.perl5.lang.perl.debugger.ui.PerlUnifiedScriptsPanel; // consulo: unified replacement of the Swing PerlScriptsPanel (not available in web)
 import com.perl5.lang.perl.idea.project.PerlProjectManager;
 import com.perl5.lang.perl.idea.run.debugger.PerlDebugOptions;
 import com.perl5.lang.perl.util.PerlRunUtil;
@@ -77,8 +76,8 @@ public class PerlDebugThread extends Thread {
   private final ExecutionResult myExecutionResult;
   private final Gson myGson;
   private final PerlDebugProfileStateBase myDebugProfileState;
-  private final PerlScriptsPanel myScriptListPanel;
-  private final PerlScriptsPanel myEvalsListPanel;
+  private final PerlUnifiedScriptsPanel myScriptListPanel;
+  private final PerlUnifiedScriptsPanel myEvalsListPanel;
   private final XDebugSession mySession;
   private Socket mySocket;
   private ServerSocket myServerSocket;
@@ -100,8 +99,8 @@ public class PerlDebugThread extends Thread {
     myGson = createGson();
     myDebugProfileState = state;
     myExecutionResult = executionResult;
-    myScriptListPanel = new PerlScriptsPanel(session.getProject(), this);
-    myEvalsListPanel = new PerlScriptsPanel(session.getProject(), this);
+    myScriptListPanel = new PerlUnifiedScriptsPanel(session.getProject(), this);
+    myEvalsListPanel = new PerlUnifiedScriptsPanel(session.getProject(), this);
     myPerlDebugOptions = state.getDebugOptions();
   }
 
@@ -230,8 +229,11 @@ public class PerlDebugThread extends Thread {
         print("perl.debug.reconnecting");
         closeStreamsAndSockets();
         isReady = false;
-        ((XDebugSessionImpl)mySession).reset();
-        ReadAction.runBlocking(mySession::initBreakpoints);
+        // TODO consulo: IntelliJ XDebugSessionImpl#reset also unsets paused state and clears paused data,
+        //  Consulo XDebugSession API exposes only breakpoints reset and views rebuild
+        mySession.resetBreakpoints();
+        mySession.rebuildViews();
+        ReadAction.run(mySession::initBreakpoints);
       }
     }
     finally {
@@ -257,8 +259,9 @@ public class PerlDebugThread extends Thread {
             var errorMessage = PerlDebuggerBundle.message(
               "perl.debugger.incorrect.version.message", DEBUG_PACKAGE, MODULE_VERSION_PREFIX,
               debuggingEventReady.version);
+            // consulo: Consulo requires a registered NotificationGroup instead of the group id, see PerlDebuggerNotificationGroupContributor
             Notification notification = new Notification(
-              PerlDebugProcess.PERL_DEBUGGER_NOTIFICATION_GROUP_ID,
+              PerlDebuggerNotificationGroupContributor.PERL_DEBUGGER,
               PerlDebuggerBundle.message("perl.debugger.incorrect.version.title", DEBUG_PACKAGE),
               errorMessage,
               NotificationType.ERROR
@@ -346,7 +349,8 @@ public class PerlDebugThread extends Thread {
     }
     closeStreamsAndSockets();
     myExecutor.shutdownNow();
-    StopProcessAction.stopProcess(myExecutionResult.getProcessHandler());
+    // consulo: IntelliJ StopProcessAction.stopProcess -> ProcessHandlerStopper.stop
+    ProcessHandlerStopper.stop(myExecutionResult.getProcessHandler());
 
     print("perl.debug.disconnected");
   }
@@ -405,11 +409,11 @@ public class PerlDebugThread extends Thread {
     return transactionsMap.remove(transactionId);
   }
 
-  public PerlScriptsPanel getScriptListPanel() {
+  public PerlUnifiedScriptsPanel getScriptListPanel() {
     return myScriptListPanel;
   }
 
-  public PerlScriptsPanel getEvalsListPanel() {
+  public PerlUnifiedScriptsPanel getEvalsListPanel() {
     return myEvalsListPanel;
   }
 

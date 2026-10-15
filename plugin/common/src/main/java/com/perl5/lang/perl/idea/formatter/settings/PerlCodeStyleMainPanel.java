@@ -16,11 +16,12 @@
 
 package com.perl5.lang.perl.idea.formatter.settings;
 
-import com.intellij.application.options.TabbedLanguageCodeStylePanel;
-import com.intellij.application.options.codeStyle.WrappingAndBracesPanel;
-import com.intellij.lang.Language;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
-import com.intellij.psi.codeStyle.LanguageCodeStyleSettingsProvider;
+import consulo.language.codeStyle.ui.setting.TabbedLanguageCodeStylePanel;
+import consulo.language.codeStyle.ui.setting.WrappingAndBracesPanel;
+import consulo.language.Language;
+import consulo.language.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider;
+import consulo.localize.LocalizeValue;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.PerlLanguage;
 import org.jetbrains.annotations.NotNull;
@@ -52,8 +53,8 @@ public class PerlCodeStyleMainPanel extends TabbedLanguageCodeStylePanel {
     }
 
     @Override
-    protected @NotNull String getTabTitle() {
-      return PerlBundle.message("perl.formatting.tab.perl5");
+    protected @NotNull LocalizeValue getTabTitle() {
+      return LocalizeValue.localizeTODO(PerlBundle.message("perl.formatting.tab.perl5"));
     }
 
     @Override
@@ -73,8 +74,8 @@ public class PerlCodeStyleMainPanel extends TabbedLanguageCodeStylePanel {
     }
 
     @Override
-    protected @NotNull String getTabTitle() {
-      return PerlBundle.message("perl.formatting.wrap.tab.name");
+    protected @NotNull LocalizeValue getTabTitle() {
+      return LocalizeValue.localizeTODO(PerlBundle.message("perl.formatting.wrap.tab.name"));
     }
   }
 

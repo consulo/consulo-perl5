@@ -16,15 +16,15 @@
 
 package com.perl5.lang.perl.idea.sdk;
 
-import com.intellij.configurationStore.XmlSerializer;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.WriteAction;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.xmlb.annotations.Tag;
+import consulo.util.xml.serializer.XmlSerializer;
+import consulo.application.ApplicationManager;
+import consulo.application.WriteAction;
+import consulo.logging.Logger;
+import consulo.application.progress.ProgressManager;
+import consulo.content.bundle.Sdk;
+import consulo.util.dataholder.Key;
+import consulo.util.lang.StringUtil;
+import consulo.util.xml.serializer.annotation.Tag;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.util.PerlRunUtil;
 import org.jdom.Element;
@@ -96,7 +96,7 @@ public final class PerlConfig {
 
   public void save(@NotNull Element parentElement) {
     var container = new Element(TAG_NAME);
-    XmlSerializer.serializeObjectInto(this, container);
+    XmlSerializer.serializeInto(this, container);
     parentElement.addContent(container);
   }
 

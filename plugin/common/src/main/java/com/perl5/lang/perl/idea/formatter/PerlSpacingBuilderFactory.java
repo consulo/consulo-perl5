@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.idea.formatter;
 
-import com.intellij.formatting.SpacingBuilder;
-import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
+import consulo.language.codeStyle.SpacingBuilder;
+import consulo.language.codeStyle.CommonCodeStyleSettings;
 import com.perl5.lang.perl.idea.formatter.settings.PerlCodeStyleSettings;
 import org.jetbrains.annotations.NotNull;
 

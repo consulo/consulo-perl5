@@ -16,9 +16,9 @@
 
 package com.perl5.lang.pod.parser.psi;
 
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiRecursiveVisitor;
+import consulo.application.progress.ProgressManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiRecursiveVisitor;
 import org.jetbrains.annotations.NotNull;
 
 public class PodRecursiveVisitor extends PodVisitor implements PsiRecursiveVisitor {

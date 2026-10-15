@@ -16,16 +16,32 @@
 
 package com.perl5.lang.perl.idea.folding;
 
-import com.intellij.application.options.editor.CodeFoldingOptionsProvider;
-import com.intellij.openapi.options.BeanConfigurable;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.configurable.ApplicationConfigurable;
+import consulo.configurable.SimpleConfigurableByProperties;
+import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
+import consulo.ui.CheckBox;
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.layout.VerticalLayout;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.PerlLanguage;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 
-public class PerlFoldingOptionsProvider extends BeanConfigurable<PerlFoldingSettingsImpl> implements CodeFoldingOptionsProvider {
+// consulo: IntelliJ BeanConfigurable + CodeFoldingOptionsProvider -> uni UI child configurable of the "Code Folding" settings page
+@ExtensionImpl
+public class PerlFoldingOptionsProvider extends SimpleConfigurableByProperties implements ApplicationConfigurable {
+  private final List<CheckBoxDescriptor> myCheckBoxes = new ArrayList<>();
+
   public PerlFoldingOptionsProvider() {
-    super(PerlFoldingSettingsImpl.getInstance(), PerlLanguage.INSTANCE.getDisplayName());
-
     PerlFoldingSettingsImpl foldingSettings = PerlFoldingSettingsImpl.getInstance();
     checkBox(PerlBundle.message("perl.options.fold.comments"),
              () -> foldingSettings.COLLAPSE_COMMENTS, value -> foldingSettings.COLLAPSE_COMMENTS = value);
@@ -45,5 +61,39 @@ public class PerlFoldingOptionsProvider extends BeanConfigurable<PerlFoldingSett
              () -> foldingSettings.COLLAPSE_QW, value -> foldingSettings.COLLAPSE_QW = value);
     checkBox(PerlBundle.message("perl.options.fold.char.substitutions"),
              () -> foldingSettings.COLLAPSE_CHAR_SUBSTITUTIONS, value -> foldingSettings.COLLAPSE_CHAR_SUBSTITUTIONS = value);
+  }
+
+  private void checkBox(@NotNull String title, @NotNull Supplier<Boolean> getter, @NotNull Consumer<Boolean> setter) {
+    myCheckBoxes.add(new CheckBoxDescriptor(title, getter, setter));
+  }
+
+  @RequiredUIAccess
+  @Override
+  protected @NotNull Component createLayout(@NotNull PropertyBuilder propertyBuilder, @NotNull Disposable uiDisposable) {
+    VerticalLayout layout = VerticalLayout.create();
+    for (CheckBoxDescriptor descriptor : myCheckBoxes) {
+      CheckBox checkBox = CheckBox.create(LocalizeValue.localizeTODO(descriptor.title()));
+      layout.add(checkBox);
+      propertyBuilder.add(checkBox, descriptor.getter(), descriptor.setter());
+    }
+    return layout;
+  }
+
+  @Override
+  public @NotNull String getId() {
+    return "editor.preferences.folding.perl5";
+  }
+
+  @Override
+  public @Nullable String getParentId() {
+    return "editor.preferences.folding";
+  }
+
+  @Override
+  public @NotNull LocalizeValue getDisplayName() {
+    return PerlLanguage.INSTANCE.getDisplayName();
+  }
+
+  private record CheckBoxDescriptor(@NotNull String title, @NotNull Supplier<Boolean> getter, @NotNull Consumer<Boolean> setter) {
   }
 }

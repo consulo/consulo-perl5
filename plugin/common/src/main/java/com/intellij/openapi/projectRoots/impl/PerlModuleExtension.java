@@ -16,191 +16,140 @@
 
 package com.intellij.openapi.projectRoots.impl;
 
-import com.intellij.openapi.application.WriteAction;
-import com.intellij.openapi.components.PathMacroManager;
-import com.intellij.openapi.components.PersistentStateComponentWithModificationTracker;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.roots.ModifiableRootModel;
-import com.intellij.openapi.roots.ModuleExtension;
-import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
+import consulo.application.WriteAction;
+import consulo.content.ContentFolderTypeProvider;
+import consulo.content.bundle.SdkType;
+import consulo.logging.Logger;
+import consulo.module.Module;
+import consulo.module.content.layer.ContentEntry;
+import consulo.module.content.layer.ContentFolder;
+import consulo.module.content.layer.ModifiableRootModel;
+import consulo.module.content.layer.ModuleRootLayer;
+import consulo.module.content.layer.extension.ModuleExtensionWithSdkBase;
+import consulo.module.content.ModuleRootManager;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import com.perl5.lang.perl.idea.modules.PerlSourceRootType;
-import org.jdom.Element;
-import org.jetbrains.annotations.ApiStatus;
+import com.perl5.lang.perl.idea.sdk.PerlSdkType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.jps.model.module.JpsModuleSourceRootType;
-import org.jetbrains.jps.model.serialization.JpsModelSerializerExtension;
-import org.jetbrains.jps.model.serialization.module.JpsModuleSourceRootPropertiesSerializer;
 
-import java.io.File;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class PerlModuleExtension extends ModuleExtension implements PersistentStateComponentWithModificationTracker<Element> {
+/**
+ * TODO consulo: upstream is an IntelliJ {@code ModuleExtension} (available for every module) which persists perl source roots in its own
+ *  state ({@code perl5/path} elements, serialized with JPS {@code JpsModuleSourceRootPropertiesSerializer}s).
+ *  In Consulo this is the Perl module extension ({@link PerlModuleExtension} + {@code PerlMutableModuleExtension}, registered by
+ *  {@code PerlModuleExtensionProvider}) bound to the {@link PerlSdkType perl interpreter}. Perl source roots are stored by the platform
+ *  as module content folders of {@link PerlSourceRootType} content folder types, so they are available regardless of the extension
+ *  being enabled. Roots are allowed only inside module content entries. Writability is asserted by the platform content entries,
+ *  {@code getModifiableModel(boolean)}/{@code commit()} of the IntelliJ API are replaced with the platform modifiable root model.
+ */
+public class PerlModuleExtension extends ModuleExtensionWithSdkBase<PerlModuleExtension> {
   private static final Logger LOG = Logger.getInstance(PerlModuleExtension.class);
-  private static final String PERL_CONFIG = "perl5";
-  private static final String ELEMENT_PATH = "path";
-  private static final String ATTRIBUTE_VALUE = "value";
-  private static final String ATTRIBUTE_TYPE = "type";
-  private final boolean myIsWritable;
-  private long myModificationTracker;
-  private final PerlModuleExtension myOriginal;
-  private final Module myModule;
-  private Map<VirtualFile, PerlSourceRootType> myRoots = new LinkedHashMap<>();
 
-  public PerlModuleExtension(Module module) {
-    myModule = module;
-    myIsWritable = false;
-    myOriginal = null;
-  }
-
-  private PerlModuleExtension(@NotNull PerlModuleExtension original, boolean writable) {
-    myModule = original.myModule;
-    myRoots.putAll(original.myRoots);
-    myIsWritable = writable;
-    myOriginal = original;
-  }
-
-  @ApiStatus.OverrideOnly
-  @Override
-  public @NotNull ModuleExtension getModifiableModel(boolean writable) {
-    return new PerlModuleExtension(this, writable);
+  public PerlModuleExtension(@NotNull String id, @NotNull ModuleRootLayer rootLayer) {
+    super(id, rootLayer);
   }
 
   @Override
-  public void commit() {
-    LOG.assertTrue(myOriginal != null, "Attempt to commit non-modifiable model");
-    if (isChanged()) {
-      synchronized (myOriginal) {
-        myOriginal.myRoots = new LinkedHashMap<>(myRoots);
-        myOriginal.myModificationTracker++;
+  public @NotNull Class<? extends SdkType> getSdkTypeClass() {
+    return PerlSdkType.class;
+  }
+
+  /**
+   * @return true iff perl roots of this model differ from the committed ones
+   */
+  public boolean isChanged() {
+    PerlModuleExtension original = getInstance(getModule());
+    return original != this && !getRoots().equals(original.getRoots());
+  }
+
+  public synchronized void setRoot(@NotNull VirtualFile root, @NotNull PerlSourceRootType type) {
+    ContentEntry contentEntry = findContentEntry(root);
+    if (contentEntry == null) {
+      LOG.warn("Unable to set root " + root + ", it's not under content roots of " + getModule());
+      return;
+    }
+    for (ContentFolder folder : contentEntry.getFolders(it -> true)) {
+      if (root.equals(folder.getFile())) {
+        // TODO consulo: in IntelliJ perl roots are stored separately, here a directory can have a single content folder type
+        contentEntry.removeFolder(folder);
+      }
+    }
+    ContentFolderTypeProvider registeredType = ContentFolderTypeProvider.byId(type.getId());
+    contentEntry.addFolder(root, registeredType instanceof PerlSourceRootType ? registeredType : type);
+  }
+
+  public synchronized void removeRoot(@NotNull VirtualFile root) {
+    for (ContentEntry contentEntry : getModuleRootLayer().getContentEntries()) {
+      for (ContentFolder folder : contentEntry.getFolders(PerlModuleExtension::isPerlRootType)) {
+        if (root.equals(folder.getFile())) {
+          contentEntry.removeFolder(folder);
+        }
       }
     }
   }
 
-  @Override
-  public boolean isChanged() {
-    return !myRoots.equals(myOriginal.myRoots);
-  }
-
-  public synchronized void setRoot(@NotNull VirtualFile root, @NotNull JpsModuleSourceRootType<?> type) {
-    LOG.assertTrue(myIsWritable, "Obtain modifiableModel first");
-    LOG.assertTrue(type instanceof PerlSourceRootType, type + " is not a PerlSourceRootType");
-    myRoots.put(root, (PerlSourceRootType)type);
-    myModificationTracker++;
-  }
-
-  public synchronized void removeRoot(@NotNull VirtualFile root) {
-    LOG.assertTrue(myIsWritable, "Obtain modifiableModel first");
-    myRoots.remove(root);
-    myModificationTracker++;
-  }
-
   public Map<VirtualFile, PerlSourceRootType> getRoots() {
-    return Collections.unmodifiableMap(myRoots);
+    Map<VirtualFile, PerlSourceRootType> roots = new LinkedHashMap<>();
+    for (ContentEntry contentEntry : getModuleRootLayer().getContentEntries()) {
+      for (ContentFolder folder : contentEntry.getFolders(PerlModuleExtension::isPerlRootType)) {
+        VirtualFile file = folder.getFile();
+        if (file != null && file.isValid() && file.isDirectory()) {
+          roots.put(file, (PerlSourceRootType)folder.getType());
+        }
+      }
+    }
+    return Collections.unmodifiableMap(roots);
   }
 
   public synchronized List<VirtualFile> getRootsByType(@NotNull PerlSourceRootType type) {
-    return myRoots.entrySet().stream()
+    return getRoots().entrySet().stream()
       .filter(entry -> type.equals(entry.getValue()))
       .map(Map.Entry::getKey)
       .collect(Collectors.toList());
   }
 
   public @Nullable PerlSourceRootType getRootType(@NotNull VirtualFile virtualFile) {
-    return myRoots.get(virtualFile);
+    return getRoots().get(virtualFile);
   }
 
-  @Override
-  public long getStateModificationCount() {
-    return myModificationTracker;
+  private @Nullable ContentEntry findContentEntry(@NotNull VirtualFile root) {
+    for (ContentEntry contentEntry : getModuleRootLayer().getContentEntries()) {
+      VirtualFile contentRoot = contentEntry.getFile();
+      if (contentRoot != null && VirtualFileUtil.isAncestor(contentRoot, root, false)) {
+        return contentEntry;
+      }
+    }
+    return null;
   }
 
-  @Override
-  public @Nullable Element getState() {
-    Element perlConfig = new Element(PERL_CONFIG);
-
-    PathMacroManager macroManager = PathMacroManager.getInstance(myModule);
-
-    for (VirtualFile root : myRoots.keySet()) {
-      if (!root.isValid() || !root.isDirectory()) {
-        continue;
-      }
-      JpsModuleSourceRootPropertiesSerializer<?> serializer = getSerializer(it -> it != null && it.getType().equals(myRoots.get(root)));
-      if (serializer == null) {
-        continue;
-      }
-
-      String collapsedUrl = macroManager.collapsePath(root.getUrl());
-      if (StringUtil.isEmpty(collapsedUrl)) {
-        continue;
-      }
-
-
-      Element pathElement = new Element(ELEMENT_PATH);
-      pathElement.setAttribute(ATTRIBUTE_VALUE, collapsedUrl);
-      pathElement.setAttribute(ATTRIBUTE_TYPE, serializer.getTypeId());
-      perlConfig.addContent(pathElement);
-    }
-
-    Element root = new Element("root");
-    if (!perlConfig.getChildren().isEmpty()) {
-      root.addContent(perlConfig);
-    }
-
-    return root;
+  private static boolean isPerlRootType(@NotNull ContentFolderTypeProvider typeProvider) {
+    return typeProvider instanceof PerlSourceRootType;
   }
 
-  @Override
-  public void loadState(@NotNull Element state) {
-    state = state.getChild(PERL_CONFIG);
-    myRoots.clear();
-    if (state == null) {
-      return;
-    }
-    PathMacroManager macroManager = PathMacroManager.getInstance(myModule);
-    for (Element pathElement : state.getChildren(ELEMENT_PATH)) {
-      JpsModuleSourceRootPropertiesSerializer<?> serializer =
-        getSerializer(it -> it != null && it.getTypeId().equals(pathElement.getAttributeValue(ATTRIBUTE_TYPE)));
-      if (serializer == null) {
-        continue;
-      }
-      String expandedPathOrUrl = macroManager.expandPath(pathElement.getAttributeValue(ATTRIBUTE_VALUE));
-      var libRoot = VirtualFileManager.getInstance().findFileByUrl(expandedPathOrUrl);
-      if (libRoot == null) {
-        // fixme migration part, to be removed
-        libRoot = VfsUtil.findFileByIoFile(new File(expandedPathOrUrl), false);
-      }
-      if (libRoot != null && libRoot.isValid() && libRoot.isDirectory()) {
-        myRoots.put(libRoot, (PerlSourceRootType)serializer.getType());
-      }
-    }
-  }
-
+  /**
+   * @return perl module extension of the module, the extension is returned even if it's not enabled for the module
+   */
   public static PerlModuleExtension getInstance(@NotNull Module module) {
-    return ModuleRootManager.getInstance(module).getModuleExtension(PerlModuleExtension.class);
+    return Objects.requireNonNull(ModuleRootManager.getInstance(module).getExtensionWithoutCheck(PerlModuleExtension.class));
   }
 
   /**
    * Modifies {@link PerlModuleExtension} for the {@code module} using {@code mutator}. Incapsulates proper logic of working with modifiable
-   * model, described in {@link ModuleExtension#getModifiableModel(boolean) javadoc}.
-   *
-   * @see ModuleExtension#getModifiableModel(boolean)
+   * root model.
    */
   public static void modify(@NotNull Module module, @NotNull Consumer<? super PerlModuleExtension> mutator) {
     ModifiableRootModel modifiableModel = ModuleRootManager.getInstance(module).getModifiableModel();
-    PerlModuleExtension moduleExtensionModifiableModel = modifiableModel.getModuleExtension(PerlModuleExtension.class);
+    PerlModuleExtension moduleExtensionModifiableModel =
+      Objects.requireNonNull(modifiableModel.getExtensionWithoutCheck(PerlModuleExtension.class));
     try {
       mutator.accept(moduleExtensionModifiableModel);
     }
@@ -209,27 +158,15 @@ public class PerlModuleExtension extends ModuleExtension implements PersistentSt
       modifiableModel.dispose();
     }
     finally {
-      if( moduleExtensionModifiableModel.isChanged()){
-        //noinspection deprecation
+      if (!modifiableModel.isDisposed() && moduleExtensionModifiableModel.isChanged()) {
+        // consulo: commit of a changed root model fires the roots change itself (the extension is a part of the root model)
         WriteAction.run(
-          () -> ProjectRootManagerEx.getInstanceEx(module.getProject()).makeRootsChange(modifiableModel::commit, false, true)
+          () -> modifiableModel.commit()
         );
       }
-      else {
+      else if (!modifiableModel.isDisposed()) {
         modifiableModel.dispose();
       }
     }
-  }
-
-  private static @Nullable JpsModuleSourceRootPropertiesSerializer<?> getSerializer(
-    Predicate<? super JpsModuleSourceRootPropertiesSerializer<?>> predicate) {
-    for (JpsModelSerializerExtension extension : JpsModelSerializerExtension.getExtensions()) {
-      for (JpsModuleSourceRootPropertiesSerializer<?> serializer : extension.getModuleSourceRootPropertiesSerializers()) {
-        if (predicate.test(serializer)) {
-          return serializer;
-        }
-      }
-    }
-    return null;
   }
 }

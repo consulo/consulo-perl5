@@ -16,14 +16,16 @@
 
 package com.perl5.lang.perl.idea.manipulators;
 
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.AbstractElementManipulator;
-import com.intellij.util.IncorrectOperationException;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.document.util.TextRange;
+import consulo.language.psi.AbstractElementManipulator;
+import consulo.language.util.IncorrectOperationException;
 import com.perl5.lang.perl.psi.PerlNamespaceElement;
 import com.perl5.lang.perl.psi.impl.PerlNamespaceElementImpl;
 import org.jetbrains.annotations.NotNull;
 
 
+@ExtensionImpl
 public class PerlNamespaceElementManipulator extends AbstractElementManipulator<PerlNamespaceElement> {
   @Override
   public PerlNamespaceElement handleContentChange(@NotNull PerlNamespaceElement element, @NotNull TextRange range, String newContent)
@@ -51,5 +53,10 @@ public class PerlNamespaceElementManipulator extends AbstractElementManipulator<
     }
 
     return endOffset == 0 ? TextRange.EMPTY_RANGE : TextRange.create(0, endOffset);
+  }
+
+  @Override
+  public @NotNull Class<PerlNamespaceElement> getElementClass() {
+    return PerlNamespaceElement.class;
   }
 }

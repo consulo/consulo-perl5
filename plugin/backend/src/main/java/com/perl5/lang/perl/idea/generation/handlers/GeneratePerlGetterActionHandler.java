@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.idea.generation.handlers;
 
-import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.codeEditor.Editor;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import com.perl5.lang.perl.extensions.PerlCodeGenerator;
 import com.perl5.lang.perl.psi.PerlFile;
 

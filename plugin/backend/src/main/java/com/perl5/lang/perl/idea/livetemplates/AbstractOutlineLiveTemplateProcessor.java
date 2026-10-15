@@ -16,18 +16,20 @@
 
 package com.perl5.lang.perl.idea.livetemplates;
 
-import com.intellij.codeInsight.template.Template;
-import com.intellij.codeInsight.template.impl.TemplateContext;
-import com.intellij.codeInsight.template.impl.TemplateImpl;
-import com.intellij.codeInsight.template.impl.TemplateOptionalProcessor;
-import com.intellij.lang.Language;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.RangeMarker;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.util.PsiUtilBase;
+import consulo.language.editor.template.Template;
+import consulo.language.editor.template.context.TemplateContext;
+import consulo.language.editor.template.TemplateOptionalProcessor;
+import consulo.language.Language;
+import consulo.document.Document;
+import consulo.codeEditor.Editor;
+import consulo.document.RangeMarker;
+import consulo.localize.LocalizeValue;
+import consulo.project.Project;
+import consulo.util.dataholder.KeyWithDefaultValue;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.editor.util.PsiUtilBase;
 import com.perl5.PerlBundle;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
@@ -35,6 +37,14 @@ import org.jetbrains.annotations.Nullable;
 
 
 public abstract class AbstractOutlineLiveTemplateProcessor implements TemplateOptionalProcessor {
+  // consulo: Consulo template options are keyed; this processor overrides isEnabled() and is never visible
+  private static final KeyWithDefaultValue<Boolean> KEY = KeyWithDefaultValue.create("perl5.outline.live.template.processor", true);
+
+  @Override
+  public KeyWithDefaultValue<Boolean> getKey() {
+    return KEY;
+  }
+
   /**
    * Checks if psi file should be handled by processor
    */
@@ -67,8 +77,8 @@ public abstract class AbstractOutlineLiveTemplateProcessor implements TemplateOp
   protected abstract @Nullable PsiElement getOutlineElement(PsiElement firstElement);
 
   @Override
-  public @Nls String getOptionName() {
-    return PerlBundle.message("please.report.a.bug");
+  public LocalizeValue getOptionText() {
+    return LocalizeValue.localizeTODO(PerlBundle.message("please.report.a.bug"));
   }
 
   @Override
@@ -77,13 +87,15 @@ public abstract class AbstractOutlineLiveTemplateProcessor implements TemplateOp
   }
 
   @Override
-  public boolean isVisible(@NotNull Template template, @NotNull TemplateContext context) {
+  public boolean isVisible(@NotNull Template template) {
     return false;
   }
 
   @Override
   public void processText(Project project, Template template, Document document, RangeMarker templateRange, Editor editor) {
-    if (template instanceof TemplateImpl templateImpl && templateImpl.isInline()) {
+    // TODO consulo: Template has no public isInline(), inline templates (in-place refactorings etc.) are built as ad-hoc templates without
+    //  a key, so all ad-hoc templates are skipped here, not only the inline ones
+    if (StringUtil.isEmpty(template.getKey())) {
       return;
     }
 

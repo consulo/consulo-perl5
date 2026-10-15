@@ -16,10 +16,10 @@
 
 package com.perl5.lang.perl.idea.sdk.host.docker;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.logging.Logger;
+import consulo.util.io.FileUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.util.collection.ContainerUtil;
 import com.perl5.lang.perl.idea.sdk.host.PerlFileDescriptor;
 import com.perl5.lang.perl.idea.sdk.host.PerlPluggableVirtualFileSystem;
 import org.jetbrains.annotations.NotNull;

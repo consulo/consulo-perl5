@@ -16,10 +16,10 @@
 
 package com.perl5.lang.perl.psi;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.util.ObjectUtils;
+import consulo.language.psi.PsiElement;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.PsiUtilCore;
+import consulo.util.lang.ObjectUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,17 +31,17 @@ import static com.perl5.lang.perl.parser.PerlElementTypesGenerated.*;
 public interface PerlReplacementRegex extends PerlRegexExpression {
   default @Nullable PsiPerlPerlRegex getMatchRegex() {
     List<PsiElement> parts = getParts();
-    return parts.isEmpty() ? null : ObjectUtils.tryCast(parts.getFirst(), PsiPerlPerlRegex.class);
+    return parts.isEmpty() ? null : ObjectUtil.tryCast(parts.getFirst(), PsiPerlPerlRegex.class);
   }
 
   default @Nullable PsiPerlRegexReplacement getReplaceRegex() {
     List<PsiElement> parts = getParts();
-    return parts.size() < 2 ? null : ObjectUtils.tryCast(parts.get(1), PsiPerlRegexReplacement.class);
+    return parts.size() < 2 ? null : ObjectUtil.tryCast(parts.get(1), PsiPerlRegexReplacement.class);
   }
 
   default @Nullable PerlBlock getReplaceBlock() {
     List<PsiElement> parts = getParts();
-    return parts.size() < 2 ? null : ObjectUtils.tryCast(parts.get(1), PerlBlock.class);
+    return parts.size() < 2 ? null : ObjectUtil.tryCast(parts.get(1), PerlBlock.class);
   }
 
   /**

@@ -16,19 +16,18 @@
 
 package com.perl5.lang.perl.psi;
 
-import com.intellij.lang.Language;
-import com.intellij.lang.LanguageParserDefinitions;
-import com.intellij.lang.ParserDefinition;
-import com.intellij.lang.html.HTMLLanguage;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.MultiplePsiFilesPerDocumentFileViewProvider;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.impl.source.PsiFileImpl;
-import com.intellij.psi.templateLanguages.ConfigurableTemplateLanguageFileViewProvider;
-import com.intellij.psi.templateLanguages.TemplateDataLanguageMappings;
-import com.intellij.psi.templateLanguages.TemplateLanguageFileViewProvider;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.Language;
+import consulo.language.parser.ParserDefinition;
+import consulo.html.language.HTMLLanguage;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.impl.file.MultiplePsiFilesPerDocumentFileViewProvider;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
+import consulo.language.impl.psi.PsiFileImpl;
+import consulo.language.template.ConfigurableTemplateLanguageFileViewProvider;
+import consulo.language.template.TemplateDataLanguageMappings;
+import consulo.language.template.TemplateLanguageFileViewProvider;
+import consulo.language.ast.IElementType;
 import com.perl5.lang.pod.PodLanguage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -85,7 +84,7 @@ public abstract class PerlMultiplePsiFilesPerDocumentFileViewProvider
       return null;
     }
 
-    final ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(lang);
+    final ParserDefinition parserDefinition = ParserDefinition.forLanguage(lang);
 
     if (parserDefinition != null) {
       final PsiFileImpl file = (PsiFileImpl)parserDefinition.createFile(this);

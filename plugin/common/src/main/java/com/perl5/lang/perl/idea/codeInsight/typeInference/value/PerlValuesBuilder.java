@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.idea.codeInsight.typeInference.value;
 
-import com.intellij.openapi.progress.ProgressManager;
+import consulo.application.progress.ProgressManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.BiFunction;

@@ -16,16 +16,16 @@
 
 package com.perl5.lang.perl.debugger.run.run.debugger;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.configurations.RunProfile;
-import com.intellij.execution.process.ProcessEvent;
-import com.intellij.execution.process.ProcessHandler;
-import com.intellij.execution.process.ProcessListener;
-import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.process.ExecutionException;
+import consulo.execution.configuration.RunProfile;
+import consulo.process.event.ProcessEvent;
+import consulo.process.ProcessHandler;
+import consulo.process.event.ProcessListener;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.application.ApplicationManager;
+import consulo.logging.Logger;
+import consulo.util.dataholder.Key;
+import consulo.util.lang.StringUtil;
 import com.perl5.lang.perl.idea.execution.PerlCommandLine;
 import com.perl5.lang.perl.idea.execution.PortMapping;
 import com.perl5.lang.perl.idea.run.GenericPerlRunConfiguration;

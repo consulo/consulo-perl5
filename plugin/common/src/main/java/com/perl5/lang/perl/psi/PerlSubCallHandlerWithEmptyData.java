@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.psi;
 
-import com.intellij.psi.stubs.StubInputStream;
+import consulo.language.psi.stub.StubInputStream;
 import com.perl5.lang.perl.psi.impl.PerlSubCallElement;
 import com.perl5.lang.perl.psi.stubs.calls.EmptyCallData;
 import org.jetbrains.annotations.NotNull;

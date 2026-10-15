@@ -16,14 +16,13 @@
 
 package com.perl5.lang.mason2;
 
-import com.intellij.lang.Language;
-import com.intellij.openapi.util.NlsSafe;
+import consulo.language.Language;
 import com.perl5.lang.perl.PerlLanguage;
 
 
 public class Mason2Language extends Language {
   public static final Mason2Language INSTANCE = new Mason2Language();
-  public static final @NlsSafe String NAME = "Mason2";
+  public static final String NAME = "Mason2";
 
   public Mason2Language() {
     super(PerlLanguage.INSTANCE, NAME);

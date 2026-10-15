@@ -16,25 +16,29 @@
 
 package com.perl5.lang.htmlmason.parser.psi.references;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.*;
-import com.intellij.util.IncorrectOperationException;
+import consulo.project.Project;
+import consulo.document.util.TextRange;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import consulo.virtualFileSystem.VirtualFile;
+
+import consulo.language.util.IncorrectOperationException;
 import com.perl5.lang.htmlmason.HTMLMasonUtil;
-import com.perl5.lang.htmlmason.idea.configuration.HTMLMasonSettings;
 import com.perl5.lang.htmlmason.parser.psi.HTMLMasonCompositeElement;
 import com.perl5.lang.htmlmason.parser.psi.HTMLMasonNamedElement;
 import com.perl5.lang.htmlmason.parser.psi.HTMLMasonSubcomponentDefitnition;
 import com.perl5.lang.htmlmason.parser.psi.impl.HTMLMasonFileImpl;
-import com.perl5.lang.perl.idea.project.PerlProjectManager;
 import com.perl5.lang.perl.psi.PerlString;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import consulo.language.psi.ElementManipulators;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiElementResolveResult;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
+import consulo.language.psi.ResolveResult;
 
 
 public class HTMLMasonComponentReference extends HTMLMasonStringReference {
@@ -86,7 +90,7 @@ public class HTMLMasonComponentReference extends HTMLMasonStringReference {
         newContent = absPrefix + newFileName;
       }
       else {
-        String relativePath = VfsUtilCore.getRelativePath(componentFileDir, componentRoot);
+        String relativePath = VirtualFileUtil.getRelativePath(componentFileDir, componentRoot);
 
         if (relativePath != null) {
           newContent = absPrefix + relativePath + '/' + newFileName;
@@ -139,9 +143,7 @@ public class HTMLMasonComponentReference extends HTMLMasonStringReference {
       VirtualFile componentVirtualFile = null;
 
       if (StringUtil.startsWith(nameOrPath, "/")) {
-        HTMLMasonSettings settings = HTMLMasonSettings.getInstance(project);
-        for (VirtualFile componentRoot : PerlProjectManager.getInstance(settings.getProject())
-          .getModulesRootsOfType(settings.getSourceRootType())) {
+        for (VirtualFile componentRoot : HTMLMasonUtil.getComponentRoots(project)) {
           componentVirtualFile = componentRoot.findFileByRelativePath(nameOrPath);
 
           if (componentVirtualFile != null) {

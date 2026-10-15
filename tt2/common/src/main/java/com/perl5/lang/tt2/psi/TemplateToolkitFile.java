@@ -16,7 +16,7 @@
 
 package com.perl5.lang.tt2.psi;
 
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.perl5.lang.perl.psi.properties.PerlLexicalScope;
 
 

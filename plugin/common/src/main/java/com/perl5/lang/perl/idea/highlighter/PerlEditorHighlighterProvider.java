@@ -16,15 +16,24 @@
 
 package com.perl5.lang.perl.idea.highlighter;
 
-import com.intellij.openapi.fileTypes.SyntaxHighlighter;
-import com.intellij.openapi.project.Project;
+import com.perl5.lang.perl.fileTypes.PerlFileTypeScript;
+import consulo.language.editor.highlight.SyntaxHighlighter;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
 public class PerlEditorHighlighterProvider extends PerlEditorHighlighterProviderBase {
+  // consulo: Consulo keys EditorHighlighterProvider by file type; registrations (one per upstream filetype) override this
   @Override
-  protected @NotNull SyntaxHighlighter createBaseSyntaxHighlighter(@Nullable Project project) {
+  public @NotNull FileType getFileType() {
+    return PerlFileTypeScript.INSTANCE;
+  }
+
+  @Override
+  protected @NotNull SyntaxHighlighter createBaseSyntaxHighlighter(@Nullable Project project, @Nullable VirtualFile virtualFile) {
     return new PerlSyntaxHighlighter(project);
   }
 }

@@ -16,10 +16,12 @@
 
 package com.perl5.lang.embedded.idea.editor;
 
-import com.intellij.lang.BracePair;
-import com.intellij.lang.PairedBraceMatcher;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.tree.IElementType;
+import com.perl5.lang.embedded.EmbeddedPerlLanguage;
+import consulo.language.BracePair;
+import consulo.language.Language;
+import consulo.language.PairedBraceMatcher;
+import consulo.language.psi.PsiFile;
+import consulo.language.ast.IElementType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -45,5 +47,10 @@ public class EmbeddedPerlBraceMatcher implements PairedBraceMatcher {
   @Override
   public int getCodeConstructStart(PsiFile file, int openingBraceOffset) {
     return openingBraceOffset;
+  }
+
+  @Override
+  public @NotNull Language getLanguage() {
+    return EmbeddedPerlLanguage.INSTANCE;
   }
 }

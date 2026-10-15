@@ -16,7 +16,7 @@
 
 package com.perl5.lang.mason2.psi.impl;
 
-import com.intellij.lang.ASTNode;
+import consulo.language.ast.ASTNode;
 import com.perl5.lang.mason2.psi.MasonMethodModifier;
 import com.perl5.lang.perl.parser.moose.psi.impl.PerlMooseMethodModifierImpl;
 import com.perl5.lang.perl.psi.PerlVariableDeclarationElement;

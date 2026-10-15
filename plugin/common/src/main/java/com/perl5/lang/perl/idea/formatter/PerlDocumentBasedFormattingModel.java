@@ -16,17 +16,17 @@
 
 package com.perl5.lang.perl.idea.formatter;
 
-import com.intellij.formatting.Block;
-import com.intellij.formatting.FormattingModelWithShiftIndentInsideDocumentRange;
-import com.intellij.lang.ASTNode;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
-import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
-import com.intellij.psi.formatter.DocumentBasedFormattingModel;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.codeStyle.Block;
+import consulo.language.codeStyle.FormattingModelWithShiftIndentInsideDocumentRange;
+import consulo.language.ast.ASTNode;
+import consulo.document.Document;
+import consulo.document.util.TextRange;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.CommonCodeStyleSettings;
+import consulo.language.codeStyle.DocumentBasedFormattingModel;
+import consulo.language.psi.PsiUtilCore;
 import com.perl5.lang.perl.PerlLanguage;
 import com.perl5.lang.perl.psi.impl.PerlHeredocElementImpl;
 import org.jetbrains.annotations.NotNull;

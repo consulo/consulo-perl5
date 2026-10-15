@@ -16,9 +16,11 @@
 
 package com.perl5.lang.perl.idea.run.prove;
 
-import com.intellij.execution.configurations.ConfigurationTypeBase;
-import com.intellij.execution.configurations.RunConfiguration;
-import com.intellij.openapi.project.Project;
+import consulo.execution.configuration.ConfigurationTypeBase;
+import consulo.execution.configuration.ConfigurationTypeUtil;
+import consulo.execution.configuration.RunConfiguration;
+import consulo.localize.LocalizeValue;
+import consulo.project.Project;
 import com.perl5.PerlBundle;
 import com.perl5.PerlIcons;
 import com.perl5.lang.perl.idea.run.PerlRunConfigurationFactory;
@@ -30,8 +32,8 @@ public class PerlTestRunConfigurationType extends ConfigurationTypeBase {
   private final @NotNull PerlRunConfigurationFactory myTestConfigurationFactory;
   public PerlTestRunConfigurationType() {
     super("PerlTestRunConfiguration",
-          PerlBundle.message("perl.run.prove.configuration.group.title"),
-          PerlBundle.message("perl.run.prove.configuration.group.description"),
+          LocalizeValue.localizeTODO(PerlBundle.message("perl.run.prove.configuration.group.title")),
+          LocalizeValue.localizeTODO(PerlBundle.message("perl.run.prove.configuration.group.description")),
           PerlIcons.PERL_TEST_CONFIGURATION);
     myTestConfigurationFactory = new PerlRunConfigurationFactory(this) {
       @Override
@@ -52,6 +54,6 @@ public class PerlTestRunConfigurationType extends ConfigurationTypeBase {
   }
 
   public static @NotNull PerlTestRunConfigurationType getInstance() {
-    return Objects.requireNonNull(CONFIGURATION_TYPE_EP.findExtension(PerlTestRunConfigurationType.class));
+    return Objects.requireNonNull(ConfigurationTypeUtil.findConfigurationType(PerlTestRunConfigurationType.class));
   }
 }

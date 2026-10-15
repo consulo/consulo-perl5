@@ -21,8 +21,10 @@ import com.perl5.lang.tt2.TemplateToolkitBundle;
 import com.perl5.lang.tt2.TemplateToolkitIcons;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.ui.image.Image;
 
+@ExtensionImpl
 public class TemplateToolkitSourceRootEditHandler extends PerlTemplatesRootEditHandler {
   public TemplateToolkitSourceRootEditHandler() {
     super(TemplateToolkitSourceRootType.INSTANCE);
@@ -34,7 +36,7 @@ public class TemplateToolkitSourceRootEditHandler extends PerlTemplatesRootEditH
   }
 
   @Override
-  public @NotNull Icon getRootIcon() {
+  public @NotNull Image getRootIcon() {
     return TemplateToolkitIcons.TTK2_ROOT;
   }
 

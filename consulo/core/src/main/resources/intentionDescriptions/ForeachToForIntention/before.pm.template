@@ -1,0 +1,4 @@
+foreach my $element (@list)
+{
+    say $element;
+}

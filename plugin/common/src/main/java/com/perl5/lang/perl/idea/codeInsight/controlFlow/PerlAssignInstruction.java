@@ -16,10 +16,10 @@
 
 package com.perl5.lang.perl.idea.codeInsight.controlFlow;
 
-import com.intellij.codeInsight.controlflow.ControlFlowBuilder;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.controlFlow.ControlFlowBuilder;
+import consulo.language.psi.PsiElement;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.PsiUtilCore;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlValue;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlValuesManager;
 import com.perl5.lang.perl.psi.PerlAssignExpression.PerlAssignValueDescriptor;

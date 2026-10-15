@@ -16,14 +16,20 @@
 
 package com.perl5.lang.perl.idea.formatter;
 
-import com.intellij.formatting.*;
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
-import com.intellij.psi.formatter.xml.XmlFormattingPolicy;
-import com.intellij.xml.template.formatter.TemplateLanguageBlock;
+
+import consulo.language.ast.ASTNode;
+import consulo.language.codeStyle.CodeStyleSettings;
+import consulo.xml.psi.formatter.xml.XmlFormattingPolicy;
+import consulo.perl5.xml.template.formatter.TemplateLanguageBlock;
 import com.perl5.lang.perl.idea.formatter.blocks.PerlAstBlock;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import consulo.language.codeStyle.Alignment;
+import consulo.language.codeStyle.Block;
+import consulo.language.codeStyle.ChildAttributes;
+import consulo.language.codeStyle.Indent;
+import consulo.language.codeStyle.Spacing;
+import consulo.language.codeStyle.Wrap;
 
 public abstract class PerlTemplateLanguageBlock<Ctx extends PerlBaseFormattingContext> extends TemplateLanguageBlock
   implements PerlAstBlock {

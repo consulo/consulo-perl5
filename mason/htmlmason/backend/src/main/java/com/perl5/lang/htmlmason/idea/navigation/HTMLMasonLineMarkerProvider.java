@@ -16,14 +16,16 @@
 
 package com.perl5.lang.htmlmason.idea.navigation;
 
-import com.intellij.codeInsight.daemon.RelatedItemLineMarkerInfo;
-import com.intellij.codeInsight.daemon.RelatedItemLineMarkerProvider;
-import com.intellij.codeInsight.navigation.NavigationGutterIconBuilder;
-import com.intellij.icons.AllIcons;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.language.editor.gutter.RelatedItemLineMarkerInfo;
+import consulo.language.editor.gutter.RelatedItemLineMarkerProvider;
+import consulo.language.editor.ui.navigation.NavigationGutterIconBuilder;
+import consulo.application.AllIcons;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import com.perl5.lang.htmlmason.HTMLMasonLanguage;
 import com.perl5.lang.htmlmason.HTMLMasonUtil;
+import consulo.language.Language;
 import com.perl5.lang.htmlmason.HtmlMasonBundle;
 import com.perl5.lang.htmlmason.parser.psi.HTMLMasonMethodDefinition;
 import com.perl5.lang.htmlmason.parser.psi.impl.HTMLMasonFileImpl;
@@ -35,7 +37,12 @@ import java.util.List;
 
 public class HTMLMasonLineMarkerProvider extends RelatedItemLineMarkerProvider {
   @Override
-  protected void collectNavigationMarkers(@NotNull PsiElement element, @NotNull Collection<? super RelatedItemLineMarkerInfo<?>> result) {
+  public @NotNull Language getLanguage() {
+    return HTMLMasonLanguage.INSTANCE;
+  }
+
+  @Override
+  protected void collectNavigationMarkers(@NotNull PsiElement element, @NotNull Collection<? super RelatedItemLineMarkerInfo> result) {
     if (element instanceof HTMLMasonFileImpl htmlMasonFile) {
       HTMLMasonFileImpl parentComponent = HTMLMasonUtil.getParentComponent(htmlMasonFile);
       if (parentComponent != null) {

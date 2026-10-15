@@ -16,12 +16,12 @@
 
 package com.perl5.lang.perl.util;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.stubs.StubIndex;
-import com.intellij.util.Processor;
+import consulo.project.Project;
+import consulo.util.lang.ref.Ref;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.stub.StubIndex;
+import consulo.application.util.function.Processor;
 import com.perl5.lang.perl.psi.*;
 import com.perl5.lang.perl.psi.references.PerlImplicitDeclarationsService;
 import com.perl5.lang.perl.psi.stubs.subsdeclarations.PerlSubDeclarationIndex;

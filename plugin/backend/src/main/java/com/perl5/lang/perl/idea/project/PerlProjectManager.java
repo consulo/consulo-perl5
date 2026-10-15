@@ -16,46 +16,52 @@
 
 package com.perl5.lang.perl.idea.project;
 
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationType;
-import com.intellij.notification.Notifications;
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.application.ReadAction;
-import com.intellij.openapi.application.WriteAction;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.RootsChangeRescanningInfo;
-import com.intellij.openapi.projectRoots.ProjectJdkTable;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.SdkModificator;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
+import jakarta.inject.Singleton;
+import jakarta.inject.Inject;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.notification.Notifications;
+import consulo.disposer.Disposable;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.language.editor.CommonDataKeys;
+import consulo.dataContext.DataContext;
+import consulo.application.ReadAction;
+import consulo.application.WriteAction;
+import consulo.module.Module;
+import consulo.module.ModuleManager;
+import consulo.language.util.ModuleUtilCore;
+import consulo.project.Project;
+import consulo.module.event.ModuleListener;
+import consulo.project.RootsChangeRescanningInfo;
+import consulo.content.bundle.Sdk;
+import consulo.content.bundle.event.SdkTableListener;
+import consulo.content.bundle.SdkModificator;
 import com.intellij.openapi.projectRoots.impl.PerlModuleExtension;
 import com.intellij.openapi.projectRoots.impl.PerlSdkTable;
-import com.intellij.openapi.roots.ModuleRootEvent;
-import com.intellij.openapi.roots.ModuleRootListener;
-import com.intellij.openapi.roots.OrderRootType;
-import com.intellij.openapi.roots.SyntheticLibrary;
-import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
-import com.intellij.openapi.util.AtomicNotNullLazyValue;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.NullableLazyValue;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.*;
-import com.intellij.util.containers.FactoryMap;
-import com.intellij.util.messages.MessageBusConnection;
+import consulo.module.content.layer.event.ModuleRootEvent;
+import consulo.module.content.layer.event.ModuleRootListener;
+import consulo.content.base.BinariesOrderRootType;
+import consulo.perl5.core.module.PerlModuleExtensionUtil;
+import consulo.perl5.core.module.PerlModuleSettingsUtil;
+import consulo.perl5.core.roots.RootsChangeUtil;
+import consulo.application.util.AtomicNotNullLazyValue;
+import consulo.disposer.Disposer;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.StringUtil;
+
+import consulo.util.collection.FactoryMap;
+import consulo.component.messagebus.MessageBusConnection;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.idea.actions.PerlDumbAwareAction;
 import com.perl5.lang.perl.idea.configuration.settings.PerlLocalSettings;
-import com.perl5.lang.perl.idea.configuration.settings.sdk.Perl5SettingsConfigurable;
 import com.perl5.lang.perl.idea.configuration.settings.sdk.PerlSdkLibrary;
 import com.perl5.lang.perl.idea.modules.PerlLibrarySourceRootType;
 import com.perl5.lang.perl.idea.modules.PerlSourceRootType;
 import com.perl5.lang.perl.idea.sdk.PerlConfig;
+import com.perl5.lang.perl.idea.sdk.PerlSdkNotificationGroups;
 import com.perl5.lang.perl.idea.sdk.PerlSdkType;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -63,17 +69,28 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.*;
+import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.event.VirtualFileEvent;
+import consulo.virtualFileSystem.event.VirtualFileListener;
+import consulo.virtualFileSystem.event.VirtualFileMoveEvent;
+import consulo.virtualFileSystem.event.VirtualFilePropertyEvent;
 
+@ServiceAPI(ComponentScope.PROJECT)
+@ServiceImpl
+@Singleton
 public class PerlProjectManager implements Disposable {
   private final @NotNull Project myProject;
   private final PerlLocalSettings myPerlSettings;
   private final Map<PerlSourceRootType, List<VirtualFile>> myModulesRootsProvider;
-  private volatile NullableLazyValue<Sdk> mySdkProvider;
   private volatile AtomicNotNullLazyValue<Map<VirtualFile, PerlSourceRootType>> myAllModulesMapProvider;
   private volatile AtomicNotNullLazyValue<List<VirtualFile>> myExternalLibraryRootsProvider;
   private volatile AtomicNotNullLazyValue<List<VirtualFile>> mySdkLibraryRootsProvider;
   private volatile AtomicNotNullLazyValue<List<VirtualFile>> myLibraryRootsProvider;
-  private volatile AtomicNotNullLazyValue<List<SyntheticLibrary>> myLibrariesProvider;
+  private volatile AtomicNotNullLazyValue<List<PerlSdkLibrary>> myLibrariesProvider;
+
+  @Inject
 
   public PerlProjectManager(@NotNull Project project) {
     myProject = project;
@@ -81,24 +98,52 @@ public class PerlProjectManager implements Disposable {
     myModulesRootsProvider = FactoryMap.create(type -> type.getRoots(myProject));
     resetProjectCaches();
     MessageBusConnection connection = myProject.getMessageBus().connect(this);
-    connection.subscribe(PerlSdkTable.PERL_TABLE_TOPIC, new ProjectJdkTable.Listener() {
+    // TODO consulo: interpreters are taken from Perl module extensions: they keep the name of a removed interpreter (it becomes invalid)
+    //  and follow renames (platform sdk pointers), upstream resets/renames the project interpreter in its settings
+    connection.subscribe(PerlSdkTable.PERL_TABLE_TOPIC, new SdkTableListener() {
       @Override
-      public void jdkRemoved(@NotNull Sdk sdk) {
-        if (StringUtil.equals(sdk.getName(), myPerlSettings.getPerlInterpreter())) {
-          setProjectSdk(null);
+      public void sdkAdded(@NotNull Sdk sdk) {
+        if (sdk.getSdkType() instanceof PerlSdkType) {
+          resetProjectCaches();
         }
       }
 
       @Override
-      public void jdkNameChanged(@NotNull Sdk jdk, @NotNull String previousName) {
-        if (StringUtil.equals(myPerlSettings.getPerlInterpreter(), previousName)) {
-          setProjectSdk(jdk);
+      public void sdkRemoved(@NotNull Sdk sdk) {
+        if (!(sdk.getSdkType() instanceof PerlSdkType)) {
+          return;
+        }
+        if (PerlModuleExtensionUtil.isUsed(myProject, sdk.getName())) {
+          WriteAction.run(
+            () -> RootsChangeUtil.makeRootsChange(myProject, () -> resetProjectCaches(), RootsChangeRescanningInfo.TOTAL_RESCAN));
+        }
+        else {
+          resetProjectCaches();
+        }
+      }
+
+      @Override
+      public void sdkNameChanged(@NotNull Sdk jdk, @NotNull String previousName) {
+        if (jdk.getSdkType() instanceof PerlSdkType) {
+          resetProjectCaches();
         }
       }
     });
-    connection.subscribe(ModuleRootListener.TOPIC, new ModuleRootListener() {
+    connection.subscribe(ModuleRootListener.class, new ModuleRootListener() {
       @Override
       public void rootsChanged(@NotNull ModuleRootEvent event) {
+        resetProjectCaches();
+      }
+    });
+    // consulo: caches computed before the modules (and their Perl module extensions) are loaded must be dropped
+    connection.subscribe(ModuleListener.class, new ModuleListener() {
+      @Override
+      public void moduleAdded(@NotNull Project project, @NotNull Module module) {
+        resetProjectCaches();
+      }
+
+      @Override
+      public void moduleRemoved(@NotNull Project project, @NotNull Module module) {
         resetProjectCaches();
       }
     });
@@ -141,7 +186,8 @@ public class PerlProjectManager implements Disposable {
       }
       return Collections.unmodifiableMap(map);
     });
-    mySdkProvider = NullableLazyValue.atomicLazyNullable(() -> PerlSdkTable.getInstance().findJdk(myPerlSettings.getPerlInterpreter()));
+    // TODO consulo: upstream project interpreter is stored in PerlLocalSettings, here it is the interpreter of the first module with
+    //  enabled Perl module extension
     myExternalLibraryRootsProvider = AtomicNotNullLazyValue.createValue(() -> {
       var result = new ArrayList<VirtualFile>();
 
@@ -150,7 +196,7 @@ public class PerlProjectManager implements Disposable {
       var archname = perlConfig == null ? null: perlConfig.getArchname();
 
       for (String externalPath : myPerlSettings.getExternalLibrariesPaths()) {
-        VirtualFile externalLibDir = VfsUtil.findFileByIoFile(new File(externalPath), false);
+        VirtualFile externalLibDir = VirtualFileUtil.findFileByIoFile(new File(externalPath), false);
         if (isAcceptableLibDir(externalLibDir)) {
           result.add(externalLibDir);
 
@@ -177,7 +223,7 @@ public class PerlProjectManager implements Disposable {
       var result = new ArrayList<>(getExternalLibraryRoots());
       Sdk projectSdk = getProjectSdk();
       if (projectSdk != null) {
-        result.addAll(Arrays.asList(projectSdk.getRootProvider().getFiles(OrderRootType.CLASSES)));
+        result.addAll(Arrays.asList(projectSdk.getRootProvider().getFiles(BinariesOrderRootType.ID)));
       }
       return Collections.unmodifiableList(result);
     });
@@ -192,13 +238,14 @@ public class PerlProjectManager implements Disposable {
         return Collections.emptyList();
       }
 
-      SyntheticLibrary sdkLibrary;
+      PerlSdkLibrary sdkLibrary;
       Sdk sdk = getProjectSdk();
       if (sdk != null) {
         sdkLibrary = new PerlSdkLibrary(sdk, sdkLibs);
       }
       else {
-        sdkLibrary = SyntheticLibrary.newImmutableLibrary(sdkLibs);
+        // TODO consulo: SyntheticLibrary.newImmutableLibrary is missing in Consulo
+        sdkLibrary = new PerlSdkLibrary(null, sdkLibs);
       }
       return Collections.singletonList(sdkLibrary);
     });
@@ -253,17 +300,19 @@ public class PerlProjectManager implements Disposable {
     return mySdkLibraryRootsProvider.getValue();
   }
 
-  public List<SyntheticLibrary> getProjectLibraries() { return myLibrariesProvider.getValue();}
+  public List<PerlSdkLibrary> getProjectLibraries() { return myLibrariesProvider.getValue();}
 
   public @Nullable Sdk getProjectSdk() {
-    return mySdkProvider.getValue();
+    // consulo: not cached - the interpreter is the one of the first Perl module, which is available only after modules are loaded
+    return PerlModuleExtensionUtil.findFirstSdk(myProject);
   }
 
+  /**
+   * TODO consulo: sets the interpreter of all modules with enabled Perl module extension (enables the extension for all modules if there
+   *  are no such modules), upstream sets the project interpreter in PerlLocalSettings. Commit of module models fires a roots change.
+   */
   public void setProjectSdk(@Nullable Sdk sdk) {
-    WriteAction.run(
-      () -> ProjectRootManagerEx.getInstanceEx(myProject).makeRootsChange(
-        () -> myPerlSettings.setPerlInterpreter(sdk == null ? null : sdk.getName()), RootsChangeRescanningInfo.TOTAL_RESCAN)
-    );
+    PerlModuleExtensionUtil.setSdk(myProject, sdk);
   }
 
   public void addExternalLibrary(@NotNull VirtualFile root) {
@@ -301,7 +350,7 @@ public class PerlProjectManager implements Disposable {
           return;
         }
 
-        ProjectRootManagerEx.getInstanceEx(myProject).makeRootsChange(
+        RootsChangeUtil.makeRootsChange(myProject,
           () -> {
             myPerlSettings.setExternalLibrariesPaths(paths);
             resetProjectCaches();
@@ -315,9 +364,12 @@ public class PerlProjectManager implements Disposable {
   }
 
 
+  /**
+   * TODO consulo: the interpreter of the enabled Perl module extension of the {@code module}, upstream returns the project interpreter
+   */
   @Contract("null->null")
   public static @Nullable Sdk getSdk(@Nullable Module module) {
-    return module == null ? null : getInstance(module.getProject()).getProjectSdk();
+    return module == null ? null : PerlModuleExtensionUtil.getSdk(module);
   }
 
   /**
@@ -334,7 +386,7 @@ public class PerlProjectManager implements Disposable {
 
   public static void showUnconfiguredInterpreterNotification(@NotNull Project project) {
     Notification notification = new Notification(
-      PerlBundle.message("perl.select.sdk.notification"),
+      PerlSdkNotificationGroups.SELECT_SDK,
       PerlBundle.message("perl.select.sdk.notification.title"),
       PerlBundle.message("perl.select.sdk.notification.message"),
       NotificationType.ERROR
@@ -342,7 +394,8 @@ public class PerlProjectManager implements Disposable {
     notification.addAction(new PerlDumbAwareAction(PerlBundle.message("perl.configure.interpreter.action")) {
       @Override
       public void actionPerformed(@NotNull AnActionEvent e) {
-        Perl5SettingsConfigurable.open(project);
+        // consulo: the interpreter is configured in the Perl module extension
+        PerlModuleSettingsUtil.openInterpreterSettings(project, PerlModuleSettingsUtil.findModuleToConfigure(project));
         notification.expire();
       }
     });
@@ -367,7 +420,7 @@ public class PerlProjectManager implements Disposable {
     }
     String homePath = sdk.getHomePath();
     if (homePath != null && !StringUtil.contains(new File(homePath).getName(), "perl")) {
-      homePath = FileUtil.join(homePath, PerlSdkType.INSTANCE.getPerlExecutableName());
+      homePath = FileUtil.join(homePath, PerlSdkType.getInstance().getPerlExecutableName());
       SdkModificator modificator = sdk.getSdkModificator();
       modificator.setHomePath(homePath);
       modificator.commitChanges();
@@ -379,7 +432,7 @@ public class PerlProjectManager implements Disposable {
     if (virtualFile == null) {
       return getSdk(project);
     }
-    Module module = ReadAction.computeBlocking(() -> ModuleUtilCore.findModuleForFile(virtualFile, project));
+    Module module = ReadAction.compute(() -> ModuleUtilCore.findModuleForFile(virtualFile, project));
     return module == null ? getSdk(project) : getSdk(module);
   }
 
@@ -389,15 +442,18 @@ public class PerlProjectManager implements Disposable {
   }
 
   public static boolean isPerlEnabled(@NotNull DataContext dataContext) {
-    return isPerlEnabled(CommonDataKeys.PROJECT.getData(dataContext));
+    return isPerlEnabled(dataContext.getData(Project.KEY));
   }
 
+  /**
+   * TODO consulo: Perl module extension of the {@code module} is enabled and has an interpreter, upstream checks the project interpreter
+   */
   public static boolean isPerlEnabled(@Nullable Module module) {
-    return module != null && isPerlEnabled(module.getProject());
+    return module != null && !module.getProject().isDisposed() && getSdk(module) != null;
   }
 
   @Contract("null->null")
   public static @Nullable Sdk getSdk(@Nullable AnActionEvent event) {
-    return event == null ? null : getSdk(event.getProject());
+    return event == null ? null : getSdk(event.getData(Project.KEY));
   }
 }

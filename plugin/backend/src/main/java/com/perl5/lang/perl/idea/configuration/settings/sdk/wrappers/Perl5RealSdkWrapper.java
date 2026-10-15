@@ -16,12 +16,11 @@
 
 package com.perl5.lang.perl.idea.configuration.settings.sdk.wrappers;
 
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.SdkType;
-import com.intellij.openapi.util.NlsSafe;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.ColoredListCellRenderer;
-import com.intellij.ui.SimpleTextAttributes;
+import consulo.content.bundle.Sdk;
+import consulo.content.bundle.SdkType;
+import consulo.util.lang.StringUtil;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
+import consulo.ui.ex.SimpleTextAttributes;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostData;
 import com.perl5.lang.perl.idea.sdk.versionManager.PerlVersionManagerData;
 import org.jetbrains.annotations.Contract;
@@ -76,8 +75,8 @@ public class Perl5RealSdkWrapper implements Perl5SdkWrapper {
   }
 
   private static void renderPair(@NotNull ColoredListCellRenderer<Perl5SdkWrapper> renderer,
-                                 @NlsSafe @NotNull String primary,
-                                 @NlsSafe @Nullable String secondary) {
+                                 @NotNull String primary,
+                                 @Nullable String secondary) {
     renderer.append(StringUtil.capitalize(primary));
     if (secondary != null) {
       renderer.append(secondary, SimpleTextAttributes.GRAY_ATTRIBUTES);

@@ -16,15 +16,17 @@
 
 package com.perl5.lang.pod.idea.completion;
 
-import com.intellij.codeInsight.completion.CompletionContributor;
-import com.intellij.codeInsight.completion.CompletionParameters;
-import com.intellij.codeInsight.completion.CompletionResultSet;
-import com.intellij.codeInsight.completion.CompletionType;
-import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiUtilCore;
+import com.perl5.lang.pod.PodLanguage;
+import consulo.language.Language;
+import consulo.language.editor.completion.CompletionContributor;
+import consulo.language.editor.completion.CompletionParameters;
+import consulo.language.editor.completion.CompletionResultSet;
+import consulo.language.editor.completion.CompletionType;
+import consulo.language.editor.completion.lookup.LookupElementBuilder;
+import consulo.application.progress.ProgressManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.PsiUtilCore;
 import com.perl5.lang.pod.parser.PodElementPatterns;
 import com.perl5.lang.pod.parser.psi.PodSyntaxElements;
 import org.jetbrains.annotations.NotNull;
@@ -48,6 +50,11 @@ public class PodCompletionContributor extends CompletionContributor implements P
       TITLE_IDENTIFIER,
       new PodTitleCompletionProvider()
     );
+  }
+
+  @Override
+  public @NotNull Language getLanguage() {
+    return PodLanguage.INSTANCE;
   }
 
   @Override

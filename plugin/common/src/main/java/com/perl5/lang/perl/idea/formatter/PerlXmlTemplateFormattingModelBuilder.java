@@ -16,19 +16,26 @@
 
 package com.perl5.lang.perl.idea.formatter;
 
-import com.intellij.formatting.*;
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.xml.XMLLanguage;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
-import com.intellij.psi.formatter.xml.XmlFormattingPolicy;
-import com.intellij.psi.templateLanguages.SimpleTemplateLanguageFormattingModelBuilder;
-import com.intellij.psi.templateLanguages.TemplateLanguageFileViewProvider;
-import com.intellij.xml.template.formatter.AbstractXmlTemplateFormattingModelBuilder;
+
+import consulo.language.Language;
+import consulo.language.ast.ASTNode;
+import consulo.xml.language.XMLLanguage;
+import consulo.logging.Logger;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.PsiElement;
+import consulo.language.codeStyle.CodeStyleSettings;
+import consulo.xml.psi.formatter.xml.XmlFormattingPolicy;
+import consulo.language.codeStyle.template.SimpleTemplateLanguageFormattingModelBuilder;
+import consulo.language.template.TemplateLanguageFileViewProvider;
+import consulo.perl5.xml.template.formatter.AbstractXmlTemplateFormattingModelBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import consulo.language.codeStyle.Alignment;
+import consulo.language.codeStyle.Block;
+import consulo.language.codeStyle.FormattingContext;
+import consulo.language.codeStyle.FormattingModel;
+import consulo.language.codeStyle.Indent;
+import consulo.language.codeStyle.Wrap;
 
 public abstract class PerlXmlTemplateFormattingModelBuilder<Ctx extends PerlBaseFormattingContext, Blk extends PerlTemplateLanguageBlock<Ctx>>
   extends AbstractXmlTemplateFormattingModelBuilder {
@@ -39,7 +46,13 @@ public abstract class PerlXmlTemplateFormattingModelBuilder<Ctx extends PerlBase
     LOG.debug("Creating model for ", formattingContext);
     return useXmlFormattingModelBuilder(formattingContext.getPsiElement()) ?
            super.createModel(formattingContext) :
-           new SimpleTemplateLanguageFormattingModelBuilder().createModel(formattingContext);
+           // consulo: SimpleTemplateLanguageFormattingModelBuilder is an abstract language extension in Consulo
+           new SimpleTemplateLanguageFormattingModelBuilder() {
+             @Override
+             public @NotNull Language getLanguage() {
+               return PerlXmlTemplateFormattingModelBuilder.this.getLanguage();
+             }
+           }.createModel(formattingContext);
   }
 
 

@@ -16,7 +16,6 @@
 
 package com.perl5.lang.perl.idea.annotators;
 
-import com.intellij.openapi.util.NlsSafe;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.regex.Matcher;
@@ -36,7 +35,7 @@ public final class PerlCriticErrorDescriptor {
     myLine = line;
   }
 
-  public @NlsSafe String getMessage() {
+  public String getMessage() {
     return myMessage.toString();
   }
 

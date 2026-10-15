@@ -17,8 +17,8 @@
 package com.perl5.lang.perl.idea.copyright;
 
 import com.perl5.lang.perl.psi.impl.PerlFileImpl;
-import com.sun.istack.NotNull;
-import com.sun.istack.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class PerlFileInfo {
   @NotNull private final PerlFileImpl myFile;

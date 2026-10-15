@@ -16,36 +16,66 @@
 
 package com.perl5.lang.perl.idea.configuration.settings.sdk;
 
-import com.intellij.openapi.actionSystem.CustomShortcutSet;
-import com.intellij.openapi.roots.ui.configuration.ModuleSourceRootEditHandler;
-import com.intellij.ui.JBColor;
+import com.perl5.lang.perl.idea.modules.PerlSourceRootType;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.application.Application;
+import consulo.ui.ex.action.CustomShortcutSet;
+import consulo.ui.ex.JBColor;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.jps.model.JpsDummyElement;
-import org.jetbrains.jps.model.module.JpsModuleSourceRootType;
 
-import javax.swing.*;
 import java.awt.*;
 
-public abstract class PerlSourceRootEditHandler extends ModuleSourceRootEditHandler<JpsDummyElement> {
-  public PerlSourceRootEditHandler(JpsModuleSourceRootType<JpsDummyElement> rootType) {
-    super(rootType);
+/**
+ * TODO consulo: upstream extends IntelliJ {@code ModuleSourceRootEditHandler<JpsDummyElement>} registered as
+ *  {@code projectStructure.sourceRootEditHandler}. Consulo has no such API (presentation of content folders is provided by
+ *  {@code ContentFolderTypeProvider}), so the used part of the base class is inlined here and handlers are Consulo extensions.
+ *  {@link PerlSourceRootType} delegates its content folder presentation to the handler.
+ */
+@ExtensionAPI(ComponentScope.APPLICATION)
+public abstract class PerlSourceRootEditHandler {
+  private final @NotNull PerlSourceRootType myRootType;
+
+  public PerlSourceRootEditHandler(@NotNull PerlSourceRootType rootType) {
+    myRootType = rootType;
   }
 
-  @Override
-  public @Nullable Icon getFolderUnderRootIcon() {
+  public static @Nullable PerlSourceRootEditHandler getEditHandler(@NotNull PerlSourceRootType rootType) {
+    return Application.get().getExtensionPoint(PerlSourceRootEditHandler.class).findFirstSafe(it -> rootType.equals(it.getRootType()));
+  }
+
+  public final @NotNull PerlSourceRootType getRootType() {
+    return myRootType;
+  }
+
+  public abstract @NotNull String getRootTypeName();
+
+  public @NotNull String getFullRootTypeName() {
+    // upstream: ProjectBundle.message("module.paths.root.node", getRootTypeName())
+    return getRootTypeName() + " Root";
+  }
+
+  public abstract @NotNull Image getRootIcon();
+
+  public @Nullable Image getFolderUnderRootIcon() {
     return null;
   }
 
-  @Override
   public @Nullable CustomShortcutSet getMarkRootShortcutSet() {
     return null;
   }
 
+  public abstract @NotNull String getRootsGroupTitle();
 
-  @Override
   public @NotNull Color getRootsGroupColor() {
     return new JBColor(new Color(76, 94, 133), new Color(76, 94, 133));
   }
 
+  public @NotNull String getMarkRootButtonText() {
+    return getRootTypeName();
+  }
+
+  public abstract @NotNull String getUnmarkRootButtonText();
 }

@@ -19,11 +19,12 @@ package com.perl5.lang.perl.idea.configuration.settings.sdk;
 import com.perl5.PerlBundle;
 import com.perl5.PerlIcons;
 import com.perl5.lang.perl.idea.modules.PerlLibrarySourceRootType;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
 
-
+@ExtensionImpl
 public class PerlLibrarySourceRootEditHandler extends PerlSourceRootEditHandler {
   public PerlLibrarySourceRootEditHandler() {
     super(PerlLibrarySourceRootType.INSTANCE);
@@ -35,7 +36,7 @@ public class PerlLibrarySourceRootEditHandler extends PerlSourceRootEditHandler 
   }
 
   @Override
-  public @NotNull Icon getRootIcon() {
+  public @NotNull Image getRootIcon() {
     return PerlIcons.LIB_ROOT;
   }
 

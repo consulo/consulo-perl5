@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.psi.mixins;
 
-import com.intellij.codeInsight.controlflow.Instruction;
-import com.intellij.lang.ASTNode;
-import com.intellij.openapi.util.ClearableLazyValue;
+import consulo.language.controlFlow.Instruction;
+import consulo.language.ast.ASTNode;
+import consulo.util.lang.lazy.ClearableLazyValue;
 import com.perl5.lang.perl.idea.codeInsight.controlFlow.PerlControlFlowBuilder;
 import com.perl5.lang.perl.psi.PerlSubExpr;
 import com.perl5.lang.perl.psi.impl.PsiPerlExprImpl;
@@ -33,11 +33,11 @@ public abstract class PerlSubExpression extends PsiPerlExprImpl implements PerlS
 
   @Override
   public @NotNull Instruction[] getControlFlow() {
-    return myControlFlow.getValue();
+    return myControlFlow.get();
   }
 
   @Override
   public void subtreeChanged() {
-    myControlFlow.drop();
+    myControlFlow.clear();
   }
 }

@@ -16,19 +16,31 @@
 
 package com.perl5.lang.pod.idea.ui;
 
-import com.intellij.ide.IconProvider;
-import com.intellij.psi.PsiElement;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.icon.IconDescriptor;
+import consulo.language.icon.IconDescriptorUpdater;
+import consulo.language.psi.PsiElement;
 import com.perl5.PerlIcons;
 import com.perl5.lang.pod.parser.psi.PodTitledSection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
+import consulo.ui.image.Image;
 
-public class PodIconProvider extends IconProvider {
-
+// consulo: IntelliJ IconProvider -> Consulo IconDescriptorUpdater
+@ExtensionImpl
+public class PodIconProvider implements IconDescriptorUpdater {
+  @RequiredReadAction
   @Override
-  public @Nullable Icon getIcon(@NotNull PsiElement element, int flags) {
+  public void updateIcon(@NotNull IconDescriptor iconDescriptor, @NotNull PsiElement element, int flags) {
+    Image icon = getIcon(element, flags);
+    if (icon != null) {
+      iconDescriptor.setMainIcon(icon);
+    }
+  }
+
+  public @Nullable Image getIcon(@NotNull PsiElement element, int flags) {
     if (element instanceof PodTitledSection) {
       return PerlIcons.POD_FILE;
     }

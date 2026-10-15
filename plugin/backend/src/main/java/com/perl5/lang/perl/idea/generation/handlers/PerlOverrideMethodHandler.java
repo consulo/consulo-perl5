@@ -16,18 +16,21 @@
 
 package com.perl5.lang.perl.idea.generation.handlers;
 
-import com.intellij.lang.LanguageCodeInsightActionHandler;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import com.perl5.lang.perl.PerlLanguage;
+import consulo.language.Language;
+import consulo.language.editor.generation.OverrideMethodHandler;
+import consulo.codeEditor.Editor;
+import consulo.project.Project;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import com.perl5.lang.perl.extensions.PerlCodeGenerator;
 import com.perl5.lang.perl.psi.PerlFile;
 import com.perl5.lang.perl.psi.impl.PerlFileImpl;
 import org.jetbrains.annotations.NotNull;
 
 
-public class PerlOverrideMethodHandler extends GeneratePerlClassMemberHandlerBase implements LanguageCodeInsightActionHandler {
+// consulo: IntelliJ <codeInsight.overrideMethod> LanguageCodeInsightActionHandler is OverrideMethodHandler in Consulo
+public class PerlOverrideMethodHandler extends GeneratePerlClassMemberHandlerBase implements OverrideMethodHandler {
   @Override
   protected void generateAfterElement(PsiElement anchor, Editor editor, PsiFile file) {
     PerlCodeGenerator.getInstance(((PerlFile)file)).generateOverrideMethod(anchor, editor);
@@ -41,5 +44,10 @@ public class PerlOverrideMethodHandler extends GeneratePerlClassMemberHandlerBas
   @Override
   public void invoke(final @NotNull Project project, final @NotNull Editor editor, final @NotNull PsiFile file) {
     PerlOverrideMethodHandler.super.invoke(project, editor, file);
+  }
+
+  @Override
+  public @NotNull Language getLanguage() {
+    return PerlLanguage.INSTANCE;
   }
 }

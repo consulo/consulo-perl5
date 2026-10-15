@@ -16,14 +16,17 @@
 
 package com.perl5.lang.perl.buildSystem;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.module.Module;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.component.extension.ExtensionPointName;
+import consulo.module.Module;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface PerlBuildSystemHandler {
-  ExtensionPointName<PerlBuildSystemHandler> EP_NAME = ExtensionPointName.create("com.perl5.buildSystemHandler");
+  ExtensionPointName<PerlBuildSystemHandler> EP_NAME = ExtensionPointName.create(PerlBuildSystemHandler.class);
 
   /**
    * @return true iff {@code module}s tests are handled by this build system, e.g. running via make or smth.

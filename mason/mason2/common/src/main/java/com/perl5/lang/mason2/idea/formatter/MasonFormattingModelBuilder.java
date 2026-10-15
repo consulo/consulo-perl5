@@ -16,16 +16,18 @@
 
 package com.perl5.lang.mason2.idea.formatter;
 
-import com.intellij.formatting.Alignment;
-import com.intellij.formatting.FormattingContext;
-import com.intellij.formatting.Indent;
-import com.intellij.formatting.Wrap;
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
-import com.intellij.psi.formatter.xml.XmlFormattingPolicy;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.Language;
+import com.perl5.lang.mason2.Mason2Language;
+import consulo.language.codeStyle.Alignment;
+import consulo.language.codeStyle.FormattingContext;
+import consulo.language.codeStyle.Indent;
+import consulo.language.codeStyle.Wrap;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.codeStyle.CodeStyleSettings;
+import consulo.xml.psi.formatter.xml.XmlFormattingPolicy;
+import consulo.language.psi.PsiUtilCore;
 import com.perl5.lang.mason2.Mason2TemplatingLanguage;
 import com.perl5.lang.mason2.elementType.Mason2ElementTypes;
 import com.perl5.lang.perl.idea.formatter.PerlXmlTemplateFormattingModelBuilder;
@@ -34,6 +36,11 @@ import org.jetbrains.annotations.Nullable;
 
 
 public class MasonFormattingModelBuilder extends PerlXmlTemplateFormattingModelBuilder<MasonFormattingContext, MasonFormattingBlock> {
+  @Override
+  public @NotNull Language getLanguage() {
+    return Mason2Language.INSTANCE;
+  }
+
   @Override
   protected MasonFormattingBlock createTemplateLanguageBlock(ASTNode node,
                                                              CodeStyleSettings settings,

@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.idea.sdk.host.wsl;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.logging.Logger;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostFileTransfer;
 import org.jetbrains.annotations.NotNull;
 
@@ -51,7 +51,7 @@ class PerlWslFileTransfer extends PerlHostFileTransfer<PerlWslData> {
       return Collections.emptyList();
     }
 
-    var localVirtualFile = VfsUtil.findFile(Path.of(localPath), true);
+    var localVirtualFile = VirtualFileUtil.findFile(Path.of(localPath), true);
     if (localVirtualFile == null) {
       LOG.info("Unable to find local virtual file for: " + localPath);
       return Collections.emptyList();

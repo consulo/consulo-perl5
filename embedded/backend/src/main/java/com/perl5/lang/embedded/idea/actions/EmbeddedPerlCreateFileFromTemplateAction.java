@@ -16,12 +16,13 @@
 
 package com.perl5.lang.embedded.idea.actions;
 
-import com.intellij.ide.actions.CreateFileFromTemplateAction;
-import com.intellij.ide.actions.CreateFileFromTemplateDialog;
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiDirectory;
+import consulo.ide.action.CreateFileFromTemplateAction;
+import consulo.ide.action.CreateFileFromTemplateDialog;
+import consulo.dataContext.DataContext;
+import consulo.localize.LocalizeValue;
+import consulo.application.dumb.DumbAware;
+import consulo.project.Project;
+import consulo.language.psi.PsiDirectory;
 import com.perl5.lang.embedded.EmbeddedPerlBundle;
 import com.perl5.lang.embedded.EmbeddedPerlIcons;
 import com.perl5.lang.embedded.filetypes.EmbeddedPerlFileType;
@@ -35,13 +36,13 @@ public class EmbeddedPerlCreateFileFromTemplateAction extends CreateFileFromTemp
 
   @Override
   protected void buildDialog(@NotNull Project project, @NotNull PsiDirectory directory, CreateFileFromTemplateDialog.Builder builder) {
-    builder.setTitle(EmbeddedPerlBundle.message("action.new.file.builder.title"));
+    builder.setTitle(LocalizeValue.localizeTODO(EmbeddedPerlBundle.message("action.new.file.builder.title")));
     builder.addKind(EmbeddedPerlFileType.INSTANCE.getDescription(), EmbeddedPerlIcons.EMBEDDED_PERL_FILE, "Perl5 embedded");
   }
 
   @Override
-  protected String getActionName(PsiDirectory directory, @NotNull String newName, String templateName) {
-    return EmbeddedPerlBundle.message("action.new.file.action.name", newName);
+  protected LocalizeValue getActionName(PsiDirectory directory, @NotNull String newName, String templateName) {
+    return LocalizeValue.localizeTODO(EmbeddedPerlBundle.message("action.new.file.action.name", newName));
   }
 
   @Override

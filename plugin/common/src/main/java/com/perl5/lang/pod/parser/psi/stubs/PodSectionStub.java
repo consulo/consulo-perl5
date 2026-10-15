@@ -16,16 +16,16 @@
 
 package com.perl5.lang.pod.parser.psi.stubs;
 
-import com.intellij.psi.stubs.StubBase;
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.psi.stub.StubBase;
+import consulo.language.psi.stub.StubElement;
+import consulo.language.psi.stub.IStubElementType;
 import com.perl5.lang.pod.parser.psi.mixin.PodStubBasedSection;
 import org.jetbrains.annotations.NotNull;
 
 public class PodSectionStub extends StubBase<PodStubBasedSection> implements StubElement<PodStubBasedSection> {
   private final @NotNull String myContent;
 
-  public PodSectionStub(StubElement parent, IElementType elementType, @NotNull String myContent) {
+  public PodSectionStub(StubElement parent, IStubElementType<?, ?> elementType, @NotNull String myContent) {
     super(parent, elementType);
     this.myContent = myContent;
   }

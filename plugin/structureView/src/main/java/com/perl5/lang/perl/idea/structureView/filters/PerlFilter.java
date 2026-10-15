@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.idea.structureView.filters;
 
-import com.intellij.ide.util.treeView.smartTree.Filter;
-import com.intellij.ide.util.treeView.smartTree.TreeElement;
+import consulo.fileEditor.structureView.tree.Filter;
+import consulo.fileEditor.structureView.tree.TreeElement;
 import com.perl5.lang.perl.idea.structureView.elements.PerlNamespaceStructureViewElement;
 import com.perl5.lang.perl.idea.structureView.elements.PerlStructureViewElement;
 import com.perl5.lang.perl.idea.structureView.elements.PerlSubStructureViewElement;

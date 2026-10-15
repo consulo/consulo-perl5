@@ -16,17 +16,16 @@
 
 package com.perl5.lang.pod.idea.documentation;
 
-import com.intellij.codeInsight.template.impl.LiveTemplateLookupElementImpl;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.util.NlsSafe;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.language.editor.template.LiveTemplateLookupElement;
+import consulo.logging.Logger;
+import consulo.codeEditor.Editor;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.PsiUtilCore;
+import consulo.util.collection.ContainerUtil;
 import com.perl5.lang.perl.PerlLanguage;
 import com.perl5.lang.perl.documentation.PerlDocUtil;
 import com.perl5.lang.perl.documentation.PerlDocumentationProviderBase;
@@ -59,7 +58,7 @@ public class PodDocumentationProvider extends PerlDocumentationProviderBase {
 
   @Override
   public PsiElement getDocumentationElementForLookupItem(PsiManager psiManager, Object object, PsiElement element) {
-    if (object instanceof LiveTemplateLookupElementImpl templateLookupElement) {
+    if (object instanceof LiveTemplateLookupElement templateLookupElement) {
       String lookupString = templateLookupElement.getLookupString();
       if (lookupString.startsWith("=")) {
         return PerlDocUtil.resolveDoc("perlpod", lookupString, element, true);
@@ -71,18 +70,18 @@ public class PodDocumentationProvider extends PerlDocumentationProviderBase {
     return super.getDocumentationElementForLookupItem(psiManager, object, element);
   }
 
+  // consulo: Consulo DocumentationProviderEx#getCustomDocumentationElement has no targetOffset parameter (it was only passed through)
   @Override
   public @Nullable PsiElement getCustomDocumentationElement(@NotNull Editor editor,
                                                             @NotNull PsiFile file,
-                                                            @Nullable PsiElement contextElement,
-                                                            int targetOffset) {
+                                                            @Nullable PsiElement contextElement) {
     if (contextElement == null || contextElement.getLanguage() != PodLanguage.INSTANCE) {
       return null;
     }
     IElementType elementType = PsiUtilCore.getElementType(contextElement);
 
     if (elementType == POD_ANGLE_LEFT) {
-      return getCustomDocumentationElement(editor, file, contextElement.getPrevSibling(), targetOffset);
+      return getCustomDocumentationElement(editor, file, contextElement.getPrevSibling());
     }
     else if (PodTokenSets.POD_FORMATTERS_TOKENSET.contains(elementType)) {
       return PerlDocUtil.resolveDoc("perlpod", contextElement.getText(), contextElement, true);
@@ -110,7 +109,7 @@ public class PodDocumentationProvider extends PerlDocumentationProviderBase {
     return super.getDocumentationElementForLink(psiManager, link, context);
   }
 
-  public static @NlsSafe @Nullable String doGenerateDoc(@Nullable PsiElement element) {
+  public static @Nullable String doGenerateDoc(@Nullable PsiElement element) {
     return switch (element) {
       case PodFile ignored -> StringUtil.nullize(PerlDocUtil.renderPodFile((PodFileImpl)element));
       case PodFormatterX x -> generateDocByIndex(x);

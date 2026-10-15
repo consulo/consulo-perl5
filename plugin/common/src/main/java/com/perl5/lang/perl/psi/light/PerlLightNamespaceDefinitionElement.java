@@ -16,10 +16,10 @@
 
 package com.perl5.lang.perl.psi.light;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiElementVisitor;
+import consulo.language.ast.IElementType;
+import consulo.language.util.IncorrectOperationException;
 import com.perl5.lang.perl.psi.PerlNamespaceDefinitionWithIdentifier;
 import com.perl5.lang.perl.psi.PerlNamespaceElement;
 import com.perl5.lang.perl.psi.PerlVisitor;
@@ -49,7 +49,7 @@ public class PerlLightNamespaceDefinitionElement extends PerlDelegatingLightName
   private final @NotNull Map<String, List<String>> myExportTags;
 
   public PerlLightNamespaceDefinitionElement(@NotNull PerlPolyNamedElement<?> delegate, @NotNull PerlNamespaceDefinitionStub stub) {
-    super(delegate, stub.getNamespaceName(), stub.getElementType());
+    super(delegate, stub.getNamespaceName(), stub.getStubType());
     myMroType = stub.getMroType();
     myParentNamespacesNames = stub.getParentNamespacesNames();
     myAnnotations = stub.getAnnotations();

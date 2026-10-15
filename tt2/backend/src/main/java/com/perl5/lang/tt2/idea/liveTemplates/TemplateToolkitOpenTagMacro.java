@@ -16,15 +16,21 @@
 
 package com.perl5.lang.tt2.idea.liveTemplates;
 
-import com.intellij.codeInsight.template.*;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.tree.IElementType;
+
+import consulo.language.ast.IElementType;
 import com.perl5.lang.tt2.idea.settings.TemplateToolkitSettings;
 import com.perl5.lang.tt2.utils.TemplateToolkitPsiUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import static com.perl5.lang.tt2.parser.TemplateToolkitElementTypesGenerated.TT2_OUTLINE_TAG;
+import consulo.language.editor.template.Expression;
+import consulo.language.editor.template.ExpressionContext;
+import consulo.language.editor.template.macro.Macro;
+import consulo.language.editor.template.Result;
+import consulo.language.editor.template.context.TemplateContextType;
+import consulo.language.editor.template.TextResult;
+import consulo.localize.LocalizeValue;
 
 
 public class TemplateToolkitOpenTagMacro extends Macro {
@@ -34,20 +40,22 @@ public class TemplateToolkitOpenTagMacro extends Macro {
   }
 
   @Override
-  public String getPresentableName() {
-    return "tt2OpenMarker()";
+  public LocalizeValue getPresentableName() {
+    return LocalizeValue.of("tt2OpenMarker()");
   }
 
   @Override
   public @Nullable Result calculateQuickResult(@NotNull Expression @NotNull [] params, ExpressionContext context) {
-    return getResultByTokenType(context.getProject(), TemplateToolkitPsiUtil.getLastOpenMarker(context.getEditor()));
+    // consulo: settings of the module of the edited file
+    TemplateToolkitSettings settings = TemplateToolkitSettings.forEditor(context.getProject(), context.getEditor());
+    return getResultByTokenType(settings, TemplateToolkitPsiUtil.getLastOpenMarker(context.getEditor()));
   }
 
-  protected @Nullable Result getResultByTokenType(Project project, IElementType tokenType) {
+  protected @Nullable Result getResultByTokenType(TemplateToolkitSettings settings, IElementType tokenType) {
     if (tokenType == TT2_OUTLINE_TAG) {
-      return new TextResult(TemplateToolkitSettings.getInstance(project).OUTLINE_TAG);
+      return new TextResult(settings.getOutlineTag());
     }
-      return new TextResult(TemplateToolkitSettings.getInstance(project).START_TAG);
+    return new TextResult(settings.getStartTag());
   }
 
 

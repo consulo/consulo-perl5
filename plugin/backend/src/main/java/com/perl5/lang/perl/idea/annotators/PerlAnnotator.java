@@ -17,19 +17,17 @@
 package com.perl5.lang.perl.idea.annotators;
 
 
-import com.intellij.codeInspection.util.InspectionMessage;
-import com.intellij.lang.annotation.AnnotationHolder;
-import com.intellij.lang.annotation.HighlightSeverity;
-import com.intellij.openapi.editor.colors.CodeInsightColors;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
-import com.intellij.openapi.util.NlsSafe;
-import com.intellij.openapi.util.NotNullLazyValue;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.ElementManipulators;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.editor.annotation.AnnotationHolder;
+import consulo.language.editor.annotation.HighlightSeverity;
+import consulo.codeEditor.CodeInsightColors;
+import consulo.colorScheme.TextAttributesKey;
+import consulo.application.util.NotNullLazyValue;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.ElementManipulators;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiReference;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.PsiUtilCore;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.extensions.packageprocessor.impl.ConstantProcessor;
 import com.perl5.lang.perl.idea.highlighter.PerlSyntaxHighlighter;
@@ -61,7 +59,7 @@ public class PerlAnnotator extends PerlBaseAnnotator {
   @Override
   public void annotate(final @NotNull PsiElement element, @NotNull AnnotationHolder holder) {
     IElementType elementType = PsiUtilCore.getElementType(element);
-    BiConsumer<@InspectionMessage String, TextAttributesKey> defaultAnnotationProducer =
+    BiConsumer<String, TextAttributesKey> defaultAnnotationProducer =
       (var msg, var key) -> createInfoAnnotation(holder, element, msg, key);
     Consumer<TextAttributesKey> defaultSilentProducer = (key) -> createInfoAnnotation(holder, element, null, key);
 
@@ -99,7 +97,7 @@ public class PerlAnnotator extends PerlBaseAnnotator {
     else if (element instanceof PerlCharSubstitution charSubstitution) {
       int codePoint = charSubstitution.getCodePoint();
       if (codePoint >= 0 && Character.isValidCodePoint(codePoint)) {
-        @NlsSafe StringBuilder sb = new StringBuilder("<ul>");
+        StringBuilder sb = new StringBuilder("<ul>");
         @NonNls String chars = charSubstitution.getNonIgnorableChars();
         if (StringUtil.isEmptyOrSpaces(chars)) {
           chars = PerlBundle.message("perl.annotator.char.non.printable");

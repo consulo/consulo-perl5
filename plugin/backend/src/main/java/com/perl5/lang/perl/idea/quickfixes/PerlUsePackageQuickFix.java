@@ -16,14 +16,15 @@
 
 package com.perl5.lang.perl.idea.quickfixes;
 
-import com.intellij.codeInspection.LocalQuickFix;
-import com.intellij.codeInspection.ProblemDescriptor;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiComment;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiWhiteSpace;
-import com.intellij.psi.util.PsiTreeUtil;
+import consulo.language.editor.inspection.LocalQuickFix;
+import consulo.language.editor.inspection.ProblemDescriptor;
+import consulo.project.Project;
+import consulo.localize.LocalizeValue;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiComment;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiWhiteSpace;
+import consulo.language.psi.util.PsiTreeUtil;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.lexer.PerlTokenSetsEx;
 import com.perl5.lang.perl.psi.PsiPerlNamespaceContent;
@@ -43,11 +44,11 @@ public class PerlUsePackageQuickFix implements LocalQuickFix {
   }
 
   @Override
-  public @Nls @NotNull String getName() {
-    return PerlBundle.message("perl.quickfix.add.use.name", myPackageName);
+  public @NotNull LocalizeValue getName() {
+    return LocalizeValue.localizeTODO(PerlBundle.message("perl.quickfix.add.use.name", myPackageName));
   }
 
-  @Override
+  // TODO consulo: Consulo QuickFix has no family name; kept for upstream parity (unused)
   public @NotNull String getFamilyName() {
     return PerlBundle.message("perl.quickfix.add.use.family");
   }

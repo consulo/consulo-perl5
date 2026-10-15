@@ -16,15 +16,15 @@
 
 package com.perl5.lang.perl.idea.quickfixes;
 
-import com.intellij.codeInspection.LocalQuickFix;
-import com.intellij.codeInspection.ProblemDescriptor;
-import com.intellij.codeInspection.util.IntentionName;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.language.editor.inspection.LocalQuickFix;
+import consulo.language.editor.inspection.ProblemDescriptor;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.localize.LocalizeValue;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.util.collection.ContainerUtil;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.psi.PerlVariableDeclarationElement;
 import com.perl5.lang.perl.psi.PsiPerlStatement;
@@ -53,10 +53,10 @@ public class PerlUseVarsQuickFix implements LocalQuickFix {
   public boolean isRemoval() { return myIsRemoval; }
 
   @Override
-  public @IntentionName @NotNull String getName() {
-    return isRemoval() ?
+  public @NotNull LocalizeValue getName() {
+    return LocalizeValue.localizeTODO(isRemoval() ?
            PerlBundle.message("perl.remove.redundant.code") :
-           PerlBundle.message("perl.quickfix.use.vars");
+           PerlBundle.message("perl.quickfix.use.vars"));
   }
 
   @Override
@@ -85,10 +85,5 @@ public class PerlUseVarsQuickFix implements LocalQuickFix {
     if (newElement != null) {
       startElement.replace(newElement);
     }
-  }
-
-  @Override
-  public @Nls @NotNull String getFamilyName() {
-    return getName();
   }
 }

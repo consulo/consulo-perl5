@@ -16,7 +16,7 @@
 
 package com.perl5.lang.mason2.idea.formatter;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.perl5.lang.mason2.Mason2Language;
 import com.perl5.lang.perl.idea.formatter.PerlPreFormatProcessor;
 

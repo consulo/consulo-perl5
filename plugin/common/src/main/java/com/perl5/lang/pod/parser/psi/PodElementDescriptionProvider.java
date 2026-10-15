@@ -16,10 +16,10 @@
 
 package com.perl5.lang.pod.parser.psi;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.logging.Logger;
+import consulo.language.psi.PsiElement;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.PsiUtilCore;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.idea.PerlElementDescriptionProviderBase;
 import com.perl5.lang.pod.PodLanguage;

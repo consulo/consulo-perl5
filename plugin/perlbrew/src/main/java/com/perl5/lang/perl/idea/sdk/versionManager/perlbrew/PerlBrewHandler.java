@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.idea.sdk.versionManager.perlbrew;
 
-import com.intellij.openapi.util.NlsSafe;
 import com.perl5.PerlIcons;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import com.perl5.lang.perl.idea.sdk.PerlHandlerBean;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostData;
 import com.perl5.lang.perl.idea.sdk.versionManager.InstallPerlHandler;
@@ -34,8 +34,8 @@ import java.util.regex.Pattern;
 
 class PerlBrewHandler extends PerlRealVersionManagerHandler<PerlBrewData, PerlBrewHandler> {
   private static final Pattern KEY_VAL_PATTERN = Pattern.compile("\\s+([\\w_]+):\\s*(\\S+)");
-  private static final @NlsSafe String PERLBREW = "perlbrew";
-  private static final @NlsSafe String PERLBREW_DEFAULT_PATH = "~/perl5/perlbrew/bin/" + PERLBREW;
+  private static final String PERLBREW = "perlbrew";
+  private static final String PERLBREW_DEFAULT_PATH = "~/perl5/perlbrew/bin/" + PERLBREW;
 
   @SuppressWarnings("NonDefaultConstructor")
   public PerlBrewHandler(@NotNull PerlHandlerBean bean) {
@@ -92,7 +92,7 @@ class PerlBrewHandler extends PerlRealVersionManagerHandler<PerlBrewData, PerlBr
 
   @Override
   public @NotNull Icon getIcon() {
-    return PerlIcons.PERLBREW_ICON;
+    return TargetAWT.to(PerlIcons.PERLBREW_ICON);
   }
 
   @Override

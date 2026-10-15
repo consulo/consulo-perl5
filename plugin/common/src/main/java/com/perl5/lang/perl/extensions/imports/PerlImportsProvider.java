@@ -16,7 +16,9 @@
 
 package com.perl5.lang.perl.extensions.imports;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.component.extension.ExtensionPointName;
 import com.perl5.lang.perl.extensions.packageprocessor.PerlExportDescriptor;
 import com.perl5.lang.perl.psi.PerlNamespaceDefinitionElement;
 import org.jetbrains.annotations.Contract;
@@ -32,8 +34,9 @@ import java.util.Set;
  * Extension point that can provide additional import descriptors by {@link com.perl5.lang.perl.psi.PerlNamespaceDefinitionElement}
  * e.g. implicit imports for carton file
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface PerlImportsProvider {
-  ExtensionPointName<PerlImportsProvider> EP_NAME = ExtensionPointName.create("com.perl5.importsProvider");
+  ExtensionPointName<PerlImportsProvider> EP_NAME = ExtensionPointName.create(PerlImportsProvider.class);
 
   @Contract("null->false")
   boolean isApplicable(@Nullable PerlNamespaceDefinitionElement namespaceDefinitionElement);

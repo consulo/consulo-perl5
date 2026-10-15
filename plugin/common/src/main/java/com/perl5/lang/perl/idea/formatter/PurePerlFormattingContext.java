@@ -16,25 +16,25 @@
 
 package com.perl5.lang.perl.idea.formatter;
 
-import com.intellij.formatting.*;
-import com.intellij.lang.ASTNode;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.TokenType;
-import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
-import com.intellij.psi.formatter.FormatterUtil;
-import com.intellij.psi.impl.source.tree.CompositeElement;
-import com.intellij.psi.impl.source.tree.LeafElement;
-import com.intellij.psi.impl.source.tree.TreeUtil;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.FactoryMap;
-import com.intellij.util.containers.MultiMap;
+
+import consulo.language.ast.ASTNode;
+import consulo.logging.Logger;
+import consulo.document.Document;
+import consulo.document.util.TextRange;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.ast.TokenType;
+import consulo.language.codeStyle.CommonCodeStyleSettings;
+import consulo.language.codeStyle.FormatterUtil;
+import consulo.language.impl.ast.CompositeElement;
+import consulo.language.impl.ast.LeafElement;
+import consulo.language.impl.ast.TreeUtil;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.psi.PsiUtilCore;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.collection.FactoryMap;
+import consulo.util.collection.MultiMap;
 import com.perl5.lang.perl.PerlLanguage;
 import com.perl5.lang.perl.idea.formatter.blocks.PerlAstBlock;
 import com.perl5.lang.perl.idea.formatter.blocks.PerlSyntheticBlock;
@@ -54,12 +54,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.intellij.formatting.WrapType.*;
-import static com.intellij.psi.codeStyle.CommonCodeStyleSettings.*;
+import static consulo.language.codeStyle.WrapType.*;
+import static consulo.language.codeStyle.CommonCodeStyleSettings.*;
 import static com.perl5.lang.perl.idea.formatter.PerlFormattingTokenSets.*;
 import static com.perl5.lang.perl.idea.formatter.settings.PerlCodeStyleSettings.OptionalConstructions.*;
 import static com.perl5.lang.perl.lexer.PerlTokenSets.*;
 import static com.perl5.lang.perl.parser.PerlElementTypesGenerated.*;
+import consulo.language.codeStyle.ASTBlock;
+import consulo.language.codeStyle.Alignment;
+import consulo.language.codeStyle.Block;
+import consulo.language.codeStyle.FormattingContext;
+import consulo.language.codeStyle.Indent;
+import consulo.language.codeStyle.Spacing;
+import consulo.language.codeStyle.SpacingBuilder;
+import consulo.language.codeStyle.Wrap;
+import consulo.language.codeStyle.WrapType;
 
 public class PurePerlFormattingContext extends PerlBaseFormattingContext {
   private static final Logger LOG = Logger.getInstance(PurePerlFormattingContext.class);

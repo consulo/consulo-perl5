@@ -16,8 +16,7 @@
 
 package com.perl5.lang.perl.idea.sdk.host.local;
 
-import com.intellij.openapi.util.NlsActions.ActionText;
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.idea.sdk.PerlHandlerBean;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostHandler;
@@ -38,7 +37,7 @@ class PerlLocalHostHandler extends PerlHostHandler<PerlLocalHostData, PerlLocalH
   }
 
   @Override
-  public @NotNull @ActionText String getMenuItemTitle() {
+  public @NotNull String getMenuItemTitle() {
     return PerlBundle.message("perl.host.handler.localhost.menu.title");
   }
 

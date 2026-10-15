@@ -17,15 +17,14 @@
 package com.perl5.lang.perl.debugger.protocol;
 
 import com.google.gson.annotations.Expose;
-import com.intellij.openapi.util.NlsSafe;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.VisibleForTesting;
 
 
 public class PerlLoadedFileDescriptor {
-  @Expose private @NlsSafe @NotNull String path;
-  @Expose private @NlsSafe @Nullable String name;
+  @Expose private @NotNull String path;
+  @Expose private @Nullable String name;
 
   @SuppressWarnings("unused")
   public PerlLoadedFileDescriptor() {
@@ -37,15 +36,15 @@ public class PerlLoadedFileDescriptor {
     this.name = name;
   }
 
-  public @NotNull @NlsSafe String getPath() {
+  public @NotNull String getPath() {
     return path;
   }
 
-  public @Nullable @NlsSafe String getName() {
+  public @Nullable String getName() {
     return name;
   }
 
-  public @NlsSafe @NotNull String getPresentableName() {
+  public @NotNull String getPresentableName() {
     return isEval() && name != null ? name : path;
   }
 

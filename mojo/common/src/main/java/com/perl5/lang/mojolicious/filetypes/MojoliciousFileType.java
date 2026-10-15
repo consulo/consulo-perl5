@@ -20,10 +20,10 @@ import com.perl5.lang.mojolicious.MojoBundle;
 import com.perl5.lang.mojolicious.MojoIcons;
 import com.perl5.lang.mojolicious.MojoliciousLanguage;
 import com.perl5.lang.perl.fileTypes.PerlFileType;
+import consulo.localize.LocalizeValue;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import javax.swing.*;
 
 
 public class MojoliciousFileType extends PerlFileType {
@@ -35,13 +35,13 @@ public class MojoliciousFileType extends PerlFileType {
   }
 
   @Override
-  public @NotNull String getName() {
+  public @NotNull String getId() {
     return "Mojolicious Perl5 Template";
   }
 
   @Override
-  public @NotNull String getDescription() {
-    return MojoBundle.message("label.mojolicious.perl5.template");
+  public @NotNull LocalizeValue getDescription() {
+    return LocalizeValue.localizeTODO(MojoBundle.message("label.mojolicious.perl5.template"));
   }
 
   @Override
@@ -50,7 +50,7 @@ public class MojoliciousFileType extends PerlFileType {
   }
 
   @Override
-  public @Nullable Icon getIcon() {
+  public @Nullable Image getIcon() {
     return MojoIcons.MOJO_FILE;
   }
 

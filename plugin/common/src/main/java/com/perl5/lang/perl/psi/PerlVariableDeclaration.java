@@ -16,9 +16,7 @@
 
 package com.perl5.lang.perl.psi;
 
-import com.intellij.openapi.util.NlsContexts;
-import com.intellij.openapi.util.NlsSafe;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlValue;
 import com.perl5.lang.perl.psi.properties.PerlPackageMember;
 import com.perl5.lang.perl.psi.utils.PerlVariableAnnotations;
@@ -35,12 +33,12 @@ public interface PerlVariableDeclaration extends PerlDeprecatable, PerlPackageMe
    *
    * @return package name for current element
    */
-  @NlsSafe
+  
   @Override
   @Nullable
   String getNamespaceName();
 
-  @NlsSafe
+  
   String getVariableName();
 
   default @NotNull PerlValue getDeclaredValue() {
@@ -75,7 +73,7 @@ public interface PerlVariableDeclaration extends PerlDeprecatable, PerlPackageMe
    * @return fqn or null if name is missing
    */
   @Override
-  default @NlsContexts.Label @Nullable String getCanonicalName() {
+  default @Nullable String getCanonicalName() {
     String variableName = getVariableName();
     if (StringUtil.isEmpty(variableName)) {
       return null;

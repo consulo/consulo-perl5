@@ -16,24 +16,31 @@
 
 package com.perl5.lang.perl.psi;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.Language;
-import com.intellij.model.psi.PsiSymbolReference;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.*;
-import com.intellij.psi.impl.FakePsiElement;
-import com.intellij.psi.scope.PsiScopeProcessor;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.search.SearchScope;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.ast.ASTNode;
+import consulo.language.Language;
+import consulo.project.Project;
+import consulo.util.dataholder.Key;
+import consulo.document.util.TextRange;
+
+import consulo.language.impl.psi.FakePsiElement;
+import consulo.language.psi.resolve.PsiScopeProcessor;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.content.scope.SearchScope;
+import consulo.language.util.IncorrectOperationException;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
+import consulo.language.psi.NavigatablePsiElement;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiElementVisitor;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiInvalidElementAccessException;
+import consulo.language.psi.PsiManager;
+import consulo.language.psi.PsiReference;
+import consulo.language.psi.resolve.ResolveState;
 
 /**
  * Fake wrapper for PsiElements, allowing e.g. to override presentation
@@ -55,10 +62,11 @@ public class PerlDelegatingFakeElement extends FakePsiElement {
     return myDelegate.getTextRangeInParent();
   }
 
-  @Override
-  public @NotNull Collection<? extends @NotNull PsiSymbolReference> getOwnReferences() {
-    return myDelegate.getOwnReferences();
-  }
+  // TODO consulo: IntelliJ Symbol API (PsiSymbolReference, PsiElement#getOwnReferences) does not exist in Consulo
+  //@Override
+  //public @NotNull Collection<? extends @NotNull PsiSymbolReference> getOwnReferences() {
+  //  return myDelegate.getOwnReferences();
+  //}
 
   @Override
   public @Nullable String getText() {

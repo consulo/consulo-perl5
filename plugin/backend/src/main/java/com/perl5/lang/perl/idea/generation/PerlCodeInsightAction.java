@@ -16,10 +16,10 @@
 
 package com.perl5.lang.perl.idea.generation;
 
-import com.intellij.codeInsight.actions.CodeInsightAction;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiFile;
+import consulo.language.editor.action.CodeInsightAction;
+import consulo.codeEditor.Editor;
+import consulo.project.Project;
+import consulo.language.psi.PsiFile;
 import com.perl5.lang.perl.psi.impl.PerlFileImpl;
 import org.jetbrains.annotations.NotNull;
 

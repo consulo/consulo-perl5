@@ -16,12 +16,12 @@
 
 package com.perl5.lang.perl.psi.mixins;
 
-import com.intellij.codeInsight.controlflow.Instruction;
-import com.intellij.lang.ASTNode;
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.openapi.util.ClearableLazyValue;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiTreeUtil;
+import consulo.language.controlFlow.Instruction;
+import consulo.language.ast.ASTNode;
+import consulo.navigation.ItemPresentation;
+import consulo.util.lang.lazy.ClearableLazyValue;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.util.PsiTreeUtil;
 import com.perl5.lang.perl.idea.codeInsight.controlFlow.PerlControlFlowBuilder;
 import com.perl5.lang.perl.idea.presentations.PerlItemPresentationSimpleDynamicLocation;
 import com.perl5.lang.perl.idea.ui.PerlIconProvider;
@@ -31,7 +31,7 @@ import com.perl5.lang.perl.psi.impl.PerlCompositeElementImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
+import consulo.ui.image.Image;
 
 public abstract class PerlMethodModifierMixin extends PerlCompositeElementImpl implements PerlMethodModifier {
 
@@ -51,8 +51,9 @@ public abstract class PerlMethodModifierMixin extends PerlCompositeElementImpl i
     return PsiTreeUtil.getChildOfType(this, PerlSubNameElement.class);
   }
 
-  @Override
-  public Icon getIcon(int flags) {
+  // TODO consulo: PsiElement#getIcon(int) does not exist in Consulo (element icons come from IconDescriptorUpdater),
+  //  so this is no longer an override and is not called by the platform
+  public Image getIcon(int flags) {
     return PerlIconProvider.getIcon(this);
   }
 
@@ -72,11 +73,11 @@ public abstract class PerlMethodModifierMixin extends PerlCompositeElementImpl i
 
   @Override
   public @NotNull Instruction[] getControlFlow() {
-    return myControlFlow.getValue();
+    return myControlFlow.get();
   }
 
   @Override
   public void subtreeChanged() {
-    myControlFlow.drop();
+    myControlFlow.clear();
   }
 }

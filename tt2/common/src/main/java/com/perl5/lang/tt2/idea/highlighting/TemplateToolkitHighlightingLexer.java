@@ -16,11 +16,11 @@
 
 package com.perl5.lang.tt2.idea.highlighting;
 
-import com.intellij.lexer.Lexer;
-import com.intellij.lexer.MergeFunction;
-import com.intellij.lexer.MergingLexerAdapterBase;
-import com.intellij.psi.TokenType;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.lexer.Lexer;
+import consulo.language.lexer.MergeFunction;
+import consulo.language.lexer.MergingLexerAdapterBase;
+import consulo.language.ast.TokenType;
+import consulo.language.ast.IElementType;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

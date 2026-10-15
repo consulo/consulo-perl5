@@ -16,9 +16,17 @@
 
 package com.perl5.lang.pod.parser.psi.manipulators;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.perl5.lang.perl.idea.manipulators.PerlTextContainerManipulator;
+import com.perl5.lang.pod.parser.psi.PodCompositeElement;
+import org.jetbrains.annotations.NotNull;
 
 
 public class PodElementManipulator extends PerlTextContainerManipulator<PsiElement> {
+  // consulo: upstream registers this manipulator for PodCompositeElement in plugin.xml
+  @SuppressWarnings({"unchecked", "rawtypes"})
+  @Override
+  public @NotNull Class<PsiElement> getElementClass() {
+    return (Class)PodCompositeElement.class;
+  }
 }

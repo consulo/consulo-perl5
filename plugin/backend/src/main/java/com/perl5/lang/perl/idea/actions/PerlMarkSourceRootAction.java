@@ -16,21 +16,22 @@
 
 package com.perl5.lang.perl.idea.actions;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.Presentation;
-import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.ReadAction;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectBundle;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
+import consulo.application.Application;
+import consulo.application.ReadAction;
+import consulo.module.Module;
+import consulo.language.util.ModuleUtilCore;
+import consulo.project.Project;
+import consulo.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.impl.PerlModuleExtension;
-import com.intellij.openapi.roots.ui.configuration.ModuleSourceRootEditHandler;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.concurrency.AppExecutorUtil;
+import com.perl5.lang.perl.idea.configuration.settings.sdk.PerlSourceRootEditHandler;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import com.perl5.lang.perl.idea.modules.PerlSourceRootType;
 import com.perl5.lang.perl.idea.project.PerlProjectManager;
 import com.perl5.lang.perl.util.PerlPluginUtil;
+import consulo.perl5.core.module.PerlFrameworkContentFolderSupportPatcher;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -43,7 +44,7 @@ public abstract class PerlMarkSourceRootAction extends PerlSourceRootAction {
 
   public PerlMarkSourceRootAction(@NotNull PerlSourceRootType type) {
     myType = type;
-    ModuleSourceRootEditHandler<?> editHandler = type.getEditHandler();
+    PerlSourceRootEditHandler editHandler = type.getEditHandler();
     Presentation presentation = getTemplatePresentation();
     presentation.setText(editHandler.getMarkRootButtonText());
     presentation.setDescription(ProjectBundle.message("module.toggle.sources.action.description",
@@ -55,6 +56,10 @@ public abstract class PerlMarkSourceRootAction extends PerlSourceRootAction {
   @Override
   protected boolean isEnabled(@NotNull List<? extends VirtualFile> files, @NotNull Module module) {
     if (files.isEmpty() || !PerlProjectManager.isPerlEnabled(module)) {
+      return false;
+    }
+    // consulo: framework roots (templates, components) may be marked only with the framework module extension enabled for the module
+    if (!PerlFrameworkContentFolderSupportPatcher.isRootTypeEnabled(module, myType)) {
       return false;
     }
     return !myType.equals(PerlModuleExtension.getInstance(module).getRootType(files.getFirst()));
@@ -74,8 +79,9 @@ public abstract class PerlMarkSourceRootAction extends PerlSourceRootAction {
           return null;
         }
         return ModuleUtilCore.findModuleForFile(virtualFile, project);
-      }).finishOnUiThread(ModalityState.current(), (module) -> {
-        if (module != null && PerlPluginUtil.isUnloaded(module.getProject())) {
+      }).finishOnUiThread(Application::getCurrentModalityState, (module) -> {
+        // consulo: upstream checks isUnloaded without negation, so nothing is ever marked
+        if (module != null && !PerlPluginUtil.isUnloaded(module.getProject())) {
           markRoot(module, virtualFile);
         }
       }).expireWith(PerlPluginUtil.getUnloadAwareDisposable(project))

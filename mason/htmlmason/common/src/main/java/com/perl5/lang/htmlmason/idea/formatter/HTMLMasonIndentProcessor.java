@@ -16,9 +16,9 @@
 
 package com.perl5.lang.htmlmason.idea.formatter;
 
-import com.intellij.formatting.Indent;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
+import consulo.language.codeStyle.Indent;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
 import com.perl5.lang.htmlmason.elementType.HTMLMasonElementTypes;
 import com.perl5.lang.perl.idea.formatter.PerlFormattingTokenSets;
 import com.perl5.lang.perl.idea.formatter.PerlIndentProcessor;

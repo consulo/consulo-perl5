@@ -16,14 +16,13 @@
 
 package com.perl5.lang.mason2;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.stubs.StubIndex;
+import consulo.project.Project;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.stub.StubIndex;
 import com.perl5.lang.htmlmason.MasonCoreUtil;
-import com.perl5.lang.mason2.idea.configuration.MasonSettings;
+import com.perl5.lang.mason2.idea.configuration.Mason2SourceRootType;
 import com.perl5.lang.mason2.psi.MasonNamespaceDefinition;
 import com.perl5.lang.mason2.psi.stubs.MasonNamespaceDefitnitionsStubIndex;
 import com.perl5.lang.perl.idea.project.PerlProjectManager;
@@ -45,7 +44,7 @@ public final class Mason2Util {
       VirtualFile componentRoot = getComponentRoot(project, componentFile);
       if (componentRoot != null) {
         //noinspection ConstantConditions
-        return Mason2UtilCore.getClassnameFromPath(VfsUtilCore.getRelativePath(componentFile, componentRoot));
+        return Mason2UtilCore.getClassnameFromPath(VirtualFileUtil.getRelativePath(componentFile, componentRoot));
       }
     }
 
@@ -53,7 +52,16 @@ public final class Mason2Util {
   }
 
   public static @Nullable VirtualFile getComponentRoot(@NotNull Project project, @Nullable VirtualFile file) {
-    return MasonCoreUtil.getComponentRoot(MasonSettings.getInstance(project), file);
+    return MasonCoreUtil.getComponentRoot(project, Mason2SourceRootType.INSTANCE, file);
+  }
+
+  /**
+   * consulo: upstream takes the roots from the project settings, which provide the root type
+   *
+   * @return components roots of the modules with the Mason2 module extension enabled
+   */
+  public static @NotNull List<VirtualFile> getComponentRoots(@NotNull Project project) {
+    return PerlProjectManager.getInstance(project).getModulesRootsOfType(Mason2SourceRootType.INSTANCE);
   }
 
   public static List<PerlNamespaceDefinitionElement> getMasonNamespacesByAbsolutePath(@NotNull Project project,
@@ -73,15 +81,12 @@ public final class Mason2Util {
                                                                                                 @NotNull List<String> componentPaths,
                                                                                                 @NotNull VirtualFile anchorDir) {
     List<PerlNamespaceDefinitionElement> result = new ArrayList<>();
-    MasonSettings masonSettings = MasonSettings.getInstance(project);
-
     for (String componentPath : componentPaths) {
       VirtualFile componentFile = null;
       if (componentPath
-        .startsWith("" + VfsUtil.VFS_SEPARATOR_CHAR)) // abs path relative to mason roots, see the Mason::Interp::_determine_parent_compc
+        .startsWith("" + VirtualFileUtil.VFS_SEPARATOR_CHAR)) // abs path relative to mason roots, see the Mason::Interp::_determine_parent_compc
       {
-        for (VirtualFile componentRoot : PerlProjectManager.getInstance(masonSettings.getProject())
-          .getModulesRootsOfType(masonSettings.getSourceRootType())) {
+        for (VirtualFile componentRoot : getComponentRoots(project)) {
           componentFile = componentRoot.findFileByRelativePath(componentPath.substring(1));
           if (componentFile != null) {
             break;

@@ -16,11 +16,15 @@
 
 package com.perl5.lang.perl.idea.codeInsight;
 
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.components.State;
-import com.intellij.openapi.components.Storage;
-import com.intellij.util.xmlb.XmlSerializerUtil;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
+import jakarta.inject.Singleton;
+import consulo.application.ApplicationManager;
+import consulo.component.persist.PersistentStateComponent;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
+import consulo.util.xml.serializer.XmlSerializerUtil;
 import com.perl5.lang.perl.idea.PerlPathMacros;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -29,10 +33,13 @@ import org.jetbrains.annotations.TestOnly;
 
 @State(
   name = "Perl5CodeInsightSettings",
-  storages = @Storage(PerlPathMacros.APP_OTHER_SETTINGS_FILE),
-  perClient = true
+  storages = @Storage(PerlPathMacros.APP_OTHER_SETTINGS_FILE)
+  // consulo: perClient = true dropped, Consulo has no per-client (remote development) state
 )
 
+@ServiceAPI(ComponentScope.APPLICATION)
+@ServiceImpl
+@Singleton
 public class Perl5CodeInsightSettings implements PersistentStateComponent<Perl5CodeInsightSettings>, Cloneable {
   public boolean HEREDOC_AUTO_INSERTION = true;
   public boolean AUTO_INSERT_COLON = true;
@@ -54,7 +61,7 @@ public class Perl5CodeInsightSettings implements PersistentStateComponent<Perl5C
     return ApplicationManager.getApplication().getService(Perl5CodeInsightSettings.class);
   }
 
-  @Override
+  // TODO consulo: Consulo PersistentStateComponent has no noStateLoaded() callback, defaults come from field initializers
   public void noStateLoaded() {
     loadState(new Perl5CodeInsightSettings());
   }

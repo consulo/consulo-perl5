@@ -16,11 +16,12 @@
 
 package com.perl5.lang.pod.idea.structureView;
 
-import com.intellij.ide.structureView.StructureViewTreeElement;
-import com.intellij.ide.structureView.impl.common.PsiTreeElementBase;
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.fileEditor.structureView.StructureViewTreeElement;
+import consulo.language.editor.structureView.PsiTreeElementBase;
+import consulo.language.icon.IconDescriptorUpdaters;
+import consulo.navigation.ItemPresentation;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import com.perl5.PerlBundle;
 import com.perl5.PerlIcons;
 import com.perl5.lang.pod.parser.psi.PodFile;
@@ -32,7 +33,7 @@ import com.perl5.lang.pod.psi.PsiPodSection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
+import consulo.ui.image.Image;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -59,13 +60,14 @@ public class PodStructureViewElement extends PsiTreeElementBase<PsiElement> {
     return null;
   }
 
+  // consulo: PsiTreeElementBase overrides getIcon() and does not delegate to getIcon(boolean)
   @Override
-  public @Nullable Icon getIcon(boolean unused) {
+  public @Nullable Image getIcon() {
     PsiElement element = getElement();
     if (element == null) {
       return null;
     }
-    return element instanceof PsiFile ? PerlIcons.POD_FILE : element.getIcon(0);
+    return element instanceof PsiFile ? PerlIcons.POD_FILE : IconDescriptorUpdaters.getIcon(element, 0);
   }
 
   @Override

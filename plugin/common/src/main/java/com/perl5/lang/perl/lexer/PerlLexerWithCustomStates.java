@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.lexer;
 
-import com.intellij.lexer.FlexLexer;
+import consulo.language.lexer.FlexLexer;
 
 
 public interface PerlLexerWithCustomStates extends FlexLexer {

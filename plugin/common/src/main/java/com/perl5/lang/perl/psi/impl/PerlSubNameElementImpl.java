@@ -16,10 +16,10 @@
 
 package com.perl5.lang.perl.psi.impl;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiElementVisitor;
+import consulo.language.psi.PsiReference;
+import consulo.language.ast.IElementType;
 import com.perl5.lang.perl.psi.PerlSubNameElement;
 import com.perl5.lang.perl.psi.PerlVisitor;
 import org.jetbrains.annotations.NotNull;

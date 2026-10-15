@@ -16,13 +16,13 @@
 
 package com.perl5.lang.perl.idea.manipulators;
 
-import com.intellij.application.options.CodeStyle;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.AbstractElementManipulator;
-import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.codeStyle.CodeStyle;
+import consulo.project.Project;
+import consulo.document.util.TextRange;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.AbstractElementManipulator;
+import consulo.language.codeStyle.CommonCodeStyleSettings;
+import consulo.language.util.IncorrectOperationException;
 import com.perl5.lang.perl.PerlLanguage;
 import com.perl5.lang.perl.psi.impl.PerlHeredocElementImpl;
 import com.perl5.lang.perl.psi.utils.PerlElementFactory;
@@ -51,6 +51,11 @@ public class PerlHeredocElementManipulator extends AbstractElementManipulator<Pe
     PerlHeredocElementImpl replacement = PerlElementFactory.createHeredocBodyReplacement(element, newElementText);
 
     return (PerlHeredocElementImpl)element.replace(replacement);
+  }
+
+  @Override
+  public @NotNull Class<PerlHeredocElementImpl> getElementClass() {
+    return PerlHeredocElementImpl.class;
   }
 
   private static @NotNull String getIndenter(@NotNull Project project, int indentSize) {

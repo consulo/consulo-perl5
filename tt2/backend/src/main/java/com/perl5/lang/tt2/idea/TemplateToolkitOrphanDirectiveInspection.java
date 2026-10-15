@@ -16,17 +16,55 @@
 
 package com.perl5.lang.tt2.idea;
 
-import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.Language;
+import consulo.language.editor.inspection.ProblemsHolder;
+import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiElementVisitor;
 import com.perl5.lang.perl.idea.inspections.PerlInspection;
 import com.perl5.lang.tt2.TemplateToolkitBundle;
+import com.perl5.lang.tt2.TemplateToolkitLanguage;
 import com.perl5.lang.tt2.parser.TemplateToolkitParserUtil;
 import com.perl5.lang.tt2.psi.*;
+import consulo.localize.LocalizeValue;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 
+@ExtensionImpl
 public class TemplateToolkitOrphanDirectiveInspection extends PerlInspection {
+  // consulo: metadata from upstream <localInspection> registration in perl5.lang.tt2.backend.main.xml
+  @Override
+  public @NotNull String getShortName() {
+    return "TT2OrphanReply";
+  }
+
+  @Override
+  public @Nullable Language getLanguage() {
+    return TemplateToolkitLanguage.INSTANCE;
+  }
+
+  @Override
+  public @NotNull LocalizeValue getDisplayName() {
+    return LocalizeValue.localizeTODO(TemplateToolkitBundle.message("tt2.inspection.orphan.reply.display.name"));
+  }
+
+  @Override
+  public @NotNull LocalizeValue getGroupDisplayName() {
+    return LocalizeValue.localizeTODO(TemplateToolkitBundle.message("tt2.group.name"));
+  }
+
+  @Override
+  public @NotNull HighlightDisplayLevel getDefaultLevel() {
+    return HighlightDisplayLevel.ERROR;
+  }
+
+  @Override
+  public boolean isEnabledByDefault() {
+    return true;
+  }
+
   @Override
   public @NotNull PsiElementVisitor buildVisitor(final @NotNull ProblemsHolder holder, boolean isOnTheFly) {
     return new TemplateToolkitVisitor() {

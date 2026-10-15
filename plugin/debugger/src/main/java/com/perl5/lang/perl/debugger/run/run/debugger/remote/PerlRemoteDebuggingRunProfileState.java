@@ -16,16 +16,16 @@
 
 package com.perl5.lang.perl.debugger.run.run.debugger.remote;
 
-import com.intellij.execution.DefaultExecutionResult;
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.ExecutionResult;
-import com.intellij.execution.Executor;
-import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.execution.ui.ConsoleView;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.xdebugger.DefaultDebugProcessHandler;
+import consulo.execution.DefaultExecutionResult;
+import consulo.process.ExecutionException;
+import consulo.execution.ExecutionResult;
+import consulo.execution.executor.Executor;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.execution.ui.console.ConsoleView;
+import consulo.project.Project;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.StringUtil;
+import consulo.execution.debug.DefaultDebugProcessHandler;
 import com.perl5.lang.perl.debugger.run.run.debugger.PerlDebugProfileStateBase;
 import com.perl5.lang.perl.idea.run.GenericPerlRunConfiguration;
 import com.perl5.lang.perl.idea.run.PerlRunConsole;

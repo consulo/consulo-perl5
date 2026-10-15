@@ -16,8 +16,8 @@
 
 package com.perl5.lang.mojolicious.idea.modules;
 
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.module.Module;
+import consulo.virtualFileSystem.VirtualFile;
 import com.perl5.lang.mojolicious.MojoUtil;
 import com.perl5.lang.perl.idea.actions.PerlMarkSourceRootAction;
 import org.jetbrains.annotations.NotNull;

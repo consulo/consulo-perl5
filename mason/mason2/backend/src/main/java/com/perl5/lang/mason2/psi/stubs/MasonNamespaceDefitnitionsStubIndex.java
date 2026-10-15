@@ -16,7 +16,7 @@
 
 package com.perl5.lang.mason2.psi.stubs;
 
-import com.intellij.psi.stubs.StubIndexKey;
+import consulo.language.psi.stub.StubIndexKey;
 import com.perl5.lang.mason2.psi.MasonNamespaceDefinition;
 import com.perl5.lang.perl.psi.stubs.PerlStubIndexBase;
 import org.jetbrains.annotations.NotNull;

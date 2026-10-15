@@ -16,17 +16,23 @@
 
 package com.perl5.lang.perl.idea.formatter;
 
-import com.intellij.formatting.*;
-import com.intellij.openapi.util.AtomicNotNullLazyValue;
-import com.intellij.openapi.util.NullableLazyValue;
-import com.intellij.openapi.util.TextRange;
+
+import consulo.application.util.AtomicNotNullLazyValue;
+import consulo.application.util.AtomicNullableLazyValue;
+import consulo.application.util.NullableLazyValue;
+import consulo.document.util.TextRange;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.intellij.openapi.util.NullableLazyValue.atomicLazyNullable;
+import consulo.language.codeStyle.Alignment;
+import consulo.language.codeStyle.Block;
+import consulo.language.codeStyle.ChildAttributes;
+import consulo.language.codeStyle.Indent;
+import consulo.language.codeStyle.Spacing;
+import consulo.language.codeStyle.Wrap;
 
 public class PerlInjectedLanguageBlockWrapper implements Block {
   protected final PerlInjectedLanguageBlocksBuilder myBuilder;
@@ -37,7 +43,7 @@ public class PerlInjectedLanguageBlockWrapper implements Block {
   public PerlInjectedLanguageBlockWrapper(@NotNull Block original, @NotNull PerlInjectedLanguageBlocksBuilder builder) {
     myOriginal = original;
     myBuilder = builder;
-    myRangeProvider = atomicLazyNullable(() -> myBuilder.getRangeInHostDocument(myOriginal.getTextRange()));
+    myRangeProvider = AtomicNullableLazyValue.createValue(() -> myBuilder.getRangeInHostDocument(myOriginal.getTextRange()));
     myChildBlocksProvider = AtomicNotNullLazyValue.createValue(() -> myOriginal.getSubBlocks().stream()
       .map(block -> new PerlInjectedLanguageBlockWrapper(block, myBuilder))
       .filter(wrapper -> wrapper.getTextRangeInner() != null)
@@ -72,9 +78,9 @@ public class PerlInjectedLanguageBlockWrapper implements Block {
   }
 
   private boolean isAbsoluteNoneIndent(@Nullable Indent indent) {
-    return indent instanceof IndentImpl indentImpl &&
+    return indent != null &&
            indent.getType() == Indent.Type.NONE &&
-           indentImpl.isAbsolute();
+           indent.isAbsolute();
   }
 
   @Override

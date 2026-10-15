@@ -16,12 +16,11 @@
 
 package com.perl5.lang.mojolicious;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.dataContext.DataContext;
+import consulo.module.Module;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
 import com.perl5.lang.perl.util.PerlRunUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
@@ -48,7 +47,7 @@ public final class MojoUtil {
    */
   @Contract("null->null")
   public static @Nullable VirtualFile getMojoScript(@Nullable AnActionEvent event) {
-    return event == null ? null : getMojoScript(event.getProject());
+    return event == null ? null : getMojoScript(event.getData(Project.KEY));
   }
 
   /**
@@ -88,6 +87,6 @@ public final class MojoUtil {
    */
   @Contract("null->false")
   public static boolean isMojoAvailable(@Nullable DataContext dataContext) {
-    return dataContext != null && getMojoScript(CommonDataKeys.PROJECT.getData(dataContext)) != null;
+    return dataContext != null && getMojoScript(dataContext.getData(Project.KEY)) != null;
   }
 }

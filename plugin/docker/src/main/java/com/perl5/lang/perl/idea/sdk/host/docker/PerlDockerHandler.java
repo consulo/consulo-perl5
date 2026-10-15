@@ -16,17 +16,15 @@
 
 package com.perl5.lang.perl.idea.sdk.host.docker;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.configurations.PathEnvironmentVariableUtil;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.options.UnnamedConfigurable;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.Messages;
+import consulo.process.ExecutionException;
+import consulo.process.PathEnvironmentVariableUtil;
+import consulo.application.ApplicationManager;
+import consulo.logging.Logger;
+import consulo.configurable.UnnamedConfigurable;
+import consulo.project.Project;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.ui.messages.MessagesService;
-import com.intellij.openapi.util.NlsActions.ActionText;
-import com.intellij.openapi.util.NlsContexts;
-import com.intellij.util.ArrayUtil;
+import consulo.util.collection.ArrayUtil;
 import com.perl5.PerlIcons;
 import com.perl5.lang.perl.idea.sdk.PerlHandlerBean;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostHandler;
@@ -81,7 +79,7 @@ class PerlDockerHandler extends PerlHostWithFileSystemHandler<PerlDockerData, Pe
     return hostData;
   }
 
-  private void showErrorDialog(@NlsContexts.DialogMessage @NotNull String message) {
+  private void showErrorDialog(@NotNull String message) {
     ApplicationManager.getApplication().invokeAndWait(() -> Messages.showErrorDialog(
       message,
       PerlDockerBundle.message("perl.host.handler.docker.error.list.images.title")
@@ -89,7 +87,7 @@ class PerlDockerHandler extends PerlHostWithFileSystemHandler<PerlDockerData, Pe
   }
 
   @Override
-  public @NotNull @ActionText String getMenuItemTitle() {
+  public @NotNull String getMenuItemTitle() {
     return PerlDockerBundle.message("perl.host.handler.docker.menu.title");
   }
 

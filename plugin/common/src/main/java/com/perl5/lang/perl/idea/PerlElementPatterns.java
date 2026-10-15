@@ -16,13 +16,13 @@
 
 package com.perl5.lang.perl.idea;
 
-import com.intellij.patterns.PsiElementPattern;
-import com.intellij.psi.PsiElement;
+import consulo.language.pattern.PsiElementPattern;
+import consulo.language.psi.PsiElement;
 import com.perl5.lang.perl.psi.*;
 import com.perl5.lang.perl.psi.impl.PerlNoStatementElement;
 import com.perl5.lang.perl.psi.impl.PerlUseStatementElement;
 
-import static com.intellij.patterns.PlatformPatterns.psiElement;
+import static consulo.language.pattern.PlatformPatterns.psiElement;
 import static com.perl5.lang.perl.parser.PerlElementTypesGenerated.*;
 
 

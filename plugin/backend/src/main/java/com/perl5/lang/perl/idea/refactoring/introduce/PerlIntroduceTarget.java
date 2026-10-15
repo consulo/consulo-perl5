@@ -16,13 +16,13 @@
 
 package com.perl5.lang.perl.idea.refactoring.introduce;
 
-import com.intellij.openapi.application.ReadAction;
-import com.intellij.openapi.util.Segment;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.refactoring.IntroduceTargetChooser;
-import com.intellij.refactoring.introduce.PsiIntroduceTarget;
+import consulo.application.ReadAction;
+import consulo.document.util.Segment;
+import consulo.document.util.TextRange;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.editor.refactoring.introduce.IntroduceTargetChooser;
+import consulo.language.editor.refactoring.introduce.PsiIntroduceTarget;
 import com.perl5.lang.perl.psi.utils.PerlPsiUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -46,7 +46,7 @@ public class PerlIntroduceTarget extends PsiIntroduceTarget<PsiElement> {
 
   @Override
   public String toString() {
-    return ReadAction.computeBlocking(() -> isValid() ? getPlace() + ";" + getTextRange() + "; " + render() : "INVALID");
+    return ReadAction.compute(() -> isValid() ? getPlace() + ";" + getTextRange() + "; " + render() : "INVALID");
   }
 
   public @NotNull TextRange getTextRangeInElement() {
@@ -55,7 +55,7 @@ public class PerlIntroduceTarget extends PsiIntroduceTarget<PsiElement> {
 
   @Override
   public @NotNull String render() {
-    String elementText = ReadAction.computeBlocking(() -> {
+    String elementText = ReadAction.compute(() -> {
       if( !isValid()){
         return "INVALID";
       }

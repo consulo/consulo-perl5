@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.util;
 
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.xmlb.annotations.Transient;
+import consulo.util.lang.StringUtil;
+import consulo.util.xml.serializer.annotation.Transient;
 import com.perl5.lang.perl.psi.utils.PerlSubArgument;
 
 import java.util.ArrayList;

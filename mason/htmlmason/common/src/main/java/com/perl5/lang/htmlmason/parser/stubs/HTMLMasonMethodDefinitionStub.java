@@ -16,7 +16,7 @@
 
 package com.perl5.lang.htmlmason.parser.stubs;
 
-import com.intellij.psi.stubs.StubElement;
+import consulo.language.psi.stub.StubElement;
 import com.perl5.lang.htmlmason.parser.psi.HTMLMasonMethodDefinition;
 
 

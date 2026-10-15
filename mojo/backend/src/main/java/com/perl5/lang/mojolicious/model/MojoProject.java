@@ -16,11 +16,11 @@
 
 package com.perl5.lang.mojolicious.model;
 
-import com.intellij.openapi.ui.InputValidator;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.ui.ex.InputValidator;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
 import java.util.regex.Pattern;
 
 /**
@@ -37,7 +37,7 @@ public abstract class MojoProject {
     return myRoot;
   }
 
-  public abstract @NotNull Icon getIcon();
+  public abstract @NotNull Image getIcon();
 
   public abstract @NotNull String getTypeName();
 

@@ -16,12 +16,12 @@
 
 package com.perl5.lang.perl.psi.references.providers;
 
-import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.PsiReferenceProvider;
-import com.intellij.util.ProcessingContext;
+import consulo.util.lang.Pair;
+import consulo.document.util.TextRange;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiReference;
+import consulo.language.psi.PsiReferenceProvider;
+import consulo.language.util.ProcessingContext;
 import com.perl5.lang.perl.psi.PerlGlobVariableElement;
 import com.perl5.lang.perl.psi.PerlVariable;
 import com.perl5.lang.perl.psi.references.PerlNamespaceReference;

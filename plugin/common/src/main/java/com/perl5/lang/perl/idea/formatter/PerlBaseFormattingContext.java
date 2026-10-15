@@ -16,15 +16,25 @@
 
 package com.perl5.lang.perl.idea.formatter;
 
-import com.intellij.formatting.*;
-import com.intellij.lang.ASTNode;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.util.NotNullLazyValue;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
+
+import consulo.language.ast.ASTNode;
+import consulo.document.Document;
+import consulo.application.util.NotNullLazyValue;
+import consulo.document.util.TextRange;
+import consulo.language.codeStyle.CodeStyleSettings;
 import com.perl5.lang.perl.idea.formatter.blocks.PerlAstBlock;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import consulo.language.codeStyle.ASTBlock;
+import consulo.language.codeStyle.Alignment;
+import consulo.language.codeStyle.Block;
+import consulo.language.codeStyle.ChildAttributes;
+import consulo.language.codeStyle.FormattingContext;
+import consulo.language.codeStyle.FormattingMode;
+import consulo.language.codeStyle.Indent;
+import consulo.language.codeStyle.Spacing;
+import consulo.language.codeStyle.SpacingBuilder;
+import consulo.language.codeStyle.Wrap;
 
 public abstract class PerlBaseFormattingContext {
   private final @NotNull FormattingContext myFormattingContext;

@@ -16,17 +16,27 @@
 
 package com.perl5.lang.tt2.idea.highlighting;
 
-import com.intellij.openapi.fileTypes.SyntaxHighlighter;
-import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import com.perl5.lang.tt2.TemplateToolkitLanguage;
+import com.perl5.lang.tt2.idea.settings.TemplateToolkitSettings;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.Language;
+import consulo.language.editor.highlight.SyntaxHighlighter;
+import consulo.language.editor.highlight.SyntaxHighlighterFactory;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
+@ExtensionImpl
 public class TemplateToolkitSyntaxHighlighterFactory extends SyntaxHighlighterFactory {
   @Override
+  public @NotNull Language getLanguage() {
+    return TemplateToolkitLanguage.INSTANCE;
+  }
+
+  @Override
   public @NotNull SyntaxHighlighter getSyntaxHighlighter(@Nullable Project project, @Nullable VirtualFile virtualFile) {
-    return new TemplateToolkitSyntaxHighlighter(project);
+    return new TemplateToolkitSyntaxHighlighter(TemplateToolkitSettings.forFile(project, virtualFile));
   }
 }

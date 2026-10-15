@@ -16,10 +16,10 @@
 
 package com.perl5.lang.perl.psi.stubs;
 
-import com.intellij.psi.stubs.StubBase;
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.psi.stub.IStubElementType;
+import consulo.language.psi.stub.StubBase;
+import consulo.language.psi.stub.StubElement;
+import consulo.language.util.IncorrectOperationException;
 import com.perl5.lang.perl.psi.PerlSub;
 import com.perl5.lang.perl.psi.PerlSubElement;
 import com.perl5.lang.perl.psi.utils.PerlSubAnnotations;
@@ -35,7 +35,7 @@ public abstract class PerlSubStub<Psi extends PerlSubElement> extends StubBase<P
                      final String namespaceName,
                      final String subName,
                      PerlSubAnnotations annotations,
-                     IElementType elementType) {
+                     IStubElementType<?, ?> elementType) {
     super(parent, elementType);
     myNamespaceName = namespaceName;
     mySubName = subName;

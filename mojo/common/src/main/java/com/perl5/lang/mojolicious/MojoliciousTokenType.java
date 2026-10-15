@@ -16,12 +16,12 @@
 
 package com.perl5.lang.mojolicious;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.impl.source.tree.LeafPsiElement;
-import com.intellij.psi.impl.source.tree.PsiCommentImpl;
-import com.intellij.psi.templateLanguages.OuterLanguageElementImpl;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.ILeafElementType;
+import consulo.language.ast.ASTNode;
+import consulo.language.impl.psi.LeafPsiElement;
+import consulo.language.impl.psi.PsiCommentImpl;
+import consulo.language.impl.psi.template.OuterLanguageElementImpl;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.ILeafElementType;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 

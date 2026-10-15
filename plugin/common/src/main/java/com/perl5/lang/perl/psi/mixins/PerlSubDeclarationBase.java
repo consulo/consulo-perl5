@@ -16,10 +16,10 @@
 
 package com.perl5.lang.perl.psi.mixins;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.ASTNode;
+import consulo.navigation.ItemPresentation;
+import consulo.util.lang.StringUtil;
+import consulo.language.ast.IElementType;
 import com.perl5.PerlIcons;
 import com.perl5.lang.perl.idea.presentations.PerlItemPresentationSimple;
 import com.perl5.lang.perl.psi.PerlSubDeclarationElement;
@@ -30,7 +30,7 @@ import com.perl5.lang.perl.util.PerlSubUtilCore;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
+import consulo.ui.image.Image;
 
 
 public abstract class PerlSubDeclarationBase extends PerlSubBase<PerlSubDeclarationStub> implements PerlSubDeclarationElement {
@@ -43,7 +43,7 @@ public abstract class PerlSubDeclarationBase extends PerlSubBase<PerlSubDeclarat
   }
 
   @Override
-  public @NotNull Icon getIcon(int flags) {
+  public @NotNull Image getIcon(int flags) {
     return isXSub()
            ? PerlIcons.XSUB_GUTTER_ICON
            : PerlIcons.SUB_DECLARATION_GUTTER_ICON;

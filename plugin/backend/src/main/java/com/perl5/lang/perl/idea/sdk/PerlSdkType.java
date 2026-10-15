@@ -16,25 +16,27 @@
 
 package com.perl5.lang.perl.idea.sdk;
 
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationType;
-import com.intellij.notification.Notifications;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.WriteAction;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.*;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.notification.Notifications;
+import consulo.application.ApplicationManager;
+import consulo.application.WriteAction;
+import consulo.logging.Logger;
+import consulo.project.Project;
+
 import com.intellij.openapi.projectRoots.impl.PerlSdkTable;
-import com.intellij.openapi.projectRoots.impl.ProjectJdkImpl;
-import com.intellij.openapi.projectRoots.impl.SdkConfigurationUtil;
-import com.intellij.openapi.roots.OrderRootType;
-import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.ObjectUtils;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.Application;
+import consulo.content.base.BinariesOrderRootType;
+import consulo.content.bundle.SdkUtil;
+import consulo.localize.LocalizeValue;
+import consulo.ui.MessageBoxes;
+import consulo.application.util.SystemInfo;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.util.lang.ObjectUtil;
+import consulo.util.collection.ContainerUtil;
 import com.perl5.PerlBundle;
 import com.perl5.PerlIcons;
 import com.perl5.lang.perl.idea.project.PerlProjectManager;
@@ -49,23 +51,35 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
+import consulo.content.bundle.AdditionalDataConfigurable;
+import consulo.content.bundle.Sdk;
+import consulo.content.bundle.SdkAdditionalData;
+import consulo.content.bundle.SdkModel;
+import consulo.content.bundle.SdkModificator;
+import consulo.content.bundle.SdkType;
 
 
+@ExtensionImpl
 public class PerlSdkType extends SdkType {
   private static final Logger LOG = Logger.getInstance(PerlSdkType.class);
   public static final String PERL_SDK_TYPE_ID = "Perl5 Interpreter";
-  public static final PerlSdkType INSTANCE = new PerlSdkType();
 
+  /**
+   * TODO consulo: upstream {@code INSTANCE} singleton field; in Consulo sdk type is an extension instantiated by the platform
+   */
+  public static @NotNull PerlSdkType getInstance() {
+    return Application.get().getExtensionPoint(SdkType.class).findExtensionOrFail(PerlSdkType.class);
+  }
 
-  private PerlSdkType() {
-    super(PERL_SDK_TYPE_ID);
+  public PerlSdkType() {
+    // upstream: getPresentableName() and getIcon() overrides
+    super(PERL_SDK_TYPE_ID, LocalizeValue.of(PerlBundle.message("perl.config.interpreter.title")), PerlIcons.PERL_LANGUAGE_ICON);
   }
 
   @Override
@@ -74,7 +88,7 @@ public class PerlSdkType extends SdkType {
   }
 
   @Override
-  public @NotNull SdkAdditionalData loadAdditionalData(@NotNull Element additional) {
+  public @NotNull SdkAdditionalData loadAdditionalData(@NotNull Sdk currentSdk, @NotNull Element additional) {
     return PerlSdkAdditionalData.load(additional);
   }
 
@@ -106,13 +120,13 @@ public class PerlSdkType extends SdkType {
       binStubber.accept(interpreterPath.getParentFile());
 
       List<VirtualFile> filesToRefresh = pathsToRefresh.stream()
-        .map(it -> VfsUtil.findFileByIoFile(new File(it), true))
+        .map(it -> VirtualFileUtil.findFileByIoFile(new File(it), true))
         .filter(Objects::nonNull)
         .toList();
 
       if (!filesToRefresh.isEmpty()) {
         PerlRunUtil.setProgressText(PerlBundle.message("perl.progress.refreshing.filesystem"));
-        VfsUtil.markDirtyAndRefresh(false, true, true, filesToRefresh.toArray(VirtualFile.EMPTY_ARRAY));
+        VirtualFileUtil.markDirtyAndRefresh(false, true, true, filesToRefresh.toArray(VirtualFile.EMPTY_ARRAY));
       }
 
       try {
@@ -126,7 +140,7 @@ public class PerlSdkType extends SdkType {
         int copiedFiles = filesToRefresh.size();
         int errorsNumber = exceptions.size();
         Notifications.Bus.notify(new Notification(
-          PerlBundle.message("perl.sync.notification.group"),
+          PerlSdkNotificationGroups.SYNC,
           PerlBundle.message("perl.sync.notification.title"),
           PerlBundle.message("perl.sync.notification.body",
                              copiedFiles, copiedFiles + errorsNumber, errorsNumber,
@@ -150,9 +164,9 @@ public class PerlSdkType extends SdkType {
       File libDir = new File(localPath);
 
       if (libDir.exists() && libDir.isDirectory()) {
-        VirtualFile virtualDir = VfsUtil.findFileByIoFile(libDir, true);
+        VirtualFile virtualDir = VirtualFileUtil.findFileByIoFile(libDir, true);
         if (virtualDir != null) {
-          sdkModificator.addRoot(virtualDir, OrderRootType.CLASSES);
+          sdkModificator.addRoot(virtualDir, BinariesOrderRootType.ID);
         }
       }
     }
@@ -189,10 +203,19 @@ public class PerlSdkType extends SdkType {
   }
 
 
+  // TODO consulo: upstream overrides ProjectJdkTable SdkType#suggestHomePath(), Consulo has #suggestHomePaths()
   @SuppressWarnings("deprecation")
-  @Override
   public @Nullable String suggestHomePath() {
     throw new RuntimeException("unsupported");
+  }
+
+  /**
+   * TODO consulo: perl interpreters require host/version manager data, they can't be created from a home path by the generic
+   *  Consulo bundles UI. Interpreters are added in the Perl5 settings ({@code Perl5SdkConfigurable}).
+   */
+  @Override
+  public boolean supportsUserAdd() {
+    return false;
   }
 
   @Override
@@ -201,7 +224,7 @@ public class PerlSdkType extends SdkType {
     return null;
   }
 
-  @Override
+  // TODO consulo: SdkType#getPresentableName() is replaced with the display name passed to the constructor
   public @NotNull String getPresentableName() {
     return PerlBundle.message("perl.config.interpreter.title");
   }
@@ -211,9 +234,12 @@ public class PerlSdkType extends SdkType {
     throw new RuntimeException("Should not be invoked");
   }
 
-  @Override
-  public @Nullable String getVersionString(@NotNull Sdk sdk) {
-    return ObjectUtils.doIfNotNull(
+  /**
+   * TODO consulo: SdkType#getVersionString(Sdk) is final in Consulo and delegates to {@link #getVersionString(String)} with the sdk home.
+   *  Upstream override is kept under this name, perl version is computed with sdk host and version manager data.
+   */
+  public @Nullable String getPerlVersionString(@NotNull Sdk sdk) {
+    return ObjectUtil.doIfNotNull(
       getPerlVersionDescriptor(PerlProjectManager.getInterpreterPath(sdk),
                                PerlHostData.notNullFrom(sdk),
                                PerlVersionManagerData.notNullFrom(sdk)),
@@ -222,6 +248,16 @@ public class PerlSdkType extends SdkType {
 
   private static @NotNull List<String> computeIncPaths(@NotNull Sdk sdk) {
     return ContainerUtil.filter(PerlRunUtil.getOutputFromPerl(sdk, PerlRunUtil.PERL_LE, "print for @INC"), it -> !".".equals(it));
+  }
+
+  @Override
+  public @Nullable String getVersionString(@NotNull String sdkHome) {
+    for (Sdk sdk : PerlSdkTable.getInstance().getInterpreters()) {
+      if (sdkHome.equals(sdk.getHomePath())) {
+        return getPerlVersionString(sdk);
+      }
+    }
+    return null;
   }
 
   @Override
@@ -241,11 +277,6 @@ public class PerlSdkType extends SdkType {
 
   public @NotNull String getPerlExecutableName() {
     return SystemInfo.isWindows ? "perl.exe" : "perl";
-  }
-
-  @Override
-  public Icon getIcon() {
-    return PerlIcons.PERL_LANGUAGE_ICON;
   }
 
   private static @NotNull String suggestSdkName(@Nullable VersionDescriptor descriptor,
@@ -295,15 +326,17 @@ public class PerlSdkType extends SdkType {
                                @NotNull Consumer<? super Sdk> sdkConsumer) {
     VersionDescriptor perlVersionDescriptor = PerlSdkType.getPerlVersionDescriptor(interpreterPath, hostData, versionManagerData);
     if (perlVersionDescriptor == null) {
+      // consulo: Messages are Swing dialogs (not available in web), the unified message box is shown asynchronously
       ApplicationManager.getApplication().invokeLater(
-        () -> Messages.showErrorDialog(PerlBundle.message("dialog.message.failed.to.fetch.perl.version.see.logs.for.more.details"),
-                                       PerlBundle.message("dialog.title.failed.to.create.interpreter")));
+        () -> MessageBoxes.okError(LocalizeValue.of(PerlBundle.message("dialog.message.failed.to.fetch.perl.version.see.logs.for.more.details")))
+          .title(LocalizeValue.of(PerlBundle.message("dialog.title.failed.to.create.interpreter")))
+          .showAsync());
       return;
     }
-    String newSdkName = SdkConfigurationUtil.createUniqueSdkName(
-      suggestSdkName(perlVersionDescriptor, hostData, versionManagerData), PerlSdkTable.getInstance().getInterpreters());
+    String newSdkName = SdkUtil.createUniqueSdkName(
+      suggestSdkName(perlVersionDescriptor, hostData, versionManagerData), PerlSdkTable.getInstance().getInterpreters().toArray(Sdk.EMPTY_ARRAY));
 
-    final ProjectJdkImpl newSdk = PerlSdkTable.getInstance().createSdk(newSdkName);
+    final Sdk newSdk = PerlSdkTable.getInstance().createSdk(newSdkName);
     var sdkModificator = newSdk.getSdkModificator();
     sdkModificator.setHomePath(interpreterPath);
 

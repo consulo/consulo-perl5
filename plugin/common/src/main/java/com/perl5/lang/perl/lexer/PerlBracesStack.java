@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.lexer;
 
-import com.intellij.util.ArrayUtil;
+import consulo.util.collection.ArrayUtil;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EmptyStackException;

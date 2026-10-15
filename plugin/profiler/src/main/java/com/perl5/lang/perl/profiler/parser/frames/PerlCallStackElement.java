@@ -17,12 +17,12 @@
 package com.perl5.lang.perl.profiler.parser.frames;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.intellij.openapi.application.ReadAction;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.profiler.api.BaseCallStackElement;
-import com.intellij.psi.NavigatablePsiElement;
+import consulo.application.ReadAction;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.content.bundle.Sdk;
+import consulo.execution.profiler.BaseCallStackElement;
+import consulo.language.psi.NavigatablePsiElement;
 import com.perl5.lang.perl.idea.project.PerlProjectManager;
 import org.jetbrains.annotations.NotNull;
 
@@ -58,17 +58,17 @@ public abstract class PerlCallStackElement extends BaseCallStackElement {
 
   @Override
   public final @NotNull NavigatablePsiElement[] calcNavigatables(@NotNull Project project) {
-    return ReadAction.computeBlocking(() -> {
+    return ReadAction.compute(() -> {
       if (project.isDisposed()) {
-        return NavigatablePsiElement.EMPTY_NAVIGATABLE_ELEMENT_ARRAY;
+        return NavigatablePsiElement.EMPTY_ARRAY;
       }
 
       var perlSdk = PerlProjectManager.getSdk(project);
       if (perlSdk == null) {
-        return NavigatablePsiElement.EMPTY_NAVIGATABLE_ELEMENT_ARRAY;
+        return NavigatablePsiElement.EMPTY_ARRAY;
       }
 
-      return computeNavigatables(project, perlSdk).toArray(NavigatablePsiElement.EMPTY_NAVIGATABLE_ELEMENT_ARRAY);
+      return computeNavigatables(project, perlSdk).toArray(NavigatablePsiElement.EMPTY_ARRAY);
     });
   }
 

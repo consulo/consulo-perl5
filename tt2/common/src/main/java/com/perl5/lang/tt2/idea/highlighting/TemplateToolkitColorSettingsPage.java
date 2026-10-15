@@ -16,31 +16,33 @@
 
 package com.perl5.lang.tt2.idea.highlighting;
 
-import com.intellij.openapi.editor.colors.TextAttributesKey;
-import com.intellij.openapi.fileTypes.SyntaxHighlighter;
-import com.intellij.openapi.options.colors.AttributesDescriptor;
-import com.intellij.openapi.options.colors.ColorDescriptor;
-import com.intellij.openapi.options.colors.ColorSettingsPage;
+import consulo.colorScheme.TextAttributesKey;
+import consulo.language.editor.highlight.SyntaxHighlighter;
+import consulo.colorScheme.setting.AttributesDescriptor;
+import consulo.colorScheme.setting.ColorDescriptor;
+import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
 import com.perl5.lang.tt2.TemplateToolkitBundle;
+import com.perl5.lang.tt2.idea.settings.TemplateToolkitSettings;
 import com.perl5.lang.tt2.TemplateToolkitIcons;
 import com.perl5.lang.tt2.TemplateToolkitLanguage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
+import consulo.localize.LocalizeValue;
+import consulo.ui.image.Image;
 import java.util.Map;
 
 
 public class TemplateToolkitColorSettingsPage implements ColorSettingsPage {
 
-  @Override
-  public @Nullable Icon getIcon() {
+  // TODO consulo: Consulo ColorSettingsPage has no getIcon(), the icon is not shown on the settings page
+  public @Nullable Image getIcon() {
     return TemplateToolkitIcons.TTK2_ICON;
   }
 
   @Override
   public @NotNull SyntaxHighlighter getHighlighter() {
-    return new TemplateToolkitSyntaxHighlighter(null);
+    return new TemplateToolkitSyntaxHighlighter(TemplateToolkitSettings.DEFAULT);
   }
 
   @Override
@@ -94,7 +96,7 @@ public class TemplateToolkitColorSettingsPage implements ColorSettingsPage {
   }
 
   @Override
-  public @NotNull String getDisplayName() {
-    return TemplateToolkitLanguage.NAME;
+  public @NotNull LocalizeValue getDisplayName() {
+    return LocalizeValue.of(TemplateToolkitLanguage.NAME);
   }
 }

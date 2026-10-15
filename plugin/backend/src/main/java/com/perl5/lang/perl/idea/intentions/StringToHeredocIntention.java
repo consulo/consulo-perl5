@@ -16,24 +16,28 @@
 
 package com.perl5.lang.perl.idea.intentions;
 
-import com.intellij.codeInsight.intention.FileModifier;
-import com.intellij.openapi.application.WriteAction;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.ui.TestDialog;
-import com.intellij.openapi.ui.TestDialogManager;
-import com.intellij.openapi.util.NlsSafe;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.util.IncorrectOperationException;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.editor.intention.IntentionMetaData;
+import consulo.localize.LocalizeValue;
+import consulo.language.editor.inspection.FileModifier;
+import consulo.undoRedo.CommandProcessor;
+import consulo.codeEditor.Editor;
+import consulo.project.Project;
+import consulo.ui.InputBoxBuilder;
+import consulo.ui.MessageBoxes;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.util.IncorrectOperationException;
 import com.perl5.PerlBundle;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
 
+// TODO consulo: upstream descriptionDirectoryName is intentionDescriptions/StringToHeredocConverter, Consulo looks up intentionDescriptions/StringToHeredocIntention
+@ExtensionImpl
+@IntentionMetaData(ignoreId = "perl5.StringToHeredocIntention", categories = {"Perl"}, fileExtensions = "pm")
 public class StringToHeredocIntention extends StringToLastHeredocIntention {
 
   @Override
@@ -70,35 +74,42 @@ public class StringToHeredocIntention extends StringToLastHeredocIntention {
 
   @Override
   public void invoke(@NotNull Project project, Editor editor, @NotNull PsiElement element) throws IncorrectOperationException {
-    String markerText = Messages.showInputDialog(
-      project,
-      PerlBundle.message("perl.intention.heredoc.dialog.prompt"),
-      PerlBundle.message("perl.intention.heredoc.dialog.title"),
-      Messages.getQuestionIcon(),
-      ourMarker,
-      null);
-    if (StringUtil.isEmpty(markerText)) {
-      Messages.showErrorDialog(
-        project,
-        PerlBundle.message("perl.intention.heredoc.error.message"),
-        PerlBundle.message("perl.intention.heredoc.error.title")
-      );
-      return;
-    }
-    ourMarker = markerText;
-    WriteAction.run(() -> doInvoke(project, editor, element));
+    // consulo: Messages are Swing dialogs (not available in web), the unified input box is asynchronous; the conversion
+    // happens after the intention command is finished, so it runs in its own write command
+    InputBoxBuilder.text()
+      .title(LocalizeValue.of(PerlBundle.message("perl.intention.heredoc.dialog.title")))
+      .text(LocalizeValue.of(PerlBundle.message("perl.intention.heredoc.dialog.prompt")))
+      .asQuestion()
+      .value(ourMarker)
+      .showAsync(project)
+      .whenComplete((markerText, error) -> {
+        if (StringUtil.isEmpty(markerText)) {
+          MessageBoxes.okError(LocalizeValue.of(PerlBundle.message("perl.intention.heredoc.error.message")))
+            .title(LocalizeValue.of(PerlBundle.message("perl.intention.heredoc.error.title")))
+            .showAsync(project);
+          return;
+        }
+        if (!element.isValid()) {
+          return;
+        }
+        ourMarker = markerText;
+        CommandProcessor.getInstance().newCommand()
+          .project(project)
+          .name(getText())
+          .inWriteAction()
+          .run(() -> doInvoke(project, editor, element));
+      });
   }
 
   @Override
-  public @NotNull String getText() {
-    return PerlBundle.message("perl.intention.heredoc.title");
+  public @NotNull LocalizeValue getText() {
+    return LocalizeValue.localizeTODO(PerlBundle.message("perl.intention.heredoc.title"));
   }
 
   @TestOnly
-  public static void doWithMarker(@NlsSafe @NotNull String marker, @NotNull Runnable runnable) {
+  public static void doWithMarker(@NotNull String marker, @NotNull Runnable runnable) {
     var currentMarker = ourMarker;
-    TestDialogManager.setTestInputDialog(message -> marker);
-    TestDialogManager.setTestDialog(TestDialog.YES);
+    // TODO consulo: no TestDialogManager/TestDialog in Consulo; upstream stubbed the input dialog to return `marker` and confirm dialogs with YES
     try {
       runnable.run();
     }

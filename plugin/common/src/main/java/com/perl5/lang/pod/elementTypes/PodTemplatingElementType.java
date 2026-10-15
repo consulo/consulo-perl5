@@ -16,12 +16,13 @@
 
 package com.perl5.lang.pod.elementTypes;
 
-import com.intellij.lang.Language;
-import com.intellij.lexer.Lexer;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.templateLanguages.TemplateDataElementType;
-import com.intellij.psi.templateLanguages.TemplateLanguageFileViewProvider;
+import consulo.language.Language;
+import consulo.language.lexer.Lexer;
+import consulo.language.psi.PsiFile;
+import consulo.document.util.TextRange;
+import consulo.util.lang.StringUtil;
+import consulo.language.impl.psi.template.TemplateDataElementType;
+import consulo.language.template.TemplateLanguageFileViewProvider;
 import com.perl5.lang.perl.PerlLanguage;
 import com.perl5.lang.perl.lexer.PerlLexer;
 import com.perl5.lang.perl.lexer.adapters.PerlProgressAwareAdapter;
@@ -75,11 +76,11 @@ public class PodTemplatingElementType extends TemplateDataElementType {
    * @return an optimized lexer (without sublexing) to distinct perl from pod
    */
   @Override
-  protected Lexer createBaseLexer(TemplateLanguageFileViewProvider viewProvider) {
+  protected Lexer createBaseLexer(PsiFile file, TemplateLanguageFileViewProvider viewProvider) {
     if (viewProvider.getBaseLanguage() == PerlLanguage.INSTANCE) {
       return new PerlProgressAwareAdapter(new PerlLexer(null).withProject(viewProvider.getManager().getProject()));
     }
-    return super.createBaseLexer(viewProvider);
+    return super.createBaseLexer(file, viewProvider);
   }
 
   @Override

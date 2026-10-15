@@ -16,24 +16,27 @@
 
 package com.perl5.lang.htmlmason.parser.psi.references;
 
-import com.intellij.openapi.application.QueryExecutorBase;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.search.searches.ReferencesSearch;
-import com.intellij.util.Processor;
+import consulo.project.util.query.QueryExecutorBase;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiReference;
+import consulo.language.psi.search.ReferencesSearch;
+import consulo.language.psi.search.ReferencesSearchQueryExecutor;
 import com.perl5.lang.htmlmason.parser.psi.impl.HTMLMasonFileImpl;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.function.Predicate;
 
 import static com.perl5.lang.htmlmason.HTMLMasonSyntaxElements.*;
 
 
-public class HTMLMasonReferencesSearcher extends QueryExecutorBase<PsiReference, ReferencesSearch.SearchParameters> {
+public class HTMLMasonReferencesSearcher extends QueryExecutorBase<PsiReference, ReferencesSearch.SearchParameters>
+  implements ReferencesSearchQueryExecutor {
   public HTMLMasonReferencesSearcher() {
     super(true);
   }
 
   @Override
-  public void processQuery(@NotNull ReferencesSearch.SearchParameters queryParameters, @NotNull Processor<? super PsiReference> consumer) {
+  public void processQuery(@NotNull ReferencesSearch.SearchParameters queryParameters, @NotNull Predicate<? super PsiReference> consumer) {
     PsiElement element = queryParameters.getElementToSearch();
     if (element instanceof HTMLMasonFileImpl) {
       queryParameters.getOptimizer().searchWord(COMPONENT_SLUG_SELF, queryParameters.getEffectiveSearchScope(), true, element);

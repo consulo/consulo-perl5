@@ -16,12 +16,12 @@
 
 package com.perl5.lang.pod.idea.livetemplates;
 
-import com.intellij.codeInsight.template.impl.TemplatePreprocessor;
-import com.intellij.openapi.application.WriteAction;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.editor.template.TemplatePreprocessor;
+import consulo.application.WriteAction;
+import consulo.document.Document;
+import consulo.codeEditor.Editor;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiUtilCore;
 import com.perl5.lang.pod.PodLanguage;
 
 /**

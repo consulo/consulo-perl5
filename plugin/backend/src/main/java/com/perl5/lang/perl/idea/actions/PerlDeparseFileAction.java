@@ -16,24 +16,25 @@
 
 package com.perl5.lang.perl.idea.actions;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.process.ProcessOutput;
-import com.intellij.ide.actions.OpenFileAction;
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationType;
-import com.intellij.notification.Notifications;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.WriteAction;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.openapi.progress.Task;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiFile;
-import com.intellij.testFramework.LightVirtualFile;
+import consulo.process.ExecutionException;
+import consulo.process.util.ProcessOutput;
+import consulo.ide.impl.idea.ide.actions.OpenFileAction;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationGroup;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.notification.Notifications;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.application.ApplicationManager;
+import consulo.application.WriteAction;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.Task;
+import consulo.project.Project;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.psi.PsiFile;
+import consulo.language.file.light.LightVirtualFile;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.idea.configuration.settings.PerlSharedSettings;
 import com.perl5.lang.perl.idea.execution.PerlCommandLine;
@@ -45,7 +46,8 @@ import java.util.Objects;
 
 
 public class PerlDeparseFileAction extends PurePerlActionBase {
-  private static final String PERL_DEPARSE_GROUP = PerlBundle.message("perl.action.deparse.notification.group");
+  // consulo: notification groups must be registered, see PerlActionsNotificationGroupContributor
+  private static final NotificationGroup PERL_DEPARSE_GROUP = PerlActionsNotificationGroupContributor.PERL_DEPARSE;
 
   public PerlDeparseFileAction() {
     super(PerlBundle.message("perl.action.deparse.file"));

@@ -16,7 +16,7 @@
 
 package com.perl5.lang.pod.elementTypes;
 
-import com.intellij.psi.tree.ILeafElementType;
+import consulo.language.ast.ILeafElementType;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 

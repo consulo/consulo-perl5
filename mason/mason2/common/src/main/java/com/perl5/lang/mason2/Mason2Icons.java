@@ -16,15 +16,14 @@
 
 package com.perl5.lang.mason2;
 
-import com.intellij.ui.LayeredIcon;
 import com.perl5.PerlIcons;
-
-import javax.swing.*;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 
 
 public class Mason2Icons {
-  public static final Icon MASON_PURE_PERL_COMPONENT_ICON = PerlIcons.PERL_SCRIPT_FILE_ICON;
-  public static final Icon MASON_TOP_LEVEL_COMPONENT_ICON = PerlIcons.PERL_SCRIPT_FILE_ICON;
-  public static final Icon MASON_INTERNAL_COMPONENT_ICON = PerlIcons.PERL_SCRIPT_FILE_ICON;
-  public static final Icon ROOT_ICON = LayeredIcon.layeredIcon(() -> new Icon[]{PerlIcons.TEMPLATE_ROOT, PerlIcons.CAMEL_MODIFIER});
+  public static final Image MASON_PURE_PERL_COMPONENT_ICON = PerlIcons.PERL_SCRIPT_FILE_ICON;
+  public static final Image MASON_TOP_LEVEL_COMPONENT_ICON = PerlIcons.PERL_SCRIPT_FILE_ICON;
+  public static final Image MASON_INTERNAL_COMPONENT_ICON = PerlIcons.PERL_SCRIPT_FILE_ICON;
+  public static final Image ROOT_ICON = ImageEffects.layered(PerlIcons.TEMPLATE_ROOT, PerlIcons.CAMEL_MODIFIER);
 }

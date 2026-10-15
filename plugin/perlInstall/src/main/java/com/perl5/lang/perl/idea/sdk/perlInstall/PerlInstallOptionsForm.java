@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.idea.sdk.perlInstall;
 
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.ObjectUtils;
+import consulo.util.lang.StringUtil;
+import consulo.util.lang.ObjectUtil;
 import com.perl5.lang.perl.idea.sdk.versionManager.PerlInstallFormOptions;
 import org.jetbrains.annotations.NotNull;
 
@@ -55,7 +55,7 @@ class PerlInstallOptionsForm extends PerlInstallFormOptions {
   public @NotNull List<String> buildParametersList() {
     List<String> buildParams = new ArrayList<>();
 
-    Integer threads = ObjectUtils.tryCast(myThreads.getSelectedItem(), Integer.class);
+    Integer threads = ObjectUtil.tryCast(myThreads.getSelectedItem(), Integer.class);
     if (threads != null && threads > 1) {
       buildParams.add("-j");
       buildParams.add(threads.toString());

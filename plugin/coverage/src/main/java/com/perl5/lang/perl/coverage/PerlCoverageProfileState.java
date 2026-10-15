@@ -16,14 +16,14 @@
 
 package com.perl5.lang.perl.coverage;
 
-import com.intellij.coverage.CoverageHelper;
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.configurations.coverage.CoverageEnabledConfiguration;
-import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.util.io.FileUtil;
+import consulo.execution.coverage.CoverageHelper;
+import consulo.process.ExecutionException;
+import consulo.execution.coverage.CoverageEnabledConfiguration;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.application.ApplicationManager;
+import consulo.logging.Logger;
+import consulo.content.bundle.Sdk;
+import consulo.util.io.FileUtil;
 import com.perl5.lang.perl.idea.run.GenericPerlRunConfiguration;
 import com.perl5.lang.perl.idea.run.PerlRunProfileState;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostData;

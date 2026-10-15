@@ -16,11 +16,11 @@
 
 package com.perl5.lang.perl.psi;
 
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.PsiRecursiveElementVisitor;
-import com.intellij.psi.stubs.StubElement;
+import consulo.application.progress.ProgressManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiElementVisitor;
+import consulo.language.psi.PsiRecursiveElementVisitor;
+import consulo.language.psi.stub.StubElement;
 import com.perl5.lang.perl.psi.utils.PerlPsiUtil;
 import org.jetbrains.annotations.NotNull;
 

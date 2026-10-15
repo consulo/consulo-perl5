@@ -16,11 +16,11 @@
 
 package com.perl5.lang.tt2.elementTypes;
 
-import com.intellij.patterns.PsiElementPattern;
-import com.intellij.psi.PsiComment;
-import com.intellij.psi.PsiElement;
+import consulo.language.pattern.PsiElementPattern;
+import consulo.language.psi.PsiComment;
+import consulo.language.psi.PsiElement;
 
-import static com.intellij.patterns.PlatformPatterns.psiElement;
+import static consulo.language.pattern.PlatformPatterns.psiElement;
 import static com.perl5.lang.tt2.parser.TemplateToolkitElementTypesGenerated.*;
 
 

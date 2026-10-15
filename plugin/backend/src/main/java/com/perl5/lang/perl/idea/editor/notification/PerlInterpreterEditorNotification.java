@@ -16,36 +16,48 @@
 
 package com.perl5.lang.perl.idea.editor.notification;
 
-import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.testFramework.LightVirtualFile;
-import com.intellij.ui.EditorNotificationPanel;
-import com.intellij.ui.EditorNotificationProvider;
-import com.intellij.ui.EditorNotifications;
+import consulo.fileEditor.FileEditor;
+import consulo.application.dumb.DumbAware;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.file.light.LightVirtualFile;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.fileEditor.EditorNotificationBuilder;
+import consulo.localize.LocalizeValue;
+import jakarta.inject.Inject;
+import consulo.fileEditor.EditorNotificationProvider;
+import consulo.fileEditor.EditorNotifications;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.fileTypes.PerlFileType;
 import com.perl5.lang.perl.idea.configuration.settings.PerlLocalSettings;
-import com.perl5.lang.perl.idea.configuration.settings.sdk.Perl5SettingsConfigurable;
 import com.perl5.lang.perl.idea.project.PerlProjectManager;
+import consulo.perl5.core.module.PerlModuleSettingsUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
-import java.util.function.Function;
+import java.util.function.Supplier;
 
 
+@ExtensionImpl
 public class PerlInterpreterEditorNotification implements EditorNotificationProvider, DumbAware {
   private final Project myProject;
 
+  @Inject
   public PerlInterpreterEditorNotification(Project myProject) {
     this.myProject = myProject;
   }
 
   @Override
-  public @Nullable Function<? super @NotNull FileEditor, ? extends @Nullable JComponent> collectNotificationData(@NotNull Project project,
-                                                                                                                 @NotNull VirtualFile virtualFile) {
+  public @NotNull String getId() {
+    return "perl5-interpreter";
+  }
+
+  @RequiredReadAction
+  @Override
+  public @Nullable EditorNotificationBuilder buildNotification(@NotNull VirtualFile virtualFile,
+                                                               @NotNull FileEditor fileEditor,
+                                                               @NotNull Supplier<EditorNotificationBuilder> builderFactory) {
     if (!(virtualFile.getFileType() instanceof PerlFileType) || virtualFile instanceof LightVirtualFile) {
       return null;
     }
@@ -55,18 +67,21 @@ public class PerlInterpreterEditorNotification implements EditorNotificationProv
       return null;
     }
 
+    // consulo: the interpreter of the file module (Perl module extension), the project one for files outside of modules
     if (PerlProjectManager.getSdk(myProject, virtualFile) != null) {
       return null;
     }
-    return fileEditor -> createNotificationPanel(perlLocalSettings);
+    return createNotificationPanel(perlLocalSettings, builderFactory.get(), virtualFile);
   }
 
-  private @NotNull EditorNotificationPanel createNotificationPanel(@NotNull PerlLocalSettings perlLocalSettings) {
-    EditorNotificationPanel panel = new EditorNotificationPanel();
-    panel.setText(PerlBundle.message("perl.notification.sdk.not.configured"));
-    panel.createActionLabel(PerlBundle.message("perl.notification.configure"),
-                            () -> Perl5SettingsConfigurable.open(myProject));
-    panel.createActionLabel(PerlBundle.message("perl.notification.disable.notification"), () -> {
+  private @NotNull EditorNotificationBuilder createNotificationPanel(@NotNull PerlLocalSettings perlLocalSettings,
+                                                                     @NotNull EditorNotificationBuilder panel,
+                                                                     @NotNull VirtualFile virtualFile) {
+    panel.withText(LocalizeValue.localizeTODO(PerlBundle.message("perl.notification.sdk.not.configured")));
+    // consulo: the interpreter is configured in the Perl module extension of the file module
+    panel.withAction(LocalizeValue.localizeTODO(PerlBundle.message("perl.notification.configure")),
+                     e -> PerlModuleSettingsUtil.openInterpreterSettings(myProject, virtualFile));
+    panel.withAction(LocalizeValue.localizeTODO(PerlBundle.message("perl.notification.disable.notification")), e -> {
       perlLocalSettings.DISABLE_NO_INTERPRETER_WARNING = true;
       EditorNotifications.getInstance(myProject).updateAllNotifications();
     });

@@ -16,26 +16,26 @@
 
 package com.perl5.lang.htmlmason.idea.completion;
 
-import com.intellij.codeInsight.completion.CompletionInitializationContext;
-import com.intellij.codeInsight.completion.CompletionParameters;
-import com.intellij.codeInsight.completion.CompletionProvider;
-import com.intellij.codeInsight.completion.CompletionResultSet;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiReference;
-import com.intellij.util.ProcessingContext;
+import consulo.language.editor.completion.CompletionInitializationContext;
+import consulo.language.editor.completion.CompletionParameters;
+import consulo.language.editor.completion.CompletionProvider;
+import consulo.language.editor.completion.CompletionResultSet;
+import consulo.project.Project;
+import consulo.document.util.TextRange;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiReference;
+import consulo.language.util.ProcessingContext;
 import com.perl5.lang.htmlmason.parser.psi.impl.HTMLMasonFileImpl;
 import com.perl5.lang.htmlmason.parser.psi.references.HTMLMasonMethodReference;
 import com.perl5.lang.perl.psi.PerlString;
 import org.jetbrains.annotations.NotNull;
 
 
-public class HTMLMasonComponentCompletionProvider extends CompletionProvider<CompletionParameters> {
+public class HTMLMasonComponentCompletionProvider implements CompletionProvider {
   @Override
-  protected void addCompletions(@NotNull CompletionParameters parameters,
+  public void addCompletions(@NotNull CompletionParameters parameters,
                                 @NotNull ProcessingContext context,
                                 @NotNull CompletionResultSet result) {
     PsiElement position = parameters.getPosition();

@@ -16,19 +16,19 @@
 
 package com.perl5.lang.perl.idea.codeInsight.typeInference.value;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.AtomicNotNullLazyValue;
-import com.intellij.openapi.util.NotNullLazyValue;
-import com.intellij.openapi.util.RecursionManager;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.ElementManipulators;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
-import com.intellij.psi.util.PsiCacheKey;
-import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.Interner;
+import consulo.logging.Logger;
+import consulo.application.util.AtomicNotNullLazyValue;
+import consulo.application.util.NotNullLazyValue;
+import consulo.application.util.RecursionManager;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.ElementManipulators;
+import consulo.language.psi.PsiElement;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
+import consulo.language.psi.util.PsiCacheKey;
+import consulo.language.psi.PsiUtilCore;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.interner.Interner;
 import com.perl5.lang.perl.psi.*;
 import com.perl5.lang.perl.psi.impl.PerlBuiltInVariable;
 import com.perl5.lang.perl.psi.impl.PerlImplicitVariableDeclaration;

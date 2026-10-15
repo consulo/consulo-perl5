@@ -18,7 +18,7 @@ package resolve;
 
 
 import base.HTMLMasonLightTestCase;
-import com.intellij.openapi.util.io.FileUtil;
+import consulo.util.io.FileUtil;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 

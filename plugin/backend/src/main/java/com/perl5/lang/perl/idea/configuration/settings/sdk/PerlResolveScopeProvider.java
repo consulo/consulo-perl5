@@ -16,10 +16,10 @@
 
 package com.perl5.lang.perl.idea.configuration.settings.sdk;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.ResolveScopeProvider;
-import com.intellij.psi.search.GlobalSearchScope;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.psi.ResolveScopeProvider;
+import consulo.language.psi.scope.GlobalSearchScope;
 import com.perl5.lang.perl.fileTypes.PerlPluginBaseFileType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

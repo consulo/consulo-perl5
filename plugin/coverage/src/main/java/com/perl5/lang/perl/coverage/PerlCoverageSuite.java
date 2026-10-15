@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.coverage;
 
-import com.intellij.coverage.BaseCoverageSuite;
-import com.intellij.coverage.CoverageEngine;
-import com.intellij.execution.configurations.RunConfigurationBase;
+import consulo.execution.coverage.BaseCoverageSuite;
+import consulo.execution.coverage.CoverageEngine;
+import consulo.execution.configuration.RunConfigurationBase;
 import com.perl5.lang.perl.idea.run.GenericPerlRunConfiguration;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,11 +30,15 @@ public class PerlCoverageSuite extends BaseCoverageSuite {
   }
 
   public PerlCoverageSuite(@NotNull PerlCoverageEnabledConfiguration config) {
+    // consulo: Consulo BaseCoverageSuite has no (name, project, runner, fileProvider, timestamp) constructor
     super(config.createSuiteName(),
-          config.getConfiguration().getProject(),
-          config.getCoverageRunner(),
           config.createFileProvider(),
-          new Date().getTime());
+          new Date().getTime(),
+          false,
+          false,
+          false,
+          config.getCoverageRunner(),
+          config.getConfiguration().getProject());
   }
 
 

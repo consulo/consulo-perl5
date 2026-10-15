@@ -23,7 +23,8 @@ import com.perl5.lang.xs.XSLanguage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
+import consulo.localize.LocalizeValue;
+import consulo.ui.image.Image;
 
 
 public class XSFileType extends PerlPluginBaseFileType {
@@ -34,13 +35,13 @@ public class XSFileType extends PerlPluginBaseFileType {
   }
 
   @Override
-  public @NotNull String getName() {
+  public @NotNull String getId() {
     return "Perl5 Extension";
   }
 
   @Override
-  public @NotNull String getDescription() {
-    return PerlBundle.message("label.perl5.extension.in.c");
+  public @NotNull LocalizeValue getDescription() {
+    return LocalizeValue.localizeTODO(PerlBundle.message("label.perl5.extension.in.c"));
   }
 
   @Override
@@ -49,7 +50,7 @@ public class XSFileType extends PerlPluginBaseFileType {
   }
 
   @Override
-  public @Nullable Icon getIcon() {
+  public @Nullable Image getIcon() {
     return PerlIcons.XS_FILE;
   }
 }

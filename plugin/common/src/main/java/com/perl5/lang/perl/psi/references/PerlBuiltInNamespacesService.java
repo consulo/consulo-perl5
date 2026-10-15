@@ -16,9 +16,14 @@
 
 package com.perl5.lang.perl.psi.references;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiManager;
-import com.intellij.util.Processor;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
+import jakarta.inject.Singleton;
+import jakarta.inject.Inject;
+import consulo.project.Project;
+import consulo.language.psi.PsiManager;
+import consulo.application.util.function.Processor;
 import com.perl5.lang.perl.psi.PerlNamespaceDefinitionElement;
 import com.perl5.lang.perl.psi.impl.PerlBuiltInNamespaceDefinition;
 import com.perl5.lang.perl.util.PerlPackageUtilCore;
@@ -28,8 +33,13 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
+@ServiceAPI(ComponentScope.PROJECT)
+@ServiceImpl
+@Singleton
 public class PerlBuiltInNamespacesService {
   private final Map<String, PerlBuiltInNamespaceDefinition> myNamespacesMap = new HashMap<>();
+
+  @Inject
 
   public PerlBuiltInNamespacesService(@NotNull Project project) {
     PsiManager psiManager = PsiManager.getInstance(project);

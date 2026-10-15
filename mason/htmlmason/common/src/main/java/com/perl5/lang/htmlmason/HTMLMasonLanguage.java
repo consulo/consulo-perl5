@@ -16,15 +16,14 @@
 
 package com.perl5.lang.htmlmason;
 
-import com.intellij.lang.Language;
-import com.intellij.openapi.util.NlsSafe;
-import com.intellij.psi.templateLanguages.TemplateLanguage;
+import consulo.language.Language;
+import consulo.language.template.TemplateLanguage;
 import com.perl5.lang.perl.PerlLanguage;
 
 
 public class HTMLMasonLanguage extends Language implements TemplateLanguage {
   public static final HTMLMasonLanguage INSTANCE = new HTMLMasonLanguage();
-  public static final @NlsSafe String NAME = "HTML::Mason Templating Language";
+  public static final String NAME = "HTML::Mason Templating Language";
 
   public HTMLMasonLanguage() {
     super(PerlLanguage.INSTANCE, NAME);

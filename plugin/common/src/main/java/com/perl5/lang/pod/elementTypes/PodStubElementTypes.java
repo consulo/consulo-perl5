@@ -16,12 +16,16 @@
 
 package com.perl5.lang.pod.elementTypes;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
 import com.perl5.lang.pod.parser.psi.mixin.*;
+import com.perl5.lang.pod.parser.psi.stubs.PodSectionStub;
 import com.perl5.lang.pod.psi.impl.*;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.stub.StubElement;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+// consulo: element types create psi and stubs (upstream: Pod*StubSerializingFactory registered in PerlStubRegistryExtension)
 public interface PodStubElementTypes {
   String HEAD_1_SECTION_DEBUG_NAME = "HEAD_1_SECTION";
   String HEAD_2_SECTION_DEBUG_NAME = "HEAD_2_SECTION";
@@ -33,12 +37,22 @@ public interface PodStubElementTypes {
   PodStubBasedTitledSectionElementType<PodSectionH1> HEAD_1_SECTION =
     new PodStubBasedTitledSectionElementType<>(HEAD_1_SECTION_DEBUG_NAME) {
       @Override
+      public PodSectionH1 createPsi(@NotNull PodSectionStub stub) {
+        return new PsiHead1SectionImpl(stub, this);
+      }
+
+      @Override
       public @NotNull PsiElement getPsiElement(@NotNull ASTNode node) {
         return new PsiHead1SectionImpl(node);
       }
     };
   PodStubBasedTitledSectionElementType<PodSectionH2>
     HEAD_2_SECTION = new PodStubBasedTitledSectionElementType<>(HEAD_2_SECTION_DEBUG_NAME) {
+    @Override
+    public PodSectionH2 createPsi(@NotNull PodSectionStub stub) {
+      return new PsiHead2SectionImpl(stub, this);
+    }
+
     @Override
     public @NotNull PsiElement getPsiElement(@NotNull ASTNode node) {
       return new PsiHead2SectionImpl(node);
@@ -47,6 +61,11 @@ public interface PodStubElementTypes {
   PodStubBasedTitledSectionElementType<PodSectionH3>
     HEAD_3_SECTION = new PodStubBasedTitledSectionElementType<>(HEAD_3_SECTION_DEBUG_NAME) {
     @Override
+    public PodSectionH3 createPsi(@NotNull PodSectionStub stub) {
+      return new PsiHead3SectionImpl(stub, this);
+    }
+
+    @Override
     public @NotNull PsiElement getPsiElement(@NotNull ASTNode node) {
       return new PsiHead3SectionImpl(node);
     }
@@ -54,11 +73,27 @@ public interface PodStubElementTypes {
   PodStubBasedTitledSectionElementType<PodSectionH4>
     HEAD_4_SECTION = new PodStubBasedTitledSectionElementType<>(HEAD_4_SECTION_DEBUG_NAME) {
     @Override
+    public PodSectionH4 createPsi(@NotNull PodSectionStub stub) {
+      return new PsiHead4SectionImpl(stub, this);
+    }
+
+    @Override
     public @NotNull PsiElement getPsiElement(@NotNull ASTNode node) {
       return new PsiHead4SectionImpl(node);
     }
   };
   PodStubBasedSectionElementType<PodSectionParagraph> POD_PARAGRAPH = new PodStubBasedSectionElementType<>(POD_PARAGRAPH_DEBUG_NAME) {
+    @Override
+    public PodSectionParagraph createPsi(@NotNull PodSectionStub stub) {
+      return new PsiPodParagraphImpl(stub, this);
+    }
+
+    @SuppressWarnings("rawtypes")
+    @Override
+    public @NotNull PodSectionStub createStub(@NotNull PodSectionParagraph psi, @Nullable StubElement parentStub) {
+      return new PodSectionStub(parentStub, this, psi.getPresentableText());
+    }
+
     @Override
     public @NotNull PsiElement getPsiElement(@NotNull ASTNode node) {
       return new PsiPodParagraphImpl(node);
@@ -66,11 +101,16 @@ public interface PodStubElementTypes {
   };
   PodStubBasedTitledSectionElementType<PsiUnknownSectionImpl> UNKNOWN_SECTION =
     new PodStubBasedTitledSectionElementType<>(UNKNOWN_SECTION_DEBUG_NAME) {
-    @Override
-    public @NotNull PsiElement getPsiElement(@NotNull ASTNode node) {
-      return new PsiUnknownSectionImpl(node);
-    }
-  };
+      @Override
+      public PsiUnknownSectionImpl createPsi(@NotNull PodSectionStub stub) {
+        return new PsiUnknownSectionImpl(stub, this);
+      }
+
+      @Override
+      public @NotNull PsiElement getPsiElement(@NotNull ASTNode node) {
+        return new PsiUnknownSectionImpl(node);
+      }
+    };
   String ITEM_SECTION_DEBUG_NAME = "ITEM_SECTION";
   PodSectionItemElementType ITEM_SECTION = new PodSectionItemElementType(ITEM_SECTION_DEBUG_NAME);
   String POD_FORMAT_INDEX_DEBUG_NAME = "POD_FORMAT_INDEX";

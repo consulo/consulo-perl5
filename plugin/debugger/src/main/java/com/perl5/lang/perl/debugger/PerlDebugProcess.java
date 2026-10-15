@@ -16,27 +16,27 @@
 
 package com.perl5.lang.perl.debugger;
 
-import com.intellij.execution.ExecutionResult;
-import com.intellij.execution.process.ProcessHandler;
-import com.intellij.execution.ui.ExecutionConsole;
-import com.intellij.execution.ui.RunnerLayoutUi;
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationType;
-import com.intellij.notification.Notifications;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.ui.content.Content;
-import com.intellij.xdebugger.XDebugProcess;
-import com.intellij.xdebugger.XDebugSession;
-import com.intellij.xdebugger.XDebuggerManager;
-import com.intellij.xdebugger.XSourcePosition;
-import com.intellij.xdebugger.breakpoints.XBreakpointHandler;
-import com.intellij.xdebugger.breakpoints.XBreakpointManager;
-import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
-import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider;
-import com.intellij.xdebugger.frame.XSuspendContext;
-import com.intellij.xdebugger.ui.XDebugTabLayouter;
+import consulo.execution.ExecutionResult;
+import consulo.process.ProcessHandler;
+import consulo.execution.ui.ExecutionConsole;
+import consulo.execution.ui.layout.RunnerLayoutUi;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.notification.Notifications;
+import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.application.ApplicationManager;
+import consulo.logging.Logger;
+import consulo.ui.ex.content.Content;
+import consulo.execution.debug.XDebugProcess;
+import consulo.execution.debug.XDebugSession;
+import consulo.execution.debug.XDebuggerManager;
+import consulo.execution.debug.XSourcePosition;
+import consulo.execution.debug.breakpoint.XBreakpointHandler;
+import consulo.execution.debug.XBreakpointManager;
+import consulo.execution.debug.breakpoint.XLineBreakpoint;
+import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
+import consulo.execution.debug.frame.XSuspendContext;
+import consulo.execution.debug.ui.XDebugTabLayouter;
 import com.perl5.PerlIcons;
 import com.perl5.lang.perl.debugger.breakpoints.PerlLineBreakPointDescriptor;
 import com.perl5.lang.perl.debugger.breakpoints.PerlLineBreakpointHandler;
@@ -118,8 +118,9 @@ public class PerlDebugProcess extends XDebugProcess {
       myDebugThread.sendString("pause");
     }
     else {
+      // consulo: Consulo requires a registered NotificationGroup instead of the group id, see PerlDebuggerNotificationGroupContributor
       Notifications.Bus.notify(new Notification(
-        PERL_DEBUGGER_NOTIFICATION_GROUP_ID,
+        PerlDebuggerNotificationGroupContributor.PERL_DEBUGGER,
         PerlDebuggerBundle.message("perl.run.pause.unavailable.title"),
         PerlDebuggerBundle.message("perl.run.pause.unavailable.content"),
         NotificationType.INFORMATION
@@ -173,13 +174,13 @@ public class PerlDebugProcess extends XDebugProcess {
       public void registerAdditionalContent(@NotNull RunnerLayoutUi ui) {
         Content content =
           ui.createContent("PerlSourceList", myDebugThread.getScriptListPanel(), PerlDebuggerBundle.message("loaded.sources"),
-                           PerlIcons.PERL_SCRIPT_FILE_ICON, null);
+                           PerlIcons.PERL_SCRIPT_FILE_ICON);
         content.setCloseable(false);
         ui.addContent(content);
 
         content =
           ui.createContent("PerlEvalsList", myDebugThread.getEvalsListPanel(), PerlDebuggerBundle.message("compiled.evals"),
-                           PerlIcons.PERL_LANGUAGE_ICON, null);
+                           PerlIcons.PERL_LANGUAGE_ICON);
         content.setCloseable(false);
         ui.addContent(content);
       }

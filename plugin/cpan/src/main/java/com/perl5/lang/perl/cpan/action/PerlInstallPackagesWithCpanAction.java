@@ -16,7 +16,8 @@
 
 package com.perl5.lang.perl.cpan.action;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.project.Project;
+import consulo.ui.ex.action.AnActionEvent;
 import com.perl5.lang.perl.adapters.PackageManagerAdapter;
 import com.perl5.lang.perl.cpan.adapter.CpanAdapter;
 import com.perl5.lang.perl.idea.actions.PerlInstallPackageActionBase;
@@ -30,6 +31,6 @@ public class PerlInstallPackagesWithCpanAction extends PerlInstallPackageActionB
 
   @Override
   protected @Nullable PackageManagerAdapter getAdapter(@NotNull AnActionEvent e) {
-    return CpanAdapter.create(e.getProject());
+    return CpanAdapter.create(e.getData(Project.KEY));
   }
 }

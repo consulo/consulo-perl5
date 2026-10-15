@@ -17,8 +17,8 @@
 package com.perl5.lang.perl.idea.execution.filters;
 
 
-import com.intellij.execution.filters.Filter;
-import com.intellij.openapi.project.Project;
+import consulo.execution.ui.console.Filter;
+import consulo.project.Project;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostData;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostDataProvider;
 import org.jetbrains.annotations.NotNull;

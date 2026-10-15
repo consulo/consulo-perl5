@@ -17,7 +17,7 @@
 package unit.perl;
 
 import base.PerlLightTestCase;
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.perl5.lang.perl.psi.PerlFile;
 import com.perl5.lang.perl.psi.mixins.PerlNamespaceDefinitionMixin;
 import org.junit.Test;

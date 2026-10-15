@@ -16,11 +16,14 @@
 
 package com.perl5.lang.perl.psi.references;
 
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.psi.PsiElement;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ComponentScope;
+import consulo.application.ApplicationManager;
+import consulo.language.psi.PsiElement;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
+@ServiceAPI(ComponentScope.APPLICATION)
 public interface PerlFileContextSubstitutor {
   @Contract("null->null;!null->!null")
   @Nullable PsiElement computeSubstitutedContext(@Nullable PsiElement originalContext);

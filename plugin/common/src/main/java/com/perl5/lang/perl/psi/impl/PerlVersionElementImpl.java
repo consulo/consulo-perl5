@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.psi.impl;
 
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 import com.perl5.lang.perl.internals.PerlVersion;
 import com.perl5.lang.perl.psi.PerlVersionElement;
 

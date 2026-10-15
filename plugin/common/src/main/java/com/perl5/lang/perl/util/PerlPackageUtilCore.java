@@ -16,14 +16,13 @@
 
 package com.perl5.lang.perl.util;
 
-import com.intellij.openapi.util.AtomicNotNullLazyValue;
-import com.intellij.openapi.util.NlsSafe;
-import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.util.PsiTreeUtil;
+import consulo.application.util.AtomicNotNullLazyValue;
+import consulo.util.lang.Pair;
+import consulo.document.util.TextRange;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.util.PsiTreeUtil;
 import com.perl5.lang.perl.fileTypes.PerlFileTypePackage;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlScalarValue;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlValue;
@@ -264,7 +263,7 @@ public final class PerlPackageUtilCore {
   }
 
   @Contract("null -> null")
-  public static @Nullable @NlsSafe Pair<@Nullable String, @Nullable String> splitNames(@Nullable @NlsSafe String fqn) {
+  public static @Nullable Pair<@Nullable String, @Nullable String> splitNames(@Nullable String fqn) {
     if (fqn == null || fqn.isEmpty()) {
       return null;
     }

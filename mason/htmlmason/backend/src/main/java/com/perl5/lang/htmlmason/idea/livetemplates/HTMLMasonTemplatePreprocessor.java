@@ -16,7 +16,7 @@
 
 package com.perl5.lang.htmlmason.idea.livetemplates;
 
-import com.intellij.psi.PsiFile;
+import consulo.language.psi.PsiFile;
 import com.perl5.lang.htmlmason.parser.psi.impl.HTMLMasonFileImpl;
 
 

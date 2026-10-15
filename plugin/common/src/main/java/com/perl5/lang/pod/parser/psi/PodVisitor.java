@@ -16,8 +16,8 @@
 
 package com.perl5.lang.pod.parser.psi;
 
-import com.intellij.openapi.progress.ProgressIndicatorProvider;
-import com.intellij.psi.PsiElement;
+import consulo.application.progress.ProgressIndicatorProvider;
+import consulo.language.psi.PsiElement;
 import com.perl5.lang.pod.psi.*;
 import org.jetbrains.annotations.NotNull;
 

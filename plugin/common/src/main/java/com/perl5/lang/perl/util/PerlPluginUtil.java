@@ -16,13 +16,13 @@
 
 package com.perl5.lang.perl.util;
 
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
-import com.intellij.ide.plugins.PluginManagerCore;
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.extensions.PluginId;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.io.FileUtil;
+import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginManager;
+import consulo.disposer.Disposable;
+import consulo.container.boot.ContainerPathManager;
+import consulo.container.plugin.PluginId;
+import consulo.project.Project;
+import consulo.util.io.FileUtil;
 import com.perl5.lang.perl.fileTypes.PerlFileTypeService;
 import com.perl5.lang.perl.idea.project.PerlNamesCache;
 import org.jetbrains.annotations.NotNull;
@@ -37,8 +37,8 @@ public class PerlPluginUtil {
   private static final String PERL_DIR = "perl5";
   private static final String REMOTES_DIR = "remote";
 
-  public static @NotNull IdeaPluginDescriptor getPlugin() {
-    return Objects.requireNonNull(PluginManagerCore.getPlugin(PluginId.getId(PLUGIN_ID)));
+  public static @NotNull PluginDescriptor getPlugin() {
+    return Objects.requireNonNull(PluginManager.findPlugin(PluginId.getId(PLUGIN_ID)));
   }
 
   /**
@@ -63,7 +63,7 @@ public class PerlPluginUtil {
     if (project.isDisposed()) {
       return true;
     }
-    var service = project.getServiceIfCreated(PerlNamesCache.class);
+    var service = project.getInstanceIfCreated(PerlNamesCache.class);
     return service == null || service.isDisposed();
   }
 
@@ -72,9 +72,9 @@ public class PerlPluginUtil {
   }
 
   public static @NotNull String getPluginRoot() {
-    IdeaPluginDescriptor plugin = PerlPluginUtil.getPlugin();
+    PluginDescriptor plugin = PerlPluginUtil.getPlugin();
     try {
-      return FileUtil.toSystemIndependentName(plugin.getPluginPath().toFile().getCanonicalPath());
+      return FileUtil.toSystemIndependentName(Objects.requireNonNull(plugin.getPath()).getCanonicalPath());
     }
     catch (IOException e) {
       throw new RuntimeException(e);
@@ -106,7 +106,7 @@ public class PerlPluginUtil {
    * @return perl5 dir in the ide's {@code system} dir
    */
   public static @NotNull String getPerlSystemPath() {
-    String systemPath = PathManager.getSystemPath();
+    String systemPath = ContainerPathManager.get().getSystemPath();
     String perlDirectory = FileUtil.join(systemPath, PERL_DIR);
     FileUtil.createDirectory(new File(perlDirectory));
     return perlDirectory;

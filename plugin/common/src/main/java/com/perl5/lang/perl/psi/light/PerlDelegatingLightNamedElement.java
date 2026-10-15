@@ -16,12 +16,12 @@
 
 package com.perl5.lang.perl.psi.light;
 
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.*;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.util.Function;
-import com.intellij.util.IncorrectOperationException;
+import consulo.navigation.ItemPresentation;
+import consulo.document.util.TextRange;
+
+import consulo.language.ast.IElementType;
+import java.util.function.Function;
+import consulo.language.util.IncorrectOperationException;
 import com.perl5.lang.perl.idea.presentations.PerlItemPresentationSimple;
 import com.perl5.lang.perl.parser.PerlIdentifierRangeProvider;
 import com.perl5.lang.perl.psi.PerlVisitor;
@@ -31,6 +31,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
+import consulo.language.psi.ElementManipulator;
+import consulo.language.psi.ElementManipulators;
+import consulo.language.psi.NavigatablePsiElement;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiElementVisitor;
+import consulo.language.psi.PsiInvalidElementAccessException;
+import consulo.language.psi.PsiNameIdentifierOwner;
 
 /**
  * Represents one of the declarations of {@link PerlPolyNamedElement}
@@ -102,7 +109,7 @@ public class PerlDelegatingLightNamedElement<Delegate extends PerlPolyNamedEleme
                                 ? ((PerlIdentifierRangeProvider)this).getRangeInIdentifier()
                                 : ElementManipulators.getValueTextRange(nameIdentifier);
     myNameIdentifier = manipulator.handleContentChange(nameIdentifier, identifierRange, newBaseName);
-    myName = getNameComputation().fun(newBaseName);
+    myName = getNameComputation().apply(newBaseName);
     return this;
   }
 

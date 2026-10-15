@@ -16,10 +16,12 @@
 
 package com.perl5.lang.mojolicious.idea.editor;
 
-import com.intellij.lang.BracePair;
-import com.intellij.lang.PairedBraceMatcher;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.tree.IElementType;
+import com.perl5.lang.mojolicious.MojoliciousLanguage;
+import consulo.language.BracePair;
+import consulo.language.Language;
+import consulo.language.PairedBraceMatcher;
+import consulo.language.psi.PsiFile;
+import consulo.language.ast.IElementType;
 import org.jetbrains.annotations.NotNull;
 
 import static com.perl5.lang.mojolicious.MojoliciousElementTypes.*;
@@ -53,5 +55,10 @@ public class MojoBraceMatcher implements PairedBraceMatcher {
   @Override
   public int getCodeConstructStart(PsiFile file, int openingBraceOffset) {
     return openingBraceOffset;
+  }
+
+  @Override
+  public @NotNull Language getLanguage() {
+    return MojoliciousLanguage.INSTANCE;
   }
 }

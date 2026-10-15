@@ -16,17 +16,20 @@
 
 package com.perl5.lang.perl.psi.impl;
 
-import com.intellij.codeInsight.daemon.impl.Divider;
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.ResolveState;
-import com.intellij.psi.StubBasedPsiElement;
-import com.intellij.psi.scope.PsiScopeProcessor;
-import com.intellij.psi.stubs.StubBuildCachedValuesManager.StubBuildCachedValueProvider;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.CachedValueProvider;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.ui.ex.awt.Divider;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiElementVisitor;
+import consulo.language.psi.resolve.ResolveState;
+import consulo.language.psi.StubBasedPsiElement;
+import consulo.language.psi.resolve.PsiScopeProcessor;
+import consulo.language.ast.IElementType;
+import consulo.application.util.CachedValue;
+import consulo.application.util.CachedValueProvider;
+import consulo.application.util.ParameterizedCachedValueProvider;
+import consulo.language.psi.util.LanguageCachedValueUtil;
+import consulo.util.dataholder.Key;
+import consulo.language.psi.PsiUtilCore;
 import com.perl5.lang.perl.parser.elementTypes.PerlReparseableElementType;
 import com.perl5.lang.perl.psi.PerlStubBasedPsiElementBase;
 import com.perl5.lang.perl.psi.PerlVisitor;
@@ -38,16 +41,14 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-import static com.intellij.psi.stubs.StubBuildCachedValuesManager.getCachedValueStubBuildOptimized;
 import static com.perl5.lang.perl.parser.PerlElementTypesGenerated.*;
 
 public abstract class PerlPolyNamedElement<Stub extends PerlPolyNamedElementStub<?>> extends PerlStubBasedPsiElementBase<Stub>
   implements StubBasedPsiElement<Stub> {
-  private static final StubBuildCachedValueProvider<List<? extends PerlDelegatingLightNamedElement<?>>, PerlPolyNamedElement<?>> PROVIDER =
-    new StubBuildCachedValueProvider<>(
-      "perl.light.elements",
-      polyNamedElement -> CachedValueProvider.Result.create(polyNamedElement.computeLightElements(), polyNamedElement)
-    );
+  // TODO consulo: StubBuildCachedValuesManager is missing in Consulo, a regular cached value is used (no stub building optimization)
+  private static final Key<CachedValue<List<? extends PerlDelegatingLightNamedElement<?>>>> PROVIDER_KEY = Key.create("perl.light.elements");
+  private static final ParameterizedCachedValueProvider<List<? extends PerlDelegatingLightNamedElement<?>>, PerlPolyNamedElement<?>> PROVIDER =
+      polyNamedElement -> CachedValueProvider.Result.create(polyNamedElement.computeLightElements(), polyNamedElement);
 
   public PerlPolyNamedElement(@NotNull Stub stub, @NotNull IElementType nodeType) {
     super(stub, nodeType);
@@ -58,7 +59,7 @@ public abstract class PerlPolyNamedElement<Stub extends PerlPolyNamedElementStub
   }
 
   public final @NotNull List<? extends PerlDelegatingLightNamedElement<?>> getLightElements() {
-    return getCachedValueStubBuildOptimized(this, PROVIDER);
+    return LanguageCachedValueUtil.getCachedValue(this, PROVIDER_KEY, () -> PROVIDER.compute(this));
   }
 
   /**
@@ -85,8 +86,8 @@ public abstract class PerlPolyNamedElement<Stub extends PerlPolyNamedElementStub
   /**
    * @implNote we need to accept light elements here, because in non-recursive visitors case, platform collects elements by itself by
    * traversing the tree
-   * @see LocalInspectionsPass#inspect(java.util.List, com.intellij.codeInspection.InspectionManager, boolean, com.intellij.openapi.progress.ProgressIndicator)
-   * @see Divider#divideInsideAndOutsideInOneRoot(com.intellij.psi.PsiFile, com.intellij.openapi.util.TextRange, com.intellij.openapi.util.TextRange, java.util.List, java.util.List, java.util.List, java.util.List, java.util.List, java.util.List, boolean)
+   * @see LocalInspectionsPass#inspect(java.util.List, consulo.language.editor.inspection.scheme.InspectionManager, boolean, consulo.application.progress.ProgressIndicator)
+   * @see Divider#divideInsideAndOutsideInOneRoot(consulo.language.psi.PsiFile, consulo.document.util.TextRange, consulo.document.util.TextRange, java.util.List, java.util.List, java.util.List, java.util.List, java.util.List, java.util.List, boolean)
    */
   @Override
   public void accept(@NotNull PsiElementVisitor visitor) {

@@ -16,11 +16,15 @@
 
 package com.perl5.lang.perl.profiler.configuration;
 
-import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.options.UnnamedConfigurable;
-import com.intellij.openapi.util.ClearableLazyValue;
+import consulo.configurable.ConfigurationException;
+import consulo.configurable.UnnamedConfigurable;
+import consulo.util.lang.lazy.ClearableLazyValue;
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import com.perl5.lang.perl.profiler.PerlProfilerBundle;
 import com.perl5.lang.perl.profiler.run.PerlProfilerStartupMode;
+import consulo.disposer.Disposable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,20 +32,23 @@ import javax.swing.*;
 
 class PerlProfilerConfigurationEditorConfigurable implements UnnamedConfigurable {
   private final ClearableLazyValue<PerlProfilerConfigurationEditor> myEditorProvider =
-    ClearableLazyValue.create(PerlProfilerConfigurationEditor::new);
+    ClearableLazyValue.notNull(PerlProfilerConfigurationEditor::new);
   private final @NotNull PerlProfilerConfigurationState myState;
 
   public PerlProfilerConfigurationEditorConfigurable(@NotNull PerlProfilerConfigurationState state) {
     myState = state;
   }
 
+  // consulo: the Swing form wrapped into uni UI component, not used in Consulo: PerlProfilerConfigurationType creates unified UI
+  //  PerlProfilerConfigurationUIConfigurable instead, kept for easier upstream merges
+  @RequiredUIAccess
   @Override
-  public @Nullable JComponent createComponent() {
-    return getEditor().myPanel;
+  public @Nullable Component createUIComponent(Disposable parentDisposable) {
+    return TargetAWT.wrap(getEditor().myPanel);
   }
 
   private @NotNull PerlProfilerConfigurationEditor getEditor() {
-    return myEditorProvider.getValue();
+    return myEditorProvider.get();
   }
 
   @Override

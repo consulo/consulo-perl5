@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.parser.moose;
 
-import com.intellij.psi.tree.TokenSet;
+import consulo.language.ast.TokenSet;
 
 import static com.perl5.lang.perl.parser.moose.MooseElementTypes.*;
 

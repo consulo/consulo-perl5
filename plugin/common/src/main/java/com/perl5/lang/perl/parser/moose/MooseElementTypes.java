@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.parser.moose;
 
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.IElementType;
 import com.perl5.lang.perl.parser.elementTypes.PerlElementType;
 import com.perl5.lang.perl.parser.elementTypes.PerlTokenType;
 import com.perl5.lang.perl.parser.moose.stubs.PerlMooseOverrideElementType;

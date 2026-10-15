@@ -16,14 +16,15 @@
 
 package com.perl5.lang.perl.idea.editor.smartkeys;
 
-import com.intellij.codeInsight.editorActions.smartEnter.SmartEnterProcessor;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.tree.TokenSet;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.Language;
+import consulo.language.editor.action.SmartEnterProcessor;
+import consulo.codeEditor.Editor;
+import consulo.project.Project;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.ast.TokenSet;
+import consulo.language.psi.PsiUtilCore;
 import com.perl5.lang.perl.PerlLanguage;
 import com.perl5.lang.perl.psi.*;
 import com.perl5.lang.perl.psi.properties.PerlBlockOwner;
@@ -32,6 +33,11 @@ import org.jetbrains.annotations.NotNull;
 import static com.perl5.lang.perl.parser.PerlElementTypesGenerated.*;
 
 public class PerlSmartEnterProcessor extends SmartEnterProcessor {
+  @Override
+  public @NotNull Language getLanguage() {
+    return PerlLanguage.INSTANCE;
+  }
+
   private static final TokenSet BLOCK_OWNER_FALLBACK_KEYWORDS = TokenSet.create(
     RESERVED_METHOD, RESERVED_FUNC, RESERVED_FUN,
     RESERVED_AROUND_FP, RESERVED_BEFORE_FP, RESERVED_AFTER_FP, RESERVED_AUGMENT_FP, RESERVED_OVERRIDE_FP

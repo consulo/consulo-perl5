@@ -16,8 +16,8 @@
 
 package com.perl5.lang.mason2.idea.formatter;
 
-import com.intellij.formatting.FormattingContext;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.codeStyle.FormattingContext;
+import consulo.language.ast.IElementType;
 import com.perl5.lang.htmlmason.idea.formatter.AbstractMasonFormattingContext;
 import com.perl5.lang.perl.idea.formatter.PerlIndentProcessor;
 import org.jetbrains.annotations.NotNull;

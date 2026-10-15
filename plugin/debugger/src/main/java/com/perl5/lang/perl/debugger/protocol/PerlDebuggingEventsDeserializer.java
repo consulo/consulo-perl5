@@ -20,7 +20,7 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import com.perl5.lang.perl.debugger.PerlDebugThread;
 
 import java.lang.reflect.Type;

@@ -16,18 +16,20 @@
 
 package com.perl5.lang.perl.idea.formatter;
 
-import com.intellij.formatting.Block;
-import com.intellij.formatting.FormattingContext;
-import com.intellij.formatting.FormattingModel;
-import com.intellij.formatting.FormattingModelBuilder;
-import com.intellij.lang.ASTNode;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.impl.source.tree.FileElement;
-import com.intellij.psi.util.PsiTreeUtil;
+import consulo.language.Language;
+import com.perl5.lang.perl.PerlLanguage;
+import consulo.language.codeStyle.Block;
+import consulo.language.codeStyle.FormattingContext;
+import consulo.language.codeStyle.FormattingModel;
+import consulo.language.codeStyle.FormattingModelBuilder;
+import consulo.language.ast.ASTNode;
+import consulo.logging.Logger;
+import consulo.util.dataholder.Key;
+import consulo.document.util.TextRange;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.impl.ast.FileElement;
+import consulo.language.psi.util.PsiTreeUtil;
 import com.perl5.lang.perl.idea.formatter.blocks.PerlFormattingBlock;
 import com.perl5.lang.perl.util.PerlTimeLogger;
 import org.jetbrains.annotations.NotNull;
@@ -38,6 +40,11 @@ import static com.perl5.lang.perl.idea.formatter.PerlFormattingTokenSets.FORMATT
 
 
 public class PerlFormattingModelBuilder implements FormattingModelBuilder {
+  @Override
+  public @NotNull Language getLanguage() {
+    return PerlLanguage.INSTANCE;
+  }
+
   private static final Logger LOG = Logger.getInstance(PerlFormattingModelBuilder.class);
   private static final Key<TextRange> COMPUTED_RANGE_KEY = Key.create("perl5.formatting.computed.range");
 

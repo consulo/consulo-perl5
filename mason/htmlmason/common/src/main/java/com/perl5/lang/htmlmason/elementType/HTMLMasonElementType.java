@@ -16,8 +16,8 @@
 
 package com.perl5.lang.htmlmason.elementType;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiElement;
 import com.perl5.lang.perl.parser.elementTypes.PsiElementProvider;
 import com.perl5.lang.perl.psi.impl.PerlCompositeElementImpl;
 import org.jetbrains.annotations.NonNls;

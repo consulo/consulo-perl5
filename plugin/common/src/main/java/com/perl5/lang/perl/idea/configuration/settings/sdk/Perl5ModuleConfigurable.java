@@ -16,17 +16,19 @@
 
 package com.perl5.lang.perl.idea.configuration.settings.sdk;
 
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.options.UnnamedConfigurable;
-import com.intellij.openapi.util.Disposer;
+import consulo.disposer.Disposable;
+import consulo.module.Module;
+import consulo.configurable.UnnamedConfigurable;
+import consulo.disposer.Disposer;
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
 public class Perl5ModuleConfigurable implements UnnamedConfigurable {
-  private final Disposable myDisposable = Disposer.newDisposable(Perl5ModuleConfigurable.class.toString());
+  private final Disposable myDisposable = Disposable.newDisposable(Perl5ModuleConfigurable.class.toString());
   private final @NotNull Module myModule;
   private PerlContentEntriesTreeEditor myPerlContentEntriesTreeEditor;
 
@@ -34,10 +36,11 @@ public class Perl5ModuleConfigurable implements UnnamedConfigurable {
     myModule = module;
   }
 
+  @RequiredUIAccess
   @Override
-  public @Nullable JComponent createComponent() {
+  public @Nullable Component createUIComponent(Disposable parentDisposable) {
     myPerlContentEntriesTreeEditor = new PerlContentEntriesTreeEditor(myModule, myDisposable);
-    return myPerlContentEntriesTreeEditor.createComponent();
+    return myPerlContentEntriesTreeEditor.createUIComponent(parentDisposable);
   }
 
   @Override

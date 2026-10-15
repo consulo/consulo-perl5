@@ -16,38 +16,42 @@
 
 package com.perl5.lang.perl.idea.configuration.module;
 
-import com.intellij.openapi.options.UnnamedConfigurable;
-import com.intellij.openapi.ui.TextFieldWithBrowseButton;
-import com.intellij.openapi.util.AtomicNotNullLazyValue;
-import com.intellij.platform.GeneratorPeerImpl;
+import consulo.configurable.UnnamedConfigurable;
+import consulo.ui.ex.awt.TextFieldWithBrowseButton;
+import consulo.application.util.AtomicNotNullLazyValue;
 import com.perl5.lang.perl.idea.configuration.settings.sdk.Perl5SdkConfigurable;
 import com.perl5.lang.perl.idea.project.PerlProjectManager;
+import consulo.disposer.Disposable;
+import consulo.ui.Component;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
-public abstract class PerlProjectGeneratorPeerBase<Settings extends PerlProjectGenerationSettings> extends GeneratorPeerImpl<Settings>
+// TODO consulo: Consulo has no ProjectGeneratorPeer/GeneratorPeerImpl API (see PerlProjectGeneratorBase); settings are held here
+public abstract class PerlProjectGeneratorPeerBase<Settings extends PerlProjectGenerationSettings>
   implements UnnamedConfigurable {
+  private final @NotNull Settings mySettings;
   private final @NotNull JComponent myMainComponent;
   private final @NotNull Perl5SdkConfigurable mySdkConfigurable;
   private final AtomicNotNullLazyValue<JComponent> myComponentProvider = AtomicNotNullLazyValue.createValue(
     this::initializeComponent);
 
   public PerlProjectGeneratorPeerBase(@NotNull Settings settings, @NotNull JComponent mainComponent) {
-    super(settings, mainComponent);
+    mySettings = settings;
     myMainComponent = mainComponent;
     mySdkConfigurable = new Perl5SdkConfigurable(getSettings(), null);
   }
 
-  @Override
+  public @NotNull Settings getSettings() {
+    return mySettings;
+  }
+
   public @NotNull JComponent getComponent(@NotNull TextFieldWithBrowseButton myLocationField, @NotNull Runnable checkValid) {
-    // this initializes parent parts
-    super.getComponent(myLocationField, checkValid);
+    // consulo: IntelliJ GeneratorPeerImpl.getComponent(field, checkValid) only returned the component, nothing to initialize
     return myComponentProvider.getValue();
   }
 
-  @SuppressWarnings("deprecation")
-  @Override
   public @NotNull JComponent getComponent() {
     return myComponentProvider.getValue();
   }
@@ -58,14 +62,14 @@ public abstract class PerlProjectGeneratorPeerBase<Settings extends PerlProjectG
   }
 
   protected @NotNull JComponent initializeComponent() {
-    myMainComponent.add(mySdkConfigurable.createComponent());
+    myMainComponent.add(mySdkConfigurable.getComponent());
     mySdkConfigurable.setEnabled(PerlProjectManager.getSdk(getSettings().getProject()) == null);
     return myMainComponent;
   }
 
   @Override
-  public final @NotNull JComponent createComponent() {
-    return myMainComponent;
+  public final Component createUIComponent(Disposable parentDisposable) {
+    return TargetAWT.wrap(myMainComponent);
   }
 
   @Override

@@ -16,20 +16,20 @@
 
 package com.perl5.lang.perl.documentation;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Predicates;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.TokenType;
-import com.intellij.psi.search.FilenameIndex;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.search.PsiElementProcessor;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.util.ObjectUtils;
+import consulo.project.Project;
+import consulo.util.lang.function.Predicates;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
+import consulo.language.ast.TokenType;
+import consulo.language.psi.search.FilenameIndex;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.resolve.PsiElementProcessor;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.psi.PsiUtilCore;
+import consulo.util.lang.ObjectUtil;
 import com.perl5.lang.perl.PerlLanguage;
 import com.perl5.lang.perl.psi.*;
 import com.perl5.lang.perl.psi.impl.PerlHeredocElementImpl;
@@ -221,7 +221,7 @@ public final class PerlDocUtil {
 
     return redirect != null ?
            resolveDescriptor(redirect, element, false) :
-           ObjectUtils.coalesce(getPerlFuncDocFromText(element, tokenChars.toString()), getPerlOpDoc(element));
+           ObjectUtil.coalesce(getPerlFuncDocFromText(element, tokenChars.toString()), getPerlOpDoc(element));
   }
 
   static PsiElement getPerlFuncDocFromText(@NotNull PsiElement element, @NotNull String text) {
@@ -285,10 +285,10 @@ public final class PerlDocUtil {
                                                             @NotNull String fileName,
                                                             @NotNull PodDocumentPattern pattern) {
     var psiManager = PsiManager.getInstance(project);
-    return FilenameIndex.getVirtualFilesByName(fileName, GlobalSearchScope.allScope(project)).stream()
+    return FilenameIndex.getVirtualFilesByName(project, fileName, GlobalSearchScope.allScope(project)).stream()
       .map(psiManager::findFile)
       .map(it -> searchPodElement(it, pattern))
-      .filter(Predicates.nonNull())
+      .filter(Predicates.notNull())
       .findFirst().orElse(null);
   }
 

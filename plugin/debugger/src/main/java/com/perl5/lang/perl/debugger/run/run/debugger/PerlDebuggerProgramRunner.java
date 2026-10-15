@@ -16,18 +16,18 @@
 
 package com.perl5.lang.perl.debugger.run.run.debugger;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.configurations.RunProfile;
-import com.intellij.execution.configurations.RunProfileState;
-import com.intellij.execution.executors.DefaultDebugExecutor;
-import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.execution.ui.RunContentDescriptor;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.xdebugger.XDebugProcess;
-import com.intellij.xdebugger.XDebugProcessStarter;
-import com.intellij.xdebugger.XDebugSession;
-import com.intellij.xdebugger.XDebuggerManager;
+import consulo.process.ExecutionException;
+import consulo.execution.configuration.RunProfile;
+import consulo.execution.configuration.RunProfileState;
+import consulo.execution.debug.DefaultDebugExecutor;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.execution.ui.RunContentDescriptor;
+import consulo.application.ApplicationManager;
+import consulo.logging.Logger;
+import consulo.execution.debug.XDebugProcess;
+import consulo.execution.debug.XDebugProcessStarter;
+import consulo.execution.debug.XDebugSession;
+import consulo.execution.debug.XDebuggerManager;
 import com.perl5.lang.perl.debugger.PerlDebugProcess;
 import com.perl5.lang.perl.debugger.PerlDebuggerBundle;
 import com.perl5.lang.perl.idea.run.GenericPerlProgramRunner;
@@ -36,7 +36,7 @@ import com.perl5.lang.perl.idea.run.debugger.PerlDebugOptions;
 import com.perl5.lang.perl.util.PerlPackageUtilCore;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.concurrency.AsyncPromise;
+import consulo.util.concurrent.AsyncPromise;
 
 import java.util.Set;
 
@@ -76,12 +76,13 @@ public class PerlDebuggerProgramRunner extends GenericPerlProgramRunner {
     var executionResult = perlDebugProfileStateBase.execute(env.getExecutor(), this);
     ApplicationManager.getApplication().invokeLater(() -> {
       try {
-        var sessionStartedResult = XDebuggerManager.getInstance(env.getProject()).newSessionBuilder(new XDebugProcessStarter() {
+        // consulo: Consulo XDebuggerManager has no session builder, startSession(environment, starter) is used
+        var sessionStartedResult = XDebuggerManager.getInstance(env.getProject()).startSession(env, new XDebugProcessStarter() {
           @Override
           public @NotNull XDebugProcess start(@NotNull XDebugSession session) {
             return new PerlDebugProcess(session, perlDebugProfileStateBase, executionResult);
           }
-        }).environment(env).startSession();
+        });
 
         result.setResult(sessionStartedResult.getRunContentDescriptor());
       }

@@ -16,10 +16,12 @@
 
 package com.perl5.lang.perl.psi.references;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.util.JDOMUtil;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.logging.Logger;
+import consulo.component.extension.ExtensionPointName;
+import consulo.util.jdom.JDOMUtil;
+import consulo.util.lang.StringUtil;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlScalarValue;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlValue;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlValues;
@@ -47,8 +49,9 @@ import static com.perl5.lang.perl.util.PerlPackageUtilCore.NAMESPACE_ANY_VALUE;
 /**
  * Provides information about implicitly defined subs, e.g {@code Types::Standard}
  */
+@ExtensionAPI(ComponentScope.APPLICATION)
 public abstract class PerlImplicitDeclarationsProvider {
-  static final ExtensionPointName<PerlImplicitDeclarationsProvider> EP_NAME = ExtensionPointName.create("com.perl5.implicitSubsProvider");
+  static final ExtensionPointName<PerlImplicitDeclarationsProvider> EP_NAME = ExtensionPointName.create(PerlImplicitDeclarationsProvider.class);
   private static final Logger LOG = Logger.getInstance(PerlImplicitDeclarationsProvider.class);
   private static final @NonNls String PACKAGE = "package";
   private static final @NonNls String SUB_ELEMENT = "sub";

@@ -16,19 +16,19 @@
 
 package com.perl5.lang.perl.idea.sdk.host;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.process.*;
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
+import consulo.process.ExecutionException;
+
+import consulo.disposer.Disposable;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.content.bundle.Sdk;
 import com.intellij.openapi.projectRoots.impl.PerlSdkTable;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFileSystem;
-import com.intellij.util.ObjectUtils;
-import com.intellij.util.io.BaseDataReader;
-import com.intellij.util.io.BaseOutputReader;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFileSystem;
+import consulo.util.lang.ObjectUtil;
+import consulo.perl5.core.process.ProcessHandlerBuilderUtil;
+import consulo.process.ProcessConsoleType;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.idea.execution.PerlCommandLine;
 import com.perl5.lang.perl.idea.sdk.AbstractPerlData;
@@ -46,6 +46,14 @@ import java.io.File;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Stream;
+import consulo.process.BaseProcessHandler;
+import consulo.process.util.CapturingProcessAdapter;
+import consulo.process.event.ProcessEvent;
+import consulo.process.ProcessHandler;
+import consulo.process.event.ProcessListener;
+import consulo.process.util.ProcessOutput;
+import consulo.process.ProcessOutputTypes;
+import consulo.execution.process.ProcessTerminatedListener;
 
 /**
  * Contains data necessary to access a perl host. E.g. local, wsl, ssh, docker
@@ -98,23 +106,24 @@ public abstract class PerlHostData<Data extends PerlHostData<Data, Handler>, Han
    * Creates a process and process handler to be run in console.
    */
   protected @NotNull ProcessHandler doCreateConsoleProcessHandler(@NotNull PerlCommandLine commandLine) throws ExecutionException {
-    return new KillableProcessHandler(
-      createConsoleProcess(commandLine), commandLine.getCommandLineString(), commandLine.getCharset()) {
-      @Override
-      protected @NotNull BaseOutputReader.Options readerOptions() {
-        return new BaseOutputReader.Options() {
-          @Override
-          public BaseDataReader.SleepingPolicy policy() {
-            return BaseDataReader.SleepingPolicy.BLOCKING;
-          }
-
-          @Override
-          public boolean splitToLines() {
-            return false;
-          }
-        };
+    // TODO consulo: process handlers for an existing Process are internal in Consulo, the public builder creates a killable handler instead.
+    //  Upstream reader options are blocking and don't split output to lines; the builder's blocking reader splits output to lines.
+    //  PtyCommandLine is internal too: the public builder can start the command line with a PTY itself, which is what the local
+    //  host does (upstream PerlCommandLine#createProcess), so PTY is used for the local host only.
+    if (commandLine.isUsePty() && "localhost".equals(getHandler().getId())) {
+      if (!getOsHandler().isMsWindows()) {
+        commandLine.withEnvironment("TERM", "xterm-256color");
       }
-    };
+      return ProcessHandlerBuilderUtil.newBuilder(commandLine, () -> createConsoleProcess(commandLine))
+        .consoleType(ProcessConsoleType.EXTERNAL_EMULATION)
+        .killable()
+        .blockingReader()
+        .build();
+    }
+    return ProcessHandlerBuilderUtil.newBuilder(commandLine, () -> createConsoleProcess(commandLine))
+      .killable()
+      .blockingReader()
+      .build();
   }
 
   /**
@@ -127,8 +136,9 @@ public abstract class PerlHostData<Data extends PerlHostData<Data, Handler>, Han
   /**
    * Creates a process and process handler to be run in background.
    */
-  protected @NotNull BaseProcessHandler<?> doCreateProcessHandler(@NotNull PerlCommandLine commandLine) throws ExecutionException {
-    return new KillableProcessHandler(createProcess(commandLine), commandLine.getCommandLineString(), commandLine.getCharset());
+  protected @NotNull BaseProcessHandler doCreateProcessHandler(@NotNull PerlCommandLine commandLine) throws ExecutionException {
+    // consulo: process handlers for an existing Process are internal in Consulo, the public builder creates a killable handler instead
+    return (BaseProcessHandler)ProcessHandlerBuilderUtil.newBuilder(commandLine, () -> createProcess(commandLine)).killable().build();
   }
 
   /***
@@ -257,7 +267,7 @@ public abstract class PerlHostData<Data extends PerlHostData<Data, Handler>, Han
     return adapter.getOutput();
   }
 
-  public static @NotNull BaseProcessHandler<?> createProcessHandler(@NotNull PerlCommandLine commandLine) throws ExecutionException {
+  public static @NotNull BaseProcessHandler createProcessHandler(@NotNull PerlCommandLine commandLine) throws ExecutionException {
     PerlConfig.init(commandLine.getEffectiveSdk());
 
     PerlVersionManagerData<?, ?> versionManagerData = commandLine.getEffectiveVersionManagerData();
@@ -269,7 +279,7 @@ public abstract class PerlHostData<Data extends PerlHostData<Data, Handler>, Han
     if (perlHostData == null) {
       throw new ExecutionException(PerlBundle.message("dialog.message.no.host.data.in", commandLine));
     }
-    BaseProcessHandler<?> processHandler = perlHostData.doCreateProcessHandler(commandLine);
+    BaseProcessHandler processHandler = perlHostData.doCreateProcessHandler(commandLine);
     commandLine.getProcessListeners().forEach(processHandler::addProcessListener);
     PerlRunUtil.addMissingPackageListener(processHandler, commandLine);
     return processHandler;
@@ -284,7 +294,7 @@ public abstract class PerlHostData<Data extends PerlHostData<Data, Handler>, Han
 
   @Contract("null->null")
   public static @Nullable PerlHostData<?, ?> from(@Nullable Sdk sdk) {
-    return ObjectUtils.doIfNotNull(PerlSdkAdditionalData.from(sdk), PerlSdkAdditionalData::getHostData);
+    return ObjectUtil.doIfNotNull(PerlSdkAdditionalData.from(sdk), PerlSdkAdditionalData::getHostData);
   }
 
   public static @NotNull PerlHostData<?, ?> notNullFrom(@NotNull Sdk sdk) {

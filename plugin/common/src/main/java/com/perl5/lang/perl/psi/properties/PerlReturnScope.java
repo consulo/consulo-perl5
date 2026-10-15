@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.psi.properties;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 
 /**
  * Marker interface for elements which can be exited by return

@@ -16,20 +16,20 @@
 
 package com.perl5.lang.perl.idea.codeInsight.highlighting;
 
-import com.intellij.codeInsight.controlflow.ControlFlowUtil;
-import com.intellij.codeInsight.controlflow.Instruction;
-import com.intellij.codeInsight.highlighting.HighlightUsagesHandlerBase;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.Consumer;
+import consulo.language.controlFlow.ControlFlowUtil;
+import consulo.language.controlFlow.Instruction;
+import consulo.language.editor.highlight.usage.HighlightUsagesHandlerBase;
+import consulo.codeEditor.Editor;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.util.PsiTreeUtil;
 import com.perl5.lang.perl.idea.codeInsight.controlFlow.PerlControlFlowBuilder;
 import com.perl5.lang.perl.psi.properties.PerlReturnScope;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
 class PerlHighlightExitPointsHandler extends HighlightUsagesHandlerBase<PsiElement> {
   private final @NotNull PsiElement myTarget;
@@ -47,13 +47,13 @@ class PerlHighlightExitPointsHandler extends HighlightUsagesHandlerBase<PsiEleme
   }
 
   @Override
-  protected void selectTargets(@NotNull List<? extends PsiElement> targets,
-                               @NotNull Consumer<? super List<? extends PsiElement>> selectionConsumer) {
-    selectionConsumer.consume(targets);
+  protected void selectTargets(@NotNull List<PsiElement> targets,
+                               @NotNull Consumer<List<PsiElement>> selectionConsumer) {
+    selectionConsumer.accept(targets);
   }
 
   @Override
-  public void computeUsages(@NotNull List<? extends PsiElement> targets) {
+  public void computeUsages(@NotNull List<PsiElement> targets) {
     PerlReturnScope returnScope = PsiTreeUtil.getParentOfType(myTarget, PerlReturnScope.class);
     if (returnScope == null) {
       return;

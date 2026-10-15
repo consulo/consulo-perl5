@@ -16,8 +16,8 @@
 
 package com.perl5.lang.htmlmason.parser.psi;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiRecursiveVisitor;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiRecursiveVisitor;
 
 public class HTMLMasonRecursiveVisitor extends HTMLMasonVisitor implements PsiRecursiveVisitor {
   @Override

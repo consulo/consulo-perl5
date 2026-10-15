@@ -21,7 +21,8 @@ import com.perl5.PerlIcons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
+import consulo.localize.LocalizeValue;
+import consulo.ui.image.Image;
 
 
 public class PerlFileTypePackage extends PurePerlFileType {
@@ -30,13 +31,13 @@ public class PerlFileTypePackage extends PurePerlFileType {
   public static final PerlFileTypePackage INSTANCE = new PerlFileTypePackage();
 
   @Override
-  public @NotNull String getName() {
+  public @NotNull String getId() {
     return "Perl5 Package";
   }
 
   @Override
-  public @NotNull String getDescription() {
-    return PerlBundle.message("label.perl5.package");
+  public @NotNull LocalizeValue getDescription() {
+    return LocalizeValue.localizeTODO(PerlBundle.message("label.perl5.package"));
   }
 
   @Override
@@ -45,7 +46,7 @@ public class PerlFileTypePackage extends PurePerlFileType {
   }
 
   @Override
-  public @Nullable Icon getIcon() {
+  public @Nullable Image getIcon() {
     return PerlIcons.PM_FILE;
   }
 }

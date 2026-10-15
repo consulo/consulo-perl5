@@ -16,12 +16,12 @@
 
 package com.perl5.lang.perl.parser.elementTypes;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.Language;
-import com.intellij.lang.PsiBuilderUtil;
-import com.intellij.lexer.Lexer;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.ast.ASTNode;
+import consulo.language.Language;
+import consulo.language.parser.PsiBuilderUtil;
+import consulo.language.lexer.Lexer;
+import consulo.project.Project;
+import consulo.language.ast.IElementType;
 import com.perl5.lang.perl.util.PerlTimeLogger;
 import org.jetbrains.annotations.NotNull;
 
@@ -53,7 +53,7 @@ public abstract class PerlBracedBlockElementType extends PerlReparseableElementT
   protected abstract boolean isLexerStateOk(int lexerState);
 
   /**
-   * Improved copy of {@link PsiBuilderUtil#hasProperBraceBalance(CharSequence, com.intellij.lexer.Lexer, IElementType, IElementType)}
+   * Improved copy of {@link PsiBuilderUtil#hasProperBraceBalance(CharSequence, consulo.language.lexer.Lexer, IElementType, IElementType)}
    * Checks that all perl braces within range are balanced and properly nested
    */
   private static boolean hasProperBraceBalance(@NotNull CharSequence text,

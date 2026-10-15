@@ -16,13 +16,14 @@
 
 package com.perl5.lang.perl.idea.refactoring;
 
-import com.intellij.lang.refactoring.RefactoringSupportProvider;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiNameIdentifierOwner;
-import com.intellij.psi.search.LocalSearchScope;
-import com.intellij.psi.search.SearchScope;
-import com.intellij.refactoring.RefactoringActionHandler;
+import consulo.language.Language;
+import consulo.language.editor.refactoring.RefactoringSupportProvider;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiNameIdentifierOwner;
+import consulo.language.psi.scope.LocalSearchScope;
+import consulo.content.scope.SearchScope;
+import consulo.language.editor.refactoring.action.RefactoringActionHandler;
 import com.perl5.lang.perl.PerlLanguage;
 import com.perl5.lang.perl.extensions.PerlRenameUsagesHelper;
 import com.perl5.lang.perl.idea.refactoring.introduce.PerlIntroduceVariableHandler;
@@ -83,5 +84,10 @@ public class PerlRefactoringSupportProvider extends RefactoringSupportProvider {
   @Override
   public @Nullable RefactoringActionHandler getIntroduceVariableHandler() {
     return new PerlIntroduceVariableHandler();
+  }
+
+  @Override
+  public @NotNull Language getLanguage() {
+    return PerlLanguage.INSTANCE;
   }
 }

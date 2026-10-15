@@ -16,14 +16,15 @@
 
 package com.perl5.lang.embedded.filetypes;
 
-import com.intellij.ide.highlighter.HtmlFileType;
-import com.intellij.openapi.editor.ex.util.LayerDescriptor;
-import com.intellij.openapi.editor.ex.util.LayeredLexerEditorHighlighter;
-import com.intellij.openapi.editor.highlighter.EditorHighlighter;
-import com.intellij.openapi.fileTypes.SyntaxHighlighter;
-import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.html.language.HtmlFileType;
+import consulo.language.editor.highlight.LayerDescriptor;
+import consulo.language.editor.highlight.LayeredLexerEditorHighlighter;
+import consulo.codeEditor.EditorHighlighter;
+import consulo.language.editor.highlight.SyntaxHighlighter;
+import consulo.language.editor.highlight.SyntaxHighlighterFactory;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
 import com.perl5.lang.embedded.idea.highlighting.EmbeddedPerlSyntaxHighlighter;
 import com.perl5.lang.perl.idea.highlighter.PerlEditorHighlighterProviderBase;
 import org.jetbrains.annotations.NotNull;
@@ -34,6 +35,12 @@ import java.util.Objects;
 import static com.perl5.lang.embedded.psi.EmbeddedPerlElementTypes.EMBED_TEMPLATE_BLOCK_HTML;
 
 public class EmbeddedPerlEditorHighlighterProvider extends PerlEditorHighlighterProviderBase {
+  // consulo: Consulo keys EditorHighlighterProvider by file type
+  @Override
+  public @NotNull FileType getFileType() {
+    return EmbeddedPerlFileType.INSTANCE;
+  }
+
   @Override
   protected @NotNull EditorHighlighter registerAdditionalLayers(@NotNull LayeredLexerEditorHighlighter highlighter,
                                                                 @Nullable Project project,
@@ -44,7 +51,7 @@ public class EmbeddedPerlEditorHighlighterProvider extends PerlEditorHighlighter
   }
 
   @Override
-  protected @NotNull SyntaxHighlighter createBaseSyntaxHighlighter(@Nullable Project project) {
+  protected @NotNull SyntaxHighlighter createBaseSyntaxHighlighter(@Nullable Project project, @Nullable VirtualFile virtualFile) {
     return new EmbeddedPerlSyntaxHighlighter(project);
   }
 }

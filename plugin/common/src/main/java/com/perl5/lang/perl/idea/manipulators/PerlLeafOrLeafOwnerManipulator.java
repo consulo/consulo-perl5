@@ -16,12 +16,13 @@
 
 package com.perl5.lang.perl.idea.manipulators;
 
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.AbstractElementManipulator;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.impl.source.tree.LeafElement;
-import com.intellij.psi.impl.source.tree.LeafPsiElement;
-import com.intellij.util.IncorrectOperationException;
+import com.perl5.lang.perl.psi.PsiPerlLabelExpr;
+import consulo.document.util.TextRange;
+import consulo.language.psi.AbstractElementManipulator;
+import consulo.language.psi.PsiElement;
+import consulo.language.impl.ast.LeafElement;
+import consulo.language.impl.psi.LeafPsiElement;
+import consulo.language.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -41,5 +42,12 @@ public class PerlLeafOrLeafOwnerManipulator extends AbstractElementManipulator<P
 
     LeafElement newElement = ((LeafPsiElement)modifyableLeaf).replaceWithText(range.replace(modifyableLeaf.getText(), newContent));
     return element == modifyableLeaf ? newElement.getPsi() : newElement.getTreeParent().getPsi();
+  }
+
+  // consulo: upstream registers this manipulator for PsiPerlLabelExpr in plugin.xml
+  @SuppressWarnings({"unchecked", "rawtypes"})
+  @Override
+  public @NotNull Class<PsiElement> getElementClass() {
+    return (Class)PsiPerlLabelExpr.class;
   }
 }

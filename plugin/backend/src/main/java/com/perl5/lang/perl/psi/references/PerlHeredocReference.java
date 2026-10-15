@@ -16,10 +16,10 @@
 
 package com.perl5.lang.perl.psi.references;
 
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.*;
-import com.intellij.util.IncorrectOperationException;
+import consulo.document.Document;
+import consulo.util.lang.StringUtil;
+
+import consulo.language.util.IncorrectOperationException;
 import com.perl5.lang.perl.psi.PerlHeredocOpener;
 import com.perl5.lang.perl.psi.PerlHeredocTerminatorElement;
 import com.perl5.lang.perl.psi.impl.PerlHeredocElementImpl;
@@ -27,6 +27,13 @@ import com.perl5.lang.perl.psi.utils.PerlElementFactory;
 import com.perl5.lang.perl.psi.utils.PerlPsiUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiElementResolveResult;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiReference;
+import consulo.language.psi.PsiWhiteSpace;
+import consulo.language.psi.ResolveResult;
 
 public class PerlHeredocReference extends PerlCachingReference<PerlHeredocTerminatorElement> {
 

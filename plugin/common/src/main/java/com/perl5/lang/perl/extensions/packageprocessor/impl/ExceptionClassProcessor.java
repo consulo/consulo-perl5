@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.extensions.packageprocessor.impl;
 
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.ElementManipulators;
-import com.intellij.psi.PsiElement;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.ElementManipulators;
+import consulo.language.psi.PsiElement;
 import com.perl5.lang.perl.extensions.packageprocessor.PerlPackageProcessorBase;
 import com.perl5.lang.perl.parser.Exception.Class.psi.light.PerlLightExceptionClassDefinition;
 import com.perl5.lang.perl.psi.PsiPerlAnonArray;
@@ -67,7 +67,7 @@ public class ExceptionClassProcessor extends PerlPackageProcessorBase {
                                                                                          @NotNull PerlUseStatementStub useStatementStub) {
     return useStatementStub.getLightNamedElementsStubs().stream()
       .map(childStub -> {
-        var stubType = childStub.getElementType();
+        var stubType = childStub.getStubType();
         if (stubType == LIGHT_NAMESPACE_DEFINITION) {
           return new PerlLightExceptionClassDefinition(useStatementElement, (PerlNamespaceDefinitionStub)childStub);
         }

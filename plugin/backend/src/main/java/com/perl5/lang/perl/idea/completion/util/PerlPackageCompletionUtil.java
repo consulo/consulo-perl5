@@ -16,20 +16,20 @@
 
 package com.perl5.lang.perl.idea.completion.util;
 
-import com.intellij.codeInsight.AutoPopupController;
-import com.intellij.codeInsight.completion.InsertHandler;
-import com.intellij.codeInsight.lookup.Lookup;
-import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.util.ObjectUtils;
-import com.intellij.util.Processor;
+import consulo.language.editor.AutoPopupController;
+import consulo.language.editor.completion.lookup.InsertHandler;
+import consulo.language.editor.completion.lookup.Lookup;
+import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.editor.completion.lookup.LookupElementBuilder;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.util.lang.ObjectUtil;
+import consulo.application.util.function.Processor;
 import com.perl5.PerlIcons;
 import com.perl5.lang.perl.fileTypes.PerlFileTypePackage;
 import com.perl5.lang.perl.idea.completion.providers.processors.PerlCompletionProcessor;
@@ -46,7 +46,8 @@ import com.perl5.lang.perl.util.PerlTimeLogger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
+import consulo.language.icon.IconDescriptorUpdaters;
+import consulo.ui.image.Image;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -72,7 +73,7 @@ public class PerlPackageCompletionUtil {
       return completionProcessor.result();
     }
     return processPackageLookupElement(
-      namespaceDefinition, namespaceName, namespaceDefinition.getIcon(0), completionProcessor, appendNamespaceSeparator);
+      namespaceDefinition, namespaceName, IconDescriptorUpdaters.getIcon(namespaceDefinition, 0), completionProcessor, appendNamespaceSeparator);
   }
 
   /**
@@ -80,7 +81,7 @@ public class PerlPackageCompletionUtil {
    */
   public static boolean processPackageLookupElement(@Nullable Object lookupObject,
                                                     @NotNull String packageName,
-                                                    @Nullable Icon icon,
+                                                    @Nullable Image icon,
                                                     @NotNull PerlCompletionProcessor completionProcessor,
                                                     boolean appendNamespaceSeparator) {
     if (!completionProcessor.matches(packageName)) {
@@ -90,7 +91,7 @@ public class PerlPackageCompletionUtil {
       packageName += PerlPackageUtilCore.NAMESPACE_SEPARATOR;
     }
 
-    LookupElementBuilder result = LookupElementBuilder.create(ObjectUtils.notNull(lookupObject, packageName), packageName);
+    LookupElementBuilder result = LookupElementBuilder.create(ObjectUtil.notNull(lookupObject, packageName), packageName);
 
     if (PerlPackageUtilCore.isBuiltIn(packageName)) {
       result = result.withBoldness(true);
@@ -116,7 +117,7 @@ public class PerlPackageCompletionUtil {
   @SuppressWarnings("UnusedReturnValue")
   public static boolean processPackageLookupElementWithAutocomplete(@Nullable PerlNamespaceDefinitionElement namespaceDefinitionElement,
                                                                     @NotNull String packageName,
-                                                                    @Nullable Icon icon,
+                                                                    @Nullable Image icon,
                                                                     @NotNull PerlCompletionProcessor completionProcessor) {
     return processPackageLookupElement(
       namespaceDefinitionElement, packageName, icon,

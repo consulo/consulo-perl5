@@ -16,15 +16,16 @@
 
 package com.perl5.lang.perl.idea.editor.smartkeys;
 
-import com.intellij.codeInsight.editorActions.BackspaceHandlerDelegate;
-import com.intellij.openapi.editor.CaretModel;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.highlighter.EditorHighlighter;
-import com.intellij.openapi.editor.highlighter.HighlighterIterator;
-import com.intellij.openapi.util.Key;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.tree.IElementType;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.editor.action.BackspaceHandlerDelegate;
+import consulo.codeEditor.CaretModel;
+import consulo.document.Document;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorHighlighter;
+import consulo.codeEditor.HighlighterIterator;
+import consulo.util.dataholder.Key;
+import consulo.language.psi.PsiFile;
+import consulo.language.ast.IElementType;
 import com.perl5.lang.perl.idea.codeInsight.Perl5CodeInsightSettings;
 import com.perl5.lang.perl.psi.PerlFile;
 import org.jetbrains.annotations.NotNull;
@@ -33,6 +34,7 @@ import java.util.function.Supplier;
 
 import static com.perl5.lang.perl.lexer.PerlTokenSets.*;
 
+@ExtensionImpl // TODO consulo: upstream order="first", Consulo reserves first/last for the platform
 public class PerlBackspaceHandler extends BackspaceHandlerDelegate {
   private static final Key<Supplier<Boolean>> POST_HANDLER = Key.create("perl.post.handler");
 
@@ -54,14 +56,14 @@ public class PerlBackspaceHandler extends BackspaceHandlerDelegate {
       if (iterator.atEnd()) {
         return;
       }
-      IElementType nextTokenType = iterator.getTokenType();
+      IElementType nextTokenType = (IElementType)iterator.getTokenType();
       if (QUOTE_CLOSE_PAIRED.contains(nextTokenType)) {
         int startOffsetToDelete = currentOffset + 1;
 
         if (currentOffset > 0 && QUOTE_MIDDLE.contains(tokenToDelete)) {
           HighlighterIterator preQuoteIterator =
             PerlEditorUtil.moveToPreviousMeaningfulToken(highlighter.createIterator(currentOffset - 1), false);
-          if (!preQuoteIterator.atEnd() && QUOTE_OPEN_ANY.contains(preQuoteIterator.getTokenType())) {
+          if (!preQuoteIterator.atEnd() && QUOTE_OPEN_ANY.contains((IElementType)preQuoteIterator.getTokenType())) {
             startOffsetToDelete = preQuoteIterator.getEnd();
             caretModel.moveToOffset(preQuoteIterator.getEnd());
           }

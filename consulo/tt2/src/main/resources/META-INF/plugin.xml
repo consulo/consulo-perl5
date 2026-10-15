@@ -1,0 +1,12 @@
+<consulo-plugin url="https://github.com/consulo/consulo-perl5">
+  <id>com.perl5.lang.tt2</id>
+  <name>Template Toolkit Support</name>
+  <version>SNAPSHOT</version>
+  <vendor>consulo.io</vendor>
+  <description>Ported from Perl5-IDEA by Alexandr Evstigneev (https://github.com/Camelcade/Perl5-IDEA)</description>
+  <depends>com.perl5</depends>
+  <depends>com.intellij.xml</depends>
+  <tags>
+    <tag>custom.language</tag>
+  </tags>
+</consulo-plugin>

@@ -16,27 +16,27 @@
 
 package com.perl5.lang.perl.idea.configuration.settings.sdk;
 
-import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
-import com.intellij.openapi.fileChooser.FileChooserFactory;
-import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.ConfigurationException;
-import com.intellij.openapi.options.UnnamedConfigurable;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.ui.ComboBox;
-import com.intellij.openapi.ui.LabeledComponent;
-import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.ui.VerticalFlowLayout;
-import com.intellij.openapi.util.NlsContexts.DialogTitle;
-import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.ui.*;
-import com.intellij.ui.components.JBList;
-import com.intellij.util.FileContentUtil;
-import com.intellij.util.ui.FormBuilder;
+import consulo.fileChooser.FileChooserDescriptorFactory;
+import consulo.fileChooser.FileChooserFactory;
+import consulo.language.util.ModuleUtilCore;
+import consulo.configurable.Configurable;
+import consulo.configurable.ConfigurationException;
+import consulo.configurable.UnnamedConfigurable;
+import consulo.project.Project;
+import consulo.content.bundle.Sdk;
+import consulo.ui.ex.awt.ComboBox;
+import consulo.ui.ex.awt.LabeledComponent;
+import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.VerticalFlowLayout;
+import consulo.util.lang.ref.Ref;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
+
+import consulo.ui.ex.awt.JBList;
+import consulo.fileEditor.util.FileContentUtil;
+import consulo.ui.ex.awt.FormBuilder;
+import consulo.localize.LocalizeValue;
 import com.perl5.PerlBundle;
 import com.perl5.PerlIcons;
 import com.perl5.lang.perl.idea.configuration.settings.PerlLocalSettings;
@@ -46,6 +46,7 @@ import com.perl5.lang.perl.idea.configuration.settings.sdk.wrappers.Perl5SdkWrap
 import com.perl5.lang.perl.idea.project.PerlProjectManager;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostHandler;
 import com.perl5.lang.perl.internals.PerlVersion;
+import consulo.disposer.Disposable;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -56,7 +57,14 @@ import java.util.*;
 import java.util.List;
 
 import static com.perl5.lang.perl.idea.configuration.settings.sdk.Perl5SdkConfigurable.DISABLE_PERL_ITEM;
+import consulo.ui.ex.awt.CollectionComboBoxModel;
+import consulo.ui.ex.awt.CollectionListModel;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
+import consulo.execution.ui.awt.RawCommandLineEditor;
+import consulo.ui.ex.awt.ToolbarDecorator;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 
+// TODO consulo: Swing settings panel (consulo.ui.ex.awt), to be rewritten with uni UI
 public class Perl5ProjectConfigurable implements Configurable, Perl5SdkManipulator {
   private static final int ourRowsCount = 5;
 
@@ -70,6 +78,7 @@ public class Perl5ProjectConfigurable implements Configurable, Perl5SdkManipulat
 
   private final Map<PerlHostHandler<?, ?>, UnnamedConfigurable> myHostConfigurablesMap = new HashMap<>();
   private UnnamedConfigurable myHostProjectConfigurable;
+  private @Nullable Disposable myUIDisposable;
 
   protected JBList<VirtualFile> myLibsList;
   private CollectionListModel<VirtualFile> myLibsModel;
@@ -97,11 +106,12 @@ public class Perl5ProjectConfigurable implements Configurable, Perl5SdkManipulat
   }
 
   @Override
-  public @Nullable JComponent createComponent() {
+  public @Nullable consulo.ui.Component createUIComponent(Disposable parentDisposable) {
+    myUIDisposable = parentDisposable;
     FormBuilder builder = FormBuilder.createFormBuilder();
     builder.getPanel().setLayout(new VerticalFlowLayout());
 
-    builder.addComponent(myPerl5SdkConfigurable.createComponent());
+    builder.addComponent((JComponent) TargetAWT.to(myPerl5SdkConfigurable.createUIComponent(parentDisposable)));
     builder.addComponent(mySdkProjectSettingsPanel);
 
     ComboBoxModel<PerlVersion> versionModel = new CollectionComboBoxModel<>(new ArrayList<>(PerlVersion.ALL_VERSIONS));
@@ -233,10 +243,10 @@ public class Perl5ProjectConfigurable implements Configurable, Perl5SdkManipulat
           }
         }).createPanel());
 
-    return builder.getPanel();
+    return TargetAWT.wrap(builder.getPanel());
   }
 
-  private void addModuleList(@NotNull @DialogTitle String title, @NotNull CollectionListModel<String> model) {
+  private void addModuleList(@NotNull String title, @NotNull CollectionListModel<String> model) {
     String moduleNames = Messages.showInputDialog(
       myProject,
       PerlBundle.message("perl.enter.comma.separated.values.to.add"),
@@ -255,8 +265,8 @@ public class Perl5ProjectConfigurable implements Configurable, Perl5SdkManipulat
   }
 
   @Override
-  public @Nls String getDisplayName() {
-    return PerlBundle.message("perl.perl5");
+  public @NotNull LocalizeValue getDisplayName() {
+    return LocalizeValue.of(PerlBundle.message("perl.perl5"));
   }
 
   private void doAddExternalLibrary() {
@@ -267,7 +277,7 @@ public class Perl5ProjectConfigurable implements Configurable, Perl5SdkManipulat
         withTitle(PerlBundle.message("perl.settings.select.libs")),
       myProject,
       myLibsList
-    ).choose(null, this::processChosenFiles);
+    ).chooseAsync(null).thenAccept(files -> processChosenFiles(Arrays.asList(files)));
   }
 
   private void processChosenFiles(@NotNull List<? extends VirtualFile> virtualFiles) {
@@ -424,7 +434,7 @@ public class Perl5ProjectConfigurable implements Configurable, Perl5SdkManipulat
       if (perlHostHandler != null) {
         myHostProjectConfigurable = myHostConfigurablesMap.computeIfAbsent(perlHostHandler, it -> it.getSettingsConfigurable(myProject));
         if (myHostProjectConfigurable != null) {
-          mySdkProjectSettingsPanel.add(Objects.requireNonNull(myHostProjectConfigurable.createComponent()), BorderLayout.CENTER);
+          mySdkProjectSettingsPanel.add(Objects.requireNonNull(TargetAWT.to(myHostProjectConfigurable.createUIComponent(Objects.requireNonNull(myUIDisposable)))), BorderLayout.CENTER);
           myHostProjectConfigurable.reset();
         }
       }
@@ -445,6 +455,7 @@ public class Perl5ProjectConfigurable implements Configurable, Perl5SdkManipulat
   @Override
   public void disposeUIResources() {
     myLibsList = null;
+    myUIDisposable = null;
     myPerl5SdkConfigurable.disposeUIResources();
     myHostProjectConfigurable = null;
     myHostConfigurablesMap.values().forEach(it -> {

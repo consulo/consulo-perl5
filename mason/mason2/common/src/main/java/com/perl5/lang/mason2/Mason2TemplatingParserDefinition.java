@@ -16,23 +16,25 @@
 
 package com.perl5.lang.mason2;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.PsiParser;
-import com.intellij.lexer.Lexer;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.impl.source.DummyHolder;
-import com.intellij.psi.impl.source.tree.TreeUtil;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.IFileElementType;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.Language;
+import consulo.language.ast.ASTNode;
+import consulo.language.parser.PsiParser;
+import consulo.language.lexer.Lexer;
+import consulo.language.version.LanguageVersion;
+import consulo.util.lang.StringUtil;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.impl.psi.DummyHolder;
+import consulo.language.impl.ast.TreeUtil;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.IFileElementType;
 import com.perl5.lang.mason2.lexer.Mason2TemplatingLexer;
 import com.perl5.lang.mason2.lexer.Mason2TemplatingLexerAdapter;
 import com.perl5.lang.mason2.psi.impl.MasonTemplatingFileImpl;
 import com.perl5.lang.perl.lexer.PerlTemplatingLexer;
-import com.perl5.lang.perl.parser.Mason2TemplatingParserImpl;
+import com.perl5.lang.mason2.parser.Mason2TemplatingParserImpl;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -40,7 +42,12 @@ import java.util.Objects;
 import static com.perl5.lang.mason2.elementType.Mason2ElementTypes.*;
 
 
+@ExtensionImpl
 public class Mason2TemplatingParserDefinition extends Mason2ParserDefinition {
+  @Override
+  public @NotNull Language getLanguage() {
+    return Mason2TemplatingLanguage.INSTANCE;
+  }
 
   @Override
   public @NotNull IFileElementType getFileNodeType() {
@@ -48,12 +55,13 @@ public class Mason2TemplatingParserDefinition extends Mason2ParserDefinition {
   }
 
   @Override
-  public @NotNull Lexer createLexer(Project project) {
-    return new Mason2TemplatingLexerAdapter(project, false);
+  public @NotNull Lexer createLexer(LanguageVersion languageVersion) {
+    // TODO consulo: no project in ParserDefinition.createLexer(LanguageVersion); upstream passes it to the lexer
+    return new Mason2TemplatingLexerAdapter(null, false);
   }
 
   @Override
-  public @NotNull PsiParser createParser(Project project) {
+  public @NotNull PsiParser createParser(LanguageVersion languageVersion) {
     return new Mason2TemplatingParserImpl();
   }
 

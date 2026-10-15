@@ -16,11 +16,11 @@
 
 package com.perl5.lang.tt2.lexer;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.tree.IElementType;
+import consulo.util.lang.StringUtil;
+import consulo.language.ast.IElementType;
 import com.perl5.lang.perl.lexer.PerlLexerWithCustomStates;
 import com.perl5.lang.tt2.idea.settings.TemplateToolkitSettings;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
@@ -29,13 +29,16 @@ import static com.perl5.lang.tt2.parser.TemplateToolkitElementTypesGenerated.*;
 
 public class TemplateToolkitLexer extends TemplateToolkitLexerGenerated implements PerlLexerWithCustomStates {
   private static final String CHOMP_MODIFIERS = "-+=~";
-  private final TemplateToolkitSettings mySettings;
+  private final @NotNull TemplateToolkitSettings mySettings;
   private int customState = 0;
   private boolean isEscaped = false;
 
-  public TemplateToolkitLexer(Project project) {
+  /**
+   * consulo: upstream reads the project settings, here the settings of the module of the lexed file are passed
+   */
+  public TemplateToolkitLexer(@NotNull TemplateToolkitSettings settings) {
     super(null);
-    mySettings = project == null ? null : TemplateToolkitSettings.getInstance(project);
+    mySettings = settings;
   }
 
   @Override
@@ -235,15 +238,15 @@ public class TemplateToolkitLexer extends TemplateToolkitLexerGenerated implemen
   }
 
   protected String getStartTag() {
-    return mySettings == null ? TemplateToolkitSettings.DEFAULT_START_TAG : mySettings.START_TAG;
+    return mySettings.getStartTag();
   }
 
   protected String getEndTag() {
-    return mySettings == null ? TemplateToolkitSettings.DEFAULT_END_TAG : mySettings.END_TAG;
+    return mySettings.getEndTag();
   }
 
   protected String getOutlineTag() {
-    return mySettings == null ? TemplateToolkitSettings.DEFAULT_OUTLINE_TAG : mySettings.OUTLINE_TAG;
+    return mySettings.getOutlineTag();
   }
 
   protected boolean isOutlineEnabled() {
@@ -255,7 +258,7 @@ public class TemplateToolkitLexer extends TemplateToolkitLexerGenerated implemen
   }
 
   protected boolean isAnycaseEnabled() {
-    return mySettings != null && mySettings.ENABLE_ANYCASE;
+    return mySettings.isAnycaseEnabled();
   }
 
   @Override

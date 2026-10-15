@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.profiler.configuration;
 
-import com.intellij.execution.configurations.RunProfile;
-import com.intellij.openapi.project.Project;
-import com.intellij.profiler.api.configurations.ProfilerStarter;
+import consulo.execution.configuration.RunProfile;
+import consulo.project.Project;
+import consulo.execution.profiler.configuration.ProfilerStarter;
 import com.perl5.lang.perl.idea.project.PerlProjectManager;
 import com.perl5.lang.perl.idea.run.GenericPerlRunConfiguration;
 import org.jetbrains.annotations.NotNull;

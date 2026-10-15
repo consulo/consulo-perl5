@@ -16,12 +16,13 @@
 
 package com.perl5.lang.tt2.elementTypes;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.PsiBuilder;
-import com.intellij.lang.PsiParser;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.ILazyParseableElementType;
+import consulo.language.ast.ASTNode;
+import consulo.language.parser.PsiBuilder;
+import consulo.language.parser.PsiParser;
+import consulo.project.Project;
+import consulo.language.psi.PsiElement;
+import consulo.language.ast.ILazyParseableElementType;
+import consulo.language.version.LanguageVersionUtil;
 import com.perl5.lang.perl.PerlLanguage;
 import com.perl5.lang.perl.lexer.PerlLexingContext;
 import com.perl5.lang.perl.lexer.adapters.PerlMergingLexerAdapter;
@@ -52,7 +53,7 @@ public class TemplateToolkitPerlCodeElementType extends ILazyParseableElementTyp
     );
     PsiParser parser = PerlParserImpl.INSTANCE;
 
-    return parser.parse(PerlStubElementTypes.FILE, builder).getFirstChildNode();
+    return parser.parse(PerlStubElementTypes.FILE, builder, LanguageVersionUtil.findDefaultVersion(PerlLanguage.INSTANCE)).getFirstChildNode();
   }
 
   @Override

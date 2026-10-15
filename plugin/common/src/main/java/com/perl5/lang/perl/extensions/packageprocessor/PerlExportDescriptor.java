@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.extensions.packageprocessor;
 
-import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.language.editor.completion.lookup.LookupElementBuilder;
+import consulo.util.lang.StringUtil;
 import com.perl5.PerlIcons;
 import com.perl5.lang.perl.idea.completion.providers.processors.PerlCompletionProcessor;
 import com.perl5.lang.perl.util.PerlPackageUtilCore;
@@ -25,7 +25,7 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
+import consulo.ui.image.Image;
 
 
 public class PerlExportDescriptor {
@@ -121,7 +121,7 @@ public class PerlExportDescriptor {
     return completionProcessor.result();
   }
 
-  public @Nullable Icon getIcon() {
+  public @Nullable Image getIcon() {
     if (isHash()) {
       return PerlIcons.HASH_GUTTER_ICON;
     }

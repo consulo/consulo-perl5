@@ -16,20 +16,25 @@
 
 package com.perl5.lang.mojolicious.idea.actions;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.process.ProcessEvent;
-import com.intellij.execution.process.ProcessListener;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ProjectFileIndex;
-import com.intellij.openapi.ui.InputValidator;
-import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.NlsContexts;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.concurrency.Semaphore;
+import consulo.process.ExecutionException;
+import consulo.process.event.ProcessEvent;
+import consulo.process.event.ProcessListener;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.language.editor.CommonDataKeys;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.module.content.ProjectFileIndex;
+import consulo.ui.ex.InputValidator;
+import consulo.ui.InputBoxBuilder;
+import consulo.ui.InputProblem;
+import consulo.ui.TextBox;
+import consulo.localize.LocalizeValue;
+import consulo.content.bundle.Sdk;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.application.util.Semaphore;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.image.Image;
 import com.perl5.lang.mojolicious.MojoIcons;
 import com.perl5.lang.mojolicious.MojoUtil;
 import com.perl5.lang.perl.idea.execution.PerlCommandLine;
@@ -41,9 +46,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 
-import javax.swing.*;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public abstract class MojoGenerateAction extends MojoScriptAction {
   private static final Logger LOG = Logger.getInstance(MojoGenerateAction.class);
@@ -54,7 +59,7 @@ public abstract class MojoGenerateAction extends MojoScriptAction {
     super(text);
   }
 
-  public MojoGenerateAction(@Nls(capitalization = Nls.Capitalization.Title) @Nullable String text, @Nullable Icon icon) {
+  public MojoGenerateAction(@Nls(capitalization = Nls.Capitalization.Title) @Nullable String text, @Nullable Image icon) {
     super(text, icon);
   }
 
@@ -68,18 +73,31 @@ public abstract class MojoGenerateAction extends MojoScriptAction {
 
   @Override
   public final void actionPerformed(@NotNull AnActionEvent e) {
-    var project = getEventProject(e);
+    var project = e.getData(Project.KEY);
     var perlSdk = PerlProjectManager.getSdk(e);
     VirtualFile mojoScript = MojoUtil.getMojoScript(e);
     if (mojoScript == null) {
       LOG.warn("No mojo script; project: " + project + " sdk: " + perlSdk);
       return;
     }
-    List<String> generationParameters = computeGenerationParameters(e);
-    if (generationParameters == null) {
-      return;
-    }
+    // consulo: the generation parameters are asked asynchronously, the generation continues when they arrive; the target
+    // directory and the test semaphore are taken before asking
+    VirtualFile targetDirectory = getTargetDirectory(e);
+    var callbackTestSemaphore = myCallbackTestSemaphore;
+    computeGenerationParameters(e).whenComplete((generationParameters, error) -> {
+      if (generationParameters == null) {
+        return;
+      }
+      generate(project, perlSdk, mojoScript, targetDirectory, callbackTestSemaphore, generationParameters);
+    });
+  }
 
+  private static void generate(@Nullable Project project,
+                               @Nullable Sdk perlSdk,
+                               @NotNull VirtualFile mojoScript,
+                               @Nullable VirtualFile targetDirectory,
+                               @Nullable Semaphore callbackTestSemaphore,
+                               @NotNull List<String> generationParameters) {
     var localScriptPath = mojoScript.getPath();
     if (perlSdk == null) {
       LOG.warn("No perl sdk for " + project);
@@ -87,13 +105,11 @@ public abstract class MojoGenerateAction extends MojoScriptAction {
     }
     PerlHostData<?, ?> hostData = PerlHostData.notNullFrom(perlSdk);
     var remoteScriptPath = hostData.getRemotePath(localScriptPath);
-    VirtualFile targetDirectory = getTargetDirectory(e);
     if (targetDirectory == null) {
       LOG.debug("No virtual file in action event");
       return;
     }
     var targetDirectoryPath = targetDirectory.getPath();
-    var callbackTestSemaphore = myCallbackTestSemaphore;
 
     var processListener = new ProcessListener() {
       @Override
@@ -116,7 +132,8 @@ public abstract class MojoGenerateAction extends MojoScriptAction {
       .withParameters(GENERATE_COMMAND)
       .withParameters(generationParameters)
       .withProject(project)
-      .withConsoleIcon(MojoIcons.MOJO_LOGO)
+      // consulo: PerlCommandLine keeps a Swing icon for the console
+      .withConsoleIcon(TargetAWT.to(MojoIcons.MOJO_LOGO))
       .withWorkDirectory(targetDirectoryPath)
       .withProcessListener(processListener);
 
@@ -129,12 +146,23 @@ public abstract class MojoGenerateAction extends MojoScriptAction {
 
   /**
    * Should return generation parameters or null if generation should not be performed
+   * <p>
+   * consulo: Messages are Swing dialogs (not available in web), the unified input box is asynchronous, so are the parameters
    */
-  protected @Nullable List<String> computeGenerationParameters(@NotNull AnActionEvent e) {
-    String entityName = Messages.showInputDialog(
-      e.getProject(), getPromptMessage(), getPromptTitle(), getPromptIcon(), getDefaultName(), getNameValidator());
-
-    return StringUtil.isEmpty(entityName) ? null : Arrays.asList(getGenerateCommand(), entityName);
+  protected @NotNull CompletableFuture<@Nullable List<String>> computeGenerationParameters(@NotNull AnActionEvent e) {
+    InputValidator nameValidator = getNameValidator();
+    InputBoxBuilder<String, TextBox> inputBox = InputBoxBuilder.text()
+      .title(LocalizeValue.of(getPromptTitle()))
+      .text(LocalizeValue.of(getPromptMessage()))
+      .icon(getPromptIcon())
+      .value(getDefaultName());
+    if (nameValidator != null) {
+      // upstream checkInput disables the confirmation, canClose keeps the dialog open
+      inputBox = inputBox.validator(
+        value -> nameValidator.checkInput(value) && nameValidator.canClose(value) ? null : InputProblem.error(LocalizeValue.empty()));
+    }
+    return inputBox.showAsync(e.getData(Project.KEY))
+      .handle((entityName, error) -> StringUtil.isEmpty(entityName) ? null : Arrays.asList(getGenerateCommand(), entityName));
   }
 
   protected abstract @NotNull String getDefaultName();
@@ -144,17 +172,17 @@ public abstract class MojoGenerateAction extends MojoScriptAction {
   /**
    * @return icon for name prompt dialog
    */
-  protected abstract @NotNull Icon getPromptIcon();
+  protected abstract @NotNull Image getPromptIcon();
 
   /**
    * @return title for name prompt dialog
    */
-  protected abstract @NlsContexts.DialogTitle @NotNull String getPromptTitle();
+  protected abstract @NotNull String getPromptTitle();
 
   /**
    * @return message for name prompt dialog
    */
-  protected abstract @NlsContexts.DialogMessage @NotNull String getPromptMessage();
+  protected abstract @NotNull String getPromptMessage();
 
   /**
    * @return a command that should be used to generate entity
@@ -162,7 +190,7 @@ public abstract class MojoGenerateAction extends MojoScriptAction {
   protected abstract @NotNull String getGenerateCommand();
 
   protected @Nullable VirtualFile getTargetDirectory(@NotNull AnActionEvent event) {
-    Project project = event.getProject();
+    Project project = event.getData(Project.KEY);
     VirtualFile virtualFile = event.getData(CommonDataKeys.VIRTUAL_FILE);
     return virtualFile != null && project != null &&
            virtualFile.isDirectory() &&

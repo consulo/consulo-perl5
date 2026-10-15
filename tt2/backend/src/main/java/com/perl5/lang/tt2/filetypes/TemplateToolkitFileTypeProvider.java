@@ -16,26 +16,42 @@
 
 package com.perl5.lang.tt2.filetypes;
 
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.perl5.lang.perl.fileTypes.PerlFileTypeProvider;
-import com.perl5.lang.tt2.idea.settings.TemplateToolkitSettingsBackendHelper;
+import com.perl5.lang.tt2.idea.settings.TemplateToolkitSettings;
+import com.perl5.lang.tt2.idea.settings.TemplateToolkitSourceRootType;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.module.Module;
+import consulo.module.ModuleManager;
+import consulo.perl5.tt2.module.TemplateToolkitModuleExtension;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
+@ExtensionImpl
 public class TemplateToolkitFileTypeProvider implements PerlFileTypeProvider {
+  /**
+   * consulo: settings are per module (Template Toolkit module extension), templates roots of a module use the settings of the module.
+   * The roots index is reset on roots changes, which include module extensions changes.
+   */
   @Override
   public void addRoots(@NotNull Project project, BiConsumer<? super VirtualFile, Function<VirtualFile, @Nullable FileType>> rootConsumer) {
-    var settings = TemplateToolkitSettingsBackendHelper.getInstance(project);
-    for (VirtualFile root : settings.getTemplateRoots()) {
-      rootConsumer.accept(
-        root,
-        virtualFile -> settings.isVirtualFileNameMatches(virtualFile) ? TemplateToolkitFileType.INSTANCE : null
-      );
+    for (Module module : ModuleManager.getInstance(project).getModules()) {
+      TemplateToolkitModuleExtension extension = module.isDisposed() ? null : module.getExtension(TemplateToolkitModuleExtension.class);
+      if (extension == null) {
+        continue;
+      }
+      TemplateToolkitSettings settings = extension.getSettings();
+      for (VirtualFile root : TemplateToolkitSourceRootType.INSTANCE.getRoots(module)) {
+        rootConsumer.accept(
+          root,
+          virtualFile -> settings.isVirtualFileNameMatches(virtualFile) ? TemplateToolkitFileType.INSTANCE : null
+        );
+      }
     }
   }
 }

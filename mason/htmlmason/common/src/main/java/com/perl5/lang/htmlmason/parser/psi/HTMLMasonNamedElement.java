@@ -16,7 +16,7 @@
 
 package com.perl5.lang.htmlmason.parser.psi;
 
-import com.intellij.psi.PsiNameIdentifierOwner;
+import consulo.language.psi.PsiNameIdentifierOwner;
 
 import java.util.regex.Pattern;
 

@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.idea.configuration.module;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
+import consulo.project.Project;
+import consulo.content.bundle.Sdk;
 import com.perl5.lang.perl.idea.configuration.settings.sdk.Perl5SdkManipulator;
 import com.perl5.lang.perl.idea.configuration.settings.sdk.wrappers.Perl5RealSdkWrapper;
 import com.perl5.lang.perl.idea.configuration.settings.sdk.wrappers.Perl5SdkWrapper;

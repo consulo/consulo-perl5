@@ -16,12 +16,12 @@
 
 package com.perl5.lang.perl.idea.completion.providers;
 
-import com.intellij.codeInsight.completion.CompletionParameters;
-import com.intellij.codeInsight.completion.CompletionResultSet;
-import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.util.ProcessingContext;
+import consulo.language.editor.completion.CompletionParameters;
+import consulo.language.editor.completion.CompletionResultSet;
+import consulo.language.editor.completion.lookup.LookupElementBuilder;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.util.ProcessingContext;
 import com.perl5.lang.perl.idea.completion.providers.processors.PerlSimpleCompletionProcessor;
 import com.perl5.lang.perl.psi.utils.PerlPsiUtil;
 import com.perl5.lang.perl.util.PerlTimeLogger;
@@ -32,7 +32,7 @@ import static com.perl5.lang.perl.idea.PerlElementPatterns.*;
 
 public class PerlLabelCompletionProvider extends PerlCompletionProvider {
   @Override
-  protected void addCompletions(@NotNull CompletionParameters parameters,
+  public void addCompletions(@NotNull CompletionParameters parameters,
                                 @NotNull ProcessingContext context,
                                 final @NotNull CompletionResultSet result) {
     final PsiElement element = parameters.getOriginalPosition();

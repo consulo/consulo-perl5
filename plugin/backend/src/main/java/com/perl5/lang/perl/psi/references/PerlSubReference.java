@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.psi.references;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.ResolveResult;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.ResolveResult;
+import consulo.language.psi.PsiUtilCore;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlCallObjectValue;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlCallValue;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.serialization.PerlCallValueBackendHelper;

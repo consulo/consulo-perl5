@@ -16,12 +16,12 @@
 
 package com.perl5.lang.pod.elementTypes;
 
-import com.intellij.lang.ASTFactory;
-import com.intellij.lang.ASTNode;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.tree.IReparseableLeafElementType;
-import com.intellij.psi.tree.OuterLanguageElementType;
+import consulo.language.impl.ast.ASTFactory;
+import consulo.language.ast.ASTNode;
+import consulo.logging.Logger;
+import consulo.util.lang.StringUtil;
+import consulo.language.ast.IReparseableLeafElementType;
+import consulo.language.impl.psi.template.OuterLanguageElementType;
 import com.perl5.lang.pod.PodLanguage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

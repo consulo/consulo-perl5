@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.parser.moose.psi;
 
-import com.intellij.psi.PsiNameIdentifierOwner;
-import com.intellij.psi.StubBasedPsiElement;
+import consulo.language.psi.PsiNameIdentifierOwner;
+import consulo.language.psi.StubBasedPsiElement;
 import com.perl5.lang.perl.parser.moose.stubs.augment.PerlMooseAugmentStatementStub;
 import com.perl5.lang.perl.psi.PsiPerlStatement;
 import org.jetbrains.annotations.Nullable;

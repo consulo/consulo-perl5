@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.psi.impl;
 
-import com.intellij.psi.PsiManager;
+import consulo.language.psi.PsiManager;
 import com.perl5.lang.perl.util.PerlPackageUtilCore;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

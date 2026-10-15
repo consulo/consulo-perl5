@@ -16,32 +16,38 @@
 
 package com.perl5.lang.perl.idea.copyright;
 
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.maddyhome.idea.copyright.CopyrightProfile;
-import com.maddyhome.idea.copyright.options.LanguageOptions;
-import com.maddyhome.idea.copyright.psi.UpdateCopyright;
-import com.maddyhome.idea.copyright.psi.UpdateCopyrightsProvider;
+import com.perl5.lang.perl.fileTypes.PerlFileTypePackage;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.copyright.BaseUpdateCopyrightsProvider;
+import consulo.language.copyright.UpdatePsiFileCopyright;
+import consulo.language.copyright.config.CopyrightFileConfig;
+import consulo.language.copyright.config.CopyrightProfile;
+import consulo.language.psi.PsiFile;
+import consulo.virtualFileSystem.fileType.FileType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class PerlUpdateCopyrightsProvider extends UpdateCopyrightsProvider {
+/**
+ * upstream: {@code <copyright.updater filetype="Perl5 Package"/>}
+ */
+@ExtensionImpl
+public class PerlUpdateCopyrightsProvider extends BaseUpdateCopyrightsProvider {
   @Override
-  public @Nullable UpdateCopyright createInstance(Project project,
-                                                  Module module,
-                                                  VirtualFile virtualFile,
-                                                  FileType fileType,
-                                                  CopyrightProfile options) {
-    return new UpdatePerlPackageFileCopyright(project, module, virtualFile, options);
+  public @NotNull FileType getFileType() {
+    return PerlFileTypePackage.INSTANCE;
   }
 
   @Override
-  public @NotNull LanguageOptions getDefaultOptions() {
-    final LanguageOptions options = new LanguageOptions();
+  public @Nullable UpdatePsiFileCopyright<CopyrightFileConfig> createInstance(PsiFile file,
+                                                                             CopyrightProfile options) {
+    return new UpdatePerlPackageFileCopyright(file, options);
+  }
+
+  @Override
+  public @NotNull CopyrightFileConfig createDefaultOptions() {
+    final CopyrightFileConfig options = new CopyrightFileConfig();
     options.setBlock(false);
-    options.setFileTypeOverride(LanguageOptions.USE_TEXT);
+    options.setFileTypeOverride(CopyrightFileConfig.USE_TEXT);
     options.setPrefixLines(false);
     return options;
   }

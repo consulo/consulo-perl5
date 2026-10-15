@@ -16,7 +16,8 @@
 
 package com.perl5.lang.perl.cpanminus.action;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.project.Project;
+import consulo.ui.ex.action.AnActionEvent;
 import com.perl5.lang.perl.adapters.PackageManagerAdapter;
 import com.perl5.lang.perl.cpanminus.adapter.CpanminusAdapter;
 import com.perl5.lang.perl.idea.actions.PerlInstallPackageActionBase;
@@ -30,6 +31,6 @@ public class PerlInstallPackagesWithCpanminusAction extends PerlInstallPackageAc
 
   @Override
   protected @Nullable PackageManagerAdapter getAdapter(@NotNull AnActionEvent e) {
-    return CpanminusAdapter.create(e.getProject());
+    return CpanminusAdapter.create(e.getData(Project.KEY));
   }
 }

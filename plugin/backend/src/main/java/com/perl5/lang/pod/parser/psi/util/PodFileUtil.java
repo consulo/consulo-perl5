@@ -16,17 +16,17 @@
 
 package com.perl5.lang.pod.parser.psi.util;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.search.FilenameIndex;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.util.Processor;
+import consulo.project.Project;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
+import consulo.language.psi.PsiReference;
+import consulo.language.psi.search.FilenameIndex;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.PsiUtilCore;
+import consulo.application.util.function.Processor;
 import com.perl5.lang.perl.fileTypes.PerlFileTypePackage;
 import com.perl5.lang.perl.idea.project.PerlProjectManager;
 import com.perl5.lang.perl.util.PerlPackageUtil;
@@ -99,7 +99,7 @@ public class PodFileUtil {
   }
 
   public static @Nullable String getPackageNameFromVirtualFile(VirtualFile file, VirtualFile classRoot) {
-    String relativePath = VfsUtilCore.getRelativePath(file, classRoot);
+    String relativePath = VirtualFileUtil.getRelativePath(file, classRoot);
     if (relativePath != null) {
       return StringUtil.join(relativePath.replaceAll(PM_OR_POD_EXTENSION_PATTERN, "").split("/"), PerlPackageUtilCore.NAMESPACE_SEPARATOR);
     }
@@ -166,7 +166,7 @@ public class PodFileUtil {
     else { // top level file perl.*
       fileId += "." + PodFileType.EXTENSION;
 
-      for (var podFile : FilenameIndex.getVirtualFilesByName(fileId, GlobalSearchScope.allScope(project))) {
+      for (var podFile : FilenameIndex.getVirtualFilesByName(project, fileId, GlobalSearchScope.allScope(project))) {
         if (!processor.process(psiManager.findFile(podFile))) {
           return;
         }

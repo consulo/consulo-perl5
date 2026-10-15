@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.idea.completion.util;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.perl5.lang.perl.idea.completion.providers.processors.PerlCompletionProcessor;
 import com.perl5.lang.perl.psi.PerlRecursiveVisitor;
 import org.jetbrains.annotations.NotNull;

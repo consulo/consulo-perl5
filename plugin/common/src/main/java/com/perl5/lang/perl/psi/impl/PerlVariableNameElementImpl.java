@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.psi.impl;
 
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.psi.PsiElementVisitor;
+import consulo.language.ast.IElementType;
 import com.perl5.lang.perl.psi.PerlVariableNameElement;
 import com.perl5.lang.perl.psi.PerlVisitor;
 import org.jetbrains.annotations.NotNull;

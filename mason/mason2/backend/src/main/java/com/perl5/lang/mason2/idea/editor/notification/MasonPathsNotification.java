@@ -16,60 +16,72 @@
 
 package com.perl5.lang.mason2.idea.editor.notification;
 
-import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.NlsContexts;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
-import com.intellij.ui.EditorNotificationPanel;
-import com.intellij.ui.EditorNotificationProvider;
-import com.perl5.lang.htmlmason.idea.configuration.AbstractMasonSettings;
+import consulo.fileEditor.FileEditor;
+import consulo.application.dumb.DumbAware;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.fileEditor.EditorNotificationBuilder;
+import consulo.localize.LocalizeValue;
+import jakarta.inject.Inject;
+import consulo.fileEditor.EditorNotificationProvider;
 import com.perl5.lang.mason2.Mason2Bundle;
 import com.perl5.lang.mason2.filetypes.MasonPurePerlComponentFileType;
-import com.perl5.lang.mason2.idea.configuration.MasonSettings;
+import com.perl5.lang.mason2.Mason2Util;
 import com.perl5.lang.mason2.psi.impl.MasonFileImpl;
-import com.perl5.lang.perl.idea.configuration.settings.sdk.Perl5SettingsConfigurable;
-import com.perl5.lang.perl.idea.project.PerlProjectManager;
+import consulo.perl5.core.module.PerlModuleSettingsUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
-import java.util.function.Function;
+import java.util.function.Supplier;
 
 import static com.perl5.lang.mason2.psi.impl.MasonBackendNamespaceDefinitionHandlerKt.getComponentRoot;
 
+@ExtensionImpl
 public class MasonPathsNotification implements EditorNotificationProvider, DumbAware {
   private final Project myProject;
 
+  @Inject
   public MasonPathsNotification(Project myProject) {
     this.myProject = myProject;
   }
 
   @Override
-  public @Nullable Function<? super @NotNull FileEditor, ? extends @Nullable JComponent> collectNotificationData(@NotNull Project project,
-                                                                                                                 @NotNull VirtualFile file) {
+  public @NotNull String getId() {
+    return "mason2-paths";
+  }
+
+  // consulo: IntelliJ collectNotificationData (panel factory) -> Consulo buildNotification (builder)
+  @RequiredReadAction
+  @Override
+  public @Nullable EditorNotificationBuilder buildNotification(@NotNull VirtualFile file,
+                                                               @NotNull FileEditor fileEditor,
+                                                               @NotNull Supplier<EditorNotificationBuilder> builderFactory) {
     if (!(file.getFileType() instanceof MasonPurePerlComponentFileType)) {
       return null;
     }
-    AbstractMasonSettings settings = MasonSettings.getInstance(myProject);
-    if (PerlProjectManager.getInstance(settings.getProject()).getModulesRootsOfType(settings.getSourceRootType()).isEmpty()) {
-      return fileEditor -> createNotificationPanel(Mason2Bundle.message("label.mason2.components.roots.are.not.configured"));
+    if (Mason2Util.getComponentRoots(myProject).isEmpty()) {
+      return createNotificationPanel(builderFactory.get(), Mason2Bundle.message("label.mason2.components.roots.are.not.configured"), file);
     }
     else {
       PsiFile psiFile = PsiManager.getInstance(myProject).findFile(file);
       if (psiFile instanceof MasonFileImpl masonFile && getComponentRoot(masonFile) == null) {
-        return fileEditor -> createNotificationPanel(Mason2Bundle.message("label.component.not.under.one.configured.roots"));
+        return createNotificationPanel(builderFactory.get(), Mason2Bundle.message("label.component.not.under.one.configured.roots"), file);
       }
     }
     return null;
   }
 
-  private @NotNull EditorNotificationPanel createNotificationPanel(@NotNull @NlsContexts.Label String message) {
-    EditorNotificationPanel panel = new EditorNotificationPanel();
-    panel.setText(message);
-    panel.createActionLabel(Mason2Bundle.message("link.label.configure"), () -> Perl5SettingsConfigurable.open(myProject));
+  private @NotNull EditorNotificationBuilder createNotificationPanel(@NotNull EditorNotificationBuilder panel,
+                                                                     @NotNull String message,
+                                                                     @NotNull VirtualFile file) {
+    panel.withText(LocalizeValue.localizeTODO(message));
+    // consulo: components roots are content folders, configured in module settings (with the Mason2 module extension enabled)
+    panel.withAction(LocalizeValue.localizeTODO(Mason2Bundle.message("link.label.configure")),
+                     e -> PerlModuleSettingsUtil.openRootsSettings(myProject, file));
     return panel;
   }
 }

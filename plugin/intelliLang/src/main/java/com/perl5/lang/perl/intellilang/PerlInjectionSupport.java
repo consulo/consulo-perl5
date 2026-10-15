@@ -16,17 +16,20 @@
 
 package com.perl5.lang.perl.intellilang;
 
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiLanguageInjectionHost;
-import com.intellij.util.Consumer;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.ui.ex.action.AnAction;
+import consulo.project.Project;
+import consulo.language.psi.PsiLanguageInjectionHost;
 import com.perl5.PerlIcons;
 import com.perl5.lang.perl.psi.PerlCompositeElement;
 import com.perl5.lang.perl.psi.utils.PerlAnnotations;
-import org.intellij.plugins.intelliLang.inject.AbstractLanguageInjectionSupport;
-import org.intellij.plugins.intelliLang.inject.config.BaseInjection;
+import consulo.language.inject.advanced.AbstractLanguageInjectionSupport;
+import consulo.language.inject.advanced.BaseInjection;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.function.Consumer;
+
+@ExtensionImpl
 public class PerlInjectionSupport extends AbstractLanguageInjectionSupport {
   private static final Class<?>[] PATTERNS_CLASSES = new Class[]{PerlInjectionPatterns.class};
 
@@ -51,7 +54,7 @@ public class PerlInjectionSupport extends AbstractLanguageInjectionSupport {
   }
 
   @Override
-  public AnAction[] createAddActions(Project project, Consumer<? super BaseInjection> consumer) {
+  public AnAction[] createAddActions(Project project, Consumer<BaseInjection> consumer) {
     var defaultAddAction = createDefaultAddAction(project, consumer, this);
     var templatePresentation = defaultAddAction.getTemplatePresentation();
     templatePresentation.setIcon(PerlIcons.PERL_LANGUAGE_ICON);

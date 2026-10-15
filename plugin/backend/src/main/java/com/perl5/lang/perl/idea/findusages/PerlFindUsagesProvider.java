@@ -16,7 +16,10 @@
 
 package com.perl5.lang.perl.idea.findusages;
 
-import com.intellij.lang.cacheBuilder.WordsScanner;
+import com.perl5.lang.perl.PerlLanguage;
+import consulo.language.Language;
+import consulo.language.cacheBuilder.WordsScanner;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
@@ -24,5 +27,10 @@ public class PerlFindUsagesProvider extends PerlFindUsagesProviderBase {
   @Override
   public @Nullable WordsScanner getWordsScanner() {
     return new PerlWordsScanner();
+  }
+
+  @Override
+  public @NotNull Language getLanguage() {
+    return PerlLanguage.INSTANCE;
   }
 }

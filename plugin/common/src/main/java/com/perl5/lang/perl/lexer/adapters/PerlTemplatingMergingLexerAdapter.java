@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.lexer.adapters;
 
-import com.intellij.lexer.MergingLexerAdapter;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.tree.TokenSet;
+import consulo.language.lexer.MergingLexerAdapter;
+import consulo.project.Project;
+import consulo.language.ast.TokenSet;
 import com.perl5.lang.perl.lexer.PerlLexingContext;
 import com.perl5.lang.perl.lexer.PerlProtoLexer;
 import org.jetbrains.annotations.NotNull;

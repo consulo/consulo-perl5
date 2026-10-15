@@ -16,13 +16,13 @@
 
 package com.perl5.lang.perl.intellilang;
 
-import com.intellij.lang.Language;
-import com.intellij.lang.injection.MultiHostRegistrar;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.ElementManipulators;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.Language;
+import consulo.language.inject.MultiHostRegistrar;
+import consulo.logging.Logger;
+import consulo.document.util.TextRange;
+import consulo.language.psi.ElementManipulators;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiUtilCore;
 import com.perl5.lang.perl.idea.configuration.settings.PerlSharedSettings;
 import com.perl5.lang.perl.idea.intellilang.PerlInjectionMarkersService;
 import com.perl5.lang.perl.psi.PerlHeredocTerminatorElement;
@@ -31,17 +31,12 @@ import com.perl5.lang.perl.psi.utils.PerlAnnotations;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
-import java.util.List;
-
 
 public class PerlHeredocLanguageInjector extends PerlLiteralLanguageInjector {
   private static final Logger LOG = Logger.getInstance(PerlHeredocLanguageInjector.class);
-  private static final List<? extends Class<? extends PsiElement>> ELEMENTS_TO_INJECT =
-    Collections.singletonList(PerlHeredocElementImpl.class);
 
   @Override
-  public void getLanguagesToInject(@NotNull MultiHostRegistrar registrar, @NotNull PsiElement context) {
+  public void injectLanguages(@NotNull MultiHostRegistrar registrar, @NotNull PsiElement context) {
     assert context instanceof PerlHeredocElementImpl;
 
     if (context.getTextLength() == 0 ||
@@ -133,8 +128,9 @@ public class PerlHeredocLanguageInjector extends PerlLiteralLanguageInjector {
     }
   }
 
+  // consulo: single element class instead of upstream elementsToInjectIn() list
   @Override
-  public @NotNull List<? extends Class<? extends PsiElement>> elementsToInjectIn() {
-    return ELEMENTS_TO_INJECT;
+  public @NotNull Class<? extends PsiElement> getElementClass() {
+    return PerlHeredocElementImpl.class;
   }
 }

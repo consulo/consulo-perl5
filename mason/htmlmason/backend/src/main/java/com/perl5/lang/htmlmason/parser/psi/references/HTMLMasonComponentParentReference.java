@@ -16,13 +16,13 @@
 
 package com.perl5.lang.htmlmason.parser.psi.references;
 
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementResolveResult;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.ResolveResult;
-import com.intellij.psi.impl.source.resolve.ResolveCache;
-import com.intellij.util.IncorrectOperationException;
+import consulo.document.util.TextRange;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiElementResolveResult;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.ResolveResult;
+import consulo.language.psi.PsiManager;
+import consulo.language.util.IncorrectOperationException;
 import com.perl5.lang.htmlmason.HTMLMasonUtil;
 import com.perl5.lang.htmlmason.parser.psi.impl.HTMLMasonFileImpl;
 import com.perl5.lang.perl.psi.PerlString;
@@ -43,7 +43,8 @@ public class HTMLMasonComponentParentReference extends HTMLMasonStringReference 
 
   @Override
   public PsiElement bindToElement(@NotNull PsiElement element) throws IncorrectOperationException {
-    ResolveCache.getInstance(element.getProject()).clearCache(true);
+    // TODO consulo: ResolveCache#clearCache(boolean) is not an API in Consulo, PsiManager#dropResolveCaches clears physical resolve caches
+    PsiManager.getInstance(element.getProject()).dropResolveCaches();
     return myElement;
   }
 

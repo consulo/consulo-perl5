@@ -16,14 +16,21 @@
 
 package com.perl5.lang.perl.intellilang;
 
-import com.intellij.lang.Language;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.psi.PsiLanguageInjectionHost;
-import org.intellij.plugins.intelliLang.inject.InjectedLanguage;
-import org.intellij.plugins.intelliLang.inject.TemporaryPlacesRegistry;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
+import consulo.language.Language;
+import consulo.application.ApplicationManager;
+import consulo.language.inject.advanced.InjectedLanguage;
+import consulo.language.inject.advanced.TemporaryPlacesRegistry;
+import consulo.language.psi.PsiLanguageInjectionHost;
+import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@Singleton
+@ServiceAPI(ComponentScope.APPLICATION)
+@ServiceImpl
 public class PerlTemporaryInjectedLanguageDetector {
   public @Nullable Language getTemporaryInjectedLanguage(@NotNull PsiLanguageInjectionHost host) {
     InjectedLanguage injectedLanguage = TemporaryPlacesRegistry.getInstance(host.getProject())

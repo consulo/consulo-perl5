@@ -16,13 +16,13 @@
 
 package com.perl5.lang.htmlmason.parser.psi.impl;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.ResolveState;
-import com.intellij.psi.scope.PsiScopeProcessor;
-import com.intellij.psi.util.CachedValueProvider;
-import com.intellij.psi.util.CachedValuesManager;
-import com.intellij.psi.util.PsiTreeUtil;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.resolve.ResolveState;
+import consulo.language.psi.resolve.PsiScopeProcessor;
+import consulo.application.util.CachedValueProvider;
+import consulo.language.psi.util.LanguageCachedValueUtil;
+import consulo.language.psi.util.PsiTreeUtil;
 import com.perl5.lang.htmlmason.parser.psi.*;
 import com.perl5.lang.perl.psi.impl.PsiPerlBlockImpl;
 import org.jetbrains.annotations.NotNull;
@@ -113,7 +113,7 @@ public class HTMLMasonBlockImpl extends PsiPerlBlockImpl implements HTMLMasonBlo
   }
 
   private Map<Class<? extends HTMLMasonCompositeElement>, List<HTMLMasonCompositeElement>> getBlocksMap() {
-    return CachedValuesManager.getCachedValue(this, () ->
+    return LanguageCachedValueUtil.getCachedValue(this, () ->
     {
       Map<Class<? extends HTMLMasonCompositeElement>, List<HTMLMasonCompositeElement>> result = new HashMap<>();
 

@@ -16,16 +16,16 @@
 
 package com.perl5.lang.htmlmason.parser.psi.impl;
 
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.ResolveState;
-import com.intellij.psi.scope.PsiScopeProcessor;
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.util.CachedValueProvider;
-import com.intellij.psi.util.CachedValuesManager;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.Processor;
+import consulo.util.lang.StringUtil;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.resolve.ResolveState;
+import consulo.language.psi.resolve.PsiScopeProcessor;
+import consulo.language.psi.stub.StubElement;
+import consulo.application.util.CachedValueProvider;
+import consulo.language.psi.util.LanguageCachedValueUtil;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.application.util.function.Processor;
 import com.perl5.lang.htmlmason.HTMLMasonLanguage;
 import com.perl5.lang.htmlmason.MasonCoreUtilCore;
 import com.perl5.lang.htmlmason.idea.configuration.HTMLMasonSettings;
@@ -45,7 +45,10 @@ import java.util.Map;
 
 public class HTMLMasonFileImpl extends PerlFileImpl implements HTMLMasonFile {
   protected List<PerlVariableDeclarationElement> myImplicitVariables = null;
-  protected int myMasonChangeCounter;
+  /**
+   * consulo: settings the implicit variables were built for, upstream uses the change counter of the project settings
+   */
+  protected HTMLMasonSettings myImplicitVariablesSettings;
 
   public HTMLMasonFileImpl(@NotNull FileViewProvider viewProvider) {
     super(viewProvider, HTMLMasonLanguage.INSTANCE);
@@ -53,10 +56,10 @@ public class HTMLMasonFileImpl extends PerlFileImpl implements HTMLMasonFile {
 
   @Override
   public @NotNull List<PerlVariableDeclarationElement> getImplicitVariables() {
-    HTMLMasonSettings settings = HTMLMasonSettings.getInstance(getProject());
-    if (myImplicitVariables == null || myMasonChangeCounter != settings.getChangeCounter()) {
+    HTMLMasonSettings settings = HTMLMasonSettings.forPsiElement(this);
+    if (myImplicitVariables == null || myImplicitVariablesSettings != settings) {
       myImplicitVariables = buildImplicitVariables(settings);
-      myMasonChangeCounter = settings.getChangeCounter();
+      myImplicitVariablesSettings = settings;
     }
     return myImplicitVariables;
   }
@@ -65,7 +68,7 @@ public class HTMLMasonFileImpl extends PerlFileImpl implements HTMLMasonFile {
     List<PerlVariableDeclarationElement> newImplicitVariables = new ArrayList<>();
 
     if (isValid()) {
-      MasonCoreUtilCore.fillVariablesList(this, newImplicitVariables, settings.globalVariables);
+      MasonCoreUtilCore.fillVariablesList(this, newImplicitVariables, settings.getGlobalVariables());
     }
     return newImplicitVariables;
   }
@@ -268,7 +271,7 @@ public class HTMLMasonFileImpl extends PerlFileImpl implements HTMLMasonFile {
   }
 
   private Map<Class<? extends HTMLMasonCompositeElement>, List<HTMLMasonCompositeElement>> getBlocksMap() {
-    return CachedValuesManager.getCachedValue(this, () ->
+    return LanguageCachedValueUtil.getCachedValue(this, () ->
     {
       Map<Class<? extends HTMLMasonCompositeElement>, List<HTMLMasonCompositeElement>> result = new HashMap<>();
 

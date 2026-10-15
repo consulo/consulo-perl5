@@ -16,8 +16,8 @@
 
 package com.perl5.lang.pod.parser.psi.mixin;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.util.ObjectUtils;
+import consulo.language.ast.ASTNode;
+import consulo.util.lang.ObjectUtil;
 import com.perl5.lang.pod.parser.psi.PodRenderingContext;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -51,7 +51,7 @@ public class PodOverSectionContent extends PodCompositeElementMixin {
    * @return item or null if not any
    */
   public @Nullable PodSectionItem getFirstItem() {
-    return ObjectUtils.tryCast(getFirstChild(), PodSectionItem.class);
+    return ObjectUtil.tryCast(getFirstChild(), PodSectionItem.class);
   }
 
   @Override

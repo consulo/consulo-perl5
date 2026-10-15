@@ -16,7 +16,7 @@
 
 package com.perl5.lang.embedded.idea.formatter;
 
-import com.intellij.formatting.FormattingContext;
+import consulo.language.codeStyle.FormattingContext;
 import com.perl5.lang.perl.idea.formatter.PerlIndentProcessor;
 import com.perl5.lang.perl.idea.formatter.PurePerlFormattingContext;
 import org.jetbrains.annotations.NotNull;

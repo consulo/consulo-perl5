@@ -16,46 +16,55 @@
 
 package com.perl5.lang.perl.idea.project;
 
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.ReadAction;
-import com.intellij.openapi.application.WriteAction;
-import com.intellij.openapi.components.Service;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.roots.ProjectFileIndex;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.openapi.vfs.newvfs.BulkFileListener;
-import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
-import com.intellij.util.concurrency.AppExecutorUtil;
-import com.intellij.util.ui.update.MergingUpdateQueue;
-import com.intellij.util.ui.update.Update;
-import com.intellij.workspaceModel.ide.JpsProjectLoadedListener;
+import consulo.disposer.Disposable;
+import consulo.application.ApplicationManager;
+import consulo.ui.ModalityState;
+import consulo.application.ReadAction;
+import consulo.application.WriteAction;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
+import jakarta.inject.Singleton;
+import jakarta.inject.Inject;
+import consulo.module.Module;
+import consulo.module.ModuleManager;
+import consulo.project.Project;
+import consulo.module.content.ModuleRootManager;
+import consulo.module.content.ProjectFileIndex;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.virtualFileSystem.event.BulkFileListener;
+import consulo.virtualFileSystem.event.VFileEvent;
+import consulo.application.util.concurrent.AppExecutorUtil;
+import consulo.ui.ex.awt.util.MergingUpdateQueue;
+import consulo.ui.ex.awt.util.Update;
+import consulo.application.Application;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
-import org.jetbrains.concurrency.CancellablePromise;
+import consulo.util.concurrent.CancellablePromise;
 
 import java.util.List;
 import java.util.Objects;
 
-@Service(Service.Level.PROJECT)
-public final class PerlProjectDirectoriesConfigurator implements Disposable, BulkFileListener, JpsProjectLoadedListener {
+@ServiceAPI(ComponentScope.PROJECT)
+@ServiceImpl
+@Singleton
+public final class PerlProjectDirectoriesConfigurator implements Disposable, BulkFileListener {
   private final MergingUpdateQueue myScanningQueue = new MergingUpdateQueue("Project configuration", 300, true, null, this, null, false);
   private final @NotNull Project myProject;
 
+  @Inject
   public PerlProjectDirectoriesConfigurator(@NotNull Project project) {
     myProject = project;
     var connection = project.getMessageBus().connect(this);
-    connection.subscribe(VirtualFileManager.VFS_CHANGES, this);
-    connection.subscribe(JpsProjectLoadedListener.Companion.getLOADED(), this);
+    connection.subscribe(BulkFileListener.class, this);
+    // TODO consulo: there is no JpsProjectLoadedListener in Consulo, rescan on project open is queued by PerlProjectDirectoriesConfiguratorStarter
   }
 
-  @Override
+  /**
+   * upstream: JpsProjectLoadedListener#loaded
+   */
   public void loaded() {
     queueRescan();
   }
@@ -79,7 +88,7 @@ public final class PerlProjectDirectoriesConfigurator implements Disposable, Bul
         }
         return collector;
       }).expireWhen(project::isDisposed)
-      .finishOnUiThread(ModalityState.defaultModalityState(), collector -> WriteAction.run(collector::commit))
+      .finishOnUiThread(Application::getDefaultModalityState, collector -> WriteAction.run(collector::commit))
       .coalesceBy(project, PerlProjectDirectoriesConfigurator.class)
       .submit(AppExecutorUtil.getAppExecutorService());
   }

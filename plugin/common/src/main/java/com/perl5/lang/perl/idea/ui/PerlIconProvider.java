@@ -16,10 +16,13 @@
 
 package com.perl5.lang.perl.idea.ui;
 
-import com.intellij.ide.IconProvider;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.icon.IconDescriptor;
+import consulo.language.icon.IconDescriptorUpdater;
+import consulo.language.psi.PsiElement;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.PsiUtilCore;
 import com.perl5.PerlIcons;
 import com.perl5.lang.perl.psi.PerlSubExpr;
 import com.perl5.lang.perl.psi.PerlVariable;
@@ -28,17 +31,23 @@ import com.perl5.lang.perl.psi.utils.PerlVariableType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
+import consulo.ui.image.Image;
 
 import static com.perl5.lang.perl.parser.PerlElementTypesGenerated.*;
 
-public class PerlIconProvider extends IconProvider {
+// consulo: IntelliJ IconProvider -> Consulo IconDescriptorUpdater
+@ExtensionImpl
+public class PerlIconProvider implements IconDescriptorUpdater {
+  @RequiredReadAction
   @Override
-  public @Nullable Icon getIcon(@NotNull PsiElement element, int flags) {
-    return getIcon(element);
+  public void updateIcon(@NotNull IconDescriptor iconDescriptor, @NotNull PsiElement element, int flags) {
+    Image icon = getIcon(element);
+    if (icon != null) {
+      iconDescriptor.setMainIcon(icon);
+    }
   }
 
-  public static @Nullable Icon getIcon(@Nullable PsiElement element) {
+  public static @Nullable Image getIcon(@Nullable PsiElement element) {
     if (element instanceof PerlSubExpr) {
       return PerlIcons.ANON_SUB_ICON;
     }
@@ -64,7 +73,7 @@ public class PerlIconProvider extends IconProvider {
     return null;
   }
 
-  public static @Nullable Icon getIcon(@Nullable PerlVariableType actualType) {
+  public static @Nullable Image getIcon(@Nullable PerlVariableType actualType) {
     return actualType == null ? null : actualType.getIcon();
   }
 }

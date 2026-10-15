@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.idea.codeInsight.typeInference.value;
 
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.psi.utils.PerlContextType;
 import org.jetbrains.annotations.NotNull;

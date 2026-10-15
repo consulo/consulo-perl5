@@ -16,11 +16,11 @@
 
 package com.perl5.lang.perl.fileTypes;
 
-import com.intellij.lang.Language;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.LanguageFileType;
-import com.intellij.openapi.util.NlsSafe;
-import com.intellij.psi.PsiElement;
+import consulo.language.Language;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.language.file.LanguageFileType;
+import consulo.localize.LocalizeValue;
+import consulo.language.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,7 +36,7 @@ public abstract class PerlPluginBaseFileType extends LanguageFileType {
   }
 
   @Override
-  public @NlsSafe @NotNull String getDisplayName() {
-    return getName();
+  public @NotNull LocalizeValue getDisplayName() {
+    return LocalizeValue.of(getId());
   }
 }

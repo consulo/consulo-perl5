@@ -17,7 +17,7 @@
   generate=[psi-factory="no"]
   psiVisitorName="PodVisitorGenerated"
   elementTypeHolderClass="com.perl5.lang.pod.parser.PodElementTypesGenerated"
-  fallbackStubElementType="com.intellij.psi.tree.IElementType"
+  fallbackStubElementType="consulo.language.ast.IElementType"
 
   elementTypeFactory="com.perl5.lang.pod.elementTypes.PodElementTypeFactory.getElementType"
   tokenTypeFactory="com.perl5.lang.pod.elementTypes.PodElementTypeFactory.getTokenType"

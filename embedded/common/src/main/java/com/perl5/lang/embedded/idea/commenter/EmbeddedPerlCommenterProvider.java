@@ -16,13 +16,12 @@
 
 package com.perl5.lang.embedded.idea.commenter;
 
-import com.intellij.lang.Commenter;
-import com.intellij.lang.Language;
-import com.intellij.lang.LanguageCommenters;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.templateLanguages.MultipleLangCommentProvider;
+import consulo.language.Commenter;
+import consulo.language.Language;
+import consulo.codeEditor.Editor;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.PsiFile;
+import consulo.language.editor.MultipleLangCommentProvider;
 import com.perl5.lang.embedded.psi.EmbeddedPerlFileViewProvider;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -36,7 +35,7 @@ public class EmbeddedPerlCommenterProvider implements MultipleLangCommentProvide
                                               @NotNull Editor editor,
                                               @NotNull Language lineStartLanguage,
                                               @NotNull Language lineEndLanguage) {
-    return LanguageCommenters.INSTANCE.forLanguage(lineStartLanguage);
+    return Commenter.forLanguage(lineStartLanguage);
   }
 
   @Override

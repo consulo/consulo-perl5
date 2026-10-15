@@ -16,28 +16,62 @@
 
 package com.perl5.lang.perl.idea.sdk;
 
-import com.intellij.openapi.components.ComponentManager;
-import com.intellij.openapi.extensions.PluginDescriptor;
-import com.intellij.util.KeyedLazyInstanceEP;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
+import consulo.application.util.AtomicNotNullLazyValue;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 
-public final class PerlHandlerBean extends KeyedLazyInstanceEP<AbstractPerlHandler<?, ?>> {
-  @Override
-  public @NotNull AbstractPerlHandler<?, ?> createInstance(@NotNull ComponentManager componentManager,
-                                                           @NotNull PluginDescriptor pluginDescriptor) {
+/**
+ * TODO consulo: was {@code KeyedLazyInstanceEP} registered in plugin.xml as {@code com.perl5.hostHandler},
+ *  {@code com.perl5.implementationHandler} and {@code com.perl5.versionManagerHandler}. In Consulo each registration is a subclass
+ *  marked with {@code @ExtensionImpl}, passing EP name, key and implementation class to the constructor.
+ */
+@ExtensionAPI(ComponentScope.APPLICATION)
+public abstract class PerlHandlerBean {
+  private final @NotNull String myEpName;
+  private final @NotNull String myKey;
+  private final @NotNull Class<? extends AbstractPerlHandler<?, ?>> myImplementationClass;
+  private final AtomicNotNullLazyValue<AbstractPerlHandler<?, ?>> myInstance = AtomicNotNullLazyValue.createValue(this::createInstance);
+
+  protected PerlHandlerBean(@NotNull String epName,
+                            @NotNull String key,
+                            @NotNull Class<? extends AbstractPerlHandler<?, ?>> implementationClass) {
+    myEpName = epName;
+    myKey = key;
+    myImplementationClass = implementationClass;
+  }
+
+  public final @NotNull String getEpName() {
+    return myEpName;
+  }
+
+  public final @NotNull String getKey() {
+    return myKey;
+  }
+
+  public final @NotNull String getImplementationClassName() {
+    return myImplementationClass.getName();
+  }
+
+  public final @NotNull AbstractPerlHandler<?, ?> getInstance() {
+    return myInstance.getValue();
+  }
+
+  @SuppressWarnings("unchecked")
+  public @NotNull AbstractPerlHandler<?, ?> createInstance() {
     try {
       var implementationClassName =
         Objects.requireNonNull(getImplementationClassName(), () -> "Class name is not specified for extension: " + getKey());
-      Class<AbstractPerlHandler<?, ?>> extensionClass = componentManager.loadClass(implementationClassName, pluginDescriptor);
+      Class<AbstractPerlHandler<?, ?>> extensionClass = (Class<AbstractPerlHandler<?, ?>>)myImplementationClass;
       Constructor<AbstractPerlHandler<?, ?>> constructor = extensionClass.getConstructor(PerlHandlerBean.class);
       constructor.setAccessible(true);
       return constructor.newInstance(PerlHandlerBean.this);
     }
-    catch (NoSuchMethodException | InstantiationException | InvocationTargetException | IllegalAccessException | ClassNotFoundException e) {
+    catch (NoSuchMethodException | InstantiationException | InvocationTargetException | IllegalAccessException e) {
       throw new RuntimeException(e);
     }
   }

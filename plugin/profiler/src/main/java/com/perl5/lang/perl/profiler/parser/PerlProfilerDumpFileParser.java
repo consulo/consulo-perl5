@@ -16,19 +16,18 @@
 
 package com.perl5.lang.perl.profiler.parser;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.process.BaseProcessHandler;
-import com.intellij.execution.process.ProcessEvent;
-import com.intellij.execution.process.ProcessListener;
-import com.intellij.execution.process.ProcessOutputType;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.NlsSafe;
-import com.intellij.openapi.util.Ref;
-import com.intellij.profiler.api.*;
-import com.intellij.profiler.ui.NativeCallStackElementRenderer;
+import consulo.process.ExecutionException;
+import consulo.process.BaseProcessHandler;
+import consulo.process.event.ProcessEvent;
+import consulo.process.event.ProcessListener;
+import consulo.process.ProcessOutputType;
+import consulo.logging.Logger;
+import consulo.application.progress.ProgressIndicator;
+import consulo.project.Project;
+import consulo.util.dataholder.Key;
+import consulo.util.lang.ref.Ref;
+
+import consulo.execution.profiler.ui.NativeCallStackElementRenderer;
 import com.perl5.lang.perl.idea.project.PerlProjectManager;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostData;
 import com.perl5.lang.perl.profiler.PerlProfilerBundle;
@@ -38,6 +37,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import consulo.execution.profiler.Failure;
+import consulo.execution.profiler.NewCallTreeOnlyProfilerData;
+import consulo.execution.profiler.ProfilerDumpFileParser;
+import consulo.execution.profiler.ProfilerDumpFileParsingResult;
+import consulo.execution.profiler.Success;
 
 /**
  * Parser for nytprof dump
@@ -86,8 +90,8 @@ public class PerlProfilerDumpFileParser implements ProfilerDumpFileParser {
     var dumpParser = new PerlCollapsedDumpParser();
 
     try {
-      BaseProcessHandler<?> processHandler = PerlHostData.createProcessHandler(perlCommandLine);
-      Ref<@NlsSafe String> errorRef = Ref.create();
+      BaseProcessHandler processHandler = PerlHostData.createProcessHandler(perlCommandLine);
+      Ref<String> errorRef = Ref.create();
       processHandler.addProcessListener(new ProcessListener() {
         @Override
         public void processTerminated(@NotNull ProcessEvent event) {
@@ -114,7 +118,7 @@ public class PerlProfilerDumpFileParser implements ProfilerDumpFileParser {
       }
       if (errorRef.isNull()) {
         return new Success(
-          new NewCallTreeOnlyProfilerData(dumpParser.getCallTreeBuilder(), NativeCallStackElementRenderer.Companion.getINSTANCE()));
+          new NewCallTreeOnlyProfilerData(dumpParser.getCallTreeBuilder(), NativeCallStackElementRenderer.INSTANCE));
       }
       return new Failure(errorRef.get());
     }

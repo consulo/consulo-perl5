@@ -16,32 +16,37 @@
 
 package com.perl5.lang.perl.idea.configuration.settings.sdk;
 
-import com.intellij.openapi.actionSystem.ActionUpdateThread;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.ToggleAction;
-import com.intellij.openapi.actionSystem.ex.ActionUtil;
-import com.intellij.openapi.project.ProjectBundle;
+import consulo.ui.ex.action.ActionUpdateThread;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.ToggleAction;
+import consulo.localize.LocalizeValue;
+import consulo.project.localize.ProjectLocalize;
 import com.intellij.openapi.projectRoots.impl.PerlModuleExtension;
-import com.intellij.openapi.roots.ui.configuration.ModuleSourceRootEditHandler;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Locale;
 
 public class PerlToggleSourceRootAction extends ToggleAction {
   private final @NotNull PerlContentEntriesTreeEditor myEditor;
-  private final ModuleSourceRootEditHandler<?> myHandler;
+  private final PerlSourceRootEditHandler myHandler;
 
   public PerlToggleSourceRootAction(@NotNull PerlContentEntriesTreeEditor editor,
-                                    @NotNull ModuleSourceRootEditHandler<?> handler) {
-    super(handler.getMarkRootButtonText(),
-          ProjectBundle.message("module.toggle.sources.action.description",
-                                handler.getFullRootTypeName().toLowerCase(Locale.getDefault())),
+                                    @NotNull PerlSourceRootEditHandler handler) {
+    super(LocalizeValue.of(handler.getMarkRootButtonText()),
+          ProjectLocalize.moduleToggle0ActionDescription(handler.getFullRootTypeName().toLowerCase(Locale.getDefault())),
           handler.getRootIcon()
     );
     myHandler = handler;
     myEditor = editor;
-    getTemplatePresentation().putClientProperty(ActionUtil.SHOW_TEXT_IN_TOOLBAR, true);
+  }
+
+  /**
+   * upstream: {@code getTemplatePresentation().putClientProperty(ActionUtil.SHOW_TEXT_IN_TOOLBAR, true)}
+   */
+  @Override
+  public boolean displayTextInToolbar() {
+    return true;
   }
 
   @Override

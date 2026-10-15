@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.psi;
 
-import com.intellij.navigation.NavigationItem;
-import com.intellij.psi.PsiElement;
+import consulo.navigation.NavigationItem;
+import consulo.language.psi.PsiElement;
 import com.perl5.lang.perl.psi.properties.PerlBlockOwner;
 import com.perl5.lang.perl.psi.properties.PerlDieScope;
 import com.perl5.lang.perl.psi.utils.PerlSubArgument;

@@ -16,28 +16,36 @@
 
 package com.perl5.lang.perl.idea.run;
 
-import com.intellij.execution.Location;
-import com.intellij.execution.actions.ConfigurationContext;
-import com.intellij.execution.actions.LazyRunConfigurationProducer;
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.LangDataKeys;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.util.Consumer;
+import consulo.execution.action.Location;
+import consulo.execution.action.ConfigurationContext;
+import consulo.execution.action.RunConfigurationProducer;
+import consulo.execution.configuration.ConfigurationFactory;
+import consulo.dataContext.DataContext;
+import consulo.language.editor.LangDataKeys;
+import consulo.module.Module;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.ref.SimpleReference;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiUtilCore;
 import com.perl5.lang.perl.idea.project.PerlProjectManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 public abstract class GenericPerlRunConfigurationProducer<Configuration extends GenericPerlRunConfiguration>
-  extends LazyRunConfigurationProducer<Configuration> {
+  extends RunConfigurationProducer<Configuration> {
+  /**
+   * Consulo: there is no LazyRunConfigurationProducer, factory must be passed to the constructor
+   */
+  protected GenericPerlRunConfigurationProducer(@NotNull ConfigurationFactory configurationFactory) {
+    super(configurationFactory);
+  }
+
   protected @NotNull List<VirtualFile> computeTargetFiles(@NotNull ConfigurationContext configurationContext) {
     if (configurationContext.containsMultipleSelection() && !allowMultipleFiles()) {
       return Collections.emptyList();
@@ -56,14 +64,14 @@ public abstract class GenericPerlRunConfigurationProducer<Configuration extends 
     };
 
     DataContext dataContext = configurationContext.getDataContext();
-    Location<?>[] locations = Location.DATA_KEYS.getData(dataContext);
+    Location<?>[] locations = dataContext.getData(Location.DATA_KEYS);
     if (locations != null) {
       for (Location<?> location : locations) {
-        locationConsumer.consume(location);
+        locationConsumer.accept(location);
       }
     }
 
-    PsiElement[] psiElements = LangDataKeys.PSI_ELEMENT_ARRAY.getData(dataContext);
+    PsiElement[] psiElements = dataContext.getData(LangDataKeys.PSI_ELEMENT_ARRAY);
     if (psiElements != null) {
       for (PsiElement psiElement : psiElements) {
         if (psiElement instanceof PsiFile || psiElement instanceof PsiDirectory) {
@@ -75,7 +83,7 @@ public abstract class GenericPerlRunConfigurationProducer<Configuration extends 
       }
     }
 
-    locationConsumer.consume(configurationContext.getLocation());
+    locationConsumer.accept(configurationContext.getLocation());
 
     return new ArrayList<>(virtualFiles);
   }
@@ -93,7 +101,7 @@ public abstract class GenericPerlRunConfigurationProducer<Configuration extends 
   @Override
   protected boolean setupConfigurationFromContext(@NotNull Configuration runConfiguration,
                                                   @NotNull ConfigurationContext configurationContext,
-                                                  @NotNull Ref<PsiElement> ref) {
+                                                  @NotNull SimpleReference<PsiElement> ref) {
     List<VirtualFile> targetFiles = computeTargetFiles(configurationContext);
     if (targetFiles.isEmpty()) {
       return false;

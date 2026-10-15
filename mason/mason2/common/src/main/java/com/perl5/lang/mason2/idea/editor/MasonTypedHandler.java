@@ -16,21 +16,21 @@
 
 package com.perl5.lang.mason2.idea.editor;
 
-import com.intellij.codeInsight.editorActions.TypedHandlerDelegate;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.EditorModificationUtilEx;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.editor.action.TypedHandlerDelegate;
+import consulo.document.Document;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.util.EditorModificationUtil;
+import consulo.project.Project;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.ast.IElementType;
 import com.perl5.lang.mason2.psi.Mason2TemplatingFileViewProvider;
 import com.perl5.lang.perl.psi.utils.PerlPsiUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
-import static com.intellij.psi.xml.XmlTokenType.XML_DATA_CHARACTERS;
+import static consulo.xml.language.psi.XmlTokenType.XML_DATA_CHARACTERS;
 import static com.perl5.lang.mason2.Mason2SyntaxElements.*;
 import static com.perl5.lang.mason2.elementType.Mason2ElementTypes.*;
 import static com.perl5.lang.perl.parser.PerlElementTypesGenerated.LEFT_BRACE;
@@ -75,7 +75,7 @@ public class MasonTypedHandler extends TypedHandlerDelegate {
     if (lineStartElement != null && lineStartElement.getNode().getElementType() == MASON_LINE_OPENER) {
       PsiElement nextElement = file.findElementAt(offset - 1);
       if (nextElement != null && nextElement.getNode().getElementType() == RIGHT_BRACE) {
-        EditorModificationUtilEx.insertStringAtCaret(editor, "\n\n% ", false, true, 1);
+        EditorModificationUtil.insertStringAtCaret(editor, "\n\n% ", false, true, 1);
       }
     }
   }
@@ -87,19 +87,19 @@ public class MasonTypedHandler extends TypedHandlerDelegate {
     }
     IElementType elementType = element.getNode().getElementType();
     if (elementType == MASON_BLOCK_OPENER && !isNextElement(element, MASON_BLOCK_CLOSER)) {
-      EditorModificationUtilEx.insertStringAtCaret(editor, KEYWORD_BLOCK_CLOSER, false, false);
+      EditorModificationUtil.insertStringAtCaret(editor, KEYWORD_BLOCK_CLOSER, false, false);
     }
     else if (elementType == MASON_CALL_OPENER && !isNextElement(element, MASON_CALL_CLOSER)) {
-      EditorModificationUtilEx.insertStringAtCaret(editor, KEYWORD_CALL_CLOSER, false, false);
+      EditorModificationUtil.insertStringAtCaret(editor, KEYWORD_CALL_CLOSER, false, false);
     }
     else if (elementType == MASON_METHOD_OPENER) {
-      EditorModificationUtilEx.insertStringAtCaret(editor, ">\n" + KEYWORD_METHOD_CLOSER, false, false);
+      EditorModificationUtil.insertStringAtCaret(editor, ">\n" + KEYWORD_METHOD_CLOSER, false, false);
     }
     else if (elementType == MASON_FILTER_OPENER) {
-      EditorModificationUtilEx.insertStringAtCaret(editor, ">\n" + KEYWORD_FILTER_CLOSER, false, false);
+      EditorModificationUtil.insertStringAtCaret(editor, ">\n" + KEYWORD_FILTER_CLOSER, false, false);
     }
     else if (elementType == MASON_OVERRIDE_OPENER) {
-      EditorModificationUtilEx.insertStringAtCaret(editor, ">\n" + KEYWORD_OVERRIDE_CLOSER, false, false);
+      EditorModificationUtil.insertStringAtCaret(editor, ">\n" + KEYWORD_OVERRIDE_CLOSER, false, false);
     }
   }
 
@@ -111,10 +111,10 @@ public class MasonTypedHandler extends TypedHandlerDelegate {
     String elementText = element.getText();
     String closeTag;
     if ((closeTag = SIMPLE_COMPLETION_MAP.get(elementText)) != null) {
-      EditorModificationUtilEx.insertStringAtCaret(editor, closeTag, false, false);
+      EditorModificationUtil.insertStringAtCaret(editor, closeTag, false, false);
     }
     else if (elementText.equals(KEYWORD_FLAGS_OPENER_UNCLOSED)) {
-      EditorModificationUtilEx.insertStringAtCaret(editor, " extends => '' " + KEYWORD_FLAGS_CLOSER, false, true, 13);
+      EditorModificationUtil.insertStringAtCaret(editor, " extends => '' " + KEYWORD_FLAGS_CLOSER, false, true, 13);
     }
   }
 

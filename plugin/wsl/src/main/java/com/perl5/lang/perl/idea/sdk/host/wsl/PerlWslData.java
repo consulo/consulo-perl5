@@ -16,24 +16,24 @@
 
 package com.perl5.lang.perl.idea.sdk.host.wsl;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.process.ProcessOutput;
+import consulo.process.ExecutionException;
+import consulo.process.util.ProcessOutput;
 import com.intellij.execution.wsl.WSLCommandLineOptions;
-import com.intellij.execution.wsl.WSLDistribution;
+import consulo.ide.impl.idea.execution.wsl.WSLDistribution;
 import com.intellij.execution.wsl.WslDistributionManager;
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.progress.util.BackgroundTaskUtil;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.util.ObjectUtils;
-import com.intellij.util.concurrency.AppExecutorUtil;
-import com.intellij.util.xmlb.annotations.Attribute;
-import com.intellij.util.xmlb.annotations.Transient;
+import consulo.disposer.Disposable;
+import consulo.application.ApplicationManager;
+import consulo.logging.Logger;
+import consulo.ide.impl.idea.openapi.progress.util.BackgroundTaskUtil;
+import consulo.project.Project;
+import consulo.content.bundle.Sdk;
+import consulo.disposer.Disposer;
+import consulo.util.lang.ref.Ref;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.ObjectUtil;
+import consulo.application.util.concurrent.AppExecutorUtil;
+import consulo.util.xml.serializer.annotation.Attribute;
+import consulo.util.xml.serializer.annotation.Transient;
 import com.perl5.lang.perl.idea.execution.PerlCommandLine;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostData;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostFileTransfer;
@@ -108,7 +108,7 @@ class PerlWslData extends PerlHostData<PerlWslData, PerlWslHandler> {
 
   @Contract("null->null")
   public static @Nullable PerlWslData from(@Nullable Sdk sdk) {
-    return ObjectUtils.tryCast(PerlHostData.from(sdk), PerlWslData.class);
+    return ObjectUtil.tryCast(PerlHostData.from(sdk), PerlWslData.class);
   }
 
   @Override
@@ -199,7 +199,7 @@ class PerlWslData extends PerlHostData<PerlWslData, PerlWslHandler> {
 
   private PerlCommandLine patchCommandLine(@NotNull PerlCommandLine perlCommandLine) throws ExecutionException {
     WSLDistribution distribution = getDistribution();
-    String workingDir = ObjectUtils.doIfNotNull(perlCommandLine.getWorkDirectory(), File::toString);
+    String workingDir = ObjectUtil.doIfNotNull(perlCommandLine.getWorkDirectory(), File::toString);
     perlCommandLine.withWorkDirectory((String)null);
     return distribution.patchCommandLine(
       perlCommandLine,

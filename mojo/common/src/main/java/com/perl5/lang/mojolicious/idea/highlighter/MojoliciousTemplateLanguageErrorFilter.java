@@ -16,9 +16,9 @@
 
 package com.perl5.lang.mojolicious.idea.highlighter;
 
-import com.intellij.codeInsight.highlighting.TemplateLanguageErrorFilter;
-import com.intellij.psi.TokenType;
-import com.intellij.psi.tree.TokenSet;
+import consulo.ide.impl.idea.codeInsight.highlighting.TemplateLanguageErrorFilter;
+import consulo.language.ast.TokenType;
+import consulo.language.ast.TokenSet;
 import com.perl5.lang.mojolicious.psi.MojoliciousFileViewProvider;
 
 import static com.perl5.lang.mojolicious.MojoliciousElementTypes.*;

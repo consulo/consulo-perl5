@@ -16,7 +16,7 @@
 
 package com.perl5.lang.htmlmason.idea.findusages;
 
-import com.intellij.lang.cacheBuilder.WordsScanner;
+import consulo.language.cacheBuilder.WordsScanner;
 import com.perl5.lang.perl.idea.findusages.PerlFindUsagesProvider;
 import org.jetbrains.annotations.Nullable;
 

@@ -16,10 +16,9 @@
 
 package com.perl5.lang.perl.cpan.adapter;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.util.NlsSafe;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.project.Project;
+import consulo.content.bundle.Sdk;
+import consulo.util.collection.ContainerUtil;
 import com.perl5.lang.perl.adapters.PackageManagerAdapter;
 import com.perl5.lang.perl.adapters.PackageManagerAdapterFactory;
 import com.perl5.lang.perl.idea.project.PerlProjectManager;
@@ -32,9 +31,9 @@ import java.util.Collection;
 import java.util.List;
 
 public class CpanAdapter extends PackageManagerAdapter {
-  private static final @NlsSafe String PACKAGE_NAME = "CPAN";
-  public static final @NlsSafe String SCRIPT_NAME = "cpan";
-  private static final @NlsSafe String NO_TEST_ARGUMENT = "-T";
+  private static final String PACKAGE_NAME = "CPAN";
+  public static final String SCRIPT_NAME = "cpan";
+  private static final String NO_TEST_ARGUMENT = "-T";
 
   public CpanAdapter(@NotNull Sdk sdk, @Nullable Project project) {
     super(sdk, project);
@@ -66,8 +65,8 @@ public class CpanAdapter extends PackageManagerAdapter {
     Sdk sdk = PerlProjectManager.getSdk(project);
     return sdk == null ? null : new CpanAdapter(sdk, project);
   }
-
-  public static final class Factory implements PackageManagerAdapterFactory<CpanAdapter> {
+  // consulo: registered by consulo/core CpanAdapterFactoryRegistration (the annotation processor does not support nested classes)
+  public static class Factory implements PackageManagerAdapterFactory<CpanAdapter> {
     @Override
     public @NotNull CpanAdapter createAdapter(@NotNull Sdk sdk, @Nullable Project project) {
       return new CpanAdapter(sdk, project);

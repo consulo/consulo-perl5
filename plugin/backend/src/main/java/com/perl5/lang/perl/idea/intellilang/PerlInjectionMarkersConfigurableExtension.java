@@ -16,15 +16,18 @@
 
 package com.perl5.lang.perl.idea.intellilang;
 
-import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.project.Project;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.configurable.Configurable;
+import consulo.project.Project;
 import com.perl5.lang.perl.idea.configuration.settings.sdk.Perl5SettingsConfigurableExtension;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@ExtensionImpl
 public class PerlInjectionMarkersConfigurableExtension implements Perl5SettingsConfigurableExtension {
   @Override
   public @Nullable Configurable createProjectConfigurable(@NotNull Project project) {
-    return new PerlInjectionMarkersTable(project);
+    // consulo: unified UI counterpart of PerlInjectionMarkersTable
+    return new PerlUnifiedInjectionMarkersConfigurable(project);
   }
 }

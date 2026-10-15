@@ -16,10 +16,10 @@
 
 package com.perl5.lang.perl.parser.elementTypes;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.Language;
-import com.intellij.lexer.Lexer;
-import com.intellij.psi.MultiplePsiFilesPerDocumentFileViewProvider;
+import consulo.language.ast.ASTNode;
+import consulo.language.Language;
+import consulo.language.lexer.Lexer;
+import consulo.language.impl.file.MultiplePsiFilesPerDocumentFileViewProvider;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

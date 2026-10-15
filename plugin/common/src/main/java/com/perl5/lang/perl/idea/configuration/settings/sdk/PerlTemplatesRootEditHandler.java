@@ -17,12 +17,11 @@
 package com.perl5.lang.perl.idea.configuration.settings.sdk;
 
 import com.perl5.PerlBundle;
+import com.perl5.lang.perl.idea.modules.PerlSourceRootType;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.jps.model.JpsDummyElement;
-import org.jetbrains.jps.model.module.JpsModuleSourceRootType;
 
 public abstract class PerlTemplatesRootEditHandler extends PerlSourceRootEditHandler {
-  public PerlTemplatesRootEditHandler(JpsModuleSourceRootType<JpsDummyElement> rootType) {
+  public PerlTemplatesRootEditHandler(PerlSourceRootType rootType) {
     super(rootType);
   }
 

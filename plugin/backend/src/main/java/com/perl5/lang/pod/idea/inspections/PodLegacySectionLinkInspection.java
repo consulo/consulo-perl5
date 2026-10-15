@@ -16,13 +16,13 @@
 
 package com.perl5.lang.pod.idea.inspections;
 
-import com.intellij.codeInspection.LocalInspectionTool;
-import com.intellij.codeInspection.ProblemHighlightType;
-import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.editor.inspection.LocalInspectionTool;
+import consulo.language.editor.inspection.ProblemHighlightType;
+import consulo.language.editor.inspection.ProblemsHolder;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiElementVisitor;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.PsiUtilCore;
 import com.perl5.PerlBundle;
 import com.perl5.lang.pod.parser.psi.PodVisitor;
 import com.perl5.lang.pod.parser.psi.mixin.PodFormatterL;
@@ -35,7 +35,13 @@ import org.jetbrains.annotations.Nullable;
 
 import static com.perl5.lang.pod.parser.PodElementTypesGenerated.POD_DIV;
 import static com.perl5.lang.pod.parser.PodElementTypesGenerated.POD_QUOTE_DOUBLE;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.Language;
+import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
+import consulo.localize.LocalizeValue;
+import com.perl5.lang.pod.PodLanguage;
 
+@ExtensionImpl
 public class PodLegacySectionLinkInspection extends LocalInspectionTool {
   @Override
   public @NotNull PsiElementVisitor buildVisitor(final @NotNull ProblemsHolder holder, boolean isOnTheFly) {
@@ -67,5 +73,26 @@ public class PodLegacySectionLinkInspection extends LocalInspectionTool {
                !(elementType == POD_QUOTE_DOUBLE && PsiUtilCore.getElementType(run.getPrevSibling()) == POD_DIV);
       }
     };
+  }
+
+  // consulo: metadata from upstream <localInspection> registration in perl5.plugin.backend.main.xml
+  @Override
+  public @Nullable Language getLanguage() {
+    return PodLanguage.INSTANCE;
+  }
+
+  @Override
+  public @NotNull LocalizeValue getDisplayName() {
+    return LocalizeValue.localizeTODO(PerlBundle.message("inspection.pod.legacy.section.link.display.name"));
+  }
+
+  @Override
+  public @NotNull LocalizeValue getGroupDisplayName() {
+    return LocalizeValue.localizeTODO(PerlBundle.message("perl5.pod.group"));
+  }
+
+  @Override
+  public @NotNull HighlightDisplayLevel getDefaultLevel() {
+    return HighlightDisplayLevel.WARNING;
   }
 }

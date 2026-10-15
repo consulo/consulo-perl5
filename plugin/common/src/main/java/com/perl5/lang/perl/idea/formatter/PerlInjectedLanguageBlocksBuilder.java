@@ -16,22 +16,26 @@
 
 package com.perl5.lang.perl.idea.formatter;
 
-import com.intellij.formatting.*;
-import com.intellij.lang.ASTNode;
-import com.intellij.lang.LanguageFormatting;
-import com.intellij.lang.injection.InjectedLanguageManager;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiLanguageInjectionHost;
-import com.intellij.psi.PsiLanguageInjectionHost.Shred;
+
+import consulo.language.ast.ASTNode;
+import consulo.language.inject.InjectedLanguageManager;
+import consulo.document.util.TextRange;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiLanguageInjectionHost;
+import consulo.language.psi.PsiLanguageInjectionHost.Shred;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import consulo.language.codeStyle.Alignment;
+import consulo.language.codeStyle.Block;
+import consulo.language.codeStyle.CoreFormatterUtil;
+import consulo.language.codeStyle.FormattingModel;
+import consulo.language.codeStyle.FormattingModelBuilder;
 
 /**
  * Mapper for Formatting blocks range using ranges from shreds
@@ -143,12 +147,12 @@ public class PerlInjectedLanguageBlocksBuilder implements PsiLanguageInjectionHo
   }
 
   private @Nullable FormattingModelBuilder getInjectedBuilder() {
-    return myInjectedPsiFile == null ? null : LanguageFormatting.INSTANCE.forContext(myInjectedPsiFile);
+    return myInjectedPsiFile == null ? null : FormattingModelBuilder.forContext(myInjectedPsiFile);
   }
 
 
   @Override
-  public void visit(@NotNull PsiFile injectedPsi, @NotNull List<? extends Shred> places) {
+  public void visit(@NotNull PsiFile injectedPsi, @NotNull List<Shred> places) {
     PsiElement hostPsi = getHostPsi();
     for (Shred shred : places) {
       if (hostPsi != shred.getHost()) {

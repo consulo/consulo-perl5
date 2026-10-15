@@ -16,10 +16,10 @@
 
 package com.perl5.lang.perl.idea.manipulators;
 
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.AbstractElementManipulator;
-import com.intellij.psi.impl.source.tree.LeafPsiElement;
-import com.intellij.util.IncorrectOperationException;
+import consulo.document.util.TextRange;
+import consulo.language.psi.AbstractElementManipulator;
+import consulo.language.impl.psi.LeafPsiElement;
+import consulo.language.util.IncorrectOperationException;
 import com.perl5.lang.perl.psi.PerlAnnotationVariableElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -44,5 +44,10 @@ public class PerlAnnotationVariableElementManipulator extends AbstractElementMan
   public @NotNull TextRange getRangeInElement(@NotNull PerlAnnotationVariableElement element) {
     var elementTextLength = element.getTextLength();
     return elementTextLength > 1 ? new TextRange(1, elementTextLength) : TextRange.EMPTY_RANGE;
+  }
+
+  @Override
+  public @NotNull Class<PerlAnnotationVariableElement> getElementClass() {
+    return PerlAnnotationVariableElement.class;
   }
 }

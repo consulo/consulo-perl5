@@ -16,12 +16,13 @@
 
 package com.perl5.lang.perl.debugger;
 
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.vfs.DeprecatedVirtualFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.openapi.vfs.VirtualFileSystem;
-import com.intellij.testFramework.LightVirtualFile;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.ApplicationManager;
+import consulo.virtualFileSystem.BaseVirtualFileSystem;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.virtualFileSystem.VirtualFileSystem;
+import consulo.language.file.light.LightVirtualFile;
 import com.perl5.lang.perl.debugger.protocol.PerlStackFrameDescriptor;
 import com.perl5.lang.perl.fileTypes.PerlFileTypeScript;
 import org.jetbrains.annotations.NotNull;
@@ -35,7 +36,9 @@ import java.util.Objects;
 /**
  * Clone of mock file system
  */
-public class PerlRemoteFileSystem extends DeprecatedVirtualFileSystem {
+// consulo: upstream <virtualFileSystem key="perl5_remote"> registration in perl5.plugin.debugger.main.xml
+@ExtensionImpl
+public class PerlRemoteFileSystem extends BaseVirtualFileSystem {
   public static final String PROTOCOL = "perl5_remote";
   public static final String PROTOCOL_PREFIX = "perl5_remote://";
   private final Map<String, VirtualFile> virtualFilesMap = new HashMap<>();

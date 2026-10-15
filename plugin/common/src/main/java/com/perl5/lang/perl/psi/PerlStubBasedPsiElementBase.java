@@ -16,21 +16,21 @@
 
 package com.perl5.lang.perl.psi;
 
-import com.intellij.extapi.psi.StubBasedPsiElementBase;
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.ResolveState;
-import com.intellij.psi.StubBasedPsiElement;
-import com.intellij.psi.scope.PsiScopeProcessor;
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.impl.psi.stub.StubBasedPsiElementBase;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.resolve.ResolveState;
+import consulo.language.psi.StubBasedPsiElement;
+import consulo.language.psi.resolve.PsiScopeProcessor;
+import consulo.language.psi.stub.StubElement;
+import consulo.language.ast.IElementType;
 import com.perl5.lang.perl.psi.utils.PerlResolveUtilCore;
 import org.jetbrains.annotations.NotNull;
 
 
 public class PerlStubBasedPsiElementBase<T extends StubElement<?>> extends StubBasedPsiElementBase<T> implements StubBasedPsiElement<T> {
   public PerlStubBasedPsiElementBase(@NotNull T stub, @NotNull IElementType nodeType) {
-    super(stub, nodeType);
+    super(stub, nodeType, null); // consulo: (stub, IElementType, node) constructor, the 2-arg one requires IStubElementType
   }
 
   public PerlStubBasedPsiElementBase(@NotNull ASTNode node) {
@@ -42,9 +42,11 @@ public class PerlStubBasedPsiElementBase<T extends StubElement<?>> extends StubB
     return getClass().getSimpleName() + "(" + getIElementType() + ")";
   }
 
-  @Override
+  // TODO consulo: Consulo StubBasedPsiElementBase has neither getIElementType() nor getElementTypeImpl() (element type field is private);
+  //  emulating via stub type or AST node type
   public final IElementType getIElementType() {
-    return getElementTypeImpl();
+    T stub = getStub();
+    return stub != null ? stub.getStubType() : getNode().getElementType();
   }
 
   @Override

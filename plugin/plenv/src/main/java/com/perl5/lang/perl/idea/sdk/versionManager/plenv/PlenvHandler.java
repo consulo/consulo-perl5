@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.idea.sdk.versionManager.plenv;
 
-import com.intellij.openapi.util.NlsSafe;
 import com.perl5.PerlIcons;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import com.perl5.lang.perl.idea.sdk.PerlHandlerBean;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostData;
 import com.perl5.lang.perl.idea.sdk.versionManager.InstallPerlHandler;
@@ -34,8 +34,8 @@ import java.util.Collections;
 
 class PlenvHandler extends PerlRealVersionManagerHandler<PlenvData, PlenvHandler> {
 
-  private static final @NlsSafe String PLENV = "plenv";
-  private static final @NlsSafe String PLENV_DEFAULT_PATH = "~/.plenv/bin/" + PLENV;
+  private static final String PLENV = "plenv";
+  private static final String PLENV_DEFAULT_PATH = "~/.plenv/bin/" + PLENV;
 
   @SuppressWarnings("NonDefaultConstructor")
   public PlenvHandler(@NotNull PerlHandlerBean bean) {
@@ -74,7 +74,7 @@ class PlenvHandler extends PerlRealVersionManagerHandler<PlenvData, PlenvHandler
 
   @Override
   public @NotNull Icon getIcon() {
-    return PerlIcons.PLENV_ICON;
+    return TargetAWT.to(PerlIcons.PLENV_ICON);
   }
 
   @Override

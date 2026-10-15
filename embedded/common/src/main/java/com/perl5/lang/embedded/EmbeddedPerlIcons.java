@@ -16,12 +16,12 @@
 
 package com.perl5.lang.embedded;
 
-import com.intellij.openapi.util.IconLoader;
+import consulo.perl5.icon.Perl5IconGroup;
+import consulo.ui.image.Image;
 
-import javax.swing.*;
-
+// consulo: the icon is generated from consulo/core/src/main/resources/ICON-LIB (Perl5IconGroup) instead of IconLoader
 public final class EmbeddedPerlIcons {
-  public static final Icon EMBEDDED_PERL_FILE = IconLoader.getIcon("/icons/embeddedperl.png", EmbeddedPerlIcons.class);
+  public static final Image EMBEDDED_PERL_FILE = Perl5IconGroup.embeddedperl();
 
   private EmbeddedPerlIcons() {
   }

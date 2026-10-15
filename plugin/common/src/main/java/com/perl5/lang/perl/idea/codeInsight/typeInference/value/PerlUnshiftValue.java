@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.idea.codeInsight.typeInference.value;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.util.ObjectUtils;
+import consulo.language.psi.PsiElement;
+import consulo.util.lang.ObjectUtil;
 import com.perl5.lang.perl.psi.PerlUnshiftPushExpr;
 import com.perl5.lang.perl.psi.PsiPerlArrayUnshiftExpr;
 import com.perl5.lang.perl.psi.utils.PerlContextType;
@@ -55,7 +55,7 @@ public class PerlUnshiftValue extends PerlParametrizedOperationValue {
 
   private static @NotNull PerlValue computeStrictResolve(@NotNull PerlValue resolvedArrayValue,
                                                          @NotNull PerlValue resolvedPrefixValue) {
-    return ObjectUtils.notNull(computeResolve(resolvedArrayValue, resolvedPrefixValue), UNKNOWN_VALUE);
+    return ObjectUtil.notNull(computeResolve(resolvedArrayValue, resolvedPrefixValue), UNKNOWN_VALUE);
   }
 
   private static @Nullable PerlValue computeResolve(@NotNull PerlValue resolvedArrayValue,

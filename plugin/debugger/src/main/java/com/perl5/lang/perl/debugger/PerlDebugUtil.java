@@ -18,15 +18,15 @@ package com.perl5.lang.perl.debugger;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.xdebugger.XDebuggerManager;
-import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
-import com.intellij.xdebugger.frame.XCompositeNode;
-import com.intellij.xdebugger.frame.XValueChildrenList;
+import consulo.application.ApplicationManager;
+import consulo.project.Project;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.execution.debug.XDebuggerManager;
+import consulo.execution.debug.breakpoint.XLineBreakpoint;
+import consulo.execution.debug.frame.XCompositeNode;
+import consulo.execution.debug.frame.XValueChildrenList;
 import com.perl5.lang.perl.debugger.breakpoints.PerlLineBreakpointProperties;
 import com.perl5.lang.perl.debugger.breakpoints.PerlLineBreakpointType;
 import com.perl5.lang.perl.debugger.protocol.PerlDebuggingEventBreakpoint;
@@ -52,7 +52,7 @@ public class PerlDebugUtil {
       VirtualFile virtualFile;
       String virtualFileUrl;
 
-      virtualFile = VfsUtil.findFileByIoFile(new File(breakpointBase.getDebugThread().getDebugProfileState().mapPathToLocal(path)), true);
+      virtualFile = VirtualFileUtil.findFileByIoFile(new File(breakpointBase.getDebugThread().getDebugProfileState().mapPathToLocal(path)), true);
 
       if (virtualFile == null) {
         virtualFileUrl = PerlRemoteFileSystem.PROTOCOL_PREFIX + path;
@@ -97,7 +97,10 @@ public class PerlDebugUtil {
           boolean isLast = container.isLast();
           node.addChildren(list, isLast);
           if (!isLast) {
-            node.tooManyChildren(container.getRemaining(), () -> requestAndComputeChildren(node, container));
+            // TODO consulo: Consulo XCompositeNode#tooManyChildren has no "add next children" callback, the "more" node
+            //  calls computeChildren of the container again, which requests the next portion from the current offset
+            //  (PerlXNamedValue#computeChildren also re-adds its IO layers/tied children on this call)
+            node.tooManyChildren(container.getRemaining());
           }
         }
       });

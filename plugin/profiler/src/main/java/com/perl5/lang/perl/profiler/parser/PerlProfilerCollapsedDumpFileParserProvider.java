@@ -16,12 +16,16 @@
 
 package com.perl5.lang.perl.profiler.parser;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.profiler.api.ProfilerDumpFileParser;
-import com.intellij.profiler.api.ProfilerDumpParserProvider;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.localize.LocalizeValue;
+import consulo.project.Project;
+import consulo.execution.profiler.ProfilerDumpFileParser;
+import consulo.execution.profiler.ProfilerDumpParserProvider;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+// consulo: upstream <profiler.api.ProfilerDumpParserProvider> registration in perl5.plugin.profiler.main.xml
+@ExtensionImpl
 public class PerlProfilerCollapsedDumpFileParserProvider implements ProfilerDumpParserProvider {
   @Override
   public @NotNull String getId() {
@@ -29,8 +33,8 @@ public class PerlProfilerCollapsedDumpFileParserProvider implements ProfilerDump
   }
 
   @Override
-  public @NotNull String getName() {
-    return "NYTProf Dump Backup";
+  public @NotNull LocalizeValue getName() {
+    return LocalizeValue.of("NYTProf Dump Backup");
   }
 
   @Override

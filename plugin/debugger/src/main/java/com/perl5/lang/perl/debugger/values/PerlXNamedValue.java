@@ -16,19 +16,18 @@
 
 package com.perl5.lang.perl.debugger.values;
 
-import com.intellij.openapi.application.ReadAction;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.ResolveState;
-import com.intellij.util.ThreeState;
-import com.intellij.xdebugger.XSourcePosition;
-import com.intellij.xdebugger.frame.*;
-import com.intellij.xdebugger.impl.XSourcePositionImpl;
+import consulo.application.ReadAction;
+import consulo.document.Document;
+import consulo.project.Project;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
+import consulo.language.psi.resolve.ResolveState;
+import consulo.util.lang.ThreeState;
+import consulo.execution.debug.XSourcePosition;
+import consulo.execution.debug.XDebuggerUtil;
 import com.perl5.PerlIcons;
 import com.perl5.lang.perl.debugger.PerlDebugUtil;
 import com.perl5.lang.perl.debugger.PerlStackFrame;
@@ -43,7 +42,14 @@ import com.perl5.lang.perl.psi.utils.PerlVariableType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
+import consulo.ui.image.Image;
+import consulo.execution.debug.frame.XCompositeNode;
+import consulo.execution.debug.frame.XInlineDebuggerDataCallback;
+import consulo.execution.debug.frame.XNamedValue;
+import consulo.execution.debug.frame.XNavigatable;
+import consulo.execution.debug.frame.XValueChildrenList;
+import consulo.execution.debug.frame.XValueNode;
+import consulo.execution.debug.frame.XValuePlace;
 
 
 public class PerlXNamedValue extends XNamedValue implements PerlLoadableXValueContainer {
@@ -145,7 +151,7 @@ public class PerlXNamedValue extends XNamedValue implements PerlLoadableXValueCo
     return type;
   }
 
-  protected @Nullable Icon calculateIcon() {
+  protected @Nullable Image calculateIcon() {
     String type = myPerlValueDescriptor.getType();
     if (StringUtil.isEmpty(type)) {
       return null;
@@ -233,7 +239,7 @@ public class PerlXNamedValue extends XNamedValue implements PerlLoadableXValueCo
         return false;
       }
 
-      navigatable.setSourcePosition(XSourcePositionImpl.createByElement(result));
+      navigatable.setSourcePosition(XDebuggerUtil.getInstance().createPositionByElement(result));
     }
     else if (callback != null) {
       final Document document = psiFile.getViewProvider().getDocument();
@@ -266,7 +272,7 @@ public class PerlXNamedValue extends XNamedValue implements PerlLoadableXValueCo
           }
 
           found[0] = true;
-          callback.computed(XSourcePositionImpl.createByElement(targetElement));
+          callback.computed(XDebuggerUtil.getInstance().createPositionByElement(targetElement));
         }
       };
 
@@ -279,6 +285,6 @@ public class PerlXNamedValue extends XNamedValue implements PerlLoadableXValueCo
 
   @Override
   public @NotNull ThreeState computeInlineDebuggerData(@NotNull XInlineDebuggerDataCallback callback) {
-    return ReadAction.computeBlocking(() -> computeMySourcePosition(null, callback) ? ThreeState.YES : ThreeState.NO);
+    return ReadAction.compute(() -> computeMySourcePosition(null, callback) ? ThreeState.YES : ThreeState.NO);
   }
 }

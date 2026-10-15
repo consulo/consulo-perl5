@@ -16,10 +16,10 @@
 
 package com.perl5.lang.pod.parser.psi.references;
 
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.*;
-import com.intellij.util.IncorrectOperationException;
+import consulo.document.util.TextRange;
+import consulo.util.lang.StringUtil;
+
+import consulo.language.util.IncorrectOperationException;
 import com.perl5.lang.perl.psi.references.PerlCachingReference;
 import com.perl5.lang.pod.parser.psi.PodElementFactory;
 import com.perl5.lang.pod.parser.psi.PodLinkDescriptor;
@@ -32,6 +32,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiElementResolveResult;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiReference;
+import consulo.language.psi.ResolveResult;
 
 
 public class PodLinkToSectionReference extends PerlCachingReference<PodFormatterL> {

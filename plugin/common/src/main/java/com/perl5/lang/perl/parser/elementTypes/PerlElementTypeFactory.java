@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.parser.elementTypes;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.psi.tree.IElementType;
+import consulo.logging.Logger;
+import consulo.language.ast.IElementType;
 import com.perl5.lang.perl.psi.stubs.PerlStubElementTypes;
 import com.perl5.lang.perl.psi.stubs.calls.PerlSubCallElementType;
 import org.jetbrains.annotations.NotNull;

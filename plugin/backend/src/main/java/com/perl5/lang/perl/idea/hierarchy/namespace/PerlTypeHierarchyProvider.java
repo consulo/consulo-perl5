@@ -16,16 +16,18 @@
 
 package com.perl5.lang.perl.idea.hierarchy.namespace;
 
-import com.intellij.ide.hierarchy.HierarchyBrowser;
-import com.intellij.ide.hierarchy.HierarchyProvider;
-import com.intellij.ide.hierarchy.TypeHierarchyBrowserBase;
-import com.intellij.lang.Language;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.util.PsiTreeUtil;
+import consulo.language.editor.hierarchy.HierarchyKind;
+import consulo.language.editor.hierarchy.HierarchyModel;
+import consulo.language.editor.hierarchy.HierarchyProvider;
+import consulo.language.editor.hierarchy.StandardHierarchyKinds;
+import consulo.project.Project;
+import consulo.language.Language;
+import consulo.language.editor.CommonDataKeys;
+import consulo.dataContext.DataContext;
+import consulo.codeEditor.Editor;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.util.PsiTreeUtil;
 import com.perl5.lang.perl.PerlLanguage;
 import com.perl5.lang.perl.psi.PerlNamespaceDefinitionElement;
 import com.perl5.lang.perl.psi.PerlNamespaceDefinitionWithIdentifier;
@@ -33,13 +35,18 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
-public class PerlTypeHierarchyProvider implements HierarchyProvider {
+public class PerlTypeHierarchyProvider implements HierarchyProvider<PsiElement> {
+  @Override
+  public HierarchyKind getKind() {
+    return StandardHierarchyKinds.TYPE;
+  }
+
   @Override
   public @Nullable PsiElement getTarget(@NotNull DataContext dataContext) {
-    PsiElement element = CommonDataKeys.PSI_ELEMENT.getData(dataContext);
+    PsiElement element = dataContext.getData(CommonDataKeys.PSI_ELEMENT);
     if (element == null) {
-      final Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
-      final PsiFile file = CommonDataKeys.PSI_FILE.getData(dataContext);
+      final Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
+      final PsiFile file = dataContext.getData(CommonDataKeys.PSI_FILE);
 
       if (editor != null && file != null) {
         element = file.getViewProvider().findElementAt(editor.getCaretModel().getOffset(), getLanguage());
@@ -57,17 +64,16 @@ public class PerlTypeHierarchyProvider implements HierarchyProvider {
     return element;
   }
 
+  // consulo: IntelliJ createHierarchyBrowser() -> Consulo createModel(), the platform builds the browser from the model
   @Override
-  public @NotNull HierarchyBrowser createHierarchyBrowser(@NotNull PsiElement target) {
+  public @NotNull HierarchyModel<PsiElement> createModel(@NotNull Project project, @NotNull PsiElement target) {
     return new PerlHierarchyBrowser(target);
   }
 
-  @Override
-  public void browserActivated(@NotNull HierarchyBrowser hierarchyBrowser) {
-    ((PerlHierarchyBrowser)hierarchyBrowser).changeView(TypeHierarchyBrowserBase.getSupertypesHierarchyType());
-  }
+  // consulo: IntelliJ browserActivated() switched the browser to the supertypes view, see PerlHierarchyBrowser#getDefaultViewType()
 
-  protected Language getLanguage() {
+  @Override
+  public Language getLanguage() {
     return PerlLanguage.INSTANCE;
   }
 }

@@ -16,10 +16,11 @@
 
 package com.perl5.lang.perl.idea.inspections;
 
-import com.intellij.codeInspection.LocalQuickFix;
-import com.intellij.codeInspection.ProblemDescriptor;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
+import consulo.language.editor.inspection.LocalQuickFix;
+import consulo.language.editor.inspection.ProblemDescriptor;
+import consulo.project.Project;
+import consulo.localize.LocalizeValue;
+import consulo.language.psi.PsiElement;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.psi.impl.PerlFileImpl;
 import com.perl5.lang.perl.psi.utils.PerlElementFactory;
@@ -34,8 +35,8 @@ class ReplaceWithExpressionQuickFix implements LocalQuickFix {
   }
 
   @Override
-  public @Nls @NotNull String getFamilyName() {
-    return PerlBundle.message("perl.inspection.loop.control.convert", myTargetKeyword);
+  public @NotNull LocalizeValue getName() {
+    return LocalizeValue.localizeTODO(PerlBundle.message("perl.inspection.loop.control.convert", myTargetKeyword));
   }
 
   @Override

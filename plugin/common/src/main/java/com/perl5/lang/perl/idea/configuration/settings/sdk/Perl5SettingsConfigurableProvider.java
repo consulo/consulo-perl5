@@ -17,12 +17,16 @@
 package com.perl5.lang.perl.idea.configuration.settings.sdk;
 
 
-import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.ConfigurableProvider;
-import com.intellij.openapi.project.Project;
+import consulo.configurable.Configurable;
+import consulo.configurable.ConfigurableProvider;
+import consulo.project.Project;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * TODO consulo: Consulo {@link ConfigurableProvider} is not an extension point, {@link Perl5SettingsConfigurable} is registered directly
+ *  as a project configurable ({@code NonDefaultProjectConfigurable} replaces {@link #canCreateConfigurable()})
+ */
 public class Perl5SettingsConfigurableProvider extends ConfigurableProvider {
   private final @NotNull Project myProject;
 
@@ -35,7 +39,6 @@ public class Perl5SettingsConfigurableProvider extends ConfigurableProvider {
     return new Perl5SettingsConfigurable(myProject);
   }
 
-  @Override
   public boolean canCreateConfigurable() {
     return !myProject.isDefault();
   }

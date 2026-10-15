@@ -16,16 +16,18 @@
 
 package com.perl5.lang.tt2.idea.liveTemplates;
 
-import com.intellij.codeInsight.template.TemplateActionContext;
-import com.intellij.codeInsight.template.TemplateContextType;
-import com.intellij.openapi.util.NlsContexts;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiErrorElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.editor.template.context.BaseTemplateContextType;
+import consulo.language.editor.template.context.EverywhereContextType;
+import consulo.language.editor.template.context.TemplateActionContext;
+import consulo.language.editor.template.context.TemplateContextType;
+import consulo.localize.LocalizeValue;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiErrorElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.psi.PsiUtilCore;
 import com.perl5.lang.tt2.TemplateToolkitBundle;
 import com.perl5.lang.tt2.TemplateToolkitLanguage;
 import com.perl5.lang.tt2.lexer.TemplateToolkitSyntaxElements;
@@ -33,14 +35,21 @@ import com.perl5.lang.tt2.psi.PsiElsifBranch;
 import com.perl5.lang.tt2.psi.impl.*;
 import com.perl5.lang.tt2.utils.TemplateToolkitPsiUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import static com.perl5.lang.tt2.parser.TemplateToolkitElementTypesGenerated.TT2_HTML;
 import static com.perl5.lang.tt2.parser.TemplateToolkitElementTypesGenerated.TT2_IDENTIFIER;
 
 
-public abstract class TemplateToolkitTemplateContextType extends TemplateContextType {
-  public TemplateToolkitTemplateContextType(@NlsContexts.Label @NotNull String presentableName) {
-    super(presentableName);
+// consulo: context ids and base contexts are declared in upstream xml (<liveTemplateContext contextId=... baseContextId=...>),
+//  Consulo takes them in the constructor
+// TODO consulo: Consulo resolves context classes with isInstance (ExtensionPoint#findExtension), CommandPosition* and Postfix
+//  extend Generic, so Generic.class (base context) and CommandPosition.class (templates) may resolve to a subclass registration
+public abstract class TemplateToolkitTemplateContextType extends BaseTemplateContextType {
+  public TemplateToolkitTemplateContextType(@NotNull String contextId,
+                                            @NotNull String presentableName,
+                                            @Nullable Class<? extends TemplateContextType> baseContextType) {
+    super(contextId, LocalizeValue.localizeTODO(presentableName), baseContextType);
   }
 
   protected abstract boolean isInContext(@NotNull PsiElement element);
@@ -65,11 +74,13 @@ public abstract class TemplateToolkitTemplateContextType extends TemplateContext
 
   public static class Generic extends TemplateToolkitTemplateContextType {
     public Generic() {
-      this(TemplateToolkitLanguage.NAME);
+      this("Template Toolkit 2", TemplateToolkitLanguage.NAME, EverywhereContextType.class);
     }
 
-    public Generic(@NlsContexts.Label String presentableName) {
-      super(presentableName);
+    public Generic(@NotNull String contextId,
+                   String presentableName,
+                   @Nullable Class<? extends TemplateContextType> baseContextType) {
+      super(contextId, presentableName, baseContextType);
     }
 
     @Override
@@ -80,11 +91,11 @@ public abstract class TemplateToolkitTemplateContextType extends TemplateContext
 
   public static class Postfix extends TemplateToolkitTemplateContextType.Generic {
     public Postfix() {
-      super(TemplateToolkitBundle.message("label.postfix"));
+      this("Template Toolkit 2.postfix", TemplateToolkitBundle.message("label.postfix"));
     }
 
-    public Postfix(@NlsContexts.Label String presentableName) {
-      super(presentableName);
+    public Postfix(@NotNull String contextId, String presentableName) {
+      super(contextId, presentableName, Generic.class);
     }
 
     @Override
@@ -106,11 +117,11 @@ public abstract class TemplateToolkitTemplateContextType extends TemplateContext
 
   public static class CommandPosition extends TemplateToolkitTemplateContextType.Generic {
     public CommandPosition() {
-      this(TemplateToolkitBundle.message("label.directive"));
+      this("Template Toolkit 2.command", TemplateToolkitBundle.message("label.directive"));
     }
 
-    public CommandPosition(@NlsContexts.Label String presentableName) {
-      super(presentableName);
+    public CommandPosition(@NotNull String contextId, String presentableName) {
+      super(contextId, presentableName, Generic.class);
     }
 
     @Override
@@ -121,11 +132,11 @@ public abstract class TemplateToolkitTemplateContextType extends TemplateContext
 
   public static class CommandPositionElsif extends TemplateToolkitTemplateContextType.CommandPosition {
     public CommandPositionElsif() {
-      this(TemplateToolkitBundle.message("label.elsif.else.branch"));
+      this("Template Toolkit 2.command.elsif", TemplateToolkitBundle.message("label.elsif.else.branch"));
     }
 
-    public CommandPositionElsif(@NlsContexts.Label String presentableName) {
-      super(presentableName);
+    public CommandPositionElsif(@NotNull String contextId, String presentableName) {
+      super(contextId, presentableName);
     }
 
     @Override
@@ -139,11 +150,11 @@ public abstract class TemplateToolkitTemplateContextType extends TemplateContext
 
   public static class CommandPositionCase extends TemplateToolkitTemplateContextType.CommandPosition {
     public CommandPositionCase() {
-      this(TemplateToolkitBundle.message("label.case.branch"));
+      this("Template Toolkit 2.command.case", TemplateToolkitBundle.message("label.case.branch"));
     }
 
-    public CommandPositionCase(@NlsContexts.Label String presentableName) {
-      super(presentableName);
+    public CommandPositionCase(@NotNull String contextId, String presentableName) {
+      super(contextId, presentableName);
     }
 
     @Override
@@ -154,11 +165,11 @@ public abstract class TemplateToolkitTemplateContextType extends TemplateContext
 
   public static class CommandPositionCatch extends TemplateToolkitTemplateContextType.CommandPosition {
     public CommandPositionCatch() {
-      this(TemplateToolkitBundle.message("label.catch.final.branch"));
+      this("Template Toolkit 2.command.catch", TemplateToolkitBundle.message("label.catch.final.branch"));
     }
 
-    public CommandPositionCatch(@NlsContexts.Label String presentableName) {
-      super(presentableName);
+    public CommandPositionCatch(@NotNull String contextId, String presentableName) {
+      super(contextId, presentableName);
     }
 
     @Override

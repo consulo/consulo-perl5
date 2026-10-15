@@ -1,0 +1,154 @@
+/*
+ * Copyright 2015-2026 Alexandr Evstigneev
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.perl5.lang.perl.psi.mixins;
+
+import consulo.language.controlFlow.Instruction;
+import consulo.language.ast.ASTNode;
+import consulo.navigation.ItemPresentation;
+import consulo.util.lang.lazy.ClearableLazyValue;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiElementVisitor;
+import consulo.language.ast.IElementType;
+import com.perl5.lang.perl.idea.codeInsight.controlFlow.PerlControlFlowBuilder;
+import com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlValue;
+import com.perl5.lang.perl.idea.presentations.PerlItemPresentationSimpleDynamicLocation;
+import com.perl5.lang.perl.psi.*;
+import com.perl5.lang.perl.psi.properties.PerlLexicalScope;
+import com.perl5.lang.perl.psi.stubs.subsdefinitions.PerlSubDefinitionStub;
+import com.perl5.lang.perl.psi.utils.PerlResolveUtilCore;
+import com.perl5.lang.perl.psi.utils.PerlSubArgument;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+public abstract class PerlSubDefinitionBase extends PerlSubBase<PerlSubDefinitionStub> implements PerlSubDefinitionElement, PerlLexicalScope,
+                                                                                                  PerlControlFlowOwner {
+  private final ClearableLazyValue<Instruction[]> myControlFlow = PerlControlFlowBuilder.createLazy(this);
+  private final ClearableLazyValue<PerlValue> myReturnValueFromCode = ClearableLazyValue.notNull(
+    () -> PerlResolveUtilCore.computeReturnValueFromControlFlow(this));
+
+  public PerlSubDefinitionBase(@NotNull ASTNode node) {
+    super(node);
+  }
+
+  public PerlSubDefinitionBase(@NotNull PerlSubDefinitionStub stub, @NotNull IElementType nodeType) {
+    super(stub, nodeType);
+  }
+
+  @Override
+  public boolean isMethod() {
+    if (super.isMethod()) {
+      return true;
+    }
+
+    List<PerlSubArgument> arguments = getSubArgumentsList();
+    return !arguments.isEmpty() && arguments.getFirst().isSelf(getProject());
+  }
+
+  @Override
+  public @NotNull List<PerlSubArgument> getSubArgumentsList() {
+    PerlSubDefinitionStub stub = getGreenStub();
+    if (stub != null) {
+      return new ArrayList<>(stub.getSubArgumentsList());
+    }
+
+    List<PerlSubArgument> perlSubArgumentsFromSignature = getPerlSubArgumentsFromSignature();
+    return perlSubArgumentsFromSignature != null ? perlSubArgumentsFromSignature : this.getPerlSubArgumentsFromBody();
+  }
+
+  @Override
+  public @NotNull PerlValue getReturnValueFromCode() {
+    PerlValue returnValue = PerlSubDefinitionElement.super.getReturnValueFromCode();
+    if (!returnValue.isUnknown()) {
+      return returnValue;
+    }
+    PerlSubDefinitionStub greenStub = getGreenStub();
+    return greenStub != null ? greenStub.getReturnValueFromCode() : myReturnValueFromCode.get();
+  }
+
+  @Override
+  public @NotNull ItemPresentation getPresentation() {
+    return new PerlItemPresentationSimpleDynamicLocation(this, getPresentableName());
+  }
+
+  /**
+   * Returns list of arguments defined in signature
+   *
+   * @return list of arguments or null if there is no signature
+   */
+  private @Nullable List<PerlSubArgument> getPerlSubArgumentsFromSignature() {
+    List<PerlSubArgument> arguments = null;
+    PsiElement signatureContainer = getSignatureContent();
+
+    if (signatureContainer != null) {
+      arguments = new ArrayList<>();
+
+      PsiElement signatureElement = signatureContainer.getFirstChild();
+
+      while (signatureElement != null) {
+        if (signatureElement instanceof PerlSignatureElement perlSignatureElement) {
+          processSignatureElement(perlSignatureElement.getDeclarationElement(), arguments);
+        }
+        else {
+          processSignatureElement(signatureElement, arguments);
+        }
+        signatureElement = signatureElement.getNextSibling();
+      }
+    }
+
+    return arguments;
+  }
+
+  protected boolean processSignatureElement(@Nullable PsiElement signatureElement, @NotNull List<PerlSubArgument> arguments) {
+    if (signatureElement instanceof PerlVariableDeclarationElement variableDeclarationElement) {
+      PerlVariable variable = variableDeclarationElement.getVariable();
+      PerlSubArgument newArgument = PerlSubArgument.mandatory(variable.getActualType(), Objects.requireNonNull(variable.getName()));
+      newArgument.setOptional(signatureElement.getNextSibling() != null);
+      arguments.add(newArgument);
+      return true;
+    }
+    return false;
+  }
+
+  @Override
+  public void accept(@NotNull PsiElementVisitor visitor) {
+    if (visitor instanceof PerlVisitor perlVisitor) {
+      perlVisitor.visitPerlSubDefinitionElement(this);
+    }
+    else {
+      super.accept(visitor);
+    }
+  }
+
+  @Override
+  public @Nullable PsiPerlBlock getSubDefinitionBody() {
+    return getBlock();
+  }
+
+  @Override
+  public @NotNull Instruction[] getControlFlow() {
+    return myControlFlow.get();
+  }
+
+  @Override
+  public void subtreeChanged() {
+    myControlFlow.clear();
+    myReturnValueFromCode.clear();
+  }
+}

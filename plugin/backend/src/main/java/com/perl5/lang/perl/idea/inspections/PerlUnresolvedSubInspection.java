@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.idea.inspections;
 
-import com.intellij.codeInspection.ProblemsHolder;
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.PsiReference;
+import consulo.language.editor.inspection.ProblemsHolder;
+import consulo.language.psi.PsiElementVisitor;
+import consulo.language.psi.PsiReference;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.psi.PerlMethod;
 import com.perl5.lang.perl.psi.PerlNamespaceElement;
@@ -29,8 +29,15 @@ import com.perl5.lang.perl.psi.utils.PerlResolveUtilCore;
 import org.jetbrains.annotations.NotNull;
 
 import static com.perl5.lang.perl.idea.PerlElementPatterns.EXPORT_ASSIGNED_STRING_CONTENT;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.Language;
+import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
+import consulo.localize.LocalizeValue;
+import com.perl5.lang.perl.PerlLanguage;
+import org.jetbrains.annotations.Nullable;
 
 
+@ExtensionImpl
 public class PerlUnresolvedSubInspection extends PerlInspection {
   @Override
   public @NotNull PsiElementVisitor buildVisitor(final @NotNull ProblemsHolder holder, boolean isOnTheFly) {
@@ -64,5 +71,31 @@ public class PerlUnresolvedSubInspection extends PerlInspection {
         registerProblem(holder, subNameElement, PerlBundle.message("perl.inspection.no.sub.definition"));
       }
     };
+  }
+
+  // consulo: metadata from upstream <localInspection> registration in perl5.plugin.backend.main.xml
+  @Override
+  public @NotNull String getShortName() {
+    return "SubUnresolvable";
+  }
+
+  @Override
+  public @Nullable Language getLanguage() {
+    return PerlLanguage.INSTANCE;
+  }
+
+  @Override
+  public @NotNull LocalizeValue getDisplayName() {
+    return LocalizeValue.localizeTODO(PerlBundle.message("inspection.sub.unresolvable.display.name"));
+  }
+
+  @Override
+  public @NotNull LocalizeValue getGroupDisplayName() {
+    return LocalizeValue.localizeTODO(PerlBundle.message("inspection.group.perl"));
+  }
+
+  @Override
+  public @NotNull HighlightDisplayLevel getDefaultLevel() {
+    return HighlightDisplayLevel.WARNING;
   }
 }

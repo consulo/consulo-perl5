@@ -16,11 +16,15 @@
 
 package com.perl5.lang.perl.idea.folding;
 
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.components.State;
-import com.intellij.openapi.components.Storage;
-import com.intellij.util.xmlb.XmlSerializerUtil;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
+import jakarta.inject.Singleton;
+import consulo.application.ApplicationManager;
+import consulo.component.persist.PersistentStateComponent;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
+import consulo.util.xml.serializer.XmlSerializerUtil;
 import com.perl5.lang.perl.idea.PerlPathMacros;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -28,9 +32,11 @@ import org.jetbrains.annotations.Nullable;
 
 @State(
   name = "PerlCodeFoldingSettings",
-  storages = @Storage(PerlPathMacros.APP_CODEINSIGHT_SETTINGS_FILE),
-  perClient = true
+  storages = @Storage(PerlPathMacros.APP_CODEINSIGHT_SETTINGS_FILE)
 )
+@ServiceAPI(ComponentScope.APPLICATION)
+@ServiceImpl
+@Singleton
 public class PerlFoldingSettingsImpl implements PersistentStateComponent<PerlFoldingSettingsImpl> {
   public boolean COLLAPSE_COMMENTS = true;
   public boolean COLLAPSE_CONSTANT_BLOCKS = false;
@@ -56,7 +62,7 @@ public class PerlFoldingSettingsImpl implements PersistentStateComponent<PerlFol
     return ApplicationManager.getApplication().getService(PerlFoldingSettingsImpl.class);
   }
 
-  @Override
+  // TODO consulo: PersistentStateComponent has no noStateLoaded() callback, so this is never called
   public void noStateLoaded() {
     loadState(new PerlFoldingSettingsImpl());
   }

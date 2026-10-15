@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.idea.sdk.versionManager.asdf;
 
-import com.intellij.openapi.util.NlsSafe;
 import com.perl5.PerlIcons;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import com.perl5.lang.perl.idea.sdk.PerlHandlerBean;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostData;
 import com.perl5.lang.perl.idea.sdk.versionManager.InstallPerlHandler;
@@ -34,8 +34,8 @@ import java.util.Collections;
 
 class AsdfHandler extends PerlRealVersionManagerHandler<AsdfData, AsdfHandler> {
 
-  private static final @NlsSafe String ASDF = "asdf";
-  private static final @NlsSafe String ASDF_DEFAULT_PATH = "~/.asdf/bin/" + ASDF;
+  private static final String ASDF = "asdf";
+  private static final String ASDF_DEFAULT_PATH = "~/.asdf/bin/" + ASDF;
 
   @SuppressWarnings("NonDefaultConstructor")
   public AsdfHandler(@NotNull PerlHandlerBean bean) {
@@ -74,7 +74,7 @@ class AsdfHandler extends PerlRealVersionManagerHandler<AsdfData, AsdfHandler> {
 
   @Override
   public @NotNull Icon getIcon() {
-    return PerlIcons.ASDF_ICON;
+    return TargetAWT.to(PerlIcons.ASDF_ICON);
   }
 
   @Override

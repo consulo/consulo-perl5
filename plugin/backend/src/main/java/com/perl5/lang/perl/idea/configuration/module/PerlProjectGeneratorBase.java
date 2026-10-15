@@ -16,18 +16,17 @@
 
 package com.perl5.lang.perl.idea.configuration.module;
 
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.platform.DirectoryProjectGeneratorBase;
+import consulo.module.Module;
+import consulo.project.Project;
+import consulo.content.bundle.Sdk;
+import consulo.virtualFileSystem.VirtualFile;
 import com.perl5.lang.perl.idea.project.PerlProjectManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class PerlProjectGeneratorBase<Settings extends PerlProjectGenerationSettings>
-  extends DirectoryProjectGeneratorBase<Settings> {
-  @Override
+// TODO consulo: Consulo has no DirectoryProjectGenerator API (IntelliJ "New Project" generators of small IDEs; the upstream
+//  <directoryProjectGenerator> registration is commented out too), so this is a plain class; the methods are kept as is
+public abstract class PerlProjectGeneratorBase<Settings extends PerlProjectGenerationSettings> {
   public final void generateProject(@Nullable Project project,
                                     @NotNull VirtualFile baseDir,
                                     @NotNull PerlProjectGenerationSettings settings,
@@ -35,7 +34,6 @@ public abstract class PerlProjectGeneratorBase<Settings extends PerlProjectGener
     configureModule(module, settings);
   }
 
-  @Override
   public abstract @NotNull PerlProjectGeneratorPeerBase<Settings> createPeer();
 
   public void configureModule(@NotNull Module module, @NotNull PerlProjectGenerationSettings settings) {

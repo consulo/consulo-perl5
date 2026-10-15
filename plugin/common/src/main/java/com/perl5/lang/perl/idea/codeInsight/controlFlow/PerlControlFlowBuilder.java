@@ -16,27 +16,27 @@
 
 package com.perl5.lang.perl.idea.codeInsight.controlFlow;
 
-import com.intellij.codeInsight.controlflow.*;
-import com.intellij.codeInsight.controlflow.impl.TransparentInstructionImpl;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.util.AtomicNotNullLazyValue;
-import com.intellij.openapi.util.ClearableLazyValue;
-import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.TokenType;
-import com.intellij.psi.impl.source.tree.LeafPsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
-import com.intellij.psi.util.CachedValueProvider;
-import com.intellij.psi.util.CachedValuesManager;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.util.Function;
-import com.intellij.util.ObjectUtils;
-import com.intellij.util.containers.ContainerUtil;
+
+import consulo.language.controlFlow.base.TransparentInstructionImpl;
+import consulo.logging.Logger;
+import consulo.application.progress.ProgressManager;
+import consulo.application.util.AtomicNotNullLazyValue;
+import consulo.util.lang.lazy.ClearableLazyValue;
+import consulo.util.lang.Pair;
+import consulo.document.util.TextRange;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.ast.TokenType;
+import consulo.language.impl.psi.LeafPsiElement;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
+import consulo.application.util.CachedValueProvider;
+import consulo.language.psi.util.LanguageCachedValueUtil;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.psi.PsiUtilCore;
+import java.util.function.Function;
+import consulo.util.lang.ObjectUtil;
+import consulo.util.collection.ContainerUtil;
 import com.perl5.lang.perl.lexer.PerlSyntax;
 import com.perl5.lang.perl.lexer.PerlTokenSets;
 import com.perl5.lang.perl.psi.*;
@@ -55,14 +55,20 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.perl5.lang.perl.parser.PerlElementTypesGenerated.*;
+import consulo.language.controlFlow.ConditionalInstruction;
+import consulo.language.controlFlow.ControlFlow;
+import consulo.language.controlFlow.ControlFlowBuilder;
+import consulo.language.controlFlow.ControlFlowUtil;
+import consulo.language.controlFlow.Instruction;
+import consulo.language.controlFlow.TransparentInstruction;
 
 public class PerlControlFlowBuilder extends ControlFlowBuilder {
   private static final Logger LOG = Logger.getInstance(PerlControlFlowBuilder.class);
-  public static final Set<String> DIE_SUBS = ContainerUtil.newHashSet(
+  public static final Set<String> DIE_SUBS = new HashSet<>(List.of(
     "die",
     "croak",
     "confess"
-  );
+  ));
 
   private static final TokenSet LOOP_MODIFIERS = TokenSet.create(
     FOR_STATEMENT_MODIFIER,
@@ -136,7 +142,7 @@ public class PerlControlFlowBuilder extends ControlFlowBuilder {
    */
   private void processGotos() {
     for (Instruction gotoInstruction : myGotos) {
-      PsiPerlGotoExpr perlGotoExpr = Objects.requireNonNull(ObjectUtils.tryCast(gotoInstruction.getElement(), PsiPerlGotoExpr.class));
+      PsiPerlGotoExpr perlGotoExpr = Objects.requireNonNull(ObjectUtil.tryCast(gotoInstruction.getElement(), PsiPerlGotoExpr.class));
       PsiPerlExpr expr = perlGotoExpr.getExpr();
       if (expr instanceof PsiPerlLabelExpr) {
         Instruction labelDeclaration = myLabelsDeclarations.get(expr.getText());
@@ -181,14 +187,14 @@ public class PerlControlFlowBuilder extends ControlFlowBuilder {
   }
 
   public static @NotNull ClearableLazyValue<Instruction[]> createLazy(@NotNull PsiElement element) {
-    return ClearableLazyValue.create(() -> new PerlControlFlowBuilder().build(element).getInstructions());
+    return ClearableLazyValue.notNull(() -> new PerlControlFlowBuilder().build(element).getInstructions());
   }
 
   public static Instruction[] getFor(@NotNull PsiElement element) {
     if (element instanceof PerlControlFlowOwner controlFlowOwner) {
       return controlFlowOwner.getControlFlow();
     }
-    return CachedValuesManager.getCachedValue(
+    return LanguageCachedValueUtil.getCachedValue(
       element, () -> CachedValueProvider.Result.create(new PerlControlFlowBuilder().build(element).getInstructions(), element));
   }
 
@@ -784,7 +790,7 @@ public class PerlControlFlowBuilder extends ControlFlowBuilder {
         for (PsiElement target : PerlAssignExpression.flattenAssignmentPart(leftSide)) {
           target.acceptChildren(this);
           PerlAssignValueDescriptor rightPartDescriptor =
-            ObjectUtils.notNull(o.getRightPartOfAssignment(target), PerlAssignValueDescriptor.EMPTY);
+            ObjectUtil.notNull(o.getRightPartOfAssignment(target), PerlAssignValueDescriptor.EMPTY);
           addNodeAndCheckPending(new PerlAssignInstruction(PerlControlFlowBuilder.this, target, rightPartDescriptor, operator));
         }
         rightSide = leftSide;

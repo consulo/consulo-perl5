@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.parser;
 
-import com.intellij.psi.tree.TokenSet;
+import consulo.language.ast.TokenSet;
 import com.perl5.lang.perl.extensions.parser.PerlParserExtension;
 import com.perl5.lang.perl.idea.highlighter.PerlSyntaxHighlighter;
 

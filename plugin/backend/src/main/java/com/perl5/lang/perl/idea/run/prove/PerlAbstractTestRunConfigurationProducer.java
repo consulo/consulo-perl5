@@ -16,13 +16,19 @@
 
 package com.perl5.lang.perl.idea.run.prove;
 
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.execution.configuration.ConfigurationFactory;
+import consulo.virtualFileSystem.VirtualFile;
 import com.perl5.lang.perl.fileTypes.PerlFileTypeTest;
 import com.perl5.lang.perl.idea.run.GenericPerlRunConfiguration;
 import com.perl5.lang.perl.idea.run.GenericPerlRunConfigurationProducer;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class PerlAbstractTestRunConfigurationProducer<Configuration extends PerlAbstractTestRunConfiguration> extends GenericPerlRunConfigurationProducer<Configuration> {
+  // consulo: RunConfigurationProducer takes the configuration factory in its constructor
+  protected PerlAbstractTestRunConfigurationProducer(@NotNull ConfigurationFactory configurationFactory) {
+    super(configurationFactory);
+  }
+
 
   @Override
   public boolean isOurFile(@NotNull VirtualFile virtualFiles) {

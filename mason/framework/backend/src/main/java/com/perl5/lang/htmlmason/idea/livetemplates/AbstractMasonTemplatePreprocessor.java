@@ -16,10 +16,10 @@
 
 package com.perl5.lang.htmlmason.idea.livetemplates;
 
-import com.intellij.codeInsight.template.impl.TemplatePreprocessor;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.PsiFile;
+import consulo.language.editor.template.TemplatePreprocessor;
+import consulo.document.Document;
+import consulo.codeEditor.Editor;
+import consulo.language.psi.PsiFile;
 
 
 public abstract class AbstractMasonTemplatePreprocessor implements TemplatePreprocessor {

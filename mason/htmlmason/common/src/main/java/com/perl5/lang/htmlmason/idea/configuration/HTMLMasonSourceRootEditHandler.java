@@ -19,10 +19,12 @@ package com.perl5.lang.htmlmason.idea.configuration;
 import com.perl5.lang.htmlmason.HTMLMasonIcons;
 import com.perl5.lang.htmlmason.HtmlMasonBundle;
 import com.perl5.lang.perl.idea.configuration.settings.sdk.PerlTemplatesRootEditHandler;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
-
+// consulo: upstream projectStructure.sourceRootEditHandler -> PerlSourceRootEditHandler extension
+@ExtensionImpl
 public class HTMLMasonSourceRootEditHandler extends PerlTemplatesRootEditHandler {
   public HTMLMasonSourceRootEditHandler() {
     super(HTMLMasonSourceRootType.INSTANCE);
@@ -34,7 +36,7 @@ public class HTMLMasonSourceRootEditHandler extends PerlTemplatesRootEditHandler
   }
 
   @Override
-  public @NotNull Icon getRootIcon() {
+  public @NotNull Image getRootIcon() {
     return HTMLMasonIcons.ROOT_ICON;
   }
 

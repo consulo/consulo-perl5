@@ -16,12 +16,12 @@
 
 package com.perl5.lang.perl.psi;
 
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.SmartList;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.document.util.TextRange;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.util.collection.SmartList;
+import consulo.util.collection.ContainerUtil;
 import com.perl5.lang.perl.psi.utils.PerlContextType;
 import com.perl5.lang.perl.psi.utils.PerlPsiUtil;
 import com.perl5.lang.perl.util.PerlArrayUtilCore;

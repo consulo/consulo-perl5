@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.psi.stubs.imports;
 
-import com.intellij.psi.stubs.StubElement;
+import consulo.language.psi.stub.StubElement;
 import com.perl5.lang.perl.psi.PerlUseStatement;
 import com.perl5.lang.perl.psi.impl.PerlUseStatementElement;
 import com.perl5.lang.perl.psi.stubs.PerlPolyNamedElementStub;

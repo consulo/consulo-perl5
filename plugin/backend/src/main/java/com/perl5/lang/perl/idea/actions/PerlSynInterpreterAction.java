@@ -16,7 +16,8 @@
 
 package com.perl5.lang.perl.idea.actions;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import consulo.project.Project;
+import consulo.ui.ex.action.AnActionEvent;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.util.PerlRunUtil;
 import org.jetbrains.annotations.NotNull;
@@ -28,6 +29,6 @@ public class PerlSynInterpreterAction extends PerlActionBase {
 
   @Override
   public void actionPerformed(@NotNull AnActionEvent e) {
-    PerlRunUtil.refreshSdkDirs(e.getProject());
+    PerlRunUtil.refreshSdkDirs(e.getData(Project.KEY));
   }
 }

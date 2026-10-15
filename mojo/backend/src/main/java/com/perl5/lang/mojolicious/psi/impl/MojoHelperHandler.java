@@ -16,9 +16,9 @@
 
 package com.perl5.lang.mojolicious.psi.impl;
 
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.ElementManipulators;
-import com.intellij.psi.PsiElement;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.ElementManipulators;
+import consulo.language.psi.PsiElement;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlScalarValue;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlValue;
 import com.perl5.lang.perl.psi.PerlSubCallHandlerWithEmptyData;
@@ -67,7 +67,7 @@ public class MojoHelperHandler extends PerlSubCallHandlerWithEmptyData {
   public @NotNull List<? extends PerlDelegatingLightNamedElement<?>> computeLightElementsFromStubs(@NotNull PerlSubCallElement psiElement,
                                                                                                    @NotNull PerlSubCallElementStub stubElement) {
     return stubElement.getLightNamedElementsStubs().stream()
-      .filter(childStub -> childStub.getElementType() == LIGHT_METHOD_DEFINITION)
+      .filter(childStub -> childStub.getStubType() == LIGHT_METHOD_DEFINITION)
       .map(childStub -> new MojoHelperDefinition(psiElement, (PerlSubDefinitionStub)childStub))
       .collect(Collectors.toList());
   }

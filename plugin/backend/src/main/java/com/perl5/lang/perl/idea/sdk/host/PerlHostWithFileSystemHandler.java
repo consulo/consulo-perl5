@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.idea.sdk.host;
 
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.vfs.VirtualFileSystem;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.virtualFileSystem.VirtualFileSystem;
 import com.perl5.lang.perl.idea.sdk.PerlHandlerBean;
 import org.jetbrains.annotations.NotNull;
 
@@ -36,7 +36,7 @@ public abstract class PerlHostWithFileSystemHandler<Data extends PerlHostData<Da
 
   @Override
   protected void customizeFileChooser(@NotNull FileChooserDescriptor descriptor, @NotNull VirtualFileSystem fileSystem) {
-    descriptor.setForcedToUseIdeaFileChooser(true);
+    descriptor.setUseApplicationDialog();
     descriptor.setShowFileSystemRoots(false);
     descriptor.setRoots(Objects.requireNonNull(fileSystem.findFileByPath("/")));
   }

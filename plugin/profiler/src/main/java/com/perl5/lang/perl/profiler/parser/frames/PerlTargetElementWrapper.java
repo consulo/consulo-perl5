@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.profiler.parser.frames;
 
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.NavigatablePsiElement;
-import com.intellij.psi.PsiDocumentManager;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.NavigatablePsiElement;
+import consulo.language.psi.PsiDocumentManager;
 import com.perl5.lang.perl.psi.PerlDelegatingFakeElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

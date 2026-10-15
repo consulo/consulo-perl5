@@ -16,22 +16,25 @@
 
 package com.perl5.lang.perl.moduleBuild.run;
 
-import com.intellij.execution.BeforeRunTask;
-import com.intellij.execution.BeforeRunTaskProvider;
-import com.intellij.execution.configurations.RunConfiguration;
-import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.execution.ui.RunContentDescriptor;
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationType;
-import com.intellij.notification.Notifications;
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.NlsContexts.NotificationContent;
-import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.execution.BeforeRunTask;
+import consulo.execution.BeforeRunTaskProvider;
+import consulo.execution.configuration.RunConfiguration;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.execution.ui.RunContentDescriptor;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.notification.Notifications;
+import consulo.dataContext.DataContext;
+import consulo.application.ApplicationManager;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.util.dataholder.Key;
+import consulo.localize.LocalizeValue;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.image.Image;
+import consulo.util.lang.ref.Ref;
+import consulo.virtualFileSystem.VirtualFile;
 import com.perl5.PerlIcons;
 import com.perl5.lang.perl.moduleBuild.ModuleBuildBundle;
 import com.perl5.lang.perl.moduleBuild.PerlModuleBuildUtil;
@@ -41,11 +44,17 @@ import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
 
+@ExtensionImpl
 class PerlModuleBuildTaskProvider extends BeforeRunTaskProvider<PerlModuleBuildTaskProvider.PerlModuleBuildTask> {
   private static final Logger LOG = Logger.getInstance(PerlModuleBuildTaskProvider.class);
   private static final Key<PerlModuleBuildTask> ID = Key.create("Module::Builder Before Run Task");
+
+  // consulo: @ExtensionImpl requires a public constructor
+  public PerlModuleBuildTaskProvider() {
+  }
 
   @Override
   public Key<PerlModuleBuildTask> getId() {
@@ -53,8 +62,8 @@ class PerlModuleBuildTaskProvider extends BeforeRunTaskProvider<PerlModuleBuildT
   }
 
   @Override
-  public @Nls(capitalization = Nls.Capitalization.Title) String getName() {
-    return ModuleBuildBundle.message("generate.build.file");
+  public @NotNull LocalizeValue getName() {
+    return LocalizeValue.localizeTODO(ModuleBuildBundle.message("generate.build.file"));
   }
 
   @Override
@@ -62,9 +71,17 @@ class PerlModuleBuildTaskProvider extends BeforeRunTaskProvider<PerlModuleBuildT
     return runConfiguration instanceof PerlModuleBuildTestRunConfiguration ? PerlModuleBuildTask.INSTANCE : null;
   }
 
+  // consulo: getIcon() takes a run configuration
   @Override
-  public @Nullable Icon getIcon() {
+  public @Nullable Image getIcon(@NotNull RunConfiguration runConfiguration) {
     return PerlIcons.PERL_LANGUAGE_ICON;
+  }
+
+  // consulo: abstract in Consulo, upstream relies on the default implementation which is not configurable
+  @RequiredUIAccess
+  @Override
+  public @NotNull CompletableFuture<?> configureTask(@NotNull RunConfiguration runConfiguration, @NotNull PerlModuleBuildTask task) {
+    return CompletableFuture.failedFuture(new CancellationException());
   }
 
   @Override
@@ -78,8 +95,8 @@ class PerlModuleBuildTaskProvider extends BeforeRunTaskProvider<PerlModuleBuildT
   }
 
   @Override
-  public @Nls(capitalization = Nls.Capitalization.Sentence) String getDescription(PerlModuleBuildTask task) {
-    return ModuleBuildBundle.message("re.generates.build.file.by.running.build.pl.when.necessary");
+  public @NotNull LocalizeValue getDescription(PerlModuleBuildTask task) {
+    return LocalizeValue.localizeTODO(ModuleBuildBundle.message("re.generates.build.file.by.running.build.pl.when.necessary"));
   }
 
   @Override
@@ -142,10 +159,10 @@ class PerlModuleBuildTaskProvider extends BeforeRunTaskProvider<PerlModuleBuildT
     return false;
   }
 
-  private static void showError(@NotNull Project project, @NotNull @NotificationContent String message){
+  private static void showError(@NotNull Project project, @NotNull String message){
     LOG.warn(message);
     Notifications.Bus.notify(new Notification(
-      "PERL_MODULE_BUILD_ERROR",
+      PerlModuleBuildNotificationGroups.BUILD_ERROR,
       ModuleBuildBundle.message("perl.module.build.notification.generating.error.title"),
       message,
       NotificationType.ERROR
@@ -158,6 +175,8 @@ class PerlModuleBuildTaskProvider extends BeforeRunTaskProvider<PerlModuleBuildT
 
     public PerlModuleBuildTask() {
       super(ID);
+      // consulo: before run tasks are disabled by default in Consulo (enabled in IntelliJ)
+      setEnabled(true);
     }
   }
 }

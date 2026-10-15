@@ -16,10 +16,10 @@
 
 package com.perl5.lang.perl.parser.builder;
 
-import com.intellij.lang.PsiBuilder;
-import com.intellij.lang.PsiParser;
-import com.intellij.lang.parser.GeneratedParserUtilBase;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.parser.PsiBuilder;
+import consulo.language.parser.PsiParser;
+import consulo.language.impl.parser.GeneratedParserUtilBase;
+import consulo.language.ast.IElementType;
 import com.perl5.lang.perl.lexer.PerlTokenSetsEx;
 import com.perl5.lang.perl.parser.PerlParserImpl;
 import org.jetbrains.annotations.Nullable;

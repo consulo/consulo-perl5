@@ -18,13 +18,12 @@ package com.perl5.lang.perl.profiler.parser;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Iterables;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.profiler.CallTreeBuilder;
-import com.intellij.profiler.Stack;
-import com.intellij.profiler.api.*;
-import com.intellij.util.containers.ContainerUtil;
-import kotlin.text.Charsets;
+import consulo.logging.Logger;
+import consulo.application.progress.ProgressIndicator;
+import consulo.execution.profiler.CallTreeBuilder;
+import consulo.execution.profiler.Stack;
+
+import consulo.util.collection.ContainerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,7 +31,13 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.zip.GZIPOutputStream;
+import consulo.execution.profiler.BaseCallStackElement;
+import consulo.execution.profiler.NewCallTreeOnlyProfilerData;
+import consulo.execution.profiler.ProfilerDumpFileParsingResult;
+import consulo.execution.profiler.ProfilerDumpWriter;
+import consulo.execution.profiler.Success;
 
 @SuppressWarnings("UnstableApiUsage")
 public class PerlProfilerDumpWriter implements ProfilerDumpWriter {
@@ -56,7 +61,7 @@ public class PerlProfilerDumpWriter implements ProfilerDumpWriter {
   public void writeDump(@NotNull File file, @NotNull ProgressIndicator indicator) {
     try (var fileOutputStream = new FileOutputStream(file);
          var gzipOutputStream = new GZIPOutputStream(fileOutputStream, 1024 * 1024);
-         var writer = new OutputStreamWriter(gzipOutputStream, Charsets.UTF_8)) {
+         var writer = new OutputStreamWriter(gzipOutputStream, StandardCharsets.UTF_8)) {
       var allStacks = myBuilder.getAllStacks();
       var stacksNumber = (double)Iterables.size(allStacks);
       double stackCounter = 0;

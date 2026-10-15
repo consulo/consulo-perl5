@@ -16,14 +16,14 @@
 
 package com.perl5.lang.htmlmason.idea.editor;
 
-import com.intellij.codeInsight.editorActions.TypedHandlerDelegate;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.EditorModificationUtilEx;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.editor.action.TypedHandlerDelegate;
+import consulo.logging.Logger;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.util.EditorModificationUtil;
+import consulo.project.Project;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.ast.IElementType;
 import com.perl5.lang.htmlmason.HTMLMasonElementPatterns;
 import com.perl5.lang.htmlmason.HTMLMasonFileViewProvider;
 import com.perl5.lang.htmlmason.idea.configuration.HTMLMasonSettings;
@@ -61,25 +61,25 @@ public class HTMLMasonTypedHandler extends TypedHandlerDelegate {
     }
     IElementType elementType = element.getNode().getElementType();
     if (elementType == HTML_MASON_BLOCK_OPENER && !isNextElement(element, HTML_MASON_BLOCK_CLOSER)) {
-      EditorModificationUtilEx.insertStringAtCaret(editor, " " + KEYWORD_BLOCK_CLOSER, false, false);
+      EditorModificationUtil.insertStringAtCaret(editor, " " + KEYWORD_BLOCK_CLOSER, false, false);
     }
     else if (elementType == HTML_MASON_CALL_OPENER && !isNextElement(element, HTML_MASON_CALL_CLOSER)) {
-      EditorModificationUtilEx.insertStringAtCaret(editor, " " + KEYWORD_CALL_CLOSER, false, false);
+      EditorModificationUtil.insertStringAtCaret(editor, " " + KEYWORD_CALL_CLOSER, false, false);
     }
     else if (elementType == HTML_MASON_CALL_FILTERING_OPENER && !isNextElement(element, HTML_MASON_CALL_CLOSER)) {
-      EditorModificationUtilEx.insertStringAtCaret(editor, " " + KEYWORD_CALL_CLOSER + KEYWORD_CALL_CLOSE_TAG_START + KEYWORD_TAG_CLOSER,
+      EditorModificationUtil.insertStringAtCaret(editor, " " + KEYWORD_CALL_CLOSER + KEYWORD_CALL_CLOSE_TAG_START + KEYWORD_TAG_CLOSER,
                                                    false, false);
     }
     else if (elementType == HTML_MASON_METHOD_OPENER) {
-      String closeTag = getCloseTag(project, element.getText());
+      String closeTag = getCloseTag(file, element.getText());
       if (closeTag != null) {
-        EditorModificationUtilEx.insertStringAtCaret(editor, ">\n" + closeTag, false, false);
+        EditorModificationUtil.insertStringAtCaret(editor, ">\n" + closeTag, false, false);
       }
     }
     else if (elementType == HTML_MASON_DEF_OPENER) {
-      String closeTag = getCloseTag(project, element.getText());
+      String closeTag = getCloseTag(file, element.getText());
       if (closeTag != null) {
-        EditorModificationUtilEx.insertStringAtCaret(editor, ">\n" + closeTag, false, false);
+        EditorModificationUtil.insertStringAtCaret(editor, ">\n" + closeTag, false, false);
       }
     }
   }
@@ -94,15 +94,18 @@ public class HTMLMasonTypedHandler extends TypedHandlerDelegate {
     String elementText = element.getText();
     String closeTag;
     if (elementText.equals(KEYWORD_FLAGS)) {
-      EditorModificationUtilEx.insertStringAtCaret(editor, "\ninherit => ''\n" + KEYWORD_FLAGS_CLOSER, false, true, 13);
+      EditorModificationUtil.insertStringAtCaret(editor, "\ninherit => ''\n" + KEYWORD_FLAGS_CLOSER, false, true, 13);
     }
-    else if ((closeTag = getCloseTag(project, "<%" + elementText + ">")) != null) {
-      EditorModificationUtilEx.insertStringAtCaret(editor, closeTag, false, false);
+    else if ((closeTag = getCloseTag(file, "<%" + elementText + ">")) != null) {
+      EditorModificationUtil.insertStringAtCaret(editor, closeTag, false, false);
     }
   }
 
-  protected String getCloseTag(Project project, String openTag) {
-    HTMLMasonSettings settings = HTMLMasonSettings.getInstance(project);
+  /**
+   * consulo: upstream takes the project to read its settings, here the settings of the module of the {@code file} are used
+   */
+  protected String getCloseTag(PsiFile file, String openTag) {
+    HTMLMasonSettings settings = HTMLMasonSettings.forPsiElement(file);
     Map<String, String> openCloseMap = settings.getOpenCloseMap();
     return openCloseMap.get(openTag);
   }

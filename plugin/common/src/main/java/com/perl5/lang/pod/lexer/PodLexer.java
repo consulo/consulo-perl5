@@ -16,9 +16,9 @@
 
 package com.perl5.lang.pod.lexer;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.psi.TokenType;
-import com.intellij.psi.tree.IElementType;
+import consulo.logging.Logger;
+import consulo.language.ast.TokenType;
+import consulo.language.ast.IElementType;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import org.jetbrains.annotations.NotNull;
 

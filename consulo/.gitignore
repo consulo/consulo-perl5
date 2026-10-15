@@ -1,0 +1,4 @@
+# Consulo build output
+*/target/
+# Consulo sandbox (platform download, config, system) of run-web / run-desktop profiles
+plugin/sandbox/

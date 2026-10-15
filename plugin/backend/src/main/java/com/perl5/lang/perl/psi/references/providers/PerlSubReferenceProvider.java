@@ -16,12 +16,12 @@
 
 package com.perl5.lang.perl.psi.references.providers;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.PsiReferenceProvider;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.util.ProcessingContext;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiReference;
+import consulo.language.psi.PsiReferenceProvider;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.PsiUtilCore;
+import consulo.language.util.ProcessingContext;
 import com.perl5.lang.perl.parser.moose.psi.references.PerlMooseInnerReference;
 import com.perl5.lang.perl.parser.moose.psi.references.PerlMooseSuperReference;
 import com.perl5.lang.perl.psi.PerlSubElement;

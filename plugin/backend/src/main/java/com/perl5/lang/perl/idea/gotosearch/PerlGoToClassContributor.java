@@ -16,10 +16,10 @@
 
 package com.perl5.lang.perl.idea.gotosearch;
 
-import com.intellij.navigation.GotoClassContributor;
-import com.intellij.navigation.NavigationItem;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.search.GlobalSearchScope;
+import consulo.ide.navigation.GotoClassOrTypeContributor;
+import consulo.navigation.NavigationItem;
+import consulo.project.Project;
+import consulo.language.psi.scope.GlobalSearchScope;
 import com.perl5.lang.perl.psi.properties.PerlIdentifierOwner;
 import com.perl5.lang.perl.util.PerlNamespaceUtil;
 import com.perl5.lang.perl.util.PerlPackageUtil;
@@ -33,7 +33,7 @@ import java.util.Collections;
 /**
  * GoToClassContributor looks up namespaces (packages names) - windows shortcut Ctrl+N
  */
-public class PerlGoToClassContributor extends PerlChooseByNameContributor implements GotoClassContributor {
+public class PerlGoToClassContributor extends PerlChooseByNameContributor implements GotoClassOrTypeContributor {
   @Override
   public @Nullable String getQualifiedName(@NotNull NavigationItem navigationItem) {
     return navigationItem instanceof PerlIdentifierOwner ? navigationItem.getName() : null;

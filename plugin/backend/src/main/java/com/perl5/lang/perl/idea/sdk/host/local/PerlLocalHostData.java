@@ -16,14 +16,14 @@
 
 package com.perl5.lang.perl.idea.sdk.host.local;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.configurations.PathEnvironmentVariableUtil;
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.io.OSAgnosticPathUtil;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFileSystem;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.process.ExecutionException;
+import consulo.process.PathEnvironmentVariableUtil;
+import consulo.disposer.Disposable;
+import consulo.project.Project;
+import consulo.application.util.UserHomeFileUtil;
+import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.virtualFileSystem.VirtualFileSystem;
+import consulo.util.collection.ContainerUtil;
 import com.perl5.lang.perl.idea.execution.PerlCommandLine;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostData;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostFileTransfer;
@@ -98,7 +98,7 @@ class PerlLocalHostData extends PerlHostData<PerlLocalHostData, PerlLocalHostHan
 
   @Override
   public @NotNull String expandUserHome(@NotNull String remotePath) {
-    return OSAgnosticPathUtil.expandUserHome(remotePath);
+    return UserHomeFileUtil.expandUserHome(remotePath);
   }
 
   @Override

@@ -16,28 +16,28 @@
 
 package com.perl5.lang.perl.debugger.values;
 
-import com.intellij.icons.AllIcons;
-import com.intellij.xdebugger.frame.XCompositeNode;
-import com.intellij.xdebugger.frame.XValueChildrenList;
-import com.intellij.xdebugger.frame.XValueGroup;
+import consulo.application.AllIcons;
+import consulo.execution.debug.frame.XCompositeNode;
+import consulo.execution.debug.frame.XValueChildrenList;
+import consulo.execution.debug.frame.XValueGroup;
+import consulo.localize.LocalizeValue;
+import consulo.ui.image.Image;
 import com.perl5.lang.perl.debugger.PerlStackFrame;
 import com.perl5.lang.perl.debugger.protocol.PerlValueDescriptor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import javax.swing.*;
 
 public class PerlTiedNamedValue extends XValueGroup {
   private final PerlXNamedValue myPerlXNamedValue;
 
   public PerlTiedNamedValue(@NotNull PerlValueDescriptor tiedValue,
                             @NotNull PerlStackFrame stackFrame) {
-    super("Tied with");
+    super(LocalizeValue.localizeTODO("Tied with"));
     myPerlXNamedValue = new PerlXNamedValue(tiedValue, stackFrame);
   }
 
   @Override
-  public @Nullable Icon getIcon() {
+  public @Nullable Image getIcon() {
     return AllIcons.Toolwindows.ToolWindowModuleDependencies;
   }
 

@@ -16,18 +16,18 @@
 
 package com.perl5.lang.perl.idea.highlighter;
 
-import com.intellij.codeInsight.template.impl.TemplateColors;
-import com.intellij.lexer.Lexer;
-import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
-import com.intellij.openapi.editor.colors.CodeInsightColors;
-import com.intellij.openapi.editor.colors.EditorColorsManager;
-import com.intellij.openapi.editor.colors.EditorColorsScheme;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
-import com.intellij.openapi.editor.markup.TextAttributes;
-import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
+import consulo.language.editor.template.TemplateColors;
+import consulo.language.lexer.Lexer;
+import consulo.codeEditor.DefaultLanguageHighlighterColors;
+import consulo.codeEditor.CodeInsightColors;
+import consulo.colorScheme.EditorColorsManager;
+import consulo.colorScheme.EditorColorsScheme;
+import consulo.colorScheme.TextAttributesKey;
+import consulo.colorScheme.TextAttributes;
+import consulo.language.editor.highlight.SyntaxHighlighterBase;
+import consulo.project.Project;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
 import com.perl5.lang.perl.extensions.parser.PerlParserExtension;
 import com.perl5.lang.perl.lexer.PerlLexingContext;
 import com.perl5.lang.perl.lexer.adapters.PerlMergingLexerAdapter;
@@ -36,7 +36,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.intellij.openapi.editor.colors.TextAttributesKey.createTextAttributesKey;
+import static consulo.colorScheme.TextAttributesKey.createTextAttributesKey;
 import static com.perl5.lang.perl.lexer.PerlTokenSets.*;
 import static com.perl5.lang.perl.parser.PerlElementTypesGenerated.*;
 import static com.perl5.lang.perl.parser.PerlElementTypesGenerated.REGEX_QUOTE_OPEN;

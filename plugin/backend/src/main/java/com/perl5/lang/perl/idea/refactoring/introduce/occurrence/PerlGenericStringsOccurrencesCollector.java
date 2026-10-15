@@ -16,11 +16,11 @@
 
 package com.perl5.lang.perl.idea.refactoring.introduce.occurrence;
 
-import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.util.lang.Pair;
+import consulo.document.util.TextRange;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiUtilCore;
 import com.perl5.lang.perl.idea.refactoring.introduce.PerlIntroduceTarget;
 import com.perl5.lang.perl.psi.PerlString;
 import com.perl5.lang.perl.psi.PsiPerlStringXq;

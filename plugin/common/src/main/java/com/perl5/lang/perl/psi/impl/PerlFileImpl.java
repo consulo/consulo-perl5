@@ -16,21 +16,23 @@
 
 package com.perl5.lang.perl.psi.impl;
 
-import com.intellij.codeInsight.controlflow.Instruction;
-import com.intellij.extapi.psi.PsiFileBase;
-import com.intellij.lang.Language;
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.roots.ProjectFileIndex;
-import com.intellij.openapi.util.ClearableLazyValue;
-import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.ResolveState;
-import com.intellij.psi.impl.source.PsiFileImpl;
-import com.intellij.psi.scope.PsiScopeProcessor;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.controlFlow.Instruction;
+import consulo.language.impl.psi.PsiFileBase;
+import consulo.language.Language;
+import consulo.navigation.ItemPresentation;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.module.content.ProjectFileIndex;
+import consulo.util.lang.lazy.ClearableLazyValue;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.resolve.ResolveState;
+import consulo.language.impl.psi.PsiFileImpl;
+import consulo.language.psi.resolve.PsiScopeProcessor;
+import consulo.language.psi.PsiUtilCore;
+import consulo.language.psi.stub.StubElement;
+import consulo.ui.image.Image;
 import com.perl5.lang.perl.PerlLanguage;
 import com.perl5.lang.perl.fileTypes.PerlFileTypeScript;
 import com.perl5.lang.perl.idea.codeInsight.controlFlow.PerlControlFlowBuilder;
@@ -45,7 +47,6 @@ import com.perl5.lang.perl.util.PerlPackageUtilCore;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -54,7 +55,7 @@ import java.util.Map;
 public class PerlFileImpl extends PsiFileBase implements PerlFile {
   protected PsiElement fileContext;
 
-  private final ClearableLazyValue<List<String>> myParentNamespaces = ClearableLazyValue.create(
+  private final ClearableLazyValue<List<String>> myParentNamespaces = ClearableLazyValue.notNull(
     () -> PerlPackageUtilCore.collectParentNamespaceNamesFromPsi(this));
   private final ClearableLazyValue<Instruction[]> myControlFlow = PerlControlFlowBuilder.createLazy(this);
 
@@ -93,8 +94,8 @@ public class PerlFileImpl extends PsiFileBase implements PerlFile {
   @Override
   public void subtreeChanged() {
     super.subtreeChanged();
-    myParentNamespaces.drop();
-    myControlFlow.drop();
+    myParentNamespaces.clear();
+    myControlFlow.clear();
   }
 
   @Override
@@ -145,11 +146,11 @@ public class PerlFileImpl extends PsiFileBase implements PerlFile {
       fileRoot = fileIndex.getSourceRootForFile(virtualFile);
     }
 
-    return fileRoot == null ? parentFile.getPresentableUrl() : VfsUtilCore.getRelativePath(parentFile, fileRoot);
+    return fileRoot == null ? parentFile.getPresentableUrl() : VirtualFileUtil.getRelativePath(parentFile, fileRoot);
   }
 
   @Override
-  public @Nullable Icon getIcon(boolean unused) {
+  public @Nullable Image getIcon(boolean unused) {
     return getFileType().getIcon();
   }
 
@@ -189,12 +190,15 @@ public class PerlFileImpl extends PsiFileBase implements PerlFile {
 
   @Override
   public @NotNull List<String> getParentNamespacesNames() {
-    return withGreenStubOrAst(stub -> {
+    // TODO consulo: PsiFileImpl#withGreenStubOrAst is missing in Consulo, emulated with getGreenStub()
+    StubElement<?> stub = getGreenStub();
+    if (stub != null) {
       if (stub instanceof PerlFileStub perlFileStub) {
         return perlFileStub.getParentNamespacesNames();
       }
       return Collections.emptyList();
-    }, ast -> myParentNamespaces.getValue());
+    }
+    return myParentNamespaces.get();
   }
 
   @Override
@@ -219,6 +223,6 @@ public class PerlFileImpl extends PsiFileBase implements PerlFile {
 
   @Override
   public @NotNull Instruction[] getControlFlow() {
-    return myControlFlow.getValue();
+    return myControlFlow.get();
   }
 }

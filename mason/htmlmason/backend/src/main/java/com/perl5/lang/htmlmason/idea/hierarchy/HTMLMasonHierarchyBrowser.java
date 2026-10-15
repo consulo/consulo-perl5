@@ -16,14 +16,17 @@
 
 package com.perl5.lang.htmlmason.idea.hierarchy;
 
-import com.intellij.ide.hierarchy.HierarchyTreeStructure;
-import com.intellij.ide.hierarchy.ViewClassHierarchyAction;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
-import com.intellij.psi.PsiElement;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.language.editor.hierarchy.HierarchyTreeStructure;
+import consulo.language.editor.hierarchy.HierarchyViewType;
+import consulo.language.editor.hierarchy.StandardHierarchyViewTypes;
+import consulo.language.psi.PsiElement;
 import com.perl5.lang.htmlmason.parser.psi.impl.HTMLMasonFileImpl;
 import com.perl5.lang.perl.idea.hierarchy.namespace.PerlHierarchyBrowser;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 
 public class HTMLMasonHierarchyBrowser extends PerlHierarchyBrowser {
@@ -31,15 +34,23 @@ public class HTMLMasonHierarchyBrowser extends PerlHierarchyBrowser {
     super(element);
   }
 
+  @RequiredReadAction
   @Override
-  protected boolean isApplicableElement(@NotNull PsiElement element) {
+  public boolean isApplicableElement(@NotNull PsiElement element) {
     return element instanceof HTMLMasonFileImpl;
   }
 
+  // consulo: upstream prependActions() adds ViewClassHierarchyAction before the actions of the super class
   @Override
-  protected void prependActions(@NotNull DefaultActionGroup actionGroup) {
-    actionGroup.add(new ViewClassHierarchyAction());
-    super.prependActions(actionGroup);
+  public List<HierarchyViewType> getViewTypes() {
+    return List.of(StandardHierarchyViewTypes.CLASS, StandardHierarchyViewTypes.SUPERTYPES, StandardHierarchyViewTypes.SUBTYPES);
+  }
+
+  // consulo: upstream HTMLMasonTypeHierarchyProvider#browserActivated switches the browser to the type hierarchy view
+  @RequiredReadAction
+  @Override
+  public HierarchyViewType getDefaultViewType() {
+    return StandardHierarchyViewTypes.CLASS;
   }
 
   @Override

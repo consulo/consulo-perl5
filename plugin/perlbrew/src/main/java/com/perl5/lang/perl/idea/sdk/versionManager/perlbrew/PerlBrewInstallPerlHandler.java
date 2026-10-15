@@ -16,7 +16,8 @@
 
 package com.perl5.lang.perl.idea.sdk.versionManager.perlbrew;
 
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.ui.image.Image;
+import consulo.util.lang.StringUtil;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostData;
 import com.perl5.lang.perl.idea.sdk.versionManager.InstallPerlHandler;
 import com.perl5.lang.perl.idea.sdk.versionManager.PerlInstallFormOptions;
@@ -25,7 +26,6 @@ import com.perl5.lang.perl.idea.sdk.versionManager.PerlVersionManagerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.List;
 
 class PerlBrewInstallPerlHandler extends InstallPerlHandler {
@@ -42,7 +42,8 @@ class PerlBrewInstallPerlHandler extends InstallPerlHandler {
 
   @Override
   protected @NotNull PerlInstallFormOptions createOptionsForm() {
-    return new PerlBrewInstallPerlForm();
+    // consulo: unified UI counterpart of PerlBrewInstallPerlForm
+    return new PerlBrewUnifiedInstallPerlForm();
   }
 
   @Override
@@ -61,7 +62,7 @@ class PerlBrewInstallPerlHandler extends InstallPerlHandler {
   }
 
   @Override
-  public @Nullable Icon doGetIcon(@NotNull String distribution) {
+  public @Nullable Image doGetIcon(@NotNull String distribution) {
     return StringUtil.contains(distribution, "cperl") ? null : super.doGetIcon(distribution);
   }
 

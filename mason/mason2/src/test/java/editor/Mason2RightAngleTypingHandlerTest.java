@@ -1,7 +1,7 @@
 package editor;
 
 import base.Mason2TopLevelComponentTestCase;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import com.intellij.testFramework.Parameterized;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;

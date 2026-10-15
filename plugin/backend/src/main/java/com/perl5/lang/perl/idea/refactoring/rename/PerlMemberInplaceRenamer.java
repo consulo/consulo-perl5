@@ -16,15 +16,15 @@
 
 package com.perl5.lang.perl.idea.refactoring.rename;
 
-import com.intellij.codeInsight.TargetElementUtil;
-import com.intellij.lang.injection.InjectedLanguageManager;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.*;
-import com.intellij.psi.search.SearchScope;
-import com.intellij.psi.search.searches.ReferencesSearch;
-import com.intellij.refactoring.rename.inplace.MemberInplaceRenamer;
+import consulo.language.editor.TargetElementUtil;
+import consulo.language.inject.InjectedLanguageManager;
+import consulo.codeEditor.Editor;
+import consulo.document.util.TextRange;
+import consulo.virtualFileSystem.VirtualFile;
+
+import consulo.content.scope.SearchScope;
+import consulo.language.psi.search.ReferencesSearch;
+import consulo.language.editor.refactoring.rename.inplace.MemberInplaceRenamer;
 import com.perl5.lang.perl.parser.PerlIdentifierRangeProvider;
 import com.perl5.lang.perl.psi.PerlSubElement;
 import com.perl5.lang.perl.psi.light.PerlDelegatingLightNamedElement;
@@ -34,6 +34,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import consulo.language.psi.ElementManipulators;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiNamedElement;
+import consulo.language.psi.PsiReference;
 
 /**
  * fixme shouldn't we extend PerlVariableInplaceRenamer?
@@ -57,7 +63,7 @@ public class PerlMemberInplaceRenamer extends MemberInplaceRenamer {
 
   @Override
   protected @NotNull TextRange getRangeToRename(@NotNull PsiElement element) {
-    PsiElement namedElement = TargetElementUtil.getInstance().getNamedElement(element, 0);
+    PsiElement namedElement = TargetElementUtil.getNamedElement(element, 0);
     return namedElement instanceof PerlIdentifierRangeProvider rangeProvider
       ? rangeProvider.getRangeInIdentifier()
            : ElementManipulators.getValueTextRange(element);
@@ -99,7 +105,7 @@ public class PerlMemberInplaceRenamer extends MemberInplaceRenamer {
       return null;
     }
 
-    PsiElement namedElement = TargetElementUtil.getInstance().getNamedElement(psiLeaf, 0);
+    PsiElement namedElement = TargetElementUtil.getNamedElement(psiLeaf, 0);
     if (namedElement instanceof PerlDelegatingLightNamedElement) {
       return (PsiNamedElement)namedElement;
     }

@@ -16,10 +16,10 @@
 
 package com.perl5.lang.embedded.psi;
 
-import com.intellij.lang.Language;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiManager;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.Language;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.psi.PsiManager;
+import consulo.language.ast.IElementType;
 import com.perl5.lang.embedded.EmbeddedPerlLanguage;
 import com.perl5.lang.perl.psi.PerlMultiplePsiFilesPerDocumentFileViewProvider;
 import org.jetbrains.annotations.NotNull;

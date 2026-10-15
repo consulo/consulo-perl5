@@ -16,11 +16,11 @@
 
 package com.perl5.lang.perl.idea.refactoring.introduce;
 
-import com.intellij.openapi.application.ReadAction;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiNamedElement;
-import com.intellij.refactoring.introduce.inplace.InplaceVariableIntroducer;
+import consulo.application.ReadAction;
+import consulo.codeEditor.Editor;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiNamedElement;
+import consulo.language.editor.refactoring.introduce.inplace.InplaceVariableIntroducer;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.idea.refactoring.PerlNameSuggestionProvider;
 import com.perl5.lang.perl.psi.PerlVariableDeclaration;
@@ -43,7 +43,7 @@ public class PerlVariableIntroducer extends InplaceVariableIntroducer<PsiElement
     LinkedHashSet<String> nameSuggestions = new LinkedHashSet<>();
     assert myElementToRename instanceof PerlVariableDeclaration;
     PerlNameSuggestionProvider.suggestNames((PerlVariableDeclarationElement)myElementToRename, nameSuggestions);
-    boolean result = ReadAction.computeBlocking(() -> super.performInplaceRefactoring(nameSuggestions));
+    boolean result = ReadAction.compute(() -> super.performInplaceRefactoring(nameSuggestions));
     if (!result) {
       finish(false);
     }

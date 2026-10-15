@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.psi;
 
-import com.intellij.psi.util.PsiTreeUtil;
+import consulo.language.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.Nullable;
 
 /**

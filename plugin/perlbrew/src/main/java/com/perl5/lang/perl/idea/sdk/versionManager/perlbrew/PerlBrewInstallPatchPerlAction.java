@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.idea.sdk.versionManager.perlbrew;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.project.Project;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.project.Project;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.util.PerlRunUtil;
 import org.jetbrains.annotations.NotNull;
@@ -37,12 +37,12 @@ public class PerlBrewInstallPatchPerlAction extends PerlBrewActionBase {
 
   @Override
   protected boolean isEnabled(@NotNull AnActionEvent event) {
-    return super.isEnabled(event) && PerlRunUtil.findScript(event.getProject(), SCRIPT_NAME) == null;
+    return super.isEnabled(event) && PerlRunUtil.findScript(event.getData(Project.KEY), SCRIPT_NAME) == null;
   }
 
   @Override
   public void actionPerformed(@NotNull AnActionEvent e) {
-    Project project = e.getProject();
+    Project project = e.getData(Project.KEY);
     PerlBrewAdapter perlBrewAdapter = PerlBrewAdapter.create(project);
     if (perlBrewAdapter == null) {
       return;

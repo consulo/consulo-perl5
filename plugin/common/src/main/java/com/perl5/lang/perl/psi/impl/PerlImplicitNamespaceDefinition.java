@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.psi.impl;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiManager;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiManager;
+import consulo.language.util.IncorrectOperationException;
 import com.perl5.PerlIcons;
 import com.perl5.lang.perl.psi.PerlNamespaceDefinitionWithIdentifier;
 import com.perl5.lang.perl.psi.PerlNamespaceElement;
@@ -28,7 +28,7 @@ import com.perl5.lang.perl.util.PerlPackageUtilCore;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
+import consulo.ui.image.Image;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -63,8 +63,9 @@ public class PerlImplicitNamespaceDefinition extends PerlImplicitElement impleme
     return myNamespaceName;
   }
 
-  @Override
-  public @Nullable Icon getIcon(int flags) {
+  // TODO consulo: PsiElement#getIcon(int) does not exist in Consulo (element icons come from IconDescriptorUpdater),
+  //  so this is no longer an override and is not called by the platform
+  public @Nullable Image getIcon(int flags) {
     return PerlIcons.PACKAGE_GUTTER_ICON;
   }
 

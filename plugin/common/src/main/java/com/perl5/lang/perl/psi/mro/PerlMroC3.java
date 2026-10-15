@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.psi.mro;
 
-import com.intellij.openapi.progress.ProgressManager;
+import consulo.application.progress.ProgressManager;
 import com.perl5.lang.perl.psi.PerlNamespaceDefinitionElement;
 import com.perl5.lang.perl.psi.PerlNamespaceDefinitionHandler;
 import org.jetbrains.annotations.NotNull;

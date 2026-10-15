@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.idea.sdk.versionManager;
 
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.xmlb.annotations.Tag;
+import consulo.content.bundle.Sdk;
+import consulo.util.lang.StringUtil;
+import consulo.util.xml.serializer.annotation.Tag;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

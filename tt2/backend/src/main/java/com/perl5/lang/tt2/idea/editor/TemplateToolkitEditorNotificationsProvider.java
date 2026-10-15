@@ -16,33 +16,46 @@
 
 package com.perl5.lang.tt2.idea.editor;
 
-import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.ui.EditorNotificationPanel;
-import com.intellij.ui.EditorNotificationProvider;
-import com.perl5.lang.perl.idea.configuration.settings.sdk.Perl5SettingsConfigurable;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.fileEditor.EditorNotificationBuilder;
+import consulo.fileEditor.FileEditor;
+import consulo.application.dumb.DumbAware;
+import consulo.localize.LocalizeValue;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.fileEditor.EditorNotificationProvider;
+import consulo.perl5.core.module.PerlModuleSettingsUtil;
 import com.perl5.lang.tt2.TemplateToolkitBundle;
 import com.perl5.lang.tt2.filetypes.TemplateToolkitFileType;
 import com.perl5.lang.tt2.idea.settings.TemplateToolkitSettingsBackendHelper;
+import jakarta.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
-import java.util.function.Function;
+import java.util.function.Supplier;
 
 
+@ExtensionImpl
 public class TemplateToolkitEditorNotificationsProvider implements EditorNotificationProvider, DumbAware {
   private final Project myProject;
 
+  @Inject
   public TemplateToolkitEditorNotificationsProvider(Project project) {
     myProject = project;
   }
 
   @Override
-  public @Nullable Function<? super @NotNull FileEditor, ? extends @Nullable JComponent> collectNotificationData(@NotNull Project project,
-                                                                                                                 @NotNull VirtualFile file) {
+  public @NotNull String getId() {
+    return "perl5-tt2-not-in-root";
+  }
+
+  // consulo: IntelliJ collectNotificationData(project, file) -> Consulo buildNotification(file, fileEditor, builderFactory)
+  @RequiredReadAction
+  @Override
+  public @Nullable EditorNotificationBuilder buildNotification(@NotNull VirtualFile file,
+                                                               @NotNull FileEditor fileEditor,
+                                                               @NotNull Supplier<EditorNotificationBuilder> builderFactory) {
     if (file.getFileType() != TemplateToolkitFileType.INSTANCE) {
       return null;
     }
@@ -50,13 +63,14 @@ public class TemplateToolkitEditorNotificationsProvider implements EditorNotific
     if (settings.isVirtualFileUnderRoot(file)) {
       return null;
     }
-    return fileEditor -> createNotificationPanel();
+    return createNotificationPanel(builderFactory.get(), file);
   }
 
-  private @NotNull EditorNotificationPanel createNotificationPanel() {
-    EditorNotificationPanel panel = new EditorNotificationPanel();
-    panel.setText(TemplateToolkitBundle.message("tt2.error.file.not.in.root"));
-    panel.createActionLabel(TemplateToolkitBundle.message("link.label.configure"), () -> Perl5SettingsConfigurable.open(myProject));
+  private @NotNull EditorNotificationBuilder createNotificationPanel(@NotNull EditorNotificationBuilder panel, @NotNull VirtualFile file) {
+    panel.withText(LocalizeValue.localizeTODO(TemplateToolkitBundle.message("tt2.error.file.not.in.root")));
+    // consulo: templates roots are content folders, configured in module settings (with the Template Toolkit module extension enabled)
+    panel.withAction(LocalizeValue.localizeTODO(TemplateToolkitBundle.message("link.label.configure")),
+                     e -> PerlModuleSettingsUtil.openRootsSettings(myProject, file));
     return panel;
   }
 }

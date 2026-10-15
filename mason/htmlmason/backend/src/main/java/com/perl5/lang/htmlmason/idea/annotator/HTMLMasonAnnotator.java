@@ -16,8 +16,8 @@
 
 package com.perl5.lang.htmlmason.idea.annotator;
 
-import com.intellij.lang.annotation.AnnotationHolder;
-import com.intellij.psi.PsiElement;
+import consulo.language.editor.annotation.AnnotationHolder;
+import consulo.language.psi.PsiElement;
 import com.perl5.lang.htmlmason.parser.psi.HTMLMasonNamedElement;
 import com.perl5.lang.perl.idea.annotators.PerlBaseAnnotator;
 import com.perl5.lang.perl.idea.highlighter.PerlSyntaxHighlighter;

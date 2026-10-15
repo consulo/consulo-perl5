@@ -16,13 +16,14 @@
 
 package com.perl5.lang.perl.idea.completion.util;
 
-import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiNamedElement;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.util.PsiTreeUtil;
+import consulo.language.icon.IconDescriptorUpdaters;
+import consulo.language.editor.completion.lookup.LookupElementBuilder;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiNamedElement;
+import consulo.language.psi.PsiReference;
+import consulo.language.psi.util.PsiTreeUtil;
 import com.perl5.lang.perl.extensions.packageprocessor.PerlExportDescriptor;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.*;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.serialization.PerlCallValueBackendHelper;
@@ -69,7 +70,7 @@ public class PerlSubCompletionUtil {
     }
     LookupElementBuilder newElement = LookupElementBuilder
       .create(subDefinition, nameToUse)
-      .withIcon(subDefinition.getIcon(0))
+      .withIcon(IconDescriptorUpdaters.getIcon(subDefinition, 0))
       .withStrikeoutness(subDefinition.isDeprecated())
       .withTypeText(subDefinition.getNamespaceName(), true);
 
@@ -114,7 +115,7 @@ public class PerlSubCompletionUtil {
 
     return completionProcessor.process(LookupElementBuilder
                                          .create(subDeclaration, lookupString)
-                                         .withIcon(subDeclaration.getIcon(0))
+                                         .withIcon(IconDescriptorUpdaters.getIcon(subDeclaration, 0))
                                          .withStrikeoutness(subDeclaration.isDeprecated())
                                          .withInsertHandler(SUB_SELECTION_HANDLER)
                                          .withTypeText(subDeclaration.getNamespaceName(), true)
@@ -139,7 +140,7 @@ public class PerlSubCompletionUtil {
 
     return completionProcessor.process(LookupElementBuilder
                                          .create(globVariable, StringUtil.notNullize(lookupString))
-                                         .withIcon(globVariable.getIcon(0))
+                                         .withIcon(IconDescriptorUpdaters.getIcon(globVariable, 0))
                                          .withInsertHandler(SUB_SELECTION_HANDLER)
                                          .withTypeText(globVariable.getNamespaceName(), true)
     );

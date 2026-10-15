@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.debugger;
 
-import com.intellij.util.containers.ContainerUtil;
-import com.intellij.xdebugger.frame.XExecutionStack;
-import com.intellij.xdebugger.frame.XStackFrame;
+import consulo.util.collection.ContainerUtil;
+import consulo.execution.debug.frame.XExecutionStack;
+import consulo.execution.debug.frame.XStackFrame;
 import com.perl5.lang.perl.debugger.protocol.PerlStackFrameDescriptor;
 import org.jetbrains.annotations.Nullable;
 
@@ -43,8 +43,9 @@ public class PerlExecutionStack extends XExecutionStack {
     return ContainerUtil.getFirstItem(myPerlStackFrames);
   }
 
+  // consulo: Consulo XExecutionStack#computeStackFrames has no firstFrameIndex parameter (it was unused)
   @Override
-  public void computeStackFrames(int firstFrameIndex, XStackFrameContainer container) {
+  public void computeStackFrames(XStackFrameContainer container) {
     container.addStackFrames(myPerlStackFrames, true);
   }
 

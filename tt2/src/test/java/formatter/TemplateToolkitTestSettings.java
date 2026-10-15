@@ -16,7 +16,7 @@
 
 package formatter;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.perl5.lang.tt2.idea.settings.TemplateToolkitSettings;
 
 

@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.psi;
 
-import com.intellij.navigation.NavigationItem;
-import com.intellij.psi.StubBasedPsiElement;
-import com.intellij.psi.util.PsiTreeUtil;
+import consulo.navigation.NavigationItem;
+import consulo.language.psi.StubBasedPsiElement;
+import consulo.language.psi.util.PsiTreeUtil;
 import com.perl5.PerlIcons;
 import com.perl5.lang.perl.psi.properties.PerlIdentifierOwner;
 import com.perl5.lang.perl.psi.stubs.variables.PerlVariableDeclarationStub;
@@ -27,7 +27,7 @@ import com.perl5.lang.perl.psi.utils.PerlVariableType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
+import consulo.ui.image.Image;
 
 
 public interface PerlVariableDeclarationElement extends StubBasedPsiElement<PerlVariableDeclarationStub>,
@@ -41,7 +41,7 @@ public interface PerlVariableDeclarationElement extends StubBasedPsiElement<Perl
   @NotNull
   PerlVariable getVariable();
 
-  default @Nullable Icon getIconByType(@NotNull PerlVariableType type) {
+  default @Nullable Image getIconByType(@NotNull PerlVariableType type) {
     if (type == PerlVariableType.ARRAY) {
       return PerlIcons.ARRAY_GUTTER_ICON;
     }

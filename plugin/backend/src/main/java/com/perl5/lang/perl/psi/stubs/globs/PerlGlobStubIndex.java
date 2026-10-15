@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.psi.stubs.globs;
 
-import com.intellij.psi.stubs.StubIndexKey;
+import consulo.language.psi.stub.StubIndexKey;
 import com.perl5.lang.perl.psi.PsiPerlGlobVariable;
 import com.perl5.lang.perl.psi.stubs.PerlStubIndexBase;
 import org.jetbrains.annotations.NotNull;

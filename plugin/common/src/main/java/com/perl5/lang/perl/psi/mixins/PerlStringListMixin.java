@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.psi.mixins;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.ElementManipulators;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.ElementManipulators;
 import com.perl5.lang.perl.psi.PerlStringList;
 import com.perl5.lang.perl.psi.impl.PerlCompositeElementImpl;
 import com.perl5.lang.perl.psi.utils.PerlPsiUtil;

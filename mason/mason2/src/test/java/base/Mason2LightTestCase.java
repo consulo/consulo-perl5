@@ -16,7 +16,7 @@
 
 package base;
 
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.perl5.lang.mason2.idea.configuration.Mason2SourceRootType;
 import org.jetbrains.annotations.NotNull;
 

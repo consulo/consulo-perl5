@@ -16,11 +16,11 @@
 
 package com.perl5.lang.perl.idea.execution.filters;
 
-import com.intellij.execution.filters.ConsoleDependentFilterProvider;
-import com.intellij.execution.filters.Filter;
-import com.intellij.execution.ui.ConsoleView;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.search.GlobalSearchScope;
+import consulo.execution.ui.console.ConsoleDependentFilterProvider;
+import consulo.execution.ui.console.Filter;
+import consulo.execution.ui.console.ConsoleView;
+import consulo.project.Project;
+import consulo.content.scope.SearchScope;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostDataProvider;
 import org.jetbrains.annotations.NotNull;
 
@@ -29,7 +29,7 @@ public class PerlConsoleFilterProvider extends ConsoleDependentFilterProvider {
   @Override
   public Filter @NotNull [] getDefaultFilters(@NotNull ConsoleView consoleView,
                                               @NotNull Project project,
-                                              @NotNull GlobalSearchScope scope) {
+                                              @NotNull SearchScope scope) {
     return consoleView instanceof PerlHostDataProvider hostDataProvider ? createFilters(project, hostDataProvider) : Filter.EMPTY_ARRAY;
   }
 

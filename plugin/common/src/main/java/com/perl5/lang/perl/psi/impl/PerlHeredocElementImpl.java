@@ -16,11 +16,11 @@
 
 package com.perl5.lang.perl.psi.impl;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.*;
-import com.intellij.psi.util.CachedValueProvider;
-import com.intellij.psi.util.CachedValuesManager;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.ast.ASTNode;
+
+import consulo.application.util.CachedValueProvider;
+import consulo.language.psi.util.LanguageCachedValueUtil;
+import consulo.language.psi.PsiUtilCore;
 import com.perl5.lang.perl.idea.configuration.settings.PerlSharedSettings;
 import com.perl5.lang.perl.idea.intellilang.PerlHeredocLiteralEscaper;
 import com.perl5.lang.perl.psi.PerlHeredocTerminatorElement;
@@ -35,6 +35,12 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.perl5.lang.perl.parser.PerlElementTypesGenerated.HEREDOC_END_INDENTABLE;
+import consulo.language.psi.ElementManipulators;
+import consulo.language.psi.LiteralTextEscaper;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiElementVisitor;
+import consulo.language.psi.PsiLanguageInjectionHost;
+import consulo.language.psi.PsiWhiteSpace;
 
 
 public class PerlHeredocElementImpl extends PerlCompositeElementImpl implements PsiLanguageInjectionHost {
@@ -73,7 +79,7 @@ public class PerlHeredocElementImpl extends PerlCompositeElementImpl implements 
   }
 
   public @Nullable PerlHeredocTerminatorElement getTerminatorElement() {
-    return CachedValuesManager.getCachedValue(this, () -> {
+    return LanguageCachedValueUtil.getCachedValue(this, () -> {
       PsiElement terminator = getNextSibling();
       while (terminator instanceof PsiWhiteSpace) {
         terminator = terminator.getNextSibling();

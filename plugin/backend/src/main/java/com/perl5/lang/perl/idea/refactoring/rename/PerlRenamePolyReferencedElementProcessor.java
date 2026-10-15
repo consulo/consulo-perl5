@@ -16,18 +16,23 @@
 
 package com.perl5.lang.perl.idea.refactoring.rename;
 
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.*;
-import com.intellij.psi.search.SearchScope;
-import com.intellij.psi.search.searches.ReferencesSearch;
-import com.intellij.refactoring.rename.PsiElementRenameHandler;
-import com.intellij.refactoring.rename.RenamePsiElementProcessor;
+import consulo.codeEditor.Editor;
+import consulo.util.lang.StringUtil;
+
+import consulo.content.scope.SearchScope;
+import consulo.language.psi.search.ReferencesSearch;
+import consulo.language.editor.refactoring.rename.PsiElementRenameHandler;
+import consulo.language.editor.refactoring.rename.RenamePsiElementProcessor;
 import com.perl5.lang.perl.psi.PerlGlobVariableElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiNameIdentifierOwner;
+import consulo.language.psi.PsiPolyVariantReference;
+import consulo.language.psi.PsiReference;
+import consulo.language.psi.ResolveResult;
 
 
 public abstract class PerlRenamePolyReferencedElementProcessor extends RenamePsiElementProcessor {

@@ -16,14 +16,15 @@
 
 package com.perl5.lang.perl.fileTypes;
 
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.psi.PsiElement;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.language.psi.PsiElement;
 import com.perl5.PerlBundle;
 import com.perl5.PerlIcons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
+import consulo.localize.LocalizeValue;
+import consulo.ui.image.Image;
 
 
 public class PerlFileTypeTest extends PurePerlFileType {
@@ -31,13 +32,13 @@ public class PerlFileTypeTest extends PurePerlFileType {
   public static final String EXTENSION = "t";
 
   @Override
-  public @NotNull String getName() {
+  public @NotNull String getId() {
     return "Perl5 Test";
   }
 
   @Override
-  public @NotNull String getDescription() {
-    return PerlBundle.message("label.perl5.test");
+  public @NotNull LocalizeValue getDescription() {
+    return LocalizeValue.localizeTODO(PerlBundle.message("label.perl5.test"));
   }
 
   @Override
@@ -46,7 +47,7 @@ public class PerlFileTypeTest extends PurePerlFileType {
   }
 
   @Override
-  public @Nullable Icon getIcon() {
+  public @Nullable Image getIcon() {
     return PerlIcons.TEST_FILE;
   }
 

@@ -16,12 +16,11 @@
 
 package com.perl5.lang.perl.idea.configuration.settings.sdk.wrappers;
 
-import com.intellij.openapi.util.NlsSafe;
-import com.intellij.ui.ColoredListCellRenderer;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
 import org.jetbrains.annotations.NotNull;
 
 public class Perl5TextSdkWrapper implements Perl5SdkWrapper {
-  private final @NlsSafe @NotNull String myText;
+  private final @NotNull String myText;
 
   public Perl5TextSdkWrapper(@NotNull String text) {
     myText = text;
@@ -30,6 +29,13 @@ public class Perl5TextSdkWrapper implements Perl5SdkWrapper {
   @Override
   public void customizeRenderer(@NotNull ColoredListCellRenderer<Perl5SdkWrapper> renderer) {
     renderer.append(myText);
+  }
+
+  /**
+   * consulo: used by the unified UI renderer, which can't use {@link #customizeRenderer(ColoredListCellRenderer)}
+   */
+  public @NotNull String getText() {
+    return myText;
   }
 
   @Override

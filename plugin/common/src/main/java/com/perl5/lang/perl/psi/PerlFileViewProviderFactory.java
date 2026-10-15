@@ -16,11 +16,11 @@
 
 package com.perl5.lang.perl.psi;
 
-import com.intellij.lang.Language;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.FileViewProviderFactory;
-import com.intellij.psi.PsiManager;
+import consulo.language.Language;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.file.FileViewProvider;
+import consulo.language.file.FileViewProviderFactory;
+import consulo.language.psi.PsiManager;
 import org.jetbrains.annotations.NotNull;
 
 

@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.psi.impl;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiReference;
-import com.intellij.util.ArrayUtil;
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiReference;
+import consulo.util.collection.ArrayUtil;
 import com.perl5.lang.perl.psi.PerlReferenceOwner;
 import org.jetbrains.annotations.NotNull;
 

@@ -16,11 +16,11 @@
 
 package com.perl5.lang.perl.idea.highlighter;
 
-import com.intellij.openapi.editor.colors.TextAttributesKey;
-import com.intellij.openapi.fileTypes.SyntaxHighlighter;
-import com.intellij.openapi.options.colors.AttributesDescriptor;
-import com.intellij.openapi.options.colors.ColorDescriptor;
-import com.intellij.openapi.options.colors.ColorSettingsPage;
+import consulo.colorScheme.TextAttributesKey;
+import consulo.language.editor.highlight.SyntaxHighlighter;
+import consulo.colorScheme.setting.AttributesDescriptor;
+import consulo.colorScheme.setting.ColorDescriptor;
+import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
 import com.perl5.PerlBundle;
 import com.perl5.PerlIcons;
 import com.perl5.lang.perl.PerlLanguage;
@@ -28,7 +28,8 @@ import com.perl5.lang.perl.psi.utils.PerlPsiUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
+import consulo.localize.LocalizeValue;
+import consulo.ui.image.Image;
 import java.util.Map;
 
 import static java.util.Map.entry;
@@ -36,8 +37,8 @@ import static java.util.Map.entry;
 
 public class PerlColorSettingsPage implements ColorSettingsPage {
 
-  @Override
-  public @Nullable Icon getIcon() {
+  // TODO consulo: Consulo ColorSettingsPage has no getIcon(), the icon is not shown on the settings page
+  public @Nullable Image getIcon() {
     return PerlIcons.PERL_LANGUAGE_ICON;
   }
 
@@ -205,7 +206,7 @@ public class PerlColorSettingsPage implements ColorSettingsPage {
   }
 
   @Override
-  public @NotNull String getDisplayName() {
-    return PerlLanguage.NAME;
+  public @NotNull LocalizeValue getDisplayName() {
+    return LocalizeValue.of(PerlLanguage.NAME);
   }
 }

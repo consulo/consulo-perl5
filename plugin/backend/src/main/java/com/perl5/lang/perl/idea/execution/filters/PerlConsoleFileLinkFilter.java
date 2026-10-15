@@ -16,10 +16,10 @@
 
 package com.perl5.lang.perl.idea.execution.filters;
 
-import com.intellij.execution.filters.Filter;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.execution.ui.console.Filter;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.util.lang.StringUtil;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostData;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostDataProvider;
 import org.jetbrains.annotations.NotNull;

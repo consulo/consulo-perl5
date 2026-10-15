@@ -16,24 +16,31 @@
 
 package com.perl5.lang.mojolicious.model;
 
-import com.intellij.ide.projectView.ProjectView;
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ReadAction;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.project.DumbService;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ProjectFileIndex;
-import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.util.concurrency.Semaphore;
-import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.messages.MessageBusConnection;
-import com.intellij.util.ui.update.MergingUpdateQueue;
-import com.intellij.util.ui.update.Update;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
+import consulo.project.ui.view.ProjectView;
+import consulo.disposer.Disposable;
+import consulo.application.ApplicationManager;
+import consulo.application.ReadAction;
+import consulo.logging.Logger;
+import consulo.application.progress.ProgressManager;
+import consulo.project.DumbService;
+import consulo.project.event.DumbModeListener;
+import consulo.project.Project;
+import consulo.module.content.ProjectFileIndex;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.PsiUtilCore;
+import consulo.application.util.Semaphore;
+import consulo.util.collection.ContainerUtil;
+import consulo.component.messagebus.MessageBusConnection;
+import consulo.ui.ex.awt.util.MergingUpdateQueue;
+import consulo.ui.ex.awt.util.Update;
+import consulo.perl5.mojo.module.MojoModuleExtension;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import com.perl5.lang.mojolicious.MojoUtil;
 import com.perl5.lang.mojolicious.idea.modules.MojoTemplateMarkSourceRootAction;
 import com.perl5.lang.perl.idea.actions.PerlMarkLibrarySourceRootAction;
@@ -52,6 +59,9 @@ import java.util.function.BooleanSupplier;
 
 import static com.perl5.lang.mojolicious.model.MojoProjectListener.MOJO_PROJECT_TOPIC;
 
+@ServiceAPI(ComponentScope.PROJECT)
+@ServiceImpl
+@Singleton
 public class MojoProjectManager implements Disposable {
   static final Logger LOG = Logger.getInstance(MojoProjectManager.class);
   private final @NotNull Project myProject;
@@ -60,11 +70,12 @@ public class MojoProjectManager implements Disposable {
   private volatile @NotNull Model myModel = new Model(Collections.emptySet());
   private volatile Semaphore myTestSemaphore;
 
+  @Inject
   public MojoProjectManager(@NotNull Project project) {
     myProject = project;
     myUpdateQueue = new MergingUpdateQueue("mojo model updating queue", 500, true, null, this, null, false);
     MessageBusConnection connection = myProject.getMessageBus().connect(this);
-    connection.subscribe(DumbService.DUMB_MODE, new DumbService.DumbModeListener() {
+    connection.subscribe(DumbModeListener.class, new DumbModeListener() {
       @Override
       public void exitDumbMode() {
         LOG.debug("Exiting dumb mode");
@@ -106,7 +117,8 @@ public class MojoProjectManager implements Disposable {
    * @return true iff mojo is available for the project: perl is enabled and mojo installed
    */
   public boolean isMojoAvailable() {
-    return MojoUtil.isMojoAvailable(myProject);
+    // consulo: and the Mojolicious module extension is enabled for some module
+    return MojoModuleExtension.isEnabled(myProject) && MojoUtil.isMojoAvailable(myProject);
   }
 
   @Contract("null->null")
@@ -203,7 +215,7 @@ public class MojoProjectManager implements Disposable {
    * @return a set of mojo entities in project
    */
   private @NotNull Set<MojoProject> findAllProjects() {
-    if (!MojoUtil.isMojoAvailable(myProject)) {
+    if (!isMojoAvailable()) {
       LOG.debug("Mojo is not available in project");
       return Collections.emptySet();
     }
@@ -249,7 +261,7 @@ public class MojoProjectManager implements Disposable {
       LOG.debug("Namespace without a virtual file");
       return null;
     }
-    VirtualFile libDirectory = VfsUtilCore.findContainingDirectory(namespaceFile, PerlPackageUtilCore.DEFAULT_LIB_DIR);
+    VirtualFile libDirectory = VirtualFileUtil.findContainingDirectory(namespaceFile, PerlPackageUtilCore.DEFAULT_LIB_DIR);
     if (libDirectory == null) {
       LOG.debug("No containing lib dir found");
       return null;

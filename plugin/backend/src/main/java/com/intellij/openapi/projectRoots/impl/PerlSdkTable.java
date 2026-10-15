@@ -16,85 +16,55 @@
 
 package com.intellij.openapi.projectRoots.impl;
 
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.components.State;
-import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.projectRoots.ProjectJdkTable;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.SdkTypeId;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.IncorrectOperationException;
-import com.intellij.util.messages.MessageBus;
-import com.intellij.util.messages.Topic;
-import com.perl5.lang.perl.idea.PerlPathMacros;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+import consulo.application.Application;
+import consulo.application.WriteAction;
+import consulo.disposer.Disposable;
+import consulo.logging.Logger;
+import consulo.content.bundle.SdkTable;
+import consulo.content.bundle.Sdk;
+import consulo.content.bundle.SdkTypeId;
+import consulo.content.bundle.event.SdkTableListener;
+import consulo.disposer.Disposer;
+import consulo.util.lang.StringUtil;
+import consulo.language.util.IncorrectOperationException;
 import com.perl5.lang.perl.idea.sdk.PerlSdkAdditionalData;
 import com.perl5.lang.perl.idea.sdk.PerlSdkType;
-import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
-import java.lang.invoke.MethodType;
 import java.util.ArrayList;
 import java.util.List;
 
-@State(
-  name = "PerlInterpreters",
-  storages = @Storage(PerlPathMacros.PERL5_APP_SETTINGS_FILE)
-)
-public class PerlSdkTable extends ProjectJdkTable implements PersistentStateComponent<Element> {
+/**
+ * TODO consulo: upstream keeps its own {@code ProjectJdkTable} implementation with perl interpreters persisted to the
+ *  {@code PerlInterpreters} state of {@code perl5.xml}. In Consulo perl interpreters are regular bundles of {@link PerlSdkType}
+ *  stored in the platform {@link SdkTable} (so they are available for the Perl module extension), and this class is a facade over it.
+ *  Interpreters from the upstream {@code perl5.xml} are not migrated.
+ */
+@ServiceAPI(ComponentScope.APPLICATION)
+@ServiceImpl
+@Singleton
+public class PerlSdkTable {
   private static final Logger LOG = Logger.getInstance(PerlSdkTable.class);
-  public static final Topic<Listener> PERL_TABLE_TOPIC = Topic.create("Perl Interpreters table", Listener.class);
+  /**
+   * TODO consulo: platform {@link SdkTableListener} topic is used, events are fired for all bundles, not only perl interpreters
+   */
+  public static final Class<SdkTableListener> PERL_TABLE_TOPIC = SdkTableListener.class;
 
-  private static final String PERL = "perl";
+  private final @NotNull SdkTable mySdkTable;
 
-  private final List<Sdk> myInterpretersList = new ArrayList<>();
-  private final MessageBus myMessageBus;
-
-  public PerlSdkTable() {
-    myMessageBus = ApplicationManager.getApplication().getMessageBus();
+  @Inject
+  public PerlSdkTable(@NotNull SdkTable sdkTable) {
+    mySdkTable = sdkTable;
   }
 
-  @Override
-  public void loadState(@NotNull Element element) {
-    myInterpretersList.clear();
-
-    for (Element child : element.getChildren(PERL)) {
-      ProjectJdkImpl sdk = new ProjectJdkImpl("", PerlSdkType.INSTANCE);
-      sdk.readExternal(child);
-      if( PerlSdkAdditionalData.from((Sdk)sdk) != null){
-        myInterpretersList.add(sdk);
-      }
-      else{
-        LOG.warn("Dropped sdk with missing additional data, bad migration in 2024.1 EAP, re-add the sdk: " + sdk);
-      }
-    }
-  }
-
-  @Override
-  public Element getState() {
-    Element element = new Element("state");
-    for (Sdk sdk : myInterpretersList) {
-      if( PerlSdkAdditionalData.from(sdk) != null){
-        Element e = new Element(PERL);
-        ((ProjectJdkImpl)sdk).writeExternal(e);
-        element.addContent(e);
-      }
-      else{
-        LOG.warn("Dropped sdk with missing additional data, corrupted on creation 2024.1 EAP, re-add the sdk: " + sdk);
-      }
-    }
-    return element;
-  }
-
-  @Override
   public @Nullable Sdk findJdk(@Nullable String name) {
-    for (Sdk interpreter : myInterpretersList) {
+    for (Sdk interpreter : getInterpreters()) {
       if (StringUtil.equals(name, interpreter.getName())) {
         return interpreter;
       }
@@ -102,7 +72,6 @@ public class PerlSdkTable extends ProjectJdkTable implements PersistentStateComp
     return null;
   }
 
-  @Override
   public @Nullable Sdk findJdk(@NotNull String name, @NotNull String type) {
     return findJdk(name);
   }
@@ -111,97 +80,80 @@ public class PerlSdkTable extends ProjectJdkTable implements PersistentStateComp
    * @deprecated use com.intellij.openapi.projectRoots.impl.PerlSdkTable#getInterpreters() instead
    */
   @Deprecated
-  @Override
   public Sdk @NotNull [] getAllJdks() {
     LOG.error("Not expected to be invoked");
     throw new AbstractMethodError();
   }
 
   public @NotNull List<Sdk> getInterpreters() {
-    return new ArrayList<>(myInterpretersList);
+    List<Sdk> result = new ArrayList<>();
+    for (Sdk sdk : mySdkTable.getAllSdks()) {
+      if (sdk.getSdkType() instanceof PerlSdkType) {
+        result.add(sdk);
+      }
+    }
+    return result;
   }
 
-  @Override
   public @NotNull List<Sdk> getSdksOfType(@NotNull SdkTypeId type) {
     throw new IncorrectOperationException();
   }
 
-  @Override
   public void addJdk(@NotNull Sdk jdk) {
     if( PerlSdkAdditionalData.from(jdk) == null){
       LOG.error("Attempt to add corrupted sdk: " + jdk);
     }
     else{
-      myInterpretersList.add(jdk);
-      myMessageBus.syncPublisher(PERL_TABLE_TOPIC).jdkAdded(jdk);
+      // platform table fires SdkTableListener#sdkAdded
+      runWriteAction(() -> mySdkTable.addSdk(jdk));
     }
   }
 
-  @Override
   public void removeJdk(@NotNull Sdk jdk) {
-    myInterpretersList.remove(jdk);
-    myMessageBus.syncPublisher(PERL_TABLE_TOPIC).jdkRemoved(jdk);
+    // platform table fires SdkTableListener#sdkRemoved
+    runWriteAction(() -> mySdkTable.removeSdk(jdk));
     if (jdk instanceof Disposable disposable) {
       Disposer.dispose(disposable);
     }
   }
 
-  @Override
   public void updateJdk(@NotNull Sdk originalJdk, @NotNull Sdk modifiedJdk) {
-    final String previousName = originalJdk.getName();
-    final String newName = modifiedJdk.getName();
-
-    MethodHandle method;
-    try {
-      method = MethodHandles
-        .privateLookupIn(ProjectJdkImpl.class, MethodHandles.lookup())
-        .findVirtual(ProjectJdkImpl.class, "copyTo", MethodType.methodType(void.class, ProjectJdkImpl.class));
-    }
-    catch (NoSuchMethodException e) {
-      throw new RuntimeException("Missing copyTo method", e);
-    }
-    catch (IllegalAccessException e) {
-      throw new RuntimeException(e);
-    }
-
-    try {
-      method.invoke(modifiedJdk, originalJdk);
-    }
-    catch (Throwable e) {
-      throw new RuntimeException(e);
-    }
-
-    if (!previousName.equals(newName)) {
-      // fire changes because after renaming JDK its name may match the associated jdk name of modules/project
-      myMessageBus.syncPublisher(PERL_TABLE_TOPIC).jdkNameChanged(originalJdk, previousName);
-    }
+    // platform table copies the modified sdk into the original one and fires SdkTableListener#sdkNameChanged
+    runWriteAction(() -> mySdkTable.updateSdk(originalJdk, modifiedJdk));
   }
 
-  @Override
   public @NotNull SdkTypeId getDefaultSdkType() {
-    return PerlSdkType.INSTANCE;
+    return PerlSdkType.getInstance();
   }
 
-  @Override
   public @NotNull SdkTypeId getSdkTypeByName(@NotNull String name) {
-    return PerlSdkType.INSTANCE;
+    return PerlSdkType.getInstance();
   }
 
-  @Override
+  @SuppressWarnings("deprecation")
   public @NotNull Sdk createSdk(@NotNull String name, @NotNull SdkTypeId sdkType) {
-    return ProjectJdkTable.getInstance().createSdk(name, PerlSdkType.INSTANCE);
+    return mySdkTable.createSdk(name, PerlSdkType.getInstance());
   }
 
-  public @NotNull ProjectJdkImpl createSdk(@NotNull String name) {
-    return (ProjectJdkImpl)createSdk(name, PerlSdkType.INSTANCE);
+  public @NotNull Sdk createSdk(@NotNull String name) {
+    return createSdk(name, PerlSdkType.getInstance());
   }
 
   public static PerlSdkTable getInstance() {
-    return ApplicationManager.getApplication().getService(PerlSdkTable.class);
+    return Application.get().getInstance(PerlSdkTable.class);
   }
 
-  @Override
   public void saveOnDisk() {
     throw new RuntimeException("Not supposed to be used for the perl plugin, not implemented");
+  }
+
+  private static void runWriteAction(@NotNull Runnable runnable) {
+    Application application = Application.get();
+    if (application.isWriteAccessAllowed()) {
+      runnable.run();
+    }
+    else {
+      application.invokeAndWait(() -> WriteAction.run(runnable::run));
+    }
   }
 }

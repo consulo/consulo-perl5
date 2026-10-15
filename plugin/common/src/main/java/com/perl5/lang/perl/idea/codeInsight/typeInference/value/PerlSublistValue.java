@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.idea.codeInsight.typeInference.value;
 
-import com.intellij.util.ObjectUtils;
+import consulo.util.lang.ObjectUtil;
 import com.perl5.lang.perl.psi.utils.PerlContextType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -87,7 +87,7 @@ public class PerlSublistValue extends PerlOperationValue {
   }
 
   private static @NotNull PerlValue computeStrictResolve(@NotNull PerlValue listValue, int startOffset, int endOffset) {
-    return ObjectUtils.notNull(computeResolve(listValue, startOffset, endOffset), UNKNOWN_VALUE);
+    return ObjectUtil.notNull(computeResolve(listValue, startOffset, endOffset), UNKNOWN_VALUE);
   }
 
   private static @Nullable PerlValue computeResolve(@NotNull PerlValue listValue, int startOffset, int endOffset) {

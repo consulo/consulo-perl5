@@ -16,8 +16,10 @@
 
 package com.perl5.lang.perl.parser.trycatch.idea.completion;
 
-import com.intellij.codeInsight.completion.CompletionContributor;
-import com.intellij.codeInsight.completion.CompletionType;
+import com.perl5.lang.perl.PerlLanguage;
+import consulo.language.Language;
+import consulo.language.editor.completion.CompletionContributor;
+import consulo.language.editor.completion.CompletionType;
 
 import static com.perl5.lang.perl.parser.trycatch.TryCatchElementPatterns.PACKAGE_IN_CATCH;
 
@@ -28,5 +30,10 @@ public class TryCatchCompletionContributor extends CompletionContributor {
            PACKAGE_IN_CATCH,
            new TryCatchPackageCompletionProvider()
     );
+  }
+
+  @Override
+  public Language getLanguage() {
+    return PerlLanguage.INSTANCE;
   }
 }

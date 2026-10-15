@@ -16,15 +16,15 @@
 
 package com.perl5.lang.perl.idea.formatter.blocks;
 
-import com.intellij.formatting.*;
-import com.intellij.lang.ASTNode;
-import com.intellij.openapi.util.AtomicNotNullLazyValue;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.TokenType;
-import com.intellij.psi.formatter.common.AbstractBlock;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
-import com.intellij.psi.util.PsiUtilCore;
+
+import consulo.language.ast.ASTNode;
+import consulo.application.util.AtomicNotNullLazyValue;
+import consulo.document.util.TextRange;
+import consulo.language.ast.TokenType;
+import consulo.language.codeStyle.AbstractBlock;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
+import consulo.language.psi.PsiUtilCore;
 import com.perl5.lang.perl.idea.formatter.PurePerlFormattingContext;
 import com.perl5.lang.perl.parser.PerlParserUtil;
 import org.jetbrains.annotations.NotNull;
@@ -37,6 +37,11 @@ import java.util.List;
 import static com.perl5.lang.perl.lexer.PerlTokenSets.HEREDOC_BODIES_TOKENSET;
 import static com.perl5.lang.perl.lexer.PerlTokenSets.TRANSPARENT_ELEMENT_TYPES;
 import static com.perl5.lang.perl.parser.PerlElementTypesGenerated.*;
+import consulo.language.codeStyle.ASTBlock;
+import consulo.language.codeStyle.Block;
+import consulo.language.codeStyle.ChildAttributes;
+import consulo.language.codeStyle.Indent;
+import consulo.language.codeStyle.Spacing;
 
 
 public class PerlFormattingBlock extends AbstractBlock implements PerlAstBlock {

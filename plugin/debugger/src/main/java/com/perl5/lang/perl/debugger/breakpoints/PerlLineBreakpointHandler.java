@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.debugger.breakpoints;
 
-import com.intellij.xdebugger.breakpoints.XBreakpointHandler;
-import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
+import consulo.execution.debug.breakpoint.XBreakpointHandler;
+import consulo.execution.debug.breakpoint.XLineBreakpoint;
 import com.perl5.lang.perl.debugger.PerlDebugThread;
 import org.jetbrains.annotations.NotNull;
 

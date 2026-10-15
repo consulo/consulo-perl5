@@ -16,14 +16,12 @@
 
 package com.perl5.lang.mojolicious.idea.actions;
 
-import com.intellij.openapi.ui.InputValidator;
-import com.intellij.openapi.util.NlsContexts;
+import consulo.ui.ex.InputValidator;
 import com.perl5.lang.mojolicious.MojoBundle;
 import com.perl5.lang.mojolicious.MojoIcons;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import javax.swing.*;
 
 public class MojoGenerateLiteAppAction extends MojoGenerateAction {
 
@@ -37,12 +35,12 @@ public class MojoGenerateLiteAppAction extends MojoGenerateAction {
   }
 
   @Override
-  protected @NotNull Icon getPromptIcon() {
+  protected @NotNull Image getPromptIcon() {
     return MojoIcons.MOJO_LITE_APP_ICON;
   }
 
   @Override
-  protected @NlsContexts.DialogTitle @NotNull String getPromptTitle() {
+  protected @NotNull String getPromptTitle() {
     return MojoBundle.message("mojo.action.generate.lite.app.prompt.title");
   }
 

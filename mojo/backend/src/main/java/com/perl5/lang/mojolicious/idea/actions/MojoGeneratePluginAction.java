@@ -16,13 +16,11 @@
 
 package com.perl5.lang.mojolicious.idea.actions;
 
-import com.intellij.openapi.util.NlsContexts;
 import com.perl5.lang.mojolicious.MojoBundle;
 import com.perl5.lang.mojolicious.MojoIcons;
 import com.perl5.lang.mojolicious.model.MojoPlugin;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NotNull;
-
-import javax.swing.*;
 
 public class MojoGeneratePluginAction extends MojoGenerateAction {
   public MojoGeneratePluginAction() {
@@ -35,12 +33,12 @@ public class MojoGeneratePluginAction extends MojoGenerateAction {
   }
 
   @Override
-  protected @NotNull Icon getPromptIcon() {
+  protected @NotNull Image getPromptIcon() {
     return MojoIcons.pluginIcon();
   }
 
   @Override
-  protected @NlsContexts.DialogTitle @NotNull String getPromptTitle() {
+  protected @NotNull String getPromptTitle() {
     return MojoBundle.message("mojo.action.generate.plugin.prompt.title");
   }
 

@@ -16,8 +16,7 @@
 
 package com.perl5.lang.perl.psi.properties;
 
-import com.intellij.openapi.util.NlsContexts;
-import com.intellij.psi.PsiNameIdentifierOwner;
+import consulo.language.psi.PsiNameIdentifierOwner;
 import org.jetbrains.annotations.Nullable;
 
 
@@ -25,5 +24,5 @@ public interface PerlIdentifierOwner extends PsiNameIdentifierOwner {
   /**
    * @return name for element presentation
    */
-  default @NlsContexts.Label @Nullable String getPresentableName() { return getName(); }
+  default @Nullable String getPresentableName() { return getName(); }
 }

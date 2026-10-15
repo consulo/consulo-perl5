@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.psi;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 
 /**
  * Interface marks statement-like PSI elements which forbids to use variables declared in them, such as statements and

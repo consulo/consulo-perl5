@@ -16,9 +16,9 @@
 
 package com.perl5.lang.tt2.psi.references;
 
-import com.intellij.psi.FileContextProvider;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiFileSystemItem;
+import consulo.language.psi.FileContextProvider;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiFileSystemItem;
 import com.perl5.lang.tt2.idea.settings.TemplateToolkitSettingsBackendHelper;
 import com.perl5.lang.tt2.psi.TemplateToolkitFile;
 import org.jetbrains.annotations.NotNull;

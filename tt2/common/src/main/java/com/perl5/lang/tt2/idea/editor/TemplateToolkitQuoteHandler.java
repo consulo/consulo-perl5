@@ -16,9 +16,10 @@
 
 package com.perl5.lang.tt2.idea.editor;
 
-import com.intellij.codeInsight.editorActions.SimpleTokenSetQuoteHandler;
-import com.intellij.openapi.editor.highlighter.HighlighterIterator;
-import com.intellij.psi.tree.TokenSet;
+import consulo.language.editor.action.SimpleTokenSetQuoteHandler;
+import consulo.codeEditor.HighlighterIterator;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
 
 import static com.perl5.lang.tt2.parser.TemplateToolkitElementTypesGenerated.*;
 
@@ -39,11 +40,11 @@ public class TemplateToolkitQuoteHandler extends SimpleTokenSetQuoteHandler {
 
   @Override
   public boolean isClosingQuote(HighlighterIterator iterator, int offset) {
-    return CLOSE_QUOTES.contains(iterator.getTokenType());
+    return CLOSE_QUOTES.contains((IElementType)iterator.getTokenType());
   }
 
   @Override
   public boolean isOpeningQuote(HighlighterIterator iterator, int offset) {
-    return OPEN_QUOTES.contains(iterator.getTokenType());
+    return OPEN_QUOTES.contains((IElementType)iterator.getTokenType());
   }
 }

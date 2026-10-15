@@ -16,11 +16,16 @@
 
 package com.perl5.lang.perl.psi.references;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiManager;
-import com.intellij.util.Processor;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
+import jakarta.inject.Singleton;
+import jakarta.inject.Inject;
+import consulo.logging.Logger;
+import consulo.application.progress.ProgressManager;
+import consulo.project.Project;
+import consulo.language.psi.PsiManager;
+import consulo.application.util.function.Processor;
 import com.perl5.lang.perl.psi.PerlSubDefinitionElement;
 import com.perl5.lang.perl.psi.PerlVariableDeclarationElement;
 import com.perl5.lang.perl.psi.impl.PerlImplicitSubDefinition;
@@ -43,6 +48,9 @@ import static com.perl5.lang.perl.util.PerlPackageUtilCore.NAMESPACE_SEPARATOR;
  * <li>Global scalars, arrays and hashes defined by modules code</li>
  * </ul>
  */
+@ServiceAPI(ComponentScope.PROJECT)
+@ServiceImpl
+@Singleton
 public class PerlImplicitDeclarationsService {
   private static final Logger LOG = Logger.getInstance(PerlImplicitDeclarationsService.class);
   private final Map<String, PerlImplicitSubDefinition> mySubsMap = new HashMap<>();
@@ -50,6 +58,8 @@ public class PerlImplicitDeclarationsService {
   private final Map<String, PerlImplicitVariableDeclaration> myArraysMap = new HashMap<>();
   private final Map<String, PerlImplicitVariableDeclaration> myHashesMap = new HashMap<>();
   private final @NotNull PsiManager myPsiManager;
+
+  @Inject
 
   public PerlImplicitDeclarationsService(@NotNull Project project) {
     myPsiManager = PsiManager.getInstance(project);

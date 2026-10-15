@@ -39,6 +39,7 @@ public abstract class PerlInstallHandlerBase extends InstallPerlHandler {
 
   @Override
   protected @NotNull PerlInstallFormOptions createOptionsForm() {
-    return new PerlInstallOptionsForm();
+    // consulo: unified UI counterpart of PerlInstallOptionsForm
+    return new PerlInstallUnifiedOptionsForm();
   }
 }

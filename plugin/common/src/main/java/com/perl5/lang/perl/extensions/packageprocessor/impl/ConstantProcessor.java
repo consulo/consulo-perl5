@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.extensions.packageprocessor.impl;
 
-import com.intellij.psi.ElementManipulators;
+import consulo.language.psi.ElementManipulators;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.extensions.packageprocessor.PerlPragmaProcessorBase;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlValuesManager;
@@ -76,7 +76,7 @@ public class ConstantProcessor extends PerlPragmaProcessorBase {
   public @NotNull List<PerlDelegatingLightNamedElement<?>> computeLightElementsFromStubs(@NotNull PerlUseStatementElement useStatementElement,
                                                                                          @NotNull PerlUseStatementStub useStatementStub) {
     return useStatementStub.getLightNamedElementsStubs().stream()
-      .filter(childStub -> childStub.getElementType() == LIGHT_SUB_DEFINITION)
+      .filter(childStub -> childStub.getStubType() == LIGHT_SUB_DEFINITION)
       .map(childStub -> new PerlLightConstantDefinitionElement(useStatementElement, (PerlSubDefinitionStub)childStub))
       .collect(Collectors.toList());
   }

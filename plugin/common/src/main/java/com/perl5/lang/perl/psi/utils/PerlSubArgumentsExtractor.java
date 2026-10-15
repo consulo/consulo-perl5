@@ -16,10 +16,10 @@
 
 package com.perl5.lang.perl.psi.utils;
 
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.Processor;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.application.util.function.Processor;
 import com.perl5.lang.perl.idea.PerlElementPatterns;
 import com.perl5.lang.perl.psi.*;
 import com.perl5.lang.perl.psi.impl.PsiPerlCallArgumentsImpl;

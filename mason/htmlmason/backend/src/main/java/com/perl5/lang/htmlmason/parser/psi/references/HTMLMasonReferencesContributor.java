@@ -16,8 +16,10 @@
 
 package com.perl5.lang.htmlmason.parser.psi.references;
 
-import com.intellij.psi.PsiReferenceContributor;
-import com.intellij.psi.PsiReferenceRegistrar;
+import com.perl5.lang.perl.PerlLanguage;
+import consulo.language.Language;
+import consulo.language.psi.PsiReferenceContributor;
+import consulo.language.psi.PsiReferenceRegistrar;
 import org.jetbrains.annotations.NotNull;
 
 import static com.perl5.lang.htmlmason.HTMLMasonElementPatterns.HTML_MASON_COMPONENT_CALLEE;
@@ -25,6 +27,11 @@ import static com.perl5.lang.htmlmason.HTMLMasonElementPatterns.HTML_MASON_FLAGS
 
 
 public class HTMLMasonReferencesContributor extends PsiReferenceContributor {
+  @Override
+  public @NotNull Language getLanguage() {
+    return PerlLanguage.INSTANCE;
+  }
+
   @Override
   public void registerReferenceProviders(@NotNull PsiReferenceRegistrar registrar) {
     registrar.registerReferenceProvider(

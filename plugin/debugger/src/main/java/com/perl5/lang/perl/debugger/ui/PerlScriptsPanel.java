@@ -16,17 +16,17 @@
 
 package com.perl5.lang.perl.debugger.ui;
 
-import com.intellij.ide.actions.OpenFileAction;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.ui.SimpleListCellRenderer;
-import com.intellij.ui.SortedListModel;
-import com.intellij.ui.components.JBList;
-import com.intellij.ui.components.JBScrollPane;
+import consulo.ide.impl.idea.ide.actions.OpenFileAction;
+import consulo.application.ApplicationManager;
+import consulo.project.Project;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.ui.ex.awt.SimpleListCellRenderer;
+import consulo.ui.ex.awt.SortedListModel;
+import consulo.ui.ex.awt.JBList;
+import consulo.ui.ex.awt.JBScrollPane;
 import com.perl5.lang.perl.debugger.PerlDebugThread;
 import com.perl5.lang.perl.debugger.PerlRemoteFileSystem;
 import com.perl5.lang.perl.debugger.protocol.PerlLoadedFileDescriptor;
@@ -61,7 +61,7 @@ public class PerlScriptsPanel extends JPanel {
 
 
   private @Nullable VirtualFile getVirtualFileByName(String virtualFileName) {
-    VirtualFile result = VfsUtil.findFileByIoFile(new File(virtualFileName), false);
+    VirtualFile result = VirtualFileUtil.findFileByIoFile(new File(virtualFileName), false);
 
     if (result != null) {
       return result;

@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.psi.impl;
 
-import com.intellij.psi.PsiManager;
+import consulo.language.psi.PsiManager;
 import org.jetbrains.annotations.NotNull;
 
 public class PerlBuiltInNamespaceDefinition extends PerlImplicitNamespaceDefinition {

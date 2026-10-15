@@ -16,11 +16,12 @@
 
 package com.perl5.lang.mojolicious.idea.editor.smartkeys;
 
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.EditorModificationUtilEx;
-import com.intellij.openapi.editor.highlighter.HighlighterIterator;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.tree.TokenSet;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.util.EditorModificationUtil;
+import consulo.codeEditor.HighlighterIterator;
+import consulo.util.lang.StringUtil;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
 import com.perl5.lang.perl.idea.editor.smartkeys.PerlEditorUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -50,7 +51,7 @@ public class MojoliciousSmartKeysUtil {
     if (hasCloseMarkerAhead(highlighterIterator)) {
       return false;
     }
-    EditorModificationUtilEx.insertStringAtCaret(editor, marker, false, false);
+    EditorModificationUtil.insertStringAtCaret(editor, marker, false, false);
     return true;
   }
 
@@ -60,7 +61,7 @@ public class MojoliciousSmartKeysUtil {
       if (highlighterIterator.atEnd()) {
         return false;
       }
-      var currentToken = highlighterIterator.getTokenType();
+      var currentToken = (IElementType)highlighterIterator.getTokenType();
       if (CLOSE_TOKENS.contains(currentToken)) {
         return true;
       }
@@ -86,7 +87,7 @@ public class MojoliciousSmartKeysUtil {
       return false;
     }
 
-    EditorModificationUtilEx.insertStringAtCaret(editor, marker, false, false);
+    EditorModificationUtil.insertStringAtCaret(editor, marker, false, false);
     return true;
   }
 

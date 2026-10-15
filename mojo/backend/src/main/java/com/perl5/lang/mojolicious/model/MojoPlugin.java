@@ -16,12 +16,12 @@
 
 package com.perl5.lang.mojolicious.model;
 
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.perl5.lang.mojolicious.MojoBundle;
 import com.perl5.lang.mojolicious.MojoIcons;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
 import java.util.regex.Pattern;
 
 public class MojoPlugin extends MojoProject {
@@ -30,7 +30,7 @@ public class MojoPlugin extends MojoProject {
   }
 
   @Override
-  public @NotNull Icon getIcon() {
+  public @NotNull Image getIcon() {
     return MojoIcons.pluginIcon();
   }
 

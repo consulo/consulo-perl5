@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.idea.refactoring.introduce.occurrence;
 
-import com.intellij.openapi.util.Pair;
-import com.intellij.psi.PsiElement;
+import consulo.util.lang.Pair;
+import consulo.language.psi.PsiElement;
 import com.perl5.lang.perl.idea.refactoring.introduce.PerlIntroduceTarget;
 import org.jetbrains.annotations.NotNull;
 

@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.idea.formatter.settings;
 
-import com.intellij.application.options.CodeStyleAbstractConfigurable;
-import com.intellij.application.options.CodeStyleAbstractPanel;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.ui.setting.CodeStyleAbstractConfigurable;
+import consulo.language.codeStyle.ui.setting.CodeStyleAbstractPanel;
+import consulo.language.codeStyle.CodeStyleSettings;
 import com.perl5.lang.perl.PerlLanguage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

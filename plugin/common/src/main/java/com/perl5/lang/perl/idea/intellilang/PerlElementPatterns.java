@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.idea.intellilang;
 
-import com.intellij.patterns.InitialPatternCondition;
-import com.intellij.patterns.PsiElementPattern;
-import com.intellij.psi.PsiElement;
+import consulo.language.pattern.InitialPatternCondition;
+import consulo.language.pattern.PsiElementPattern;
+import consulo.language.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 
 public final class PerlElementPatterns {

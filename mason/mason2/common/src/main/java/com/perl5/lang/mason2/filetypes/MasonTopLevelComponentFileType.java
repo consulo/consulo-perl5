@@ -22,7 +22,8 @@ import com.perl5.lang.mason2.Mason2TemplatingLanguage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
+import consulo.localize.LocalizeValue;
+import consulo.ui.image.Image;
 
 
 public class MasonTopLevelComponentFileType extends MasonPurePerlComponentFileType {
@@ -34,13 +35,13 @@ public class MasonTopLevelComponentFileType extends MasonPurePerlComponentFileTy
   }
 
   @Override
-  public @NotNull String getName() {
+  public @NotNull String getId() {
     return "Mason2 Top-Level Component";
   }
 
   @Override
-  public @NotNull String getDescription() {
-    return Mason2Bundle.message("label.mason2.top.level.component");
+  public @NotNull LocalizeValue getDescription() {
+    return LocalizeValue.localizeTODO(Mason2Bundle.message("label.mason2.top.level.component"));
   }
 
   @Override
@@ -49,7 +50,7 @@ public class MasonTopLevelComponentFileType extends MasonPurePerlComponentFileTy
   }
 
   @Override
-  public @Nullable Icon getIcon() {
+  public @Nullable Image getIcon() {
     return Mason2Icons.MASON_TOP_LEVEL_COMPONENT_ICON;
   }
 }

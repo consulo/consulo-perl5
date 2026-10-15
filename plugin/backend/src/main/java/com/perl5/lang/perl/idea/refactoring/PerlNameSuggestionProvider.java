@@ -16,22 +16,23 @@
 
 package com.perl5.lang.perl.idea.refactoring;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.NotNullLazyValue;
-import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.ElementManipulator;
-import com.intellij.psi.ElementManipulators;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.codeStyle.SuggestedNameInfo;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.util.PsiUtilCore;
-import com.intellij.refactoring.rename.NameSuggestionProvider;
-import com.intellij.util.ObjectUtils;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.logging.Logger;
+import consulo.application.util.NotNullLazyValue;
+import consulo.util.lang.ref.Ref;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.ElementManipulator;
+import consulo.language.psi.ElementManipulators;
+import consulo.language.psi.PsiElement;
+import consulo.language.editor.refactoring.rename.SuggestedNameInfo;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.psi.PsiUtilCore;
+import consulo.language.editor.refactoring.rename.NameSuggestionProvider;
+import consulo.util.lang.ObjectUtil;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.collection.Lists;
 import com.perl5.lang.perl.PerlLanguage;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlCallValue;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlValue;
@@ -75,14 +76,14 @@ public class PerlNameSuggestionProvider implements NameSuggestionProvider {
   private static final String ARRAY_REF = Objects.requireNonNull(join(ARRAY, REF));
   private static final String LIST = "list";
   private static final List<String> ARRAY_BASE_NAMES = Arrays.asList(ARRAY, LIST);
-  private static final List<String> ANON_ARRAY_BASE_NAMES = ContainerUtil.append(ARRAY_BASE_NAMES, ANON_ARRAY, ARRAY_REF);
+  private static final List<String> ANON_ARRAY_BASE_NAMES = Lists.append(ARRAY_BASE_NAMES, ANON_ARRAY, ARRAY_REF);
   private static final String HASH = "hash";
   private static final String ANON_HASH = Objects.requireNonNull(join(ANON, HASH));
   private static final String HASH_REF = Objects.requireNonNull(join(HASH, REF));
   private static final String MAP = "map";
   private static final String DICT = "dict";
   private static final List<String> HASH_BASE_NAMES = Arrays.asList(HASH, MAP, DICT);
-  private static final List<String> ANON_HASH_BASE_NAMES = ContainerUtil.append(HASH_BASE_NAMES, ANON_HASH, HASH_REF);
+  private static final List<String> ANON_HASH_BASE_NAMES = Lists.append(HASH_BASE_NAMES, ANON_HASH, HASH_REF);
   private static final String NUMBER = "number";
   private static final String STRING = "string";
   private static final String COMMAND_OUTPUT = "command_output";
@@ -475,7 +476,7 @@ public class PerlNameSuggestionProvider implements NameSuggestionProvider {
     }
 
     if (StringUtil.isNotEmpty(baseExprName)) {
-      singularName = ObjectUtils.notNull(StringUtil.unpluralize(baseExprName), baseExprName);
+      singularName = ObjectUtil.notNull(StringUtil.unpluralize(baseExprName), baseExprName);
       String variableNameElement = join(singularName, ELEMENT);
       if (StringUtil.isNotEmpty(variableNameElement)) {
         result.add(variableNameElement);

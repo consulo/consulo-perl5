@@ -16,7 +16,7 @@
 
 package com.perl5.lang.tt2.psi.impl;
 
-import com.intellij.lang.ASTNode;
+import consulo.language.ast.ASTNode;
 import com.perl5.lang.perl.psi.PerlVariableDeclarationElement;
 import com.perl5.lang.perl.psi.impl.PerlImplicitVariableDeclaration;
 import com.perl5.lang.tt2.psi.TemplateToolkitRawPerlBlockElement;

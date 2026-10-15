@@ -16,7 +16,7 @@
 
 package com.perl5.lang.tt2.psi;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 
 
 public interface TemplateToolkitString extends PsiElement {

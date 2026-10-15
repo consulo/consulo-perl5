@@ -17,11 +17,11 @@
 package com.perl5.lang.perl.idea.sdk.versionManager.plenv;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.intellij.execution.process.ProcessListener;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.util.NlsContexts;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.process.event.ProcessListener;
+import consulo.project.Project;
+import consulo.content.bundle.Sdk;
+import consulo.util.lang.StringUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.idea.execution.PerlCommandLine;
 import com.perl5.lang.perl.idea.project.PerlProjectManager;
@@ -75,7 +75,7 @@ public class PlenvAdapter extends PerlVersionManagerAdapter {
 
   @Override
   protected @Nullable Icon getIcon() {
-    return PLENV_ICON;
+    return TargetAWT.to(PLENV_ICON);
   }
 
   @Override
@@ -122,7 +122,7 @@ public class PlenvAdapter extends PerlVersionManagerAdapter {
   }
 
   @Override
-  protected @NlsContexts.DialogTitle @NotNull String getErrorNotificationTitle() {
+  protected @NotNull String getErrorNotificationTitle() {
     return PerlBundle.message("perl.vm.plenv.notification.title");
   }
 

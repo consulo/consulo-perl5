@@ -16,19 +16,19 @@
 
 package com.perl5.lang.mojolicious.idea.editor.smartkeys;
 
-import com.intellij.codeInsight.editorActions.enter.EnterHandlerDelegateAdapter;
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.EditorModificationUtilEx;
-import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
-import com.intellij.openapi.util.Ref;
-import com.intellij.psi.FileViewProvider;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiWhiteSpace;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiUtilCore;
+import consulo.language.editor.action.EnterHandlerDelegateAdapter;
+import consulo.dataContext.DataContext;
+import consulo.document.Document;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.util.EditorModificationUtil;
+import consulo.codeEditor.action.EditorActionHandler;
+import consulo.util.lang.ref.SimpleReference;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiWhiteSpace;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.PsiUtilCore;
 import com.perl5.lang.mojolicious.MojoliciousLanguage;
 import com.perl5.lang.mojolicious.psi.MojoliciousFileViewProvider;
 import org.jetbrains.annotations.NotNull;
@@ -44,8 +44,8 @@ public class MojoliciousEnterHandlerDelegate extends EnterHandlerDelegateAdapter
   @Override
   public Result preprocessEnter(@NotNull PsiFile file,
                                 @NotNull Editor editor,
-                                @NotNull Ref<Integer> caretOffset,
-                                @NotNull Ref<Integer> caretAdvance,
+                                @NotNull SimpleReference<Integer> caretOffset,
+                                @NotNull SimpleReference<Integer> caretAdvance,
                                 @NotNull DataContext dataContext,
                                 @Nullable EditorActionHandler originalHandler) {
     FileViewProvider viewProvider = file.getViewProvider();
@@ -89,7 +89,7 @@ public class MojoliciousEnterHandlerDelegate extends EnterHandlerDelegateAdapter
 
     IElementType tokenType = PsiUtilCore.getElementType(element);
     if (tokenType == MOJO_LINE_OPENER && element.getNode().getStartOffset() < offset) {
-      EditorModificationUtilEx.insertStringAtCaret(editor, KEYWORD_MOJO_LINE_OPENER + " ", false, true);
+      EditorModificationUtil.insertStringAtCaret(editor, KEYWORD_MOJO_LINE_OPENER + " ", false, true);
     }
   }
 }

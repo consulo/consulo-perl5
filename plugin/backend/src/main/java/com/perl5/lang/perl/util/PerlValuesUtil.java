@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.util;
 
-import com.intellij.psi.stubs.StubInputStream;
+import consulo.language.psi.stub.StubInputStream;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlValue;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlValueDeserializer;
 import org.jetbrains.annotations.NotNull;

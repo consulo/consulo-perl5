@@ -16,17 +16,17 @@
 
 package com.perl5.lang.perl.idea.sdk.host.docker;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.process.ProcessOutput;
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.util.xmlb.annotations.Tag;
-import com.intellij.util.xmlb.annotations.Transient;
+import consulo.process.ExecutionException;
+import consulo.process.util.ProcessOutput;
+import consulo.disposer.Disposable;
+import consulo.application.ApplicationManager;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.disposer.Disposer;
+import consulo.application.util.SystemInfo;
+import consulo.util.io.FileUtil;
+import consulo.util.xml.serializer.annotation.Tag;
+import consulo.util.xml.serializer.annotation.Transient;
 import com.perl5.lang.perl.idea.execution.PerlCommandLine;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostData;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostFileTransfer;

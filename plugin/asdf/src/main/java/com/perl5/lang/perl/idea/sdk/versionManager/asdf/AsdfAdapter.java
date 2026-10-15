@@ -17,10 +17,10 @@
 package com.perl5.lang.perl.idea.sdk.versionManager.asdf;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.intellij.execution.process.ProcessListener;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.NlsContexts;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.process.event.ProcessListener;
+import consulo.project.Project;
+import consulo.util.lang.StringUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.idea.execution.PerlCommandLine;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostData;
@@ -75,7 +75,7 @@ public class AsdfAdapter extends PerlVersionManagerAdapter {
 
   @Override
   protected @Nullable Icon getIcon() {
-    return ASDF_ICON;
+    return TargetAWT.to(ASDF_ICON);
   }
 
   @Override
@@ -115,7 +115,7 @@ public class AsdfAdapter extends PerlVersionManagerAdapter {
   }
 
   @Override
-  protected @NlsContexts.DialogTitle @NotNull String getErrorNotificationTitle() {
+  protected @NotNull String getErrorNotificationTitle() {
     return PerlBundle.message("perl.vm.asdf.notification.title");
   }
 }

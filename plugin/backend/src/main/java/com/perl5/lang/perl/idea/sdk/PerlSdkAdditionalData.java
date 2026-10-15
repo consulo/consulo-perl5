@@ -16,12 +16,11 @@
 
 package com.perl5.lang.perl.idea.sdk;
 
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.SdkAdditionalData;
-import com.intellij.openapi.projectRoots.SdkModificator;
-import com.intellij.openapi.projectRoots.impl.SdkAdditionalDataBase;
-import com.intellij.openapi.util.JDOMUtil;
-import com.intellij.util.ObjectUtils;
+import consulo.content.bundle.Sdk;
+import consulo.content.bundle.SdkAdditionalData;
+import consulo.content.bundle.SdkModificator;
+import consulo.logging.Logger;
+import consulo.util.lang.ObjectUtil;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostData;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostHandler;
 import com.perl5.lang.perl.idea.sdk.implementation.PerlImplementationData;
@@ -29,6 +28,7 @@ import com.perl5.lang.perl.idea.sdk.implementation.PerlImplementationHandler;
 import com.perl5.lang.perl.idea.sdk.versionManager.PerlVersionManagerAdapter;
 import com.perl5.lang.perl.idea.sdk.versionManager.PerlVersionManagerData;
 import com.perl5.lang.perl.idea.sdk.versionManager.PerlVersionManagerHandler;
+import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -37,7 +37,11 @@ import org.jetbrains.annotations.TestOnly;
 
 import java.util.Objects;
 
-public class PerlSdkAdditionalData extends SdkAdditionalDataBase implements SaveAwareSdkAdditionalData {
+// TODO consulo: SdkAdditionalDataBase is missing in Consulo, its commit tracking is inlined here. Consulo never marks additional data
+//  as committed, so writability assertions are not triggered by the platform
+public class PerlSdkAdditionalData implements SaveAwareSdkAdditionalData, Cloneable {
+  private static final Logger LOG = Logger.getInstance(PerlSdkAdditionalData.class);
+  private Throwable myCommitStackTrace;
   private final @NotNull PerlHostData<?, ?> myHostData;
   private final @NotNull PerlVersionManagerData<?, ?> myVersionManagerData;
   private final @NotNull PerlImplementationData<?, ?> myImplementationData;
@@ -70,7 +74,24 @@ public class PerlSdkAdditionalData extends SdkAdditionalDataBase implements Save
     return myConfig;
   }
 
+  public final void markAsCommited() {
+    if (myCommitStackTrace == null) {
+      myCommitStackTrace = new Throwable();
+      markInternalsAsCommited(myCommitStackTrace);
+    }
+  }
+
+  protected final void assertWritable() {
+    if (myCommitStackTrace != null) {
+      LOG.error(new Throwable("Additional sdk data can't be directly modified, see javadoc for the assertion.", myCommitStackTrace));
+    }
+  }
+
   @Override
+  public Object clone() throws CloneNotSupportedException {
+    return super.clone();
+  }
+
   protected void markInternalsAsCommited(@NotNull Throwable commitStackTrace) {
     myHostData.markAsCommited(commitStackTrace);
     myVersionManagerData.markAsCommited(commitStackTrace);
@@ -102,12 +123,12 @@ public class PerlSdkAdditionalData extends SdkAdditionalDataBase implements Save
 
   @Contract("null -> null")
   public static @Nullable PerlSdkAdditionalData from(@Nullable Sdk sdk) {
-    return sdk == null ? null : ObjectUtils.tryCast(sdk.getSdkAdditionalData(), PerlSdkAdditionalData.class);
+    return sdk == null ? null : ObjectUtil.tryCast(sdk.getSdkAdditionalData(), PerlSdkAdditionalData.class);
   }
 
   @Contract("null -> null")
   public static @Nullable PerlSdkAdditionalData from(@Nullable SdkModificator sdkModificator) {
-    return sdkModificator == null ? null : ObjectUtils.tryCast(sdkModificator.getSdkAdditionalData(), PerlSdkAdditionalData.class);
+    return sdkModificator == null ? null : ObjectUtil.tryCast(sdkModificator.getSdkAdditionalData(), PerlSdkAdditionalData.class);
   }
 
   public static @NotNull PerlSdkAdditionalData notNullFrom(@NotNull Sdk sdk) {
@@ -138,6 +159,11 @@ public class PerlSdkAdditionalData extends SdkAdditionalDataBase implements Save
   }
 
   private static class UnknownSdkAdditionalData implements SaveAwareSdkAdditionalData {
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+      return super.clone();
+    }
+
     private final @NotNull Element myAdditionalElement;
 
     UnknownSdkAdditionalData(@NotNull Element element) {
@@ -146,7 +172,17 @@ public class PerlSdkAdditionalData extends SdkAdditionalDataBase implements Save
 
     @Override
     public void save(@NotNull Element additional) {
-      JDOMUtil.copyMissingContent(myAdditionalElement, additional);
+      // TODO consulo: JDOMUtil.copyMissingContent is missing in Consulo, inlined
+      for (Attribute attribute : myAdditionalElement.getAttributes()) {
+        if (additional.getAttribute(attribute.getName(), attribute.getNamespace()) == null) {
+          additional.setAttribute(attribute.clone());
+        }
+      }
+      for (Element child : myAdditionalElement.getChildren()) {
+        if (additional.getChild(child.getName(), child.getNamespace()) == null) {
+          additional.addContent(child.clone());
+        }
+      }
     }
   }
 }

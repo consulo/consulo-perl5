@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.idea.sdk.versionManager.system;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import com.perl5.lang.perl.adapters.PackageManagerAdapter;
 import com.perl5.lang.perl.idea.execution.PerlCommandLine;
 import com.perl5.lang.perl.idea.sdk.versionManager.InstallPerlHandler;

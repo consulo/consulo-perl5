@@ -16,7 +16,6 @@
 
 package com.perl5.lang.perl.psi;
 
-import com.intellij.openapi.util.NlsSafe;
 import com.perl5.lang.perl.psi.mro.PerlMro;
 import com.perl5.lang.perl.psi.mro.PerlMroC3;
 import com.perl5.lang.perl.psi.mro.PerlMroDfs;
@@ -37,7 +36,7 @@ public interface PerlNamespaceDefinition extends PerlDeprecatable {
    *
    * @return canonical package name
    */
-  @NlsSafe
+  
   @Nullable
   String getNamespaceName();
 

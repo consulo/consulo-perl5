@@ -17,17 +17,18 @@
 package com.perl5.lang.pod.idea.surroundWith;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.intellij.lang.surroundWith.Surrounder;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.SelectionModel;
-import com.intellij.openapi.editor.highlighter.EditorHighlighter;
-import com.intellij.openapi.editor.highlighter.HighlighterIterator;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.editor.surroundWith.Surrounder;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.SelectionModel;
+import consulo.codeEditor.EditorHighlighter;
+import consulo.codeEditor.HighlighterIterator;
+import consulo.project.Project;
+import consulo.document.util.TextRange;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.ast.IElementType;
+import consulo.language.util.IncorrectOperationException;
+import consulo.localize.LocalizeValue;
 import com.perl5.PerlBundle;
 import com.perl5.lang.pod.parser.psi.util.PodRenderUtil;
 import org.jetbrains.annotations.NotNull;
@@ -38,8 +39,8 @@ import static com.perl5.lang.pod.parser.PodElementTypesGenerated.POD_SYMBOL;
 @VisibleForTesting
 public abstract class PodSurrounder implements Surrounder {
   @Override
-  public String getTemplateDescription() {
-    return PerlBundle.message("pod.intention.wrap.with", getFormatterLetter(), getFormatterDescription());
+  public @NotNull LocalizeValue getTemplateDescription() {
+    return LocalizeValue.localizeTODO(PerlBundle.message("pod.intention.wrap.with", getFormatterLetter(), getFormatterDescription()));
   }
 
   @Override
@@ -75,7 +76,7 @@ public abstract class PodSurrounder implements Surrounder {
     int sequentialCloseAngles = 0;
     StringBuilder sb = new StringBuilder();
     while (!highlighterIterator.atEnd() && highlighterIterator.getStart() <= endOffset) {
-      IElementType tokenType = highlighterIterator.getTokenType();
+      IElementType tokenType = (IElementType)highlighterIterator.getTokenType();
       int effectiveTokenStart = Math.max(highlighterIterator.getStart(), startOffset);
       int effectiveTokenEnd = Math.min(highlighterIterator.getEnd(), endOffset);
       CharSequence text = documentChars.subSequence(effectiveTokenStart, effectiveTokenEnd);

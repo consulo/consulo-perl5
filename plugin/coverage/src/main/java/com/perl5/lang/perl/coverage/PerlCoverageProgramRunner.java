@@ -16,24 +16,24 @@
 
 package com.perl5.lang.perl.coverage;
 
-import com.intellij.coverage.CoverageDataManager;
-import com.intellij.coverage.CoverageExecutor;
-import com.intellij.coverage.CoverageRunnerData;
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.configurations.ConfigurationInfoProvider;
-import com.intellij.execution.configurations.RunProfile;
-import com.intellij.execution.configurations.RunProfileState;
-import com.intellij.execution.configurations.RunnerSettings;
-import com.intellij.execution.process.ProcessHandler;
-import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.execution.ui.RunContentDescriptor;
+import consulo.execution.coverage.CoverageDataManager;
+import consulo.execution.coverage.CoverageExecutor;
+import consulo.execution.coverage.CoverageRunnerData;
+import consulo.process.ExecutionException;
+import consulo.execution.configuration.ConfigurationInfoProvider;
+import consulo.execution.configuration.RunProfile;
+import consulo.execution.configuration.RunProfileState;
+import consulo.execution.configuration.RunnerSettings;
+import consulo.process.ProcessHandler;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.execution.ui.RunContentDescriptor;
 import com.perl5.lang.perl.idea.run.GenericPerlProgramRunner;
 import com.perl5.lang.perl.idea.run.GenericPerlRunConfiguration;
 import com.perl5.lang.perl.idea.run.PerlRunProfileState;
 import com.perl5.lang.perl.util.PerlPackageUtilCore;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.concurrency.AsyncPromise;
+import consulo.util.concurrent.AsyncPromise;
 
 import java.util.Set;
 

@@ -16,14 +16,14 @@
 
 package com.perl5.lang.perl.psi.light;
 
-import com.intellij.navigation.ItemPresentation;
-import com.intellij.openapi.util.AtomicNotNullLazyValue;
-import com.intellij.openapi.util.NotNullFactory;
-import com.intellij.openapi.util.NotNullLazyValue;
-import com.intellij.openapi.util.NullableLazyValue;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.tree.IElementType;
+import consulo.navigation.ItemPresentation;
+import consulo.application.util.AtomicNotNullLazyValue;
+import consulo.application.util.AtomicNullableLazyValue;
+import consulo.application.util.NotNullLazyValue;
+import consulo.application.util.NullableLazyValue;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiElementVisitor;
+import consulo.language.ast.IElementType;
 import com.perl5.PerlIcons;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlValue;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlValuesManager;
@@ -37,10 +37,9 @@ import com.perl5.lang.perl.psi.utils.PerlSubArgument;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
+import consulo.ui.image.Image;
 import java.util.List;
-
-import static com.intellij.openapi.util.NullableLazyValue.atomicLazyNullable;
+import java.util.function.Supplier;
 
 public class PerlLightSubDefinitionElement<Delegate extends PerlPolyNamedElement<?>> extends PerlDelegatingLightNamedElement<Delegate>
   implements PerlSubDefinitionElement {
@@ -62,7 +61,7 @@ public class PerlLightSubDefinitionElement<Delegate extends PerlPolyNamedElement
                                        @Nullable PsiPerlBlock subDefinitionBody) {
     super(delegate, name, elementType, nameIdentifier);
     myNamespaceName = namespaceName;
-    myAnnotationsProvider = atomicLazyNullable(() -> annotations);
+    myAnnotationsProvider = AtomicNullableLazyValue.createValue(() -> annotations);
     mySubArgumentsProvider = AtomicNotNullLazyValue.createValue(() -> subArguments);
     myReturnValueFromCodeProvider = returnValueFromCodeProvider;
     mySubDefinitionBody = subDefinitionBody;
@@ -77,7 +76,7 @@ public class PerlLightSubDefinitionElement<Delegate extends PerlPolyNamedElement
     super(delegate, name, elementType, nameIdentifier);
     myNamespaceName = namespaceName;
     mySubDefinitionBody = elementSub.getBlock();
-    myAnnotationsProvider = atomicLazyNullable(
+    myAnnotationsProvider = AtomicNullableLazyValue.createValue(
       () -> PerlSubAnnotations.computeForLightElement(delegate, nameIdentifier));
     mySubArgumentsProvider = AtomicNotNullLazyValue.createValue(
       () -> PerlSubDefinitionElement.getPerlSubArgumentsFromBody(mySubDefinitionBody));
@@ -85,15 +84,15 @@ public class PerlLightSubDefinitionElement<Delegate extends PerlPolyNamedElement
   }
 
   public PerlLightSubDefinitionElement(@NotNull Delegate delegate, @NotNull PerlSubDefinitionStub stub) {
-    super(delegate, stub.getSubName(), stub.getElementType());
+    super(delegate, stub.getSubName(), stub.getStubType());
     myNamespaceName = stub.getNamespaceName();
     mySubArgumentsProvider = AtomicNotNullLazyValue.createValue(stub::getSubArgumentsList);
-    myAnnotationsProvider = atomicLazyNullable(stub::getAnnotations);
+    myAnnotationsProvider = AtomicNullableLazyValue.createValue(stub::getAnnotations);
     myReturnValueFromCodeProvider = AtomicNotNullLazyValue.createValue(stub::getReturnValueFromCode);
   }
 
-  protected final void setSubArgumentsProvider(@NotNull NotNullFactory<? extends List<PerlSubArgument>> provider) {
-    mySubArgumentsProvider = AtomicNotNullLazyValue.createValue(provider);
+  protected final void setSubArgumentsProvider(@NotNull Supplier<? extends List<PerlSubArgument>> provider) {
+    mySubArgumentsProvider = AtomicNotNullLazyValue.createValue(provider::get);
   }
 
   @Override
@@ -152,7 +151,7 @@ public class PerlLightSubDefinitionElement<Delegate extends PerlPolyNamedElement
   }
 
   @Override
-  public @Nullable Icon getIcon(int flags) {
+  public @Nullable Image getIcon(int flags) {
     if (isMethod()) {
       return PerlIcons.METHOD_GUTTER_ICON;
     }

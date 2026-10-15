@@ -16,11 +16,11 @@
 
 package com.perl5.lang.tt2.idea.highlighting;
 
-import com.intellij.lang.annotation.AnnotationHolder;
-import com.intellij.lang.annotation.Annotator;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.editor.annotation.AnnotationHolder;
+import consulo.language.editor.annotation.Annotator;
+import consulo.colorScheme.TextAttributesKey;
+import consulo.language.psi.PsiElement;
+import consulo.language.ast.IElementType;
 import com.perl5.lang.perl.idea.annotators.PerlBaseAnnotator;
 import com.perl5.lang.tt2.lexer.TemplateToolkitSyntaxElements;
 import org.jetbrains.annotations.NotNull;

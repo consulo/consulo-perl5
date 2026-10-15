@@ -16,9 +16,9 @@
 
 package com.perl5.lang.mason2.psi.impl;
 
-import com.intellij.lang.Language;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.psi.FileViewProvider;
+import consulo.language.Language;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.language.file.FileViewProvider;
 import com.perl5.lang.mason2.Mason2Language;
 import com.perl5.lang.mason2.filetypes.MasonPurePerlComponentFileType;
 import com.perl5.lang.perl.psi.impl.PerlFileImpl;

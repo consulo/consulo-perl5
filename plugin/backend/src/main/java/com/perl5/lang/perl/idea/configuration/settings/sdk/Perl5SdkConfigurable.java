@@ -16,39 +16,41 @@
 
 package com.perl5.lang.perl.idea.configuration.settings.sdk;
 
-import com.intellij.execution.ui.CommonProgramParametersPanel;
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.actionSystem.ActionGroup;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.options.UnnamedConfigurable;
-import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.openapi.progress.Task;
-import com.intellij.openapi.project.DumbAwareAction;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.ProjectJdkTable;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.projectRoots.SdkModificator;
+import consulo.execution.ui.awt.CommonProgramParametersPanel;
+import consulo.disposer.Disposable;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.application.ApplicationManager;
+import consulo.configurable.UnnamedConfigurable;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.Task;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.project.Project;
+import consulo.content.bundle.Sdk;
+import consulo.content.bundle.event.SdkTableListener;
+import consulo.content.bundle.SdkModificator;
 import com.intellij.openapi.projectRoots.impl.PerlSdkTable;
-import com.intellij.openapi.ui.ComboBox;
-import com.intellij.openapi.ui.InputValidator;
-import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.util.NlsContexts;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.CollectionComboBoxModel;
-import com.intellij.ui.ColoredListCellRenderer;
-import com.intellij.util.messages.MessageBusConnection;
+import consulo.ui.ex.awt.ComboBox;
+import consulo.ui.ex.InputValidator;
+import consulo.ui.ex.awt.Messages;
+import consulo.disposer.Disposer;
+import consulo.util.lang.StringUtil;
+import consulo.ui.ex.awt.CollectionComboBoxModel;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
+import consulo.component.messagebus.MessageBusConnection;
 import com.perl5.PerlBundle;
 import com.perl5.PerlIcons;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import com.perl5.lang.perl.idea.actions.PerlDumbAwareAction;
 import com.perl5.lang.perl.idea.configuration.settings.sdk.wrappers.Perl5RealSdkWrapper;
 import com.perl5.lang.perl.idea.configuration.settings.sdk.wrappers.Perl5SdkWrapper;
 import com.perl5.lang.perl.idea.configuration.settings.sdk.wrappers.Perl5TextSdkWrapper;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostHandler;
 import com.perl5.lang.perl.idea.sdk.versionManager.PerlVersionManagerHandler;
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -59,14 +61,14 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class Perl5SdkConfigurable implements UnnamedConfigurable, ProjectJdkTable.Listener {
+public class Perl5SdkConfigurable implements UnnamedConfigurable, SdkTableListener {
   public static final Perl5SdkWrapper DISABLE_PERL_ITEM = new Perl5TextSdkWrapper(PerlBundle.message("perl.settings.disable.perl.support"));
   private Perl5SdkPanel myPanel;
   private final @NotNull MessageBusConnection myConnection;
   private final @NotNull Perl5SdkManipulator mySdkManipulator;
   private @Nullable Project myProject;
 
-  private final Disposable myDisposable = Disposer.newDisposable();
+  private final Disposable myDisposable = Disposable.newDisposable();
 
   /**
    * @apiNote if you are passing null to the constructor, you MUST then call {@link #setProject(Project)}
@@ -83,8 +85,13 @@ public class Perl5SdkConfigurable implements UnnamedConfigurable, ProjectJdkTabl
     myProject = project;
   }
 
+  @RequiredUIAccess
   @Override
-  public @NotNull JComponent createComponent() {
+  public Component createUIComponent(Disposable parentDisposable) {
+    return TargetAWT.wrap(getComponent());
+  }
+
+  public @NotNull JComponent getComponent() {
     if (myPanel == null) {
       initPanel();
     }
@@ -111,8 +118,9 @@ public class Perl5SdkConfigurable implements UnnamedConfigurable, ProjectJdkTabl
               new Task.Modal(myProject, PerlBundle.message("perl.create.interpreter.progress"), false) {
                 @Override
                 public void run(@NotNull ProgressIndicator indicator) {
+                  // consulo: Task has own myProject field
                   versionManagerHandler.createSdkInteractively(
-                    myProject, hostHandler, sdk -> updateSdkModel(new Perl5RealSdkWrapper(sdk)), myDisposable);
+                    Perl5SdkConfigurable.this.myProject, hostHandler, sdk -> updateSdkModel(new Perl5RealSdkWrapper(sdk)), myDisposable);
                 }
               }.queue();
             }
@@ -129,7 +137,7 @@ public class Perl5SdkConfigurable implements UnnamedConfigurable, ProjectJdkTabl
             return groupItems.toArray(AnAction.EMPTY_ARRAY);
           }
         };
-        hostActionGroup.getTemplatePresentation().setIcon(hostHandler.getIcon());
+        hostActionGroup.getTemplatePresentation().setIcon(TargetAWT.from(hostHandler.getIcon()));
         return hostActionGroup;
       }).toList();
 
@@ -288,13 +296,14 @@ public class Perl5SdkConfigurable implements UnnamedConfigurable, ProjectJdkTabl
     Disposer.dispose(myDisposable);
   }
 
+  // TODO consulo: platform SdkTableListener fires for all bundles, not only perl interpreters
   @Override
-  public void jdkAdded(@NotNull Sdk sdk) {
+  public void sdkAdded(@NotNull Sdk sdk) {
     updateSdkModel(getSelectedSdkWrapper());
   }
 
   @Override
-  public void jdkRemoved(@NotNull Sdk sdk) {
+  public void sdkRemoved(@NotNull Sdk sdk) {
     // fixme we should create a wrapper here and find it in combobox
     ComboBox<Perl5SdkWrapper> comboBox = myPanel.getSdkComboBox();
     int selectedIndex = comboBox.getSelectedIndex();
@@ -318,7 +327,7 @@ public class Perl5SdkConfigurable implements UnnamedConfigurable, ProjectJdkTabl
     myPanel.setEnabled(isEnabled);
   }
 
-  public void setLabelText(@NotNull @NlsContexts.Label String text) {
+  public void setLabelText(@NotNull String text) {
     myPanel.setLabelText(text);
   }
 }

@@ -16,34 +16,40 @@
 
 package com.perl5.lang.perl.psi;
 
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.components.Service;
-import com.intellij.openapi.util.ClearableLazyValue;
-import com.intellij.util.KeyedLazyInstance;
+import consulo.disposer.Disposable;
+import consulo.application.ApplicationManager;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
+import jakarta.inject.Singleton;
+import consulo.util.lang.lazy.ClearableLazyValue;
+import com.perl5.lang.perl.psi.PerlSubCallHandler.KeyedLazyInstance;
 import org.jetbrains.annotations.NotNull;
 
-@Service
+@ServiceAPI(ComponentScope.APPLICATION)
+@ServiceImpl
+@Singleton
 public final class PerlSubCallHandlerVersionService implements Disposable {
-  private final ClearableLazyValue<Integer> myVersionProvider = ClearableLazyValue.createAtomic(() -> {
+  private final ClearableLazyValue<Integer> myVersionProvider = ClearableLazyValue.atomicNotNull(() -> {
     int version = 0;
-    for (KeyedLazyInstance<PerlSubCallHandler<?>> instance : PerlSubCallHandler.getExtensionPoint().getExtensions()) {
+    for (KeyedLazyInstance instance : PerlSubCallHandler.getExtensionPoint().getExtensions()) {
       version += instance.getInstance().getVersion();
     }
     return version;
   });
 
   public PerlSubCallHandlerVersionService() {
-    PerlSubCallHandler.getExtensionPoint().addChangeListener(myVersionProvider::drop, this);
+    // TODO consulo: Consulo ExtensionPoint has no change listeners (extensions are not changed without restart),
+    //  upstream drops the cached version on com.perl5.subCallHandler extensions change here
   }
 
   public static int getHandlersVersion() {
-    return getInstance().myVersionProvider.getValue();
+    return getInstance().myVersionProvider.get();
   }
 
   @Override
   public void dispose() {
-    myVersionProvider.drop();
+    myVersionProvider.clear();
   }
 
   private static @NotNull PerlSubCallHandlerVersionService getInstance() {

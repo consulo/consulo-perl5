@@ -16,15 +16,15 @@
 
 package com.perl5.lang.perl.idea.completion.util;
 
-import com.intellij.codeInsight.lookup.LookupElementBuilder;
-import com.intellij.lang.Language;
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiTreeUtil;
+import consulo.language.editor.completion.lookup.LookupElementBuilder;
+import consulo.language.Language;
+import consulo.application.progress.ProgressManager;
+import consulo.project.Project;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.util.PsiTreeUtil;
 import com.perl5.PerlIcons;
 import com.perl5.lang.perl.extensions.packageprocessor.PerlPackageOptionsProvider;
 import com.perl5.lang.perl.extensions.packageprocessor.PerlPackageParentsProvider;

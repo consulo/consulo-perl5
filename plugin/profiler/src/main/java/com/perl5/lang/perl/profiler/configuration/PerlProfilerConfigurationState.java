@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.profiler.configuration;
 
-import com.intellij.profiler.api.configurations.ProfilerConfigurationStateBase;
+import consulo.execution.profiler.configuration.ProfilerConfigurationStateBase;
 import com.perl5.lang.perl.profiler.run.PerlProfilerStartupMode;
 import org.jetbrains.annotations.NotNull;
 

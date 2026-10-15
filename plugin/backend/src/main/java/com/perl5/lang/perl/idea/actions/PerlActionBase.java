@@ -16,33 +16,40 @@
 
 package com.perl5.lang.perl.idea.actions;
 
-import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
+
+import consulo.codeEditor.Editor;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
 import com.perl5.lang.perl.idea.project.PerlProjectManager;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
+import consulo.ui.image.Image;
+import consulo.ui.ex.action.ActionPlaces;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
+import consulo.language.editor.CommonDataKeys;
+import consulo.dataContext.DataContext;
 
 
-public abstract class PerlActionBase extends AnAction implements PerlAction {
+// consulo: update(AnActionEvent) is declared by AnActionWithSyncUpdate
+public abstract class PerlActionBase extends AnAction implements PerlAction, AnActionWithSyncUpdate {
   public PerlActionBase() {
   }
 
   public PerlActionBase(@Nls(capitalization = Nls.Capitalization.Title) @Nullable String text,
                         @Nls(capitalization = Nls.Capitalization.Sentence) @Nullable String description,
-                        @Nullable Icon icon) {
+                        @Nullable Image icon) {
     super(text, description, icon);
   }
 
   public PerlActionBase(@Nls(capitalization = Nls.Capitalization.Title) @Nullable String text,
-                        @Nullable Icon icon) {
+                        @Nullable Image icon) {
     this(text, null, icon);
   }
 
@@ -55,16 +62,12 @@ public abstract class PerlActionBase extends AnAction implements PerlAction {
   }
 
   @Override
-  public @NotNull ActionUpdateThread getActionUpdateThread() {
-    return ActionUpdateThread.BGT;
-  }
-
-  @Override
   public void update(@NotNull AnActionEvent event) {
     final boolean enabled = isEnabled(event);
     var eventPresentation = event.getPresentation();
     eventPresentation.setEnabled(enabled);
-    if (alwaysHideDisabled() || (event.getUiKind() instanceof ActionUiKind.Popup)) {
+    // consulo: no ActionUiKind, IntelliJ ActionUiKind.Popup covers popups and the main menu
+    if (alwaysHideDisabled() || ActionPlaces.isPopupPlace(event.getPlace()) || ActionPlaces.MAIN_MENU.equals(event.getPlace())) {
       eventPresentation.setVisible(enabled);
     }
     else {
@@ -78,12 +81,12 @@ public abstract class PerlActionBase extends AnAction implements PerlAction {
 
   protected static @Nullable PsiFile getPsiFile(@NotNull AnActionEvent event) {
     final DataContext context = event.getDataContext();
-    final Project project = CommonDataKeys.PROJECT.getData(context);
+    final Project project = context.getData(CommonDataKeys.PROJECT);
     if (project == null) {
       return null;
     }
 
-    final Editor editor = CommonDataKeys.EDITOR.getData(context);
+    final Editor editor = context.getData(CommonDataKeys.EDITOR);
     if (editor != null) {
       return PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
     }
@@ -97,6 +100,6 @@ public abstract class PerlActionBase extends AnAction implements PerlAction {
   }
 
   protected static @Nullable VirtualFile getVirtualFile(@NotNull AnActionEvent event) {
-    return CommonDataKeys.VIRTUAL_FILE.getData(event.getDataContext());
+    return event.getDataContext().getData(CommonDataKeys.VIRTUAL_FILE);
   }
 }

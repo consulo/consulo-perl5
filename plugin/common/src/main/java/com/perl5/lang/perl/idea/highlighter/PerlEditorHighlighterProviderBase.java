@@ -16,16 +16,16 @@
 
 package com.perl5.lang.perl.idea.highlighter;
 
-import com.intellij.openapi.editor.colors.EditorColorsScheme;
-import com.intellij.openapi.editor.ex.util.LayerDescriptor;
-import com.intellij.openapi.editor.ex.util.LayeredLexerEditorHighlighter;
-import com.intellij.openapi.editor.highlighter.EditorHighlighter;
-import com.intellij.openapi.fileTypes.EditorHighlighterProvider;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.openapi.fileTypes.SyntaxHighlighter;
-import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.colorScheme.EditorColorsScheme;
+import consulo.language.editor.highlight.LayerDescriptor;
+import consulo.language.editor.highlight.LayeredLexerEditorHighlighter;
+import consulo.codeEditor.EditorHighlighter;
+import consulo.language.editor.highlight.EditorHighlighterProvider;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.language.editor.highlight.SyntaxHighlighter;
+import consulo.language.editor.highlight.SyntaxHighlighterFactory;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
 import com.perl5.lang.pod.filetypes.PodFileType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,7 +40,8 @@ public abstract class PerlEditorHighlighterProviderBase implements EditorHighlig
                                                       @NotNull FileType fileType,
                                                       @Nullable VirtualFile virtualFile,
                                                       @NotNull EditorColorsScheme colors) {
-    LayeredLexerEditorHighlighter highlighter = new LayeredLexerEditorHighlighter(createBaseSyntaxHighlighter(project), colors);
+    LayeredLexerEditorHighlighter highlighter =
+      new LayeredLexerEditorHighlighter(createBaseSyntaxHighlighter(project, virtualFile), colors);
     highlighter.registerLayer(POD, new LayerDescriptor(
       Objects.requireNonNull(SyntaxHighlighterFactory.getSyntaxHighlighter(PodFileType.INSTANCE, project, virtualFile)),
       ""
@@ -54,5 +55,8 @@ public abstract class PerlEditorHighlighterProviderBase implements EditorHighlig
     return highlighter;
   }
 
-  protected abstract @NotNull SyntaxHighlighter createBaseSyntaxHighlighter(@Nullable Project project);
+  /**
+   * consulo: {@code virtualFile} is passed to read per-module settings of the file (module extensions), upstream reads project settings
+   */
+  protected abstract @NotNull SyntaxHighlighter createBaseSyntaxHighlighter(@Nullable Project project, @Nullable VirtualFile virtualFile);
 }

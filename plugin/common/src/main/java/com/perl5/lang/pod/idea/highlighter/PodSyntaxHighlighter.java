@@ -16,13 +16,13 @@
 
 package com.perl5.lang.pod.idea.highlighter;
 
-import com.intellij.lexer.Lexer;
-import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
-import com.intellij.openapi.editor.HighlighterColors;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
-import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.tree.TokenSet;
+import consulo.language.lexer.Lexer;
+import consulo.codeEditor.DefaultLanguageHighlighterColors;
+import consulo.codeEditor.HighlighterColors;
+import consulo.colorScheme.TextAttributesKey;
+import consulo.language.editor.highlight.SyntaxHighlighterBase;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
 import com.perl5.lang.pod.lexer.PodLexerAdapter;
 import com.perl5.lang.pod.lexer.PodTokenSets;
 import org.jetbrains.annotations.NotNull;
@@ -30,7 +30,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.intellij.openapi.editor.colors.TextAttributesKey.createTextAttributesKey;
+import static consulo.colorScheme.TextAttributesKey.createTextAttributesKey;
 import static com.perl5.lang.pod.parser.PodElementTypesGenerated.*;
 
 

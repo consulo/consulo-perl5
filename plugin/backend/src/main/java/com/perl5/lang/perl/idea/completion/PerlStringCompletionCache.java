@@ -16,13 +16,20 @@
 
 package com.perl5.lang.perl.idea.completion;
 
-import com.intellij.openapi.project.Project;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
+import jakarta.inject.Singleton;
+import consulo.project.Project;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.HashSet;
 import java.util.Set;
 
+@ServiceAPI(ComponentScope.PROJECT)
+@ServiceImpl
+@Singleton
 public class PerlStringCompletionCache {
   private final Set<String> myHashIndexesCache = new HashSet<>();
   private final Set<String> myHeredocOpenersCache = new HashSet<>();

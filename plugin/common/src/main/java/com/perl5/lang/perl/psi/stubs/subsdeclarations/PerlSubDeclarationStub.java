@@ -16,8 +16,8 @@
 
 package com.perl5.lang.perl.psi.stubs.subsdeclarations;
 
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.tree.IElementType;
+import consulo.language.psi.stub.IStubElementType;
+import consulo.language.psi.stub.StubElement;
 import com.perl5.lang.perl.psi.PerlSubDeclarationElement;
 import com.perl5.lang.perl.psi.stubs.PerlSubStub;
 import com.perl5.lang.perl.psi.utils.PerlSubAnnotations;
@@ -27,7 +27,7 @@ public class PerlSubDeclarationStub extends PerlSubStub<PerlSubDeclarationElemen
                                 String packageName,
                                 String subName,
                                 PerlSubAnnotations annotations,
-                                IElementType elementType) {
+                                IStubElementType<?, ?> elementType) {
     super(parent, packageName, subName, annotations, elementType);
   }
 }

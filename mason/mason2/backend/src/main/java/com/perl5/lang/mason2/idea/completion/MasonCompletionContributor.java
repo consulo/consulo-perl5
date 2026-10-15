@@ -16,14 +16,22 @@
 
 package com.perl5.lang.mason2.idea.completion;
 
-import com.intellij.codeInsight.completion.CompletionContributor;
-import com.intellij.codeInsight.completion.CompletionType;
+import com.perl5.lang.perl.PerlLanguage;
+import consulo.language.Language;
+import consulo.language.editor.completion.CompletionContributor;
+import consulo.language.editor.completion.CompletionType;
+import org.jetbrains.annotations.NotNull;
 
 import static com.perl5.lang.mason2.idea.completion.MasonElementPatterns.MASON_CALL_TEMPLATE_PATTERN;
 import static com.perl5.lang.mason2.idea.completion.MasonElementPatterns.MASON_EXTENDS_VALUE_TEXT_PATTERN;
 
 
 public class MasonCompletionContributor extends CompletionContributor {
+  @Override
+  public @NotNull Language getLanguage() {
+    return PerlLanguage.INSTANCE;
+  }
+
   public MasonCompletionContributor() {
     extend(
       CompletionType.BASIC,

@@ -16,11 +16,11 @@
 
 package com.perl5.lang.perl.idea.sdk.host;
 
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.application.ApplicationManager;
+import consulo.logging.Logger;
+import consulo.util.io.FileUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.util.collection.ContainerUtil;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.util.PerlPluginUtil;
 import com.perl5.lang.perl.util.PerlRunUtil;

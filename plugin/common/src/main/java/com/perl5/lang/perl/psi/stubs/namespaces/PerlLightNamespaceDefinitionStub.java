@@ -16,11 +16,11 @@
 
 package com.perl5.lang.perl.psi.stubs.namespaces;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.stubs.PsiFileStubImpl;
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.psi.stub.IStubElementType;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.stub.PsiFileStubImpl;
+import consulo.language.psi.stub.StubElement;
+import consulo.language.util.IncorrectOperationException;
 import com.perl5.lang.perl.psi.stubs.PerlLightElementStub;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,7 +31,7 @@ public class PerlLightNamespaceDefinitionStub extends PerlNamespaceDefinitionStu
   private boolean myIsImplicit = false;
 
   public PerlLightNamespaceDefinitionStub(@Nullable StubElement<?> parent,
-                                          @NotNull IElementType elementType,
+                                          @NotNull IStubElementType<?, ?> elementType,
                                           @NotNull PerlNamespaceDefinitionData data) {
     super(new PsiFileStubImpl<>(null), elementType, data);
     myParent = parent;
@@ -49,7 +49,7 @@ public class PerlLightNamespaceDefinitionStub extends PerlNamespaceDefinitionStu
 
   @Override
   public String toString() {
-    return getElementType() + ":" + super.toString();
+    return getStubType() + ":" + super.toString();
   }
 
   @Override

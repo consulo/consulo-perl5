@@ -16,8 +16,7 @@
 
 package com.perl5.lang.perl.idea.run.debugger;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.openapi.util.NlsSafe;
+import consulo.process.ExecutionException;
 
 
 public interface PerlDebugOptions {
@@ -46,7 +45,7 @@ public interface PerlDebugOptions {
   @SuppressWarnings("unused")
   String getRemoteProjectRoot();
 
-  @NlsSafe
+  
   String getStartMode();
 
   void setStartMode(String startMode);

@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.psi.references;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.ResolveResult;
+import consulo.project.Project;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.ResolveResult;
 import com.perl5.lang.perl.util.PerlPackageUtilCore;
 import org.jetbrains.annotations.NotNull;
 

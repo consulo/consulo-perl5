@@ -16,10 +16,10 @@
 
 package com.perl5.lang.perl.idea.sdk.versionManager.perlbrew;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.util.ObjectUtils;
-import com.intellij.util.xmlb.annotations.Tag;
+import consulo.project.Project;
+import consulo.content.bundle.Sdk;
+import consulo.util.lang.ObjectUtil;
+import consulo.util.xml.serializer.annotation.Tag;
 import com.perl5.lang.perl.adapters.PackageManagerAdapter;
 import com.perl5.lang.perl.idea.execution.PerlCommandLine;
 import com.perl5.lang.perl.idea.sdk.versionManager.PerlRealVersionManagerData;
@@ -89,7 +89,7 @@ class PerlBrewData extends PerlRealVersionManagerData<PerlBrewData, PerlBrewHand
 
   @Contract("null->null")
   public static @Nullable PerlBrewData from(@Nullable Sdk sdk) {
-    return ObjectUtils.tryCast(PerlVersionManagerData.from(sdk), PerlBrewData.class);
+    return ObjectUtil.tryCast(PerlVersionManagerData.from(sdk), PerlBrewData.class);
   }
 
   @Override

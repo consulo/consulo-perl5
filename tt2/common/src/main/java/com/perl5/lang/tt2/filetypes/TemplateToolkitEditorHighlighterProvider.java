@@ -16,24 +16,32 @@
 
 package com.perl5.lang.tt2.filetypes;
 
-import com.intellij.openapi.editor.ex.util.LayerDescriptor;
-import com.intellij.openapi.editor.ex.util.LayeredLexerEditorHighlighter;
-import com.intellij.openapi.editor.highlighter.EditorHighlighter;
-import com.intellij.openapi.fileTypes.SyntaxHighlighter;
-import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.language.editor.highlight.LayerDescriptor;
+import consulo.language.editor.highlight.LayeredLexerEditorHighlighter;
+import consulo.codeEditor.EditorHighlighter;
+import consulo.language.editor.highlight.SyntaxHighlighter;
+import consulo.language.editor.highlight.SyntaxHighlighterFactory;
+import consulo.project.Project;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.VirtualFile;
 import com.perl5.lang.perl.PerlLanguage;
 import com.perl5.lang.perl.idea.highlighter.PerlEditorHighlighterProviderBase;
 import com.perl5.lang.tt2.TemplateToolkitFileViewProvider;
 import com.perl5.lang.tt2.elementTypes.TemplateToolkitElementTypes;
 import com.perl5.lang.tt2.idea.highlighting.TemplateToolkitSyntaxHighlighter;
+import com.perl5.lang.tt2.idea.settings.TemplateToolkitSettings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import static com.perl5.lang.tt2.parser.TemplateToolkitElementTypesGenerated.TT2_HTML;
 
 public class TemplateToolkitEditorHighlighterProvider extends PerlEditorHighlighterProviderBase {
+  // consulo: Consulo keys EditorHighlighterProvider by file type (upstream xml filetype="Template Toolkit")
+  @Override
+  public @NotNull FileType getFileType() {
+    return TemplateToolkitFileType.INSTANCE;
+  }
+
   @Override
   protected @NotNull EditorHighlighter registerAdditionalLayers(@NotNull LayeredLexerEditorHighlighter highlighter,
                                                                 @Nullable Project project,
@@ -54,7 +62,7 @@ public class TemplateToolkitEditorHighlighterProvider extends PerlEditorHighligh
   }
 
   @Override
-  protected @NotNull SyntaxHighlighter createBaseSyntaxHighlighter(@Nullable Project project) {
-    return new TemplateToolkitSyntaxHighlighter(project);
+  protected @NotNull SyntaxHighlighter createBaseSyntaxHighlighter(@Nullable Project project, @Nullable VirtualFile virtualFile) {
+    return new TemplateToolkitSyntaxHighlighter(TemplateToolkitSettings.forFile(project, virtualFile));
   }
 }

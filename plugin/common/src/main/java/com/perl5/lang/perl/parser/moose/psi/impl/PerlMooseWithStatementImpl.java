@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.parser.moose.psi.impl;
 
-import com.intellij.lang.ASTNode;
+import consulo.language.ast.ASTNode;
 import com.perl5.lang.perl.parser.moose.psi.PerlMooseWithStatement;
 import org.jetbrains.annotations.NotNull;
 

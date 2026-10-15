@@ -16,14 +16,14 @@
 
 package com.perl5.lang.pod.parser.psi.mixin;
 
-import com.intellij.lang.ASTNode;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.ElementManipulators;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.stubs.StubElement;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.util.IncorrectOperationException;
+import consulo.language.ast.ASTNode;
+import consulo.logging.Logger;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.ElementManipulators;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.stub.StubElement;
+import consulo.language.ast.IElementType;
+import consulo.language.util.IncorrectOperationException;
 import com.perl5.lang.pod.parser.psi.*;
 import com.perl5.lang.pod.parser.psi.stubs.PodSectionStub;
 import com.perl5.lang.pod.parser.psi.util.PodRenderUtil;

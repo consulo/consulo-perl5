@@ -16,11 +16,11 @@
 
 package com.perl5.lang.perl.psi.references;
 
-import com.intellij.openapi.application.QueryExecutorBase;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiReference;
-import com.intellij.psi.search.searches.ReferencesSearch;
-import com.intellij.util.Processor;
+import consulo.project.util.query.QueryExecutorBase;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiReference;
+import consulo.language.psi.search.ReferencesSearch;
+import consulo.language.psi.search.ReferencesSearchQueryExecutor;
 import com.perl5.lang.perl.psi.PerlHeredocOpener;
 import com.perl5.lang.perl.psi.PerlNamespaceDefinitionElement;
 import com.perl5.lang.perl.psi.impl.PerlPolyNamedElement;
@@ -29,17 +29,19 @@ import com.perl5.lang.perl.psi.light.PerlLightSubDefinitionElement;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
+import java.util.function.Predicate;
 
 import static com.perl5.lang.perl.util.PerlPackageUtilCore.__PACKAGE__;
 
 
-public class PerlReferencesSearcher extends QueryExecutorBase<PsiReference, ReferencesSearch.SearchParameters> {
+public class PerlReferencesSearcher extends QueryExecutorBase<PsiReference, ReferencesSearch.SearchParameters>
+  implements ReferencesSearchQueryExecutor {
   public PerlReferencesSearcher() {
     super(true);
   }
 
   @Override
-  public void processQuery(@NotNull ReferencesSearch.SearchParameters queryParameters, @NotNull Processor<? super PsiReference> consumer) {
+  public void processQuery(@NotNull ReferencesSearch.SearchParameters queryParameters, @NotNull Predicate<? super PsiReference> consumer) {
     PsiElement element = queryParameters.getElementToSearch();
 
     switch (element) {

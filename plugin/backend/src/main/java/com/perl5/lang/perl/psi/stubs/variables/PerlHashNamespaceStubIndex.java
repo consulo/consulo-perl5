@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.psi.stubs.variables;
 
-import com.intellij.psi.stubs.StubIndexKey;
+import consulo.language.psi.stub.StubIndexKey;
 import com.perl5.lang.perl.psi.PerlVariableDeclarationElement;
 import org.jetbrains.annotations.NotNull;
 

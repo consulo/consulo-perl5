@@ -1,118 +1,55 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Guidance for Claude Code when working in this repository.
 
 ## Project Overview
 
-This is **Perl5 Support for JetBrains IDEs (Camelcade)** - a multi-module IntelliJ Platform plugin providing comprehensive Perl language support. The codebase is primarily Kotlin and Java (~2,884 source files).
+Consulo port of **Perl5 support (Camelcade/Perl5-IDEA)**. Upstream sources are kept in the upstream layout
+(`plugin/`, `tt2/`, `mojo/`, `embedded/`, `mason/`) and compiled by Maven aggregate modules in `consulo/`.
+Upstream changes are merged from https://github.com/Camelcade/Perl5-IDEA.
 
-## Build Commands
+## Build
 
 ```bash
-# Build all plugins
-./gradlew buildPlugin
+# full build (the only build command to use)
+mvn package -T 1C -Dmaven.test.skip=true
 
-# Build specific plugin (e.g., Template Toolkit)
-./gradlew :lang.tt2:buildPlugin
-
-# Run all tests (excludes integration tests by default)
-./gradlew test
-
-# Run light tests only (fast, for local development)
-./gradlew test -PlightTests=1
-
-# Run heavy tests only (longer running)
-./gradlew test -PheavyTests=1
-
-# Run integration tests (requires Perl environment)
-./gradlew test -PintegrationTests=1
-
-# Run specific test class
-./gradlew test -Pruntest=PerlCompletionResultTest
-
-# Run tests with test data overwrite (updates expected output files)
-./gradlew test -Poverwrite
-
-# Build with code coverage
-./gradlew build -Pwith_coverage=1
-
-# Launch IDE with plugins for testing
-./gradlew runIde
-
-# Launch in split mode (frontend/backend separate)
-./gradlew runInSplitMode
+# run Consulo with the plugins in consulo/plugin/sandbox (web: http://localhost:8080)
+mvn package -T 1C -Dmaven.test.skip=true -Prun-web
+mvn package -T 1C -Dmaven.test.skip=true -Prun-desktop
 ```
 
-## Architecture
+Upstream tests (`*/src/test`, `plugin/testFixtures`) are not built.
 
-### Plugin Structure
+## Layout
 
-The project uses a modular multi-plugin architecture:
+- `consulo/core` — plugin `com.perl5`: aggregate of `plugin/common`, `plugin/backend`, `plugin/frontend` and the
+  sub-projects (`carton`, `cpan`, `cpanminus`, `perlbrew`, `plenv`, `asdf`, `berrybrew`, `perlInstall`, `makeMaker`,
+  `moduleBuild`, `structureView`, `debugger`, `profiler`, `coverage`, `copyright`, `intelliLang`). They share packages,
+  so they form one JPMS module.
+- `consulo/tt2`, `consulo/mojo`, `consulo/embedded`, `consulo/mason` — templating plugins (depend on `com.perl5`).
+- `consulo/plugin` — packaging of `com.perl5` and the run profiles; loads the templating plugins into the sandbox.
+- `consulo/<module>/src/main/java` — Consulo-only sources (registrations, unified UI, helpers).
+- Not ported (IntelliJ-only APIs): `plugin/docker`, `plugin/wsl`, `plugin/terminal`, `plugin/idea`.
+- Lexers/parsers are generated at build time from `*/grammar/*.flex` and `*.bnf` (maven-consulo-plugin).
 
-- `plugin/` - Main Perl5 plugin with sub-modules:
-  - `psi/` - Program Structure Interface (AST)
-  - `common/`, `backend/`, `frontend/` - Split architecture
-  - `debugger/`, `profiler/`, `coverage/` - Development tools
-  - `perlbrew/`, `plenv/`, `asdf/`, `berrybrew/` - Version manager integrations
-  - `docker/`, `wsl/` - Environment support
-  - `cpan/`, `cpanminus/` - Package management
-- `tt2/` - Template Toolkit support (common/backend/frontend/split)
-- `mojo/` - Mojolicious support (common/backend/frontend/split)
-- `mason/` - Mason framework plugins
-- `embedded/` - Embedded Perl (`<?` markers) support
+## Conventions
 
-### Backend/Frontend/Common Pattern
-
-Each language module follows this structure:
-- `*-common/` - Shared language definitions
-- `*-backend/` - IDE logic, indexing, analysis (heavy computation)
-- `*-frontend/` - UI, syntax highlighting, editing
-- `*-frontend/split/` - Remote/WSL development support
-
-### Key Directories
-
-- `grammar/` - JFlex lexer grammar files (`Perl5.skeleton`, `Perl5Templating.skeleton`)
-- `buildSrc/` - Custom Gradle plugins and build logic
-- `plugin/testFixtures/` - Shared test base classes
-
-## Testing
-
-Prefer functional tests over unit tests unless a unit test is absolutely necessary and requested. Functional tests cover behavior instead of a particular implementation and may cover additional stuff on the way.
-
-Tests are categorized using JUnit `@Category` annotations:
-
-- `@Category(Light.class)` - Fast tests, suitable for local development
-- `@Category(Heavy.class)` - Longer running tests, run on CI
-- `@Category(Integration.class)` - Full integration tests requiring Perl environment
-
-Test base classes in `plugin/testFixtures/`:
-- `PerlLightTestCaseBase` - For light/unit tests
-- `PerlPlatformTestCase` - For integration tests
-- `PerlInstrumentationTestCase` - For instrumentation tests
-
-## Build Configuration
-
-Key files:
-- `gradle.properties` - Version numbers and build properties
-- `build.gradle.kts` - Root build configuration
-- `settings.gradle.kts` - Multi-project module definitions
-
-Current targets:
-- Java 21
-- IntelliJ Platform 253 (EAP)
-- Perl 5.38.0 (for testing)
-
-## Contribution Guidelines
-
-- One PR = one feature or bugfix
-- No partial implementations - complete solutions or decompose into separate issues
-- PRs must not break existing tests
-- Contact maintainer (hurricup) before major architectural changes
-
-### Commit policy
-
-- Prefer atomic changes, not a single commit mess. Commit incrementally as you work, one logical change per commit (e.g. "add key", "add field type", "handle new case in consumers", "add tests" are each their own commit). Don't bundle a whole feature into one commit. Each commit must still build/compile on its own. Use nice messages (IntelliJ format).
-- Reference issues in commit messages with a bare `#xxx` (no `user/project` prefix needed for local issues). Always include the issue id in the subject of every commit that belongs to an issue — including test-only, refactor, cleanup, docs, and follow-up commits. Keep a descriptive label if useful, but prefix it with the id, e.g. "#xxx tests: …". Only genuinely issue-less changes (incidental typo, unrelated drive-by) may omit an id.
-- Addressing review comments / fixing an existing change: if the code being fixed lives on a not-yet-merged feature branch, make `git commit --fixup=<sha>` commits targeting the original commit that introduced it (the maintainer runs the autosquash rebase). Only if the original change is already in master, make a normal separate commit. Grouping: one fix per commit by default, but several comments about the same problem or a really related issue may share a commit.
-- To reword a non-HEAD commit, create a `git commit --fixup=reword:<sha>` commit (or `--fixup=amend:<sha>` to change content+message too) — do NOT reset/cherry-pick or rewrite history by hand. For the current HEAD commit, plain `git commit --amend` is fine.
-- Put the why in the commit message, not in inline code comments.
+- Use the real Consulo API (`consulo.*`); `consulo.ide.impl` only when no API is exported. Never import
+  `consulo.*.internal.*` packages exported only to platform modules — they fail at runtime.
+- Extensions/services are registered with annotations (`@ExtensionImpl`, `@ServiceAPI`/`@ServiceImpl`, `@ActionImpl`,
+  `@TopicAPI`); annotated types must be top-level classes. Plugin-owned extension points only may use
+  `order = "first"/"last"`.
+- UI is Consulo unified UI (`consulo.ui.*`, `LocalizeValue`, `@RequiredUIAccess`); it must work in Consulo web.
+  No Swing dialogs (`Messages`, `DialogWrapper`): use `MessageBoxes`, `InputBoxBuilder`, `DialogService`
+  (`consulo.perl5.core.ui.PerlDialogUtil`). No `Task.Modal` where a dialog is needed (web deadlock).
+  Module extension panels are unified too (`MutableModuleExtension#createConfigurationComponent`); lists and tables use
+  `ToolbarDecoratorBuilderFactory` (`consulo.ui.ex.toolbar`), see `consulo.perl5.core.ui.PerlUnifiedConfigurationUtil`.
+- Perl interpreter = SDK of the module's Perl module extension (`perl5`); templating plugins are child extensions
+  (`perl5-tt2`, `perl5-mojo`, `perl5-embedded`, `perl5-htmlmason`, `perl5-mason2`) and keep their settings per module
+  in the extension state.
+- "New Project/Module" templates: the Perl5 group is shared — plugins add items with `PerlNewModuleBuilder.addGroup(context)`
+  and `PerlNewModuleBuilder.FRAMEWORK_TEMPLATE_WEIGHT`; `PerlNewModuleBuilderProcessor` sets up the Perl part (interpreter,
+  `lib`, `t`), `PerlFrameworkNewModuleBuilderProcessor` adds a framework extension and its root directory. Mojolicious
+  templates run `mojo generate` after the project is opened (`consulo/mojo/.../newProject`).
+- No Kotlin. Mark Consulo-specific changes in upstream files with `// consulo:` / `// TODO consulo:` comments.

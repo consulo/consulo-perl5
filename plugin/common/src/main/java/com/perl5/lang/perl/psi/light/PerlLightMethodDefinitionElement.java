@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.psi.light;
 
-import com.intellij.openapi.util.AtomicNotNullLazyValue;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
+import consulo.application.util.AtomicNotNullLazyValue;
+import consulo.language.psi.PsiElement;
+import consulo.language.ast.IElementType;
 import com.perl5.PerlIcons;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlValue;
 import com.perl5.lang.perl.psi.PerlSubExpr;
@@ -30,7 +30,7 @@ import com.perl5.lang.perl.psi.utils.PerlSubArgument;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
+import consulo.ui.image.Image;
 import java.util.List;
 
 import static com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlValues.UNKNOWN_VALUE_PROVIDER;
@@ -80,7 +80,7 @@ public class PerlLightMethodDefinitionElement<Delegate extends PerlPolyNamedElem
   }
 
   @Override
-  public @Nullable Icon getIcon(int flags) {
+  public @Nullable Image getIcon(int flags) {
     return PerlIcons.METHOD_GUTTER_ICON;
   }
 }

@@ -16,11 +16,11 @@
 
 package com.perl5.lang.tt2.formatter;
 
-import com.intellij.formatting.*;
-import com.intellij.lang.ASTNode;
-import com.intellij.openapi.util.NotNullLazyValue;
-import com.intellij.psi.tree.IElementType;
-import com.intellij.psi.util.PsiUtilCore;
+
+import consulo.language.ast.ASTNode;
+import consulo.application.util.NotNullLazyValue;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.PsiUtilCore;
 import com.perl5.lang.perl.idea.formatter.PerlBaseFormattingContext;
 import com.perl5.lang.perl.idea.formatter.PurePerlFormattingContext;
 import com.perl5.lang.perl.idea.formatter.blocks.PerlAstBlock;
@@ -38,6 +38,11 @@ import static com.perl5.lang.tt2.formatter.TemplateToolkitFormattingTokenSets.*;
 import static com.perl5.lang.tt2.lexer.TemplateToolkitSyntaxElements.ALL_OPERATORS_TOKENSET;
 import static com.perl5.lang.tt2.lexer.TemplateToolkitSyntaxElements.KEYWORDS_TOKENSET;
 import static com.perl5.lang.tt2.parser.TemplateToolkitElementTypesGenerated.*;
+import consulo.language.codeStyle.Alignment;
+import consulo.language.codeStyle.FormattingContext;
+import consulo.language.codeStyle.Indent;
+import consulo.language.codeStyle.SpacingBuilder;
+import consulo.language.codeStyle.Wrap;
 
 public final class TemplateToolkitFormattingContext extends PerlBaseFormattingContext {
   private final Map<ASTNode, Alignment> myAssignAlignmentMap = new HashMap<>();

@@ -16,7 +16,7 @@
 
 package com.perl5.lang.perl.idea.structureView.elements;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 
 public class PerlNamespaceStructureViewElement extends PerlStructureViewElement {
   public PerlNamespaceStructureViewElement(PsiElement element) {

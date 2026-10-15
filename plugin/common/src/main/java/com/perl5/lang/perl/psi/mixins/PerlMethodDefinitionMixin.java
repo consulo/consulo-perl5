@@ -1,0 +1,109 @@
+/*
+ * Copyright 2015-2026 Alexandr Evstigneev
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.perl5.lang.perl.psi.mixins;
+
+import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiElement;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.util.PsiTreeUtil;
+import com.perl5.lang.perl.psi.PerlMethodDefinition;
+import com.perl5.lang.perl.psi.PerlVariable;
+import com.perl5.lang.perl.psi.PerlVariableDeclarationElement;
+import com.perl5.lang.perl.psi.PsiPerlMethodSignatureInvocant;
+import com.perl5.lang.perl.psi.impl.PerlImplicitVariableDeclaration;
+import com.perl5.lang.perl.psi.stubs.subsdefinitions.PerlSubDefinitionStub;
+import com.perl5.lang.perl.psi.utils.PerlSubArgument;
+import com.perl5.lang.perl.util.PerlScalarUtilCore;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+
+public abstract class PerlMethodDefinitionMixin extends PerlSubDefinitionBase implements PerlMethodDefinition {
+  private volatile List<PerlVariableDeclarationElement> myImplicitVariables;
+
+  public PerlMethodDefinitionMixin(@NotNull ASTNode node) {
+    super(node);
+  }
+
+  public PerlMethodDefinitionMixin(@NotNull PerlSubDefinitionStub stub, @NotNull IElementType nodeType) {
+    super(stub, nodeType);
+  }
+
+  protected final @NotNull List<PerlVariableDeclarationElement> getMyImplicitVariables() {
+    List<PerlVariableDeclarationElement> result = myImplicitVariables;
+    if (result == null) {
+      result = buildImplicitVariables();
+      myImplicitVariables = result;
+    }
+    return result;
+  }
+
+  protected @NotNull List<PerlVariableDeclarationElement> buildImplicitVariables() {
+    return Collections.singletonList(PerlImplicitVariableDeclaration.createInvocant(this));
+  }
+
+  @Override
+  public boolean isMethod() {
+    return true;
+  }
+
+  @Override
+  protected boolean processSignatureElement(@Nullable PsiElement signatureElement, @NotNull List<PerlSubArgument> arguments) {
+    if (signatureElement instanceof PsiPerlMethodSignatureInvocant) {
+      PerlVariable variable = PsiTreeUtil.findChildOfType(signatureElement, PerlVariable.class);
+      if (variable != null) {
+        arguments.add(PerlSubArgument.mandatory(variable.getActualType(), Objects.requireNonNull(variable.getName())));
+      }
+    }
+    else if (signatureElement instanceof PerlVariableDeclarationElement) {
+      if (arguments.isEmpty()) {
+        arguments.add(PerlSubArgument.mandatoryScalar(getDefaultInvocantName().substring(1)));
+      }
+
+      return super.processSignatureElement(signatureElement, arguments);
+    }
+    return false;
+  }
+
+  /**
+   * Checks if method has an explicit invocant
+   *
+   * @return check result
+   */
+  private boolean hasExplicitInvocant() {
+    PsiElement signatureContainer = getSignatureContent();
+    return signatureContainer != null && signatureContainer.getFirstChild() instanceof PsiPerlMethodSignatureInvocant;
+  }
+
+  @Override
+  public @NotNull List<PerlVariableDeclarationElement> getImplicitVariables() {
+    if (hasExplicitInvocant()) {
+      return Collections.emptyList();
+    }
+    else {
+      return getMyImplicitVariables();
+    }
+  }
+
+  private static final @NotNull String defaultInvocantName = PerlScalarUtilCore.DEFAULT_SELF_SCALAR_NAME;
+
+  public static @NotNull String getDefaultInvocantName() {
+    return defaultInvocantName;
+  }
+}

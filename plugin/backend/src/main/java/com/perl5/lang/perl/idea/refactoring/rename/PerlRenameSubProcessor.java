@@ -16,15 +16,19 @@
 
 package com.perl5.lang.perl.idea.refactoring.rename;
 
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.search.PsiSearchScopeUtil;
-import com.intellij.psi.search.SearchScope;
-import com.intellij.refactoring.rename.PsiElementRenameHandler;
-import com.intellij.refactoring.rename.RenamePsiElementProcessor;
+import consulo.codeEditor.Editor;
+import consulo.ui.ex.awt.Messages;
+import consulo.util.lang.StringUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.scope.PsiSearchScopeUtil;
+import consulo.content.scope.SearchScope;
+import consulo.language.editor.refactoring.rename.PsiElementRenameHandler;
+import consulo.language.editor.refactoring.rename.RenamePsiElementProcessor;
+import consulo.localize.LocalizeValue;
+import consulo.ui.MessageBoxBuilder;
+import consulo.ui.MessageButtonRole;
+import consulo.ui.annotation.RequiredUIAccess;
 import com.perl5.PerlBundle;
 import com.perl5.PerlIcons;
 import com.perl5.lang.perl.parser.Class.Accessor.psi.impl.PerlClassAccessorMethod;
@@ -35,6 +39,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 
 public class PerlRenameSubProcessor extends RenamePsiElementProcessor {
   @Override
@@ -69,6 +75,57 @@ public class PerlRenameSubProcessor extends RenamePsiElementProcessor {
     return super.substituteElementToRename(element, editor);
   }
 
+  /**
+   * consulo: in-place rename takes the element through the callback, so the SUPER method question is asked with the unified
+   * (asynchronous) message box there, Messages are Swing dialogs (not available in web). The synchronous variant above is
+   * left for the dialog rename, whose rename dialog is Swing anyway.
+   */
+  @Override
+  @RequiredUIAccess
+  public void substituteElementToRename(@NotNull PsiElement element,
+                                        @NotNull Editor editor,
+                                        @NotNull Consumer<PsiElement> renameCallback) {
+    if (PsiElementRenameHandler.isVetoed(element)) {
+      return;
+    }
+
+    if (element instanceof PerlSubElement subElement && subElement.isMethod()) {
+      suggestSuperMethodAsync(subElement).whenComplete((substituted, error) -> {
+        if (substituted != null && substituted.isValid() &&
+            PsiElementRenameHandler.canRename(substituted.getProject(), editor, substituted)) {
+          renameCallback.accept(substituted);
+        }
+      });
+      return;
+    }
+
+    super.substituteElementToRename(element, editor, renameCallback);
+  }
+
+  /**
+   * consulo: asynchronous {@link #suggestSuperMethod(PerlSubElement)}
+   */
+  @RequiredUIAccess
+  private static @NotNull CompletableFuture<PsiElement> suggestSuperMethodAsync(@NotNull PerlSubElement subBase) {
+    PerlSubElement topLevelSuperMethod = PerlSubUtil.getTopmostSuperMethod(subBase);
+    String canonicalName = topLevelSuperMethod.getCanonicalName();
+
+    if (topLevelSuperMethod == subBase || canonicalName == null) {
+      return CompletableFuture.completedFuture(subBase);
+    }
+
+    return MessageBoxBuilder.<PsiElement>create()
+      .asQuestion()
+      .title(LocalizeValue.of(PerlBundle.message("perl.sub.rename.dialog.title")))
+      .text(LocalizeValue.of(PerlBundle.message("perl.sub.rename.dialog.message", canonicalName)))
+      .icon(PerlIcons.PERL_LANGUAGE_ICON)
+      .button(MessageButtonRole.OK, LocalizeValue.of(PerlBundle.message("perl.sub.rename.dialog.rename.super")), topLevelSuperMethod)
+      .asDefaultButton()
+      .button(MessageButtonRole.CANCEL, LocalizeValue.of(PerlBundle.message("perl.sub.rename.dialog.rename.current")), subBase)
+      .asExitButton()
+      .showAsync(subBase.getProject());
+  }
+
   private @NotNull PsiElement suggestSuperMethod(@NotNull PerlSubElement subBase) {
     PerlSubElement topLevelSuperMethod = PerlSubUtil.getTopmostSuperMethod(subBase);
     String canonicalName = topLevelSuperMethod.getCanonicalName();
@@ -89,7 +146,7 @@ public class PerlRenameSubProcessor extends RenamePsiElementProcessor {
 
   /**
    * @return related items for sub declaration or definition. All synonymous definitions, declarations and typeglobs from
-   * the {@link GlobalSearchScope#allScope(com.intellij.openapi.project.Project) all scope}
+   * the {@link GlobalSearchScope#allScope(consulo.project.Project) all scope}
    */
   public static @NotNull Set<PsiElement> computeRelatedItems(@NotNull PerlSubElement subElement) {
     String canonicalName = subElement.getCanonicalName();

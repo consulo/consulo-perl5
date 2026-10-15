@@ -16,10 +16,10 @@
 
 package com.perl5.lang.perl.psi.impl;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiManager;
-import com.intellij.util.IncorrectOperationException;
-import com.intellij.util.ObjectUtils;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiManager;
+import consulo.language.util.IncorrectOperationException;
+import consulo.util.lang.ObjectUtil;
 import com.perl5.PerlIcons;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlValue;
 import com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlValues;
@@ -30,7 +30,7 @@ import com.perl5.lang.perl.psi.utils.PerlSubArgument;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
+import consulo.ui.image.Image;
 import java.util.List;
 
 public class PerlImplicitSubDefinition extends PerlImplicitElement implements PerlSubDefinitionElement {
@@ -69,7 +69,7 @@ public class PerlImplicitSubDefinition extends PerlImplicitElement implements Pe
     mySubName = subName;
     myNamespaceName = namespaceName;
     mySubArguments = argumentList;
-    myReturnValue = ObjectUtils.notNull(returnValue, PerlValues.UNKNOWN_VALUE);
+    myReturnValue = ObjectUtil.notNull(returnValue, PerlValues.UNKNOWN_VALUE);
     myIsAnonymous = isAnonymous;
   }
 
@@ -128,8 +128,9 @@ public class PerlImplicitSubDefinition extends PerlImplicitElement implements Pe
     return null;
   }
 
-  @Override
-  public @Nullable Icon getIcon(int flags) {
+  // TODO consulo: PsiElement#getIcon(int) does not exist in Consulo (element icons come from IconDescriptorUpdater),
+  //  so this is no longer an override and is not called by the platform
+  public @Nullable Image getIcon(int flags) {
     return PerlIcons.SUB_GUTTER_ICON;
   }
 
