@@ -16,6 +16,7 @@
 
 package com.perl5.lang.perl.idea.configuration.settings.sdk;
 
+import consulo.localize.LocalizeValue;
 import consulo.navigation.ItemPresentation;
 import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkType;
@@ -23,7 +24,7 @@ import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 import com.perl5.lang.perl.idea.project.PerlProjectManager;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -43,8 +44,8 @@ public class PerlSdkLibrary implements ItemPresentation {
   }
 
   @Override
-  public @Nullable String getPresentableText() {
-    return mySdk == null ? null : mySdk.getName();
+  public LocalizeValue getPresentableText() {
+    return mySdk == null ? LocalizeValue.empty() : LocalizeValue.of(mySdk.getName());
   }
 
   @Override

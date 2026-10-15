@@ -88,7 +88,7 @@ final class PerlUnifiedInjectionMarkersConfigurable implements Configurable, Con
     table.addColumn(LocalizeValue.of(PerlBundle.message("perl.settings.markers.column.language.title")), item -> item.myLanguageId)
       .setWidth(600)
       .setSortable(Comparator.comparing(languageId -> getLanguagePresentation(languageId).get()))
-      .setRender((presentation, item) -> {
+      .setRenderer((presentation, item) -> {
         String languageId = item.getValue();
         if (languageId != null) {
           presentation.append(getLanguagePresentation(languageId));

@@ -19,21 +19,21 @@ package com.perl5.lang.mojolicious.psi;
 import consulo.language.psi.ElementDescriptionLocation;
 import consulo.language.psi.ElementDescriptionProvider;
 import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
 import consulo.usage.UsageViewTypeLocation;
 import com.perl5.lang.mojolicious.MojoBundle;
 import com.perl5.lang.mojolicious.psi.impl.MojoHelperDefinition;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class MojoElementDescriptionProvider implements ElementDescriptionProvider {
   @Override
-  public @Nullable String getElementDescription(@NotNull PsiElement element, @NotNull ElementDescriptionLocation location) {
+  public LocalizeValue getElementDescription(@NotNull PsiElement element, @NotNull ElementDescriptionLocation location) {
     if (location == UsageViewTypeLocation.INSTANCE) {
       if (element instanceof MojoHelperDefinition) {
-        return MojoBundle.message("perl.type.mojo.helper");
+        return LocalizeValue.localizeTODO(MojoBundle.message("perl.type.mojo.helper"));
       }
     }
 
-    return null;
+    return LocalizeValue.empty();
   }
 }

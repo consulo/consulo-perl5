@@ -16,13 +16,16 @@
 
 package com.perl5.lang.perl.psi.properties;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.PsiNameIdentifierOwner;
-import org.jetbrains.annotations.Nullable;
-
+import consulo.localize.LocalizeValue;
 
 public interface PerlIdentifierOwner extends PsiNameIdentifierOwner {
   /**
    * @return name for element presentation
    */
-  default @Nullable String getPresentableName() { return getName(); }
+  @RequiredReadAction
+  default LocalizeValue getPresentableName() {
+    return LocalizeValue.ofNullable(getName());
+  }
 }

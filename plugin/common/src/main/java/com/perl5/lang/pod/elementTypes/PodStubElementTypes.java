@@ -91,7 +91,7 @@ public interface PodStubElementTypes {
     @SuppressWarnings("rawtypes")
     @Override
     public @NotNull PodSectionStub createStub(@NotNull PodSectionParagraph psi, @Nullable StubElement parentStub) {
-      return new PodSectionStub(parentStub, this, psi.getPresentableText());
+      return new PodSectionStub(parentStub, this, psi.getPresentableText().get());
     }
 
     @Override

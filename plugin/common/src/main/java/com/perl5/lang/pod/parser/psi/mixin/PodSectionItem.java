@@ -16,6 +16,7 @@
 
 package com.perl5.lang.pod.parser.psi.mixin;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiElement;
 import consulo.language.ast.IElementType;
@@ -23,6 +24,7 @@ import consulo.language.psi.PsiUtilCore;
 import com.perl5.lang.pod.parser.psi.PodRenderingContext;
 import com.perl5.lang.pod.parser.psi.stubs.PodSectionStub;
 import com.perl5.lang.pod.parser.psi.util.PodRenderUtil;
+import consulo.localize.LocalizeValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,17 +35,17 @@ public class PodSectionItem extends PodTitledSectionMixin {
     super(node);
   }
 
-  public PodSectionItem(@NotNull PodSectionStub stub,
-                        @NotNull IElementType nodeType) {
+  public PodSectionItem(@NotNull PodSectionStub stub, @NotNull IElementType nodeType) {
     super(stub, nodeType);
   }
 
   @Override
-  public @Nullable String getPresentableText() {
+  @RequiredReadAction
+  public LocalizeValue getPresentableText() {
     PodSectionStub greenStub = getGreenStub();
     if (greenStub != null) {
       String content = greenStub.getContent();
-      return content.isEmpty() ? "" : content.substring(1);
+      return content.isEmpty() ? LocalizeValue.empty() : LocalizeValue.of(content.substring(1));
     }
 
     if (isTargetable()) {
@@ -51,12 +53,13 @@ public class PodSectionItem extends PodTitledSectionMixin {
     }
     PsiElement contentBlock = getContentBlock();
     if (contentBlock == null) {
-      return null;
+      return LocalizeValue.empty();
     }
-    return PodRenderUtil.trimItemText(PodRenderUtil.renderPsiElementAsText(contentBlock));
+    return LocalizeValue.of(PodRenderUtil.renderPsiElementAsText(contentBlock)).truncateWithEllipsis(140);
   }
 
   @Override
+  @RequiredReadAction
   public @Nullable String getTitleText() {
     PodSectionStub greenStub = getGreenStub();
     if (greenStub != null) {
@@ -69,6 +72,7 @@ public class PodSectionItem extends PodTitledSectionMixin {
   /**
    * @return true iff this item may be targeted from link (has title)
    */
+  @RequiredReadAction
   public boolean isTargetable() {
     PodSectionStub stub = getGreenStub();
     if (stub != null) {
@@ -82,6 +86,7 @@ public class PodSectionItem extends PodTitledSectionMixin {
    *
    * @return true if list should be bulleted
    */
+  @RequiredReadAction
   public boolean isBulleted() {
     return !isTargetable() && !isNumbered();
   }
@@ -89,6 +94,7 @@ public class PodSectionItem extends PodTitledSectionMixin {
   /**
    * @return true iff this item is numbered one
    */
+  @RequiredReadAction
   public boolean isNumbered() {
     if (isTargetable()) {
       return false;
@@ -106,6 +112,7 @@ public class PodSectionItem extends PodTitledSectionMixin {
   /**
    * @return true iff item should be rendered with {@code <li>..</li>} tags
    */
+  @RequiredReadAction
   private boolean isRenderAsListItem() {
     PsiElement container = getParent();
     return container instanceof PodOverSectionContent overSectionContent &&
@@ -113,6 +120,7 @@ public class PodSectionItem extends PodTitledSectionMixin {
   }
 
   @Override
+  @RequiredReadAction
   public void renderElementAsHTML(StringBuilder builder, PodRenderingContext context) {
     boolean isListItem = isRenderAsListItem();
 

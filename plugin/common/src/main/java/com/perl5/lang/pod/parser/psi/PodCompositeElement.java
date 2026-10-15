@@ -16,21 +16,23 @@
 
 package com.perl5.lang.pod.parser.psi;
 
-import consulo.navigation.ItemPresentation;
-import consulo.util.lang.StringUtil;
+import com.perl5.lang.perl.psi.PerlReferenceOwner;
+import com.perl5.lang.pod.parser.psi.mixin.PodFormatterX;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.util.PsiTreeUtil;
-import consulo.language.icon.IconDescriptorUpdaters;
+import consulo.localize.LocalizeValue;
+import consulo.navigation.ItemPresentation;
 import consulo.ui.image.Image;
-import com.perl5.lang.perl.psi.PerlReferenceOwner;
-import com.perl5.lang.pod.parser.psi.mixin.PodFormatterX;
 import org.jetbrains.annotations.Nullable;
 
 public interface PodCompositeElement extends PsiElement, PodRenderableElement, ItemPresentation, PerlReferenceOwner {
   /**
    * @return true iff element contains direct child X<>
    */
+  @RequiredReadAction
   default boolean isIndexed() {
     return PsiTreeUtil.getChildOfType(this, PodFormatterX.class) != null;
   }
@@ -52,8 +54,8 @@ public interface PodCompositeElement extends PsiElement, PodRenderableElement, I
   }
 
   @Override
-  default @Nullable String getPresentableText() {
-    return null;
+  default LocalizeValue getPresentableText() {
+    return LocalizeValue.empty();
   }
 
   @Override
@@ -66,11 +68,11 @@ public interface PodCompositeElement extends PsiElement, PodRenderableElement, I
     if (presentation == null) {
       return null;
     }
-    String filePresentableText = presentation.getPresentableText();
-    return StringUtil.isNotEmpty(filePresentableText) ? filePresentableText : null;
+    return presentation.getPresentableText().getNullIfEmpty();
   }
 
   @Override
+  @RequiredReadAction
   default @Nullable Image getIcon(boolean unused) {
     PsiFile file = getContainingFile();
     return file == null ? null : IconDescriptorUpdaters.getIcon(file, 0);

@@ -17,23 +17,22 @@
 package com.perl5.lang.perl.idea.presentations;
 
 import consulo.language.psi.PsiElement;
-import org.jetbrains.annotations.Nullable;
-
+import consulo.localize.LocalizeValue;
 
 public class PerlItemPresentationSimple extends PerlItemPresentationBase {
-  private String myPresentableText;
+  private LocalizeValue myPresentableText;
 
-  public PerlItemPresentationSimple(PsiElement element, String presentatbleText) {
+  public PerlItemPresentationSimple(PsiElement element, LocalizeValue presentableText) {
     super(element);
-    myPresentableText = presentatbleText;
+    myPresentableText = presentableText;
   }
 
   @Override
-  public @Nullable String getPresentableText() {
+  public LocalizeValue getPresentableText() {
     return myPresentableText;
   }
 
-  public void setPresentableText(String presentableText) {
+  public void setPresentableText(LocalizeValue presentableText) {
     myPresentableText = presentableText;
   }
 }

@@ -16,7 +16,10 @@
 
 package com.perl5.lang.perl.psi.mixins;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.language.ast.ASTNode;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.ItemPresentation;
 import consulo.util.lang.StringUtil;
 import consulo.language.psi.PsiElement;
@@ -39,6 +42,7 @@ import org.jetbrains.annotations.Nullable;
 
 import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.ui.image.Image;
+
 import java.util.Objects;
 
 import static com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlValues.UNKNOWN_VALUE;
@@ -57,22 +61,25 @@ public class PerlVariableDeclarationElementMixin extends PerlStubBasedPsiElement
   }
 
   @Override
+  @RequiredReadAction
   public @NotNull PerlVariable getVariable() {
     return Objects.requireNonNull(findChildByClass(PerlVariable.class), () -> "Unable to find variable in: " + getText());
   }
 
   @Override
+  @RequiredReadAction
   public @Nullable PsiElement getNameIdentifier() {
     return getVariable().getVariableNameElement();
   }
 
-
   @Override
+  @RequiredReadAction
   public String getVariableName() {
     return getName();
   }
 
   @Override
+  @RequiredReadAction
   public String getName() {
     PerlVariableDeclarationStub stub = getGreenStub();
     if (stub != null) {
@@ -82,12 +89,14 @@ public class PerlVariableDeclarationElementMixin extends PerlStubBasedPsiElement
   }
 
   @Override
+  @RequiredWriteAction
   public PsiElement setName(@NotNull String name) throws IncorrectOperationException {
     PerlPsiUtil.renameNamedElement(this, name);
     return this;
   }
 
   @Override
+  @RequiredReadAction
   public int getTextOffset() {
     PsiElement nameIdentifier = getNameIdentifier();
 
@@ -97,6 +106,7 @@ public class PerlVariableDeclarationElementMixin extends PerlStubBasedPsiElement
   }
 
   @Override
+  @RequiredReadAction
   public @Nullable String getExplicitNamespaceName() {
     return getVariable().getExplicitNamespaceName();
   }
@@ -121,6 +131,7 @@ public class PerlVariableDeclarationElementMixin extends PerlStubBasedPsiElement
   }
 
   @Override
+  @RequiredReadAction
   public @NotNull String getNamespaceName() {
     PerlVariableDeclarationStub stub = getGreenStub();
     if (stub != null) {
@@ -134,6 +145,7 @@ public class PerlVariableDeclarationElementMixin extends PerlStubBasedPsiElement
   }
 
   @Override
+  @RequiredReadAction
   public PerlVariableType getActualType() {
     PerlVariableDeclarationStub stub = getGreenStub();
     if (stub != null) {
@@ -161,6 +173,7 @@ public class PerlVariableDeclarationElementMixin extends PerlStubBasedPsiElement
   }
 
   @Override
+  @RequiredReadAction
   public boolean isLexicalDeclaration() {
     if (getGreenStub() != null) {
       return false;
@@ -171,28 +184,33 @@ public class PerlVariableDeclarationElementMixin extends PerlStubBasedPsiElement
   }
 
   @Override
+  @RequiredReadAction
   public boolean isInvocantDeclaration() {
     return getParent() instanceof PsiPerlMethodSignatureInvocant;
   }
 
   @Override
+  @RequiredReadAction
   public boolean isLocalDeclaration() {
     return getParent() instanceof PsiPerlVariableDeclarationLocal;
   }
 
   @Override
+  @RequiredReadAction
   public boolean isGlobalDeclaration() {
     return !isLexicalDeclaration();
   }
 
   @Override
+  @RequiredReadAction
   public ItemPresentation getPresentation() {
-    return new PerlItemPresentationSimpleDynamicLocation(this, getName());
+    return new PerlItemPresentationSimpleDynamicLocation(this, LocalizeValue.ofNullable(getName()));
   }
 
 
   // TODO consulo: PsiElement#getIcon(int) does not exist in Consulo (element icons come from IconDescriptorUpdater),
   //  so this is no longer an override and is not called by the platform
+  @RequiredReadAction
   public @Nullable Image getIcon(int flags) {
     Image iconByType = getIconByType(getActualType());
     return iconByType == null ? IconDescriptorUpdaters.getIcon(this, flags) : iconByType;

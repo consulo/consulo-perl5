@@ -13,10 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.perl5.lang.perl.psi.mixins;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.language.ast.ASTNode;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.ItemPresentation;
 import consulo.language.psi.ElementManipulators;
 import consulo.language.psi.PsiElement;
@@ -70,6 +72,7 @@ public abstract class PerlGlobVariableMixin extends PerlStubBasedPsiElementBase<
   }
 
   @Override
+  @RequiredReadAction
   public @Nullable String getGlobName() {
     PerlGlobStub stub = getGreenStub();
     if (stub != null) {
@@ -102,6 +105,7 @@ public abstract class PerlGlobVariableMixin extends PerlStubBasedPsiElementBase<
   }
 
   @Override
+  @RequiredReadAction
   public PerlVariableNameElement getVariableNameElement() {
     return findChildByClass(PerlVariableNameElement.class);
   }
@@ -117,11 +121,13 @@ public abstract class PerlGlobVariableMixin extends PerlStubBasedPsiElementBase<
   }
 
   @Override
+  @RequiredReadAction
   public @Nullable PsiElement getNameIdentifier() {
     return getVariableNameElement();
   }
 
   @Override
+  @RequiredWriteAction
   public PsiElement setName(@NotNull String name) throws IncorrectOperationException {
     return PerlPsiUtil.renameNamedElement(this, name);
   }
@@ -145,10 +151,11 @@ public abstract class PerlGlobVariableMixin extends PerlStubBasedPsiElementBase<
 
   @Override
   public ItemPresentation getPresentation() {
-    return new PerlItemPresentationSimple(this, getName());
+    return new PerlItemPresentationSimple(this, LocalizeValue.ofNullable(getName()));
   }
 
   @Override
+  @RequiredReadAction
   public boolean isLeftSideOfAssignment() {
     PerlGlobStub stub = getGreenStub();
     if (stub != null) {
@@ -157,8 +164,8 @@ public abstract class PerlGlobVariableMixin extends PerlStubBasedPsiElementBase<
     return getParent() instanceof PsiPerlAssignExpr && getNextSibling() != null;
   }
 
-
   @Override
+  @RequiredReadAction
   public int getTextOffset() {
     PsiElement nameIdentifier = getNameIdentifier();
     if (nameIdentifier == null) {

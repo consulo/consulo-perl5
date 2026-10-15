@@ -16,6 +16,7 @@
 
 package com.perl5.lang.perl.idea.codeInsight;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.language.editor.generation.ClassMember;
 import consulo.language.editor.generation.MemberChooserObject;
@@ -32,11 +33,13 @@ import org.jetbrains.annotations.NotNull;
 public class PerlMethodMember extends PsiElementMemberChooserObject implements ClassMember {
   public static final PerlMethodMember[] EMPTY_ARRAY = {};
 
+  @RequiredReadAction
   public PerlMethodMember(@NotNull PsiElement psiElement) {
-    super(psiElement, ((PerlIdentifierOwner)psiElement).getPresentableName(), IconDescriptorUpdaters.getIcon(psiElement, 0));
+    super(psiElement, ((PerlIdentifierOwner)psiElement).getPresentableName().get(), IconDescriptorUpdaters.getIcon(psiElement, 0));
   }
 
   @Override
+  @RequiredReadAction
   public MemberChooserObject getParentNodeDelegate() {
     final PsiElement subDefinitionBase = getPsiElement();
     final PerlNamespaceDefinitionElement parent = (PerlNamespaceDefinitionElement)PerlPsiUtil

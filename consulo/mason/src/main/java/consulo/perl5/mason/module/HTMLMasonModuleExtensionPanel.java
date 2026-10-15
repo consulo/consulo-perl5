@@ -114,7 +114,7 @@ final class HTMLMasonModuleExtensionPanel extends AbstractMasonModuleExtensionPa
     Table<CustomTagRow> table = Table.create(myCustomTagsModel);
     table.addColumn(LocalizeValue.of(HtmlMasonBundle.message("column.name.tag.text.without.surrounding")), row -> row.myText);
     table.addColumn(LocalizeValue.of(HtmlMasonBundle.message("column.name.parse")), row -> row.myRole)
-      .setRender((presentation, item) -> {
+      .setRenderer((presentation, item) -> {
         HTMLMasonCustomTagRole role = item.getValue();
         presentation.append(role == null ? "" : role.getTitle());
       })

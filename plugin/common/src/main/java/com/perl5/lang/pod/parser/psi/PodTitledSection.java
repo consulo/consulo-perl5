@@ -16,6 +16,8 @@
 
 package com.perl5.lang.pod.parser.psi;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.NavigationItem;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNameIdentifierOwner;
@@ -32,13 +34,14 @@ public interface PodTitledSection extends PodSection,
                                           NavigationItem {
 
   @Override
-  default @Nullable String getPresentableText() {
-    return getTitleText();
+  default LocalizeValue getPresentableText() {
+    return LocalizeValue.ofNullable(getTitleText());
   }
 
   /**
    * @return text representation of section
    */
+  @RequiredReadAction
   default @Nullable String getTitleText() {
     PsiElement titleElement = getTitleElement();
 
@@ -51,11 +54,13 @@ public interface PodTitledSection extends PodSection,
     return builder.toString().trim();
   }
 
+  @RequiredReadAction
   default void renderElementTitleAsHTML(StringBuilder builder, PodRenderingContext context) {
     PsiElement content = getTitleElement();
     PodRenderUtil.renderPsiRangeAsHTML(content, content, builder, context);
   }
 
+  @RequiredReadAction
   default void renderElementTitleAsText(StringBuilder builder, PodRenderingContext context) {
     PsiElement content = getTitleElement();
     PodRenderUtil.renderPsiRangeAsText(content, content, builder, context);
@@ -64,6 +69,7 @@ public interface PodTitledSection extends PodSection,
   /**
    * @return a text of the section title with all formatting codes but indexes, or null if there is no title section
    */
+  @RequiredReadAction
   default @Nullable String getTitleTextWithoutIndexes() {
     PsiElement titleElement = getTitleElement();
     if (titleElement == null) {
@@ -72,6 +78,7 @@ public interface PodTitledSection extends PodSection,
     StringBuilder sb = new StringBuilder();
     titleElement.accept(new PodRecursiveVisitor() {
       @Override
+      @RequiredReadAction
       public void visitElement(@NotNull PsiElement element) {
         if (element.getChildren().length > 0) {
           super.visitElement(element);
@@ -91,23 +98,27 @@ public interface PodTitledSection extends PodSection,
   /**
    * @return an element containing title of this section, probably with formatting codes
    */
+  @RequiredReadAction
   default @Nullable PsiElement getTitleElement() {
     return PsiTreeUtil.getChildOfType(this, PodSectionTitle.class);
   }
 
   @Override
+  @RequiredReadAction
   default void renderElementAsHTML(StringBuilder builder, PodRenderingContext context) {
     renderElementTitleAsHTML(builder, new PodRenderingContext());
     PodSection.super.renderElementAsHTML(builder, context);
   }
 
   @Override
+  @RequiredReadAction
   default void renderElementAsText(StringBuilder builder, PodRenderingContext context) {
     renderElementTitleAsText(builder, new PodRenderingContext());
     PodSection.super.renderElementAsText(builder, context);
   }
 
   @Override
+  @RequiredReadAction
   default boolean isIndexed() {
     PsiElement titleBlock = getTitleElement();
     if (titleBlock instanceof PodCompositeElement podCompositeElement && podCompositeElement.isIndexed()) {

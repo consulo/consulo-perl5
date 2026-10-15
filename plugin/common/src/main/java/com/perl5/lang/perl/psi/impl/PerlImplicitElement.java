@@ -16,6 +16,8 @@
 
 package com.perl5.lang.perl.psi.impl;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.ItemPresentation;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -24,7 +26,7 @@ import consulo.language.impl.psi.LightElement;
 import com.perl5.lang.perl.PerlLanguage;
 import com.perl5.lang.perl.idea.presentations.PerlItemPresentationSimple;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -55,10 +57,10 @@ public abstract class PerlImplicitElement extends LightElement {
   }
 
   @Override
+  @RequiredReadAction
   public ItemPresentation getPresentation() {
-    return new PerlItemPresentationSimple(this, getName());
+    return new PerlItemPresentationSimple(this, LocalizeValue.ofNullable(getName()));
   }
-
 
   @Override
   public boolean equals(Object o) {

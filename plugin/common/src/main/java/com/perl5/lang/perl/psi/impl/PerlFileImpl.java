@@ -16,9 +16,11 @@
 
 package com.perl5.lang.perl.psi.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.controlFlow.Instruction;
 import consulo.language.impl.psi.PsiFileBase;
 import consulo.language.Language;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.ItemPresentation;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.module.content.ProjectFileIndex;
@@ -92,6 +94,7 @@ public class PerlFileImpl extends PsiFileBase implements PerlFile {
   }
 
   @Override
+  @RequiredReadAction
   public void subtreeChanged() {
     super.subtreeChanged();
     myParentNamespaces.clear();
@@ -122,12 +125,14 @@ public class PerlFileImpl extends PsiFileBase implements PerlFile {
   }
 
   @Override
-  public @Nullable String getPresentableText() {
+  @RequiredReadAction
+  public LocalizeValue getPresentableText() {
     String result = getFilePackageName();
-    return result == null ? getName() : result;
+    return result == null ? LocalizeValue.of(getName()) : LocalizeValue.of(result);
   }
 
   @Override
+  @RequiredReadAction
   public @Nullable String getLocationString() {
     VirtualFile virtualFile = PsiUtilCore.getVirtualFile(this);
     if (virtualFile == null) {
@@ -166,6 +171,7 @@ public class PerlFileImpl extends PsiFileBase implements PerlFile {
 
 
   @Override
+  @RequiredReadAction
   public byte @Nullable [] getPerlContentInBytes() {
     return getText().getBytes(getVirtualFile().getCharset());
   }
@@ -182,6 +188,7 @@ public class PerlFileImpl extends PsiFileBase implements PerlFile {
 
   // fixme we could use some SmartPsiElementPointer and UserData to hold the context
   @Override
+  @RequiredReadAction
   protected PsiFileImpl clone() {
     PerlFileImpl clone = (PerlFileImpl)super.clone();
     clone.setFileContext(fileContext);
@@ -189,6 +196,7 @@ public class PerlFileImpl extends PsiFileBase implements PerlFile {
   }
 
   @Override
+  @RequiredReadAction
   public @NotNull List<String> getParentNamespacesNames() {
     // TODO consulo: PsiFileImpl#withGreenStubOrAst is missing in Consulo, emulated with getGreenStub()
     StubElement<?> stub = getGreenStub();

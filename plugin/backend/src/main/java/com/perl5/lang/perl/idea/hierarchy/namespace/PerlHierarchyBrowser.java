@@ -85,9 +85,10 @@ public class PerlHierarchyBrowser implements HierarchyModel<PsiElement> {
   }
 
   // consulo: no HierarchyModel counterpart, only used for deletion which is not allowed
+  @RequiredReadAction
   protected @Nullable String getQualifiedName(PsiElement psiElement) {
     if (psiElement instanceof PerlIdentifierOwner identifierOwner) {
-      return identifierOwner.getPresentableName();
+      return identifierOwner.getPresentableName().getNullIfEmpty();
     }
 
     return null;

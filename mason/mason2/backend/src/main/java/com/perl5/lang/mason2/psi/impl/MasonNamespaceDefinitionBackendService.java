@@ -16,6 +16,8 @@
 
 package com.perl5.lang.mason2.psi.impl;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.localize.LocalizeValue;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import com.perl5.lang.htmlmason.MasonCoreUtil;
@@ -47,18 +49,19 @@ public final class MasonNamespaceDefinitionBackendService implements MasonNamesp
   }
 
   @Override
-  public @Nullable String getPresentableName(@NotNull MasonNamespaceDefinition namespaceDefinition) {
-    VirtualFile componentRoot = MasonBackendNamespaceDefinitionHandlerKt.getComponentRoot((MasonFileImpl)namespaceDefinition.getContainingFile());
+  @RequiredReadAction
+  public LocalizeValue getPresentableName(@NotNull MasonNamespaceDefinition namespaceDefinition) {
+    VirtualFile componentRoot = MasonBackendNamespaceDefinitionHandlerKt.getComponentRoot((MasonFileImpl) namespaceDefinition.getContainingFile());
     VirtualFile containingFile = MasonCoreUtil.getContainingVirtualFile(namespaceDefinition.getContainingFile());
 
     if (componentRoot != null && containingFile != null) {
       String componentPath = VirtualFileUtil.getRelativePath(containingFile, componentRoot);
 
       if (componentPath != null) {
-        return VirtualFileUtil.VFS_SEPARATOR_CHAR + componentPath;
+        return LocalizeValue.of(VirtualFileUtil.VFS_SEPARATOR_CHAR + componentPath);
       }
     }
 
-    return namespaceDefinition.getName();
+    return LocalizeValue.ofNullable(namespaceDefinition.getName());
   }
 }

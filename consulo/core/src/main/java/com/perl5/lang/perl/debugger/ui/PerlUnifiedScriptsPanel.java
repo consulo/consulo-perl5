@@ -4,17 +4,17 @@ import com.perl5.lang.perl.debugger.PerlDebugThread;
 import com.perl5.lang.perl.debugger.PerlRemoteFileSystem;
 import com.perl5.lang.perl.debugger.protocol.PerlLoadedFileDescriptor;
 import com.perl5.lang.perl.fileTypes.PerlFileTypeScript;
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import consulo.ide.impl.idea.ide.actions.OpenFileAction;
 import consulo.project.Project;
 import consulo.ui.Component;
 import consulo.ui.ListBox;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.ComponentContainer;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.layout.ScrollableLayout;
 import consulo.ui.model.FlatDataModel;
 import consulo.ui.model.MutableFlatDataModel;
-import consulo.ui.ex.ComponentContainer;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
@@ -58,7 +58,7 @@ public class PerlUnifiedScriptsPanel implements ComponentContainer {
       MutableFlatDataModel<PerlLoadedFileDescriptor> model = FlatDataModel.of(new ArrayList<>(myEntries));
       myModel = model;
       ListBox<PerlLoadedFileDescriptor> listBox = ListBox.create(model);
-      listBox.setRender((presentation, item) -> {
+      listBox.setRenderer((presentation, item) -> {
         PerlLoadedFileDescriptor fileDescriptor = item.getValue();
         if (fileDescriptor == null) {
           return;
@@ -83,11 +83,13 @@ public class PerlUnifiedScriptsPanel implements ComponentContainer {
    * consulo: desktop runner layouts take Swing components
    */
   @Override
+  @RequiredUIAccess
   public JComponent getComponent() {
     return (JComponent)TargetAWT.to(getUIComponent());
   }
 
   @Override
+  @RequiredUIAccess
   public JComponent getPreferredFocusableComponent() {
     return getComponent();
   }
@@ -124,7 +126,7 @@ public class PerlUnifiedScriptsPanel implements ComponentContainer {
   }
 
   public void clear() {
-    ApplicationManager.getApplication().invokeLater(() -> {
+    Application.get().invokeLater(() -> {
       myEntries.clear();
       myEntriesSet.clear();
       updateModel();
@@ -142,7 +144,7 @@ public class PerlUnifiedScriptsPanel implements ComponentContainer {
   public void bulkChange(List<? extends PerlLoadedFileDescriptor> toAdd, List<? extends PerlLoadedFileDescriptor> toRemove) {
     List<PerlLoadedFileDescriptor> added = new ArrayList<>(toAdd);
     List<PerlLoadedFileDescriptor> removed = new ArrayList<>(toRemove);
-    ApplicationManager.getApplication().invokeLater(() -> {
+    Application.get().invokeLater(() -> {
       boolean changed = false;
       for (PerlLoadedFileDescriptor value : removed) {
         if (myEntriesSet.remove(value)) {

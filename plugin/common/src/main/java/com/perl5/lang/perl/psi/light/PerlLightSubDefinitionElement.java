@@ -16,6 +16,7 @@
 
 package com.perl5.lang.perl.psi.light;
 
+import consulo.localize.LocalizeValue;
 import consulo.navigation.ItemPresentation;
 import consulo.application.util.AtomicNotNullLazyValue;
 import consulo.application.util.AtomicNullableLazyValue;
@@ -38,6 +39,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import consulo.ui.image.Image;
+
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -172,7 +174,7 @@ public class PerlLightSubDefinitionElement<Delegate extends PerlPolyNamedElement
 
   @Override
   public ItemPresentation getPresentation() {
-    return new PerlItemPresentationSimpleDynamicLocation(this, getSubName());
+    return new PerlItemPresentationSimpleDynamicLocation(this, LocalizeValue.of(getSubName()));
   }
 
   @Override

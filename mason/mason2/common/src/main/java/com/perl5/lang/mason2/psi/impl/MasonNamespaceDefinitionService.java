@@ -16,8 +16,9 @@
 
 package com.perl5.lang.mason2.psi.impl;
 
-import consulo.application.ApplicationManager;
+import consulo.application.Application;
 import com.perl5.lang.mason2.psi.MasonNamespaceDefinition;
+import consulo.localize.LocalizeValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,11 +29,9 @@ public interface MasonNamespaceDefinitionService {
   @Nullable
   String computeNamespaceName(@NotNull MasonNamespaceDefinition namespaceDefinition);
 
-  
-  @Nullable
-  String getPresentableName(@NotNull MasonNamespaceDefinition namespaceDefinition);
+  LocalizeValue getPresentableName(@NotNull MasonNamespaceDefinition namespaceDefinition);
 
   static @NotNull MasonNamespaceDefinitionService getInstance() {
-    return ApplicationManager.getApplication().getService(MasonNamespaceDefinitionService.class);
+    return Application.get().getService(MasonNamespaceDefinitionService.class);
   }
 }

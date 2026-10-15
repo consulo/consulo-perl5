@@ -19,14 +19,12 @@ package com.perl5.lang.pod.elementTypes;
 import com.perl5.lang.pod.parser.psi.mixin.PodSectionItem;
 import com.perl5.lang.pod.parser.psi.stubs.PodSectionStub;
 import com.perl5.lang.pod.psi.impl.PsiItemSectionImpl;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.stub.StubElement;
-import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Objects;
 
 // consulo: stubs are handled by the element type (upstream: PodSectionItemStubSerializingFactory)
 public class PodSectionItemElementType extends PodStubBasedTitledSectionElementType<PodSectionItem> {
@@ -46,14 +44,16 @@ public class PodSectionItemElementType extends PodStubBasedTitledSectionElementT
 
   @SuppressWarnings("rawtypes")
   @Override
+  @RequiredReadAction
   public @NotNull PodSectionStub createStub(@NotNull PodSectionItem psi, @Nullable StubElement parentStub) {
     char prefix = psi.isTargetable() ? '+' : '-';
-    return new PodSectionStub(parentStub, this, prefix + Objects.requireNonNull(psi.getPresentableText()));
+    return new PodSectionStub(parentStub, this, prefix + psi.getPresentableText().get());
   }
 
   @Override
+  @RequiredReadAction
   protected boolean shouldCreateStub(@NotNull PodSectionItem psi) {
-    return psi.isIndexed() && StringUtil.isNotEmpty(psi.getPresentableText()) ||
+    return psi.isIndexed() && psi.getPresentableText().isNotEmpty() ||
            psi.isTargetable() && super.shouldCreateStub(psi);
   }
 }

@@ -16,49 +16,51 @@
 
 package com.perl5.lang.htmlmason.parser.psi;
 
+import com.perl5.lang.htmlmason.HTMLMasonUtil;
+import com.perl5.lang.htmlmason.parser.psi.impl.HTMLMasonFileImpl;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.ElementDescriptionLocation;
 import consulo.language.psi.ElementDescriptionProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;
+import consulo.localize.LocalizeValue;
 import consulo.usage.UsageViewLongNameLocation;
 import consulo.usage.UsageViewNodeTextLocation;
 import consulo.usage.UsageViewShortNameLocation;
 import consulo.usage.UsageViewTypeLocation;
-import com.perl5.lang.htmlmason.HTMLMasonUtil;
-import com.perl5.lang.htmlmason.parser.psi.impl.HTMLMasonFileImpl;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 
 public class HTMLMasonElementDescriptionProvider implements ElementDescriptionProvider {
   @Override
-  public @Nullable String getElementDescription(@NotNull PsiElement element, @NotNull ElementDescriptionLocation location) {
+  @RequiredReadAction
+  public LocalizeValue getElementDescription(@NotNull PsiElement element, @NotNull ElementDescriptionLocation location) {
     if (!(element instanceof HTMLMasonNamedElement namedElement)) {
-      return null;
+      return LocalizeValue.empty();
     }
     if (location == UsageViewLongNameLocation.INSTANCE) {
-      return HTMLMasonUtil.getAbsoluteComponentPath(((HTMLMasonFileImpl)element.getContainingFile())) +
-             ":" +
-             ((PsiNamedElement)element).getName();
+      return LocalizeValue.of(
+        HTMLMasonUtil.getAbsoluteComponentPath(((HTMLMasonFileImpl)element.getContainingFile())) + ":" +
+          ((PsiNamedElement)element).getName()
+      );
     }
     else if (location == UsageViewNodeTextLocation.INSTANCE) {
-      return namedElement.getName() + HTMLMasonUtil.getArgumentsListAsString((HTMLMasonParametrizedEntity)element);
+      return LocalizeValue.of(namedElement.getName() + HTMLMasonUtil.getArgumentsListAsString((HTMLMasonParametrizedEntity)element));
     }
     else if (location == UsageViewShortNameLocation.INSTANCE) {
-      return namedElement.getName() + HTMLMasonUtil.getArgumentsListAsString((HTMLMasonParametrizedEntity)element);
+      return LocalizeValue.of(namedElement.getName() + HTMLMasonUtil.getArgumentsListAsString((HTMLMasonParametrizedEntity)element));
     }
     else if (element instanceof HTMLMasonMethodDefinition) {
       if (location == UsageViewTypeLocation.INSTANCE) {
-        return "HTML::Mason method";
+        return LocalizeValue.localizeTODO("HTML::Mason method");
       }
-      return "HTML::Mason method for " + location.getClass().getSimpleName();
+      return LocalizeValue.localizeTODO("HTML::Mason method for " + location.getClass().getSimpleName());
     }
     else if (element instanceof HTMLMasonSubcomponentDefitnition) {
       if (location == UsageViewTypeLocation.INSTANCE) {
-        return "HTML::Mason subcomponent";
+        return LocalizeValue.localizeTODO("HTML::Mason subcomponent");
       }
-      return "HTML::Mason subcomponent for " + location.getClass().getSimpleName();
+      return LocalizeValue.localizeTODO("HTML::Mason subcomponent for " + location.getClass().getSimpleName());
     }
-    return null;
+    return LocalizeValue.empty();
   }
 }

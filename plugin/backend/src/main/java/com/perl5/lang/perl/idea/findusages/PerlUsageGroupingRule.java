@@ -16,6 +16,7 @@
 
 package com.perl5.lang.perl.idea.findusages;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.navigation.ItemPresentation;
 import consulo.util.lang.StringUtil;
 import consulo.language.psi.PsiElement;
@@ -39,6 +40,7 @@ import consulo.usage.UsageView;
 
 class PerlUsageGroupingRule extends SingleParentUsageGroupingRule {
   @Override
+  @RequiredReadAction
   protected @Nullable UsageGroup getParentGroupFor(@NotNull Usage usage, UsageTarget @NotNull [] targets) {
     if (!(usage instanceof PsiElementUsage psiElementUsage)) {
       return null;
@@ -50,6 +52,7 @@ class PerlUsageGroupingRule extends SingleParentUsageGroupingRule {
     return computeParentGroupFor(element);
   }
 
+  @RequiredReadAction
   private @Nullable UsageGroup computeParentGroupFor(@Nullable PsiElement element) {
     if (element == null) {
       return null;
@@ -81,12 +84,13 @@ class PerlUsageGroupingRule extends SingleParentUsageGroupingRule {
     if (structuralParentElement instanceof PerlMethodModifier) {
       return new PsiElementUsageGroupBase<>((PerlMethodModifier)structuralParentElement) {
         @Override
+        @RequiredReadAction
         public @NotNull String getText(@Nullable UsageView view) {
           PerlMethodModifier modifier = getElement();
           if (modifier != null) {
             ItemPresentation presentation = modifier.getPresentation();
             if (presentation != null) {
-              return StringUtil.notNullize(presentation.getPresentableText());
+              return presentation.getPresentableText().get();
             }
           }
           return super.getText(view);
