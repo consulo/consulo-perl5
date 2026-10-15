@@ -16,18 +16,6 @@
 
 package com.perl5.lang.pod.idea.completion;
 
-import consulo.language.icon.IconDescriptorUpdaters;
-import consulo.language.editor.completion.CompletionParameters;
-import consulo.language.editor.completion.CompletionProvider;
-import consulo.language.editor.completion.CompletionResultSet;
-import consulo.language.editor.completion.lookup.LookupElementBuilder;
-import consulo.util.lang.StringUtil;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
-import consulo.language.psi.ResolveResult;
-import consulo.language.ast.IElementType;
-import consulo.language.psi.PsiUtilCore;
-import consulo.language.util.ProcessingContext;
 import com.perl5.lang.perl.idea.completion.providers.processors.PerlSimpleCompletionProcessor;
 import com.perl5.lang.perl.psi.PerlSubElement;
 import com.perl5.lang.perl.psi.utils.PerlPsiUtil;
@@ -37,6 +25,19 @@ import com.perl5.lang.pod.parser.psi.PodSectionTitle;
 import com.perl5.lang.pod.parser.psi.PodTitledSection;
 import com.perl5.lang.pod.parser.psi.references.PodSubReference;
 import com.perl5.lang.pod.parser.psi.util.PodFileUtil;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.language.ast.IElementType;
+import consulo.language.editor.completion.CompletionParameters;
+import consulo.language.editor.completion.CompletionProvider;
+import consulo.language.editor.completion.CompletionResultSet;
+import consulo.language.editor.completion.lookup.LookupElementBuilder;
+import consulo.language.icon.IconDescriptorUpdaters;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiUtilCore;
+import consulo.language.psi.ResolveResult;
+import consulo.language.util.ProcessingContext;
+import consulo.localize.LocalizeValue;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -54,6 +55,7 @@ public class PodTitleCompletionProvider implements CompletionProvider, PodElemen
             "METHODS", "ATTRIBUTES", "FUNCTIONS");
 
   @Override
+  @RequiredReadAction
   public void addCompletions(@NotNull CompletionParameters parameters,
                                 @NotNull ProcessingContext context,
                                 @NotNull CompletionResultSet result) {
@@ -87,11 +89,13 @@ public class PodTitleCompletionProvider implements CompletionProvider, PodElemen
     PerlPsiUtil.processSubElements(perlFile, possibleTargets::add);
     elementFile.accept(new PodRecursiveVisitor() {
       @Override
+      @RequiredReadAction
       public void visitTargetableSection(PodTitledSection o) {
         processSection(o);
         super.visitTargetableSection(o);
       }
 
+      @RequiredReadAction
       private void processSection(@NotNull PodTitledSection o) {
         PsiElement titleBlock = o.getTitleElement();
         if (titleBlock == null) {
@@ -111,9 +115,9 @@ public class PodTitleCompletionProvider implements CompletionProvider, PodElemen
     });
 
     for (PerlSubElement subElement : possibleTargets) {
-      String lookupString = StringUtil.notNullize(subElement.getPresentableName());
-      if (completionProcessor.matches(lookupString) &&
-          !completionProcessor.process(LookupElementBuilder.create(subElement, lookupString).withIcon(IconDescriptorUpdaters.getIcon(subElement, 0)))) {
+      LocalizeValue lookupString = subElement.getPresentableName();
+      if (completionProcessor.matches(lookupString.get()) &&
+        !completionProcessor.process(LookupElementBuilder.create(subElement, lookupString.get()).withIcon(IconDescriptorUpdaters.getIcon(subElement, 0)))) {
         break;
       }
     }

@@ -16,6 +16,8 @@
 
 package com.perl5.lang.perl.psi;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.NavigationItem;
 import consulo.language.psi.PsiElement;
 import com.perl5.lang.perl.psi.properties.PerlBlockOwner;
@@ -30,9 +32,10 @@ import java.util.List;
 
 public interface PerlSubDefinitionElement extends PerlSubDefinition, PerlSubElement, PerlDieScope, PerlBlockOwner, NavigationItem {
   @Override
-  default @Nullable String getPresentableName() {
+  @RequiredReadAction
+  default LocalizeValue getPresentableName() {
     String args = getSubArgumentsListAsString();
-    return this.getName() + (args.isEmpty() ? "()" : args);
+    return LocalizeValue.of(this.getName() + (args.isEmpty() ? "()" : args));
   }
 
   /**
@@ -45,10 +48,12 @@ public interface PerlSubDefinitionElement extends PerlSubDefinition, PerlSubElem
   /**
    * @return sub arguments, extracted from PSI structure of code block
    */
+  @RequiredReadAction
   default @NotNull List<PerlSubArgument> getPerlSubArgumentsFromBody() {
     return getPerlSubArgumentsFromBody(getSubDefinitionBody());
   }
 
+  @RequiredReadAction
   static @NotNull List<PerlSubArgument> getPerlSubArgumentsFromBody(@Nullable PsiPerlBlock subBlock) {
     if (subBlock == null || !subBlock.isValid()) {
       return Collections.emptyList();

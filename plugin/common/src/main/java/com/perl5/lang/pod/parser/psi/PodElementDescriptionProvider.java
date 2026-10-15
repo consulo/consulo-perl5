@@ -16,6 +16,7 @@
 
 package com.perl5.lang.pod.parser.psi;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.logging.Logger;
 import consulo.language.psi.PsiElement;
 import consulo.language.ast.IElementType;
@@ -37,11 +38,13 @@ public class PodElementDescriptionProvider extends PerlElementDescriptionProvide
   }
 
   @Override
+  @RequiredReadAction
   protected boolean isMyElement(@NotNull PsiElement element) {
     return super.isMyElement(element) && element instanceof PodStubBasedTitledSection;
   }
 
   @Override
+  @RequiredReadAction
   protected @Nullable String getShortName(@NotNull PsiElement element) {
     return getLongName(element);
   }
@@ -79,6 +82,7 @@ public class PodElementDescriptionProvider extends PerlElementDescriptionProvide
   }
 
   @Override
+  @RequiredReadAction
   protected @Nullable String getLongName(@NotNull PsiElement element) {
     if (element instanceof PodTitledSection titledSection) {
       return titledSection.getTitleTextWithoutIndexes();

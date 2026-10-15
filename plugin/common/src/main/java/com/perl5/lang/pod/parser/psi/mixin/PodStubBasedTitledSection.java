@@ -16,7 +16,9 @@
 
 package com.perl5.lang.pod.parser.psi.mixin;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.ast.ASTNode;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.ItemPresentation;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.StubBasedPsiElement;
@@ -30,7 +32,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class PodStubBasedTitledSection extends PodStubBasedSection implements StubBasedPsiElement<PodSectionStub>,
-                                                                                       PodTitledSection {
+  PodTitledSection {
   public PodStubBasedTitledSection(@NotNull PodSectionStub stub, @NotNull IElementType nodeType) {
     super(stub, nodeType);
   }
@@ -40,6 +42,7 @@ public abstract class PodStubBasedTitledSection extends PodStubBasedSection impl
   }
 
   @Override
+  @RequiredReadAction
   public @Nullable String getTitleText() {
     PodSectionStub stub = getGreenStub();
     if (stub != null) {
@@ -49,6 +52,7 @@ public abstract class PodStubBasedTitledSection extends PodStubBasedSection impl
   }
 
   @Override
+  @RequiredReadAction
   public int getListLevel() {
     PsiElement parent = getParent();
     return parent instanceof PodCompositeElement podCompositeElement ? podCompositeElement.getListLevel() : 0;
@@ -60,16 +64,19 @@ public abstract class PodStubBasedTitledSection extends PodStubBasedSection impl
   }
 
   @Override
-  public @Nullable String getPresentableText() {
-    return getTitleText();
+  @RequiredReadAction
+  public LocalizeValue getPresentableText() {
+    return LocalizeValue.ofNullable(getTitleText());
   }
 
   @Override
+  @RequiredReadAction
   public @Nullable Image getIcon(boolean unused) {
     return IconDescriptorUpdaters.getIcon(getContainingFile(), 0);
   }
 
   @Override
+  @RequiredReadAction
   public @Nullable String getPodLinkText() {
     return getTitleText();
   }

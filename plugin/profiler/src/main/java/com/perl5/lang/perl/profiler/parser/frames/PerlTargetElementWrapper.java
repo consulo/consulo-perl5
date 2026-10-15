@@ -16,6 +16,8 @@
 
 package com.perl5.lang.perl.profiler.parser.frames;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.localize.LocalizeValue;
 import consulo.util.lang.StringUtil;
 import consulo.language.psi.NavigatablePsiElement;
 import consulo.language.psi.PsiDocumentManager;
@@ -32,11 +34,12 @@ class PerlTargetElementWrapper extends PerlDelegatingFakeElement {
   }
 
   @Override
-  public String getPresentableText() {
-    return StringUtil.shortenTextWithEllipsis(StringUtil.notNullize(getText()), 80, 5, true);
+  public LocalizeValue getPresentableText() {
+    return LocalizeValue.of(StringUtil.shortenTextWithEllipsis(StringUtil.notNullize(getText()), 80, 5, true));
   }
 
   @Override
+  @RequiredReadAction
   public @Nullable String getLocationString() {
     var containingFile = getContainingFile();
     if (containingFile == null) {

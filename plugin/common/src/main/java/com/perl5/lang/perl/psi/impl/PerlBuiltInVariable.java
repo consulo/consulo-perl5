@@ -24,8 +24,7 @@ import org.jetbrains.annotations.Nullable;
 import static com.perl5.lang.perl.idea.codeInsight.typeInference.value.PerlValues.UNKNOWN_VALUE;
 
 public class PerlBuiltInVariable extends PerlImplicitVariableDeclaration {
-  public PerlBuiltInVariable(@NotNull PsiManager manager,
-                             @NotNull String variableName) {
+  public PerlBuiltInVariable(@NotNull PsiManager manager, @NotNull String variableName) {
     super(manager, variableName, PerlPackageUtilCore.MAIN_NAMESPACE_NAME, UNKNOWN_VALUE, false, false, false, null);
   }
 

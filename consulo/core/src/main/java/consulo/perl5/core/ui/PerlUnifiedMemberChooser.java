@@ -72,7 +72,7 @@ public final class PerlUnifiedMemberChooser<T extends ClassMember> extends Dialo
   @Override
   public Component createCenterComponent(Disposable uiDisposable) {
     MultiSelectListBox<Item<T>> list = MultiSelectListBox.create(myItems);
-    list.setRender((presentation, renderItem) -> {
+    list.setRenderer((presentation, renderItem) -> {
       Item<T> item = renderItem.getValue();
       if (item == null) {
         return;

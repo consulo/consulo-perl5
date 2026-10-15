@@ -16,22 +16,27 @@
 
 package com.perl5.lang.perl.idea.ui.breadcrumbs;
 
-import consulo.language.Language;
-import consulo.navigation.ItemPresentation;
-import consulo.util.lang.StringUtil;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
-import consulo.language.psi.util.PsiTreeUtil;
-import consulo.language.icon.IconDescriptorUpdaters;
 import com.perl5.lang.perl.PerlLanguage;
-import com.perl5.lang.perl.psi.*;
+import com.perl5.lang.perl.psi.PerlFile;
+import com.perl5.lang.perl.psi.PerlMethodModifier;
+import com.perl5.lang.perl.psi.PerlNamespaceDefinitionElement;
+import com.perl5.lang.perl.psi.PerlSubDefinitionElement;
+import com.perl5.lang.perl.psi.PerlSubExpr;
+import com.perl5.lang.perl.psi.PsiPerlBlock;
 import com.perl5.lang.perl.psi.impl.PerlPolyNamedElement;
 import com.perl5.lang.perl.psi.light.PerlDelegatingLightNamedElement;
 import com.perl5.lang.perl.psi.properties.PerlBlockOwner;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.language.Language;
+import consulo.language.icon.IconDescriptorUpdaters;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.navigation.ItemPresentation;
+import consulo.ui.image.Image;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import consulo.ui.image.Image;
 import java.util.Objects;
 
 // TODO consulo: Consulo has no breadcrumbs API (BreadcrumbsProvider was dropped in favour of the navigation bar), so this
@@ -51,11 +56,13 @@ public class PerlBreadcrumbsProvider {
            namespaceDefinitionElement.getNamespaceName() != null;
   }
 
+  @RequiredReadAction
   public @Nullable PsiElement getParent(@NotNull PsiElement element) {
     PsiElement structuralParent = getStructuralParentElement(element);
     return structuralParent instanceof PsiFile ? null : structuralParent;
   }
 
+  @RequiredReadAction
   public static @Nullable PsiElement getStructuralParentElement(@NotNull PsiElement element) {
     switch (element) {
       case PerlFile ignored -> {
@@ -101,6 +108,7 @@ public class PerlBreadcrumbsProvider {
     return nearestParent;
   }
 
+  @RequiredReadAction
   public @Nullable Image getElementIcon(@NotNull PsiElement element) {
     return IconDescriptorUpdaters.getIcon(element, 0);
   }
@@ -119,7 +127,7 @@ public class PerlBreadcrumbsProvider {
       case PerlMethodModifier methodModifier -> {
         ItemPresentation presentation = methodModifier.getPresentation();
         if (presentation != null) {
-          return StringUtil.notNullize(presentation.getPresentableText());
+          return presentation.getPresentableText().get();
         }
       }
       case PerlSubExpr ignored -> {

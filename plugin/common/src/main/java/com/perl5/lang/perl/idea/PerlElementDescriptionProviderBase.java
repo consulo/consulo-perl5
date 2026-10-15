@@ -16,9 +16,11 @@
 
 package com.perl5.lang.perl.idea;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.editor.refactoring.util.DeleteNameDescriptionLocation;
 import consulo.language.editor.refactoring.util.DeleteTypeDescriptionLocation;
 import consulo.language.Language;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.util.lang.StringUtil;
 import consulo.language.psi.ElementDescriptionLocation;
@@ -44,41 +46,43 @@ public abstract class PerlElementDescriptionProviderBase implements ElementDescr
   }
 
   @Override
-  public final @Nullable String getElementDescription(@NotNull PsiElement element, @NotNull ElementDescriptionLocation location) {
+  @RequiredReadAction
+  public final LocalizeValue getElementDescription(@NotNull PsiElement element, @NotNull ElementDescriptionLocation location) {
     if (!isMyElement(element)) {
-      return null;
+      return LocalizeValue.empty();
     }
     if (location == DeleteNameDescriptionLocation.INSTANCE) {
-      return UsageViewUtil.getShortName(element);
+      return LocalizeValue.of(UsageViewUtil.getShortName(element));
     }
     else if (location == DeleteTypeDescriptionLocation.SINGULAR) {
-      return UsageViewUtil.getType(element);
+      return LocalizeValue.of(UsageViewUtil.getType(element));
     }
     else if (location == DeleteTypeDescriptionLocation.PLURAL) {
-      return StringUtil.pluralize(UsageViewUtil.getType(element));
+      return LocalizeValue.of(StringUtil.pluralize(UsageViewUtil.getType(element)));
     }
     else if (location == UsageViewShortNameLocation.INSTANCE) {
-      return getShortName(element);
+      return LocalizeValue.ofNullable(getShortName(element));
     }
     else if (location == UsageViewLongNameLocation.INSTANCE) {
-      return getLongName(element);
+      return LocalizeValue.ofNullable(getLongName(element));
     }
     else if (location == UsageViewNodeTextLocation.INSTANCE) {
-      return UsageViewUtil.getShortName(element);
+      return LocalizeValue.of(UsageViewUtil.getShortName(element));
     }
     else if (location == UsageViewTypeLocation.INSTANCE) {
-      return getTypeName(element);
+      return LocalizeValue.ofNullable(getTypeName(element));
     }
     else if (location == NonCodeSearchDescriptionLocation.STRINGS_AND_COMMENTS) {
-      return getShortName(element);
+      return LocalizeValue.ofNullable(getShortName(element));
     }
     LOG.warn("Unhandled location: " + location);
-    return "Unknown location: " + location;
+    return LocalizeValue.localizeTODO("Unknown location: " + location);
   }
 
   /**
    * @return true iff element is handled by this provider
    */
+  @RequiredReadAction
   protected boolean isMyElement(@NotNull PsiElement element) {
     return element.getLanguage().isKindOf(myLanguage);
   }

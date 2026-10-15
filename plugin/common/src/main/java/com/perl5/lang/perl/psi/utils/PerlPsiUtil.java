@@ -16,6 +16,7 @@
 
 package com.perl5.lang.perl.psi.utils;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.impl.psi.ASTWrapperPsiElement;
 import consulo.language.ast.ASTNode;
 import consulo.language.Language;
@@ -389,6 +390,7 @@ public final class PerlPsiUtil {
     return true;
   }
 
+  @RequiredReadAction
   public static boolean iteratePsiElementsRight(PsiElement element, Processor<? super PsiElement> processor) {
     if (element == null || element instanceof PsiFile) {
       return false;
@@ -407,6 +409,7 @@ public final class PerlPsiUtil {
     return iteratePsiElementsRightDown(run, processor) && iteratePsiElementsRight(element.getParent(), processor);
   }
 
+  @RequiredReadAction
   public static boolean iteratePsiElementsRightDown(@NotNull PsiElement element, @NotNull Processor<? super PsiElement> processor) {
     boolean result = processor.process(element);
     if (result) {
@@ -427,6 +430,7 @@ public final class PerlPsiUtil {
     return result;
   }
 
+  @RequiredReadAction
   public static boolean processNamespaceStatements(@NotNull PsiElement rootElement, Processor<? super PsiElement> processor) {
     PsiElement run = rootElement.getFirstChild();
     boolean result = true;

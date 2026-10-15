@@ -16,6 +16,7 @@
 
 package com.perl5.lang.perl.psi.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.document.Document;
 
 import consulo.language.psi.stub.IStubElementType;
@@ -32,19 +33,21 @@ import com.perl5.lang.perl.psi.stubs.variables.PerlVariableDeclarationStub;
 import com.perl5.lang.perl.psi.utils.PerlVariableAnnotations;
 import com.perl5.lang.perl.psi.utils.PerlVariableType;
 import com.perl5.lang.perl.util.PerlPackageUtilCore;
+import consulo.localize.LocalizeValue;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.ui.image.Image;
+
 import java.util.Objects;
+
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiElementVisitor;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-
+import org.jspecify.annotations.Nullable;
 
 public class PerlImplicitVariableDeclaration extends PerlImplicitElement
   implements PerlVariable, PerlVariableNameElement, PerlVariableDeclarationElement {
@@ -212,12 +215,13 @@ public class PerlImplicitVariableDeclaration extends PerlImplicitElement
   }
 
   @Override
-  public @Nullable String getPresentableName() {
-    return isLocalDeclaration() ? getName() : getCanonicalName();
+  public LocalizeValue getPresentableName() {
+    return isLocalDeclaration() ? LocalizeValue.of(getName()) : LocalizeValue.ofNullable(getCanonicalName());
   }
 
   // TODO consulo: PsiElement#getIcon(int) does not exist in Consulo (element icons come from IconDescriptorUpdater),
   //  so this is no longer an override and is not called by the platform
+  @RequiredReadAction
   public @Nullable Image getIcon(int flags) {
     Image iconByType = getIconByType(getActualType());
     return iconByType == null ? IconDescriptorUpdaters.getIcon(this, flags) : iconByType;

@@ -16,6 +16,7 @@
 
 package com.perl5.lang.perl.idea;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.PsiDirectoryContainer;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;
@@ -36,13 +37,12 @@ import org.jetbrains.annotations.Nullable;
 import java.text.MessageFormat;
 
 public class PerlElementDescriptionProvider extends PerlElementDescriptionProviderBase {
-
   public PerlElementDescriptionProvider() {
     super(PerlLanguage.INSTANCE);
   }
 
-
   @Override
+  @RequiredReadAction
   protected @Nullable String getShortName(@NotNull PsiElement element) {
     if (element instanceof PsiNamedElement namedElement) {
       return namedElement.getName();

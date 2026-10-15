@@ -16,6 +16,7 @@
 
 package com.perl5.lang.perl.psi.mixins;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.ast.ASTNode;
 import consulo.navigation.ItemPresentation;
 import consulo.util.lang.StringUtil;
@@ -43,6 +44,7 @@ public abstract class PerlSubDeclarationBase extends PerlSubBase<PerlSubDeclarat
   }
 
   @Override
+  @RequiredReadAction
   public @NotNull Image getIcon(int flags) {
     return isXSub()
            ? PerlIcons.XSUB_GUTTER_ICON
@@ -50,6 +52,7 @@ public abstract class PerlSubDeclarationBase extends PerlSubBase<PerlSubDeclarat
   }
 
   @Override
+  @RequiredReadAction
   public ItemPresentation getPresentation() {
     return new PerlItemPresentationSimple(this, getPresentableName());
   }
@@ -65,6 +68,7 @@ public abstract class PerlSubDeclarationBase extends PerlSubBase<PerlSubDeclarat
   }
 
   @Override
+  @RequiredReadAction
   public boolean isXSub() {
     return StringUtil.equals(getContainingFile().getName(), PerlSubUtilCore.DEPARSED_FILE_NAME);
   }

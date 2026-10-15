@@ -490,7 +490,7 @@ public class Perl5UnifiedProjectConfigurable implements Configurable {
     private Form() {
       // PerlVersion#ALL_VERSIONS contains equal versions (5.40 and 5.42 are aliases of 5.36 and 5.38), combobox items must be unique
       myTargetPerlVersionComboBox = ComboBox.create(new ArrayList<>(new LinkedHashSet<>(PerlVersion.ALL_VERSIONS)));
-      myTargetPerlVersionComboBox.setRender((presentation, item) -> {
+      myTargetPerlVersionComboBox.setRenderer((presentation, item) -> {
         PerlVersion value = item.getValue();
         if (value == null) {
           return;
@@ -502,7 +502,7 @@ public class Perl5UnifiedProjectConfigurable implements Configurable {
         }
       });
 
-      myLibsList.setRender((presentation, item) -> {
+      myLibsList.setRenderer((presentation, item) -> {
         VirtualFile value = item.getValue();
         if (value == null) {
           return;

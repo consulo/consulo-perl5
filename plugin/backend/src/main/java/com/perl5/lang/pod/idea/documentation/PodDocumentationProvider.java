@@ -16,7 +16,9 @@
 
 package com.perl5.lang.pod.idea.documentation;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.editor.template.LiveTemplateLookupElement;
+import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.codeEditor.Editor;
 import consulo.util.lang.StringUtil;
@@ -52,11 +54,13 @@ public class PodDocumentationProvider extends PerlDocumentationProviderBase {
   private static final Logger LOG = Logger.getInstance(PodDocumentationProvider.class);
 
   @Override
+  @RequiredReadAction
   public @Nullable String generateDoc(@Nullable PsiElement element, @Nullable PsiElement originalElement) {
     return doGenerateDoc(element);
   }
 
   @Override
+  @SuppressWarnings("SpellCheckingInspection")
   public PsiElement getDocumentationElementForLookupItem(PsiManager psiManager, Object object, PsiElement element) {
     if (object instanceof LiveTemplateLookupElement templateLookupElement) {
       String lookupString = templateLookupElement.getLookupString();
@@ -72,6 +76,7 @@ public class PodDocumentationProvider extends PerlDocumentationProviderBase {
 
   // consulo: Consulo DocumentationProviderEx#getCustomDocumentationElement has no targetOffset parameter (it was only passed through)
   @Override
+  @RequiredReadAction
   public @Nullable PsiElement getCustomDocumentationElement(@NotNull Editor editor,
                                                             @NotNull PsiFile file,
                                                             @Nullable PsiElement contextElement) {
@@ -93,6 +98,7 @@ public class PodDocumentationProvider extends PerlDocumentationProviderBase {
   }
 
   @Override
+  @RequiredReadAction
   public @Nullable PsiElement getDocumentationElementForLink(PsiManager psiManager, String link, PsiElement context) {
     if (context.getLanguage().isKindOf(PerlLanguage.INSTANCE)) {
       context = findPodElement(context);
@@ -109,24 +115,27 @@ public class PodDocumentationProvider extends PerlDocumentationProviderBase {
     return super.getDocumentationElementForLink(psiManager, link, context);
   }
 
+  @RequiredReadAction
   public static @Nullable String doGenerateDoc(@Nullable PsiElement element) {
     return switch (element) {
-      case PodFile ignored -> StringUtil.nullize(PerlDocUtil.renderPodFile((PodFileImpl)element));
+      case PodFileImpl file -> StringUtil.nullize(PerlDocUtil.renderPodFile(file));
       case PodFormatterX x -> generateDocByIndex(x);
       case PodSection section -> PerlDocUtil.renderElement(section);
       case null, default -> null;
     };
   }
 
+  @RequiredReadAction
   private static @NotNull String generateDocByIndex(@NotNull PodFormatterX element) {
-    String indexText = element.getPresentableText();
+    LocalizeValue indexText = element.getPresentableText();
     List<PsiElement> targets = new ArrayList<>();
     element.getContainingFile().accept(new PodStubsAwareRecursiveVisitor() {
       @Override
+      @RequiredReadAction
       public void visitPodFormatIndex(@NotNull PsiPodFormatIndex o) {
-        assert o instanceof PodFormatterX;
-        if (StringUtil.equals(indexText, ((PodFormatterX)o).getPresentableText())) {
-          ContainerUtil.addIfNotNull(targets, ((PodFormatterX)o).getIndexTarget());
+        PodFormatterX formatterX = (PodFormatterX) o;
+        if (indexText.equals(formatterX.getPresentableText())) {
+          ContainerUtil.addIfNotNull(targets, formatterX.getIndexTarget());
         }
       }
     });

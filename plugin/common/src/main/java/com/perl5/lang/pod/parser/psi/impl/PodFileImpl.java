@@ -16,7 +16,9 @@
 
 package com.perl5.lang.pod.parser.psi.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.impl.psi.PsiFileBase;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.ItemPresentation;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.util.lang.StringUtil;
@@ -55,26 +57,31 @@ public class PodFileImpl extends PsiFileBase implements PodFile {
 
   // TODO consulo: PsiElement#getIcon(int) does not exist in Consulo (element icons come from IconDescriptorUpdaters/IconDescriptorUpdater),
   //  so this is no longer an override and is not called by the platform; base-file icon delegation needs an IconDescriptorUpdater
+  @RequiredReadAction
   public Image getIcon(int flags) {
     PsiFile baseFile = getViewProvider().getStubBindingRoot();
     return baseFile == this ? IconDescriptorUpdaters.getIcon(this, flags) : IconDescriptorUpdaters.getIcon(baseFile, flags);
   }
 
   @Override
+  @RequiredReadAction
   public void renderElementAsHTML(StringBuilder builder, PodRenderingContext context) {
     PodRenderUtil.renderPsiRangeAsHTML(getFirstNamedBlock(), null, builder, context);
   }
 
+  @RequiredReadAction
   public @Nullable PsiElement getFirstNamedBlock() {
     return findChildByClass(PodTitledSection.class);
   }
 
   @Override
+  @RequiredReadAction
   public void renderElementAsText(StringBuilder builder, PodRenderingContext context) {
     PodRenderUtil.renderPsiRangeAsText(getFirstNamedBlock(), null, builder, context);
   }
 
   @Override
+  @RequiredReadAction
   public boolean isIndexed() {
     return false;
   }
@@ -90,9 +97,10 @@ public class PodFileImpl extends PsiFileBase implements PodFile {
   }
 
   @Override
-  public @Nullable String getPresentableText() {
+  @RequiredReadAction
+  public LocalizeValue getPresentableText() {
     String packageName = getNormalizedPackageName();
-    return packageName == null ? getName() : packageName;
+    return packageName == null ? LocalizeValue.of(getName()) : LocalizeValue.of(packageName);
   }
 
   /**
@@ -109,6 +117,7 @@ public class PodFileImpl extends PsiFileBase implements PodFile {
   }
 
   @Override
+  @RequiredReadAction
   public @Nullable String getLocationString() {
     final PsiDirectory psiDirectory = getParent();
     if (psiDirectory != null) {
@@ -118,6 +127,7 @@ public class PodFileImpl extends PsiFileBase implements PodFile {
   }
 
   @Override
+  @RequiredReadAction
   public @Nullable Image getIcon(boolean unused) {
     return getFileType().getIcon();
   }

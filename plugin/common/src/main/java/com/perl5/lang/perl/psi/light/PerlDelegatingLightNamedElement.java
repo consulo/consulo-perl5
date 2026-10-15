@@ -16,11 +16,16 @@
 
 package com.perl5.lang.perl.psi.light;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.ItemPresentation;
 import consulo.document.util.TextRange;
 
 import consulo.language.ast.IElementType;
+
 import java.util.function.Function;
+
 import consulo.language.util.IncorrectOperationException;
 import com.perl5.lang.perl.idea.presentations.PerlItemPresentationSimple;
 import com.perl5.lang.perl.parser.PerlIdentifierRangeProvider;
@@ -28,9 +33,9 @@ import com.perl5.lang.perl.psi.PerlVisitor;
 import com.perl5.lang.perl.psi.impl.PerlPolyNamedElement;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
+
 import consulo.language.psi.ElementManipulator;
 import consulo.language.psi.ElementManipulators;
 import consulo.language.psi.NavigatablePsiElement;
@@ -38,6 +43,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiElementVisitor;
 import consulo.language.psi.PsiInvalidElementAccessException;
 import consulo.language.psi.PsiNameIdentifierOwner;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents one of the declarations of {@link PerlPolyNamedElement}
@@ -69,6 +75,7 @@ public class PerlDelegatingLightNamedElement<Delegate extends PerlPolyNamedEleme
   }
 
   @Override
+  @RequiredReadAction
   public @NotNull String getName() {
     return myName;
   }
@@ -78,6 +85,7 @@ public class PerlDelegatingLightNamedElement<Delegate extends PerlPolyNamedEleme
   }
 
   @Override
+  @RequiredReadAction
   public @Nullable PsiElement getNameIdentifier() {
     if (myIsImplicit) {
       return null;
@@ -98,6 +106,7 @@ public class PerlDelegatingLightNamedElement<Delegate extends PerlPolyNamedEleme
   }
 
   @Override
+  @RequiredWriteAction
   public PsiElement setName(@NonNls @NotNull String newBaseName) throws IncorrectOperationException {
     // fixme should be in com.perl5.lang.perl.psi.utils.PerlPsiUtil.renameElement()
     PsiElement nameIdentifier = getNameIdentifier();
@@ -118,6 +127,7 @@ public class PerlDelegatingLightNamedElement<Delegate extends PerlPolyNamedEleme
   }
 
   @Override
+  @RequiredReadAction
   public void navigate(boolean requestFocus) {
     PsiElement nameIdentifier = getNameIdentifier();
     if (nameIdentifier instanceof NavigatablePsiElement navigatablePsiElement) {
@@ -133,21 +143,25 @@ public class PerlDelegatingLightNamedElement<Delegate extends PerlPolyNamedEleme
   }
 
   @Override
+  @RequiredReadAction
   public @NotNull PsiElement getNavigationElement() {
     return myIsImplicit ? getDelegate() : Objects.requireNonNull(getNameIdentifier());
   }
 
   @Override
+  @RequiredReadAction
   public int getTextOffset() {
     return getNavigationElement().getTextOffset();
   }
 
   @Override
+  @RequiredReadAction
   public TextRange getTextRange() {
     return myIsImplicit ? super.getTextRange() : Objects.requireNonNull(getNameIdentifier()).getTextRange();
   }
 
   @Override
+  @RequiredReadAction
   public boolean isValid() {
     return getDelegate().isValid() && (myIsImplicit || myNameIdentifier == null || myNameIdentifier.isValid());
   }
@@ -183,7 +197,8 @@ public class PerlDelegatingLightNamedElement<Delegate extends PerlPolyNamedEleme
   }
 
   @Override
+  @RequiredReadAction
   public ItemPresentation getPresentation() {
-    return new PerlItemPresentationSimple(this, getName());
+    return new PerlItemPresentationSimple(this, LocalizeValue.of(getName()));
   }
 }

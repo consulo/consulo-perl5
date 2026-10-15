@@ -72,7 +72,7 @@ public final class PerlUnifiedInstallForm extends DialogDescriptor {
   @Override
   public Component createCenterComponent(Disposable uiDisposable) {
     ComboBox<String> distributionsComboBox = ComboBox.create(myDistributions);
-    distributionsComboBox.setRender((presentation, item) -> {
+    distributionsComboBox.setRenderer((presentation, item) -> {
       String value = item.getValue();
       if (value == null) {
         return;
@@ -156,7 +156,7 @@ public final class PerlUnifiedInstallForm extends DialogDescriptor {
       threadsList.add(i);
     }
     ComboBox<Integer> threadsComboBox = ComboBox.create(threadsList);
-    threadsComboBox.setRender((presentation, item) -> {
+    threadsComboBox.setRenderer((presentation, item) -> {
       Integer value = item.getValue();
       if (value == null) {
         return;

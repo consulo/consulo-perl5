@@ -16,9 +16,11 @@
 
 package com.perl5.lang.pod.idea.structureView;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.fileEditor.structureView.StructureViewTreeElement;
 import consulo.language.editor.structureView.PsiTreeElementBase;
 import consulo.language.icon.IconDescriptorUpdaters;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.ItemPresentation;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -34,6 +36,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import consulo.ui.image.Image;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -46,12 +49,12 @@ public class PodStructureViewElement extends PsiTreeElementBase<PsiElement> {
   }
 
   @Override
-  public @Nullable String getPresentableText() {
+  public LocalizeValue getPresentableText() {
     PsiElement element = getElement();
     return switch (element) {
-      case PodFile ignored -> PerlBundle.message("pod.structure.view.file.title");
+      case PodFile ignored -> LocalizeValue.localizeTODO(PerlBundle.message("pod.structure.view.file.title"));
       case ItemPresentation presentation -> presentation.getPresentableText();
-      case null, default -> null;
+      case null, default -> LocalizeValue.empty();
     };
   }
 
@@ -62,6 +65,7 @@ public class PodStructureViewElement extends PsiTreeElementBase<PsiElement> {
 
   // consulo: PsiTreeElementBase overrides getIcon() and does not delegate to getIcon(boolean)
   @Override
+  @RequiredReadAction
   public @Nullable Image getIcon() {
     PsiElement element = getElement();
     if (element == null) {
@@ -71,6 +75,7 @@ public class PodStructureViewElement extends PsiTreeElementBase<PsiElement> {
   }
 
   @Override
+  @RequiredReadAction
   public @NotNull Collection<StructureViewTreeElement> getChildrenBase() {
     PsiElement psiElement = getElement();
     if (psiElement == null) {

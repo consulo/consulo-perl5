@@ -16,6 +16,7 @@
 
 package com.perl5.lang.perl.psi.mixins;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.ast.ASTNode;
 import consulo.navigation.ItemPresentation;
 import consulo.util.lang.lazy.ClearableLazyValue;
@@ -41,13 +42,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import consulo.ui.image.Image;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import static com.perl5.lang.perl.idea.PerlElementPatterns.*;
-
 
 public abstract class PerlNamespaceDefinitionMixin extends PerlStubBasedPsiElementBase<PerlNamespaceDefinitionStub>
   implements StubBasedPsiElement<PerlNamespaceDefinitionStub>,
@@ -67,21 +68,25 @@ public abstract class PerlNamespaceDefinitionMixin extends PerlStubBasedPsiEleme
   }
 
   @Override
+  @RequiredReadAction
   public @Nullable PsiPerlNamespaceContent getNamespaceContent() {
     return PsiTreeUtil.getChildOfType(this, PsiPerlNamespaceContent.class);
   }
 
   @Override
+  @RequiredReadAction
   public @Nullable String getName() {
     return getNamespaceName();
   }
 
   @Override
+  @RequiredReadAction
   public @Nullable PerlNamespaceElement getNamespaceElement() {
     return findChildByClass(PerlNamespaceElement.class);
   }
 
   @Override
+  @RequiredReadAction
   public @Nullable PsiElement getNameIdentifier() {
     return getNamespaceElement();
   }
@@ -93,6 +98,7 @@ public abstract class PerlNamespaceDefinitionMixin extends PerlStubBasedPsiEleme
 
 
   @Override
+  @RequiredReadAction
   public @Nullable String getNamespaceName() {
     PerlNamespaceDefinitionStub stub = getGreenStub();
     if (stub != null) {
@@ -102,6 +108,7 @@ public abstract class PerlNamespaceDefinitionMixin extends PerlStubBasedPsiEleme
     return computeNamespaceName();
   }
 
+  @RequiredReadAction
   protected @Nullable String computeNamespaceName() {
     PerlNamespaceElement namespaceElement = getNamespaceElement();
     if (namespaceElement != null) {
@@ -126,6 +133,7 @@ public abstract class PerlNamespaceDefinitionMixin extends PerlStubBasedPsiEleme
   }
 
   @Override
+  @RequiredReadAction
   public ItemPresentation getPresentation() {
     return new PerlItemPresentationSimple(this, getPresentableName());
   }
@@ -140,6 +148,7 @@ public abstract class PerlNamespaceDefinitionMixin extends PerlStubBasedPsiEleme
     return myMroType.get();
   }
 
+  @RequiredReadAction
   private @NotNull PerlMroType computeMroType() {
     MroSearcher searcher = new MroSearcher();
     PerlPsiUtil.processNamespaceStatements(this, searcher);
@@ -178,6 +187,7 @@ public abstract class PerlNamespaceDefinitionMixin extends PerlStubBasedPsiEleme
   }
 
   @Override
+  @RequiredReadAction
   public int getTextOffset() {
     PsiElement nameIdentifier = getNameIdentifier();
 
@@ -190,6 +200,7 @@ public abstract class PerlNamespaceDefinitionMixin extends PerlStubBasedPsiEleme
     return myExporterInfo.get();
   }
 
+  @RequiredReadAction
   private @NotNull ExporterInfo computeExporterInfo() {
     ExporterInfo result = new ExporterInfo();
     PerlPsiUtil.processNamespaceStatements(this, result);
@@ -213,6 +224,7 @@ public abstract class PerlNamespaceDefinitionMixin extends PerlStubBasedPsiEleme
   }
 
   @Override
+  @RequiredReadAction
   public String toString() {
     return super.toString() + "@" + getNamespaceName();
   }
@@ -251,6 +263,7 @@ public abstract class PerlNamespaceDefinitionMixin extends PerlStubBasedPsiEleme
     private final @NotNull Map<String, List<String>> EXPORT_TAGS = Collections.emptyMap();
 
     @Override
+    @RequiredReadAction
     public boolean process(PsiElement element) {
       if (ASSIGN_STATEMENT.accepts(element)) {
         if (EXPORT_ASSIGN_STATEMENT.accepts(element)) {
@@ -272,6 +285,7 @@ public abstract class PerlNamespaceDefinitionMixin extends PerlStubBasedPsiEleme
       return true;
     }
 
+    @RequiredReadAction
     protected List<String> getRightSideStrings(@NotNull PsiElement rightSide) {
       List<String> result = new ArrayList<>();
       if (rightSide.getFirstChild() != null) {

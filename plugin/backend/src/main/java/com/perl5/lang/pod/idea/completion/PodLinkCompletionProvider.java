@@ -16,6 +16,7 @@
 
 package com.perl5.lang.pod.idea.completion;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.editor.completion.CompletionParameters;
 import consulo.language.editor.completion.CompletionProvider;
 import consulo.language.editor.completion.CompletionResultSet;
@@ -59,6 +60,7 @@ public class PodLinkCompletionProvider implements CompletionProvider {
   private static final Logger LOG = Logger.getInstance(PodLinkCompletionProvider.class);
 
   @Override
+  @RequiredReadAction
   public void addCompletions(@NotNull CompletionParameters parameters,
                                 @NotNull ProcessingContext context,
                                 @NotNull CompletionResultSet result) {
@@ -83,6 +85,7 @@ public class PodLinkCompletionProvider implements CompletionProvider {
     completionProcessor.logStatus(getClass());
   }
 
+  @RequiredReadAction
   @SuppressWarnings("UnusedReturnValue")
   protected boolean processFilesCompletions(@NotNull PerlCompletionProcessor completionProcessor) {
     PodFormatterL linkElement = (PodFormatterL)completionProcessor.getLeafElement();
@@ -129,6 +132,7 @@ public class PodLinkCompletionProvider implements CompletionProvider {
       }
 
       @Override
+      @RequiredReadAction
       public void visitTargetableSection(PodTitledSection o) {
         String title = cleanItemText(o.getTitleText());
         if (completionProcessor.matches(title) && distinctString.add(title)) {
@@ -142,6 +146,7 @@ public class PodLinkCompletionProvider implements CompletionProvider {
       }
 
       @Override
+      @RequiredReadAction
       public void visitItemSection(@NotNull PsiItemSection o) {
         if (((PodSectionItem)o).isTargetable()) {
           super.visitItemSection(o);
@@ -178,6 +183,7 @@ public class PodLinkCompletionProvider implements CompletionProvider {
       }
 
       @Override
+      @RequiredReadAction
       public void visitPodFormatIndex(@NotNull PsiPodFormatIndex o) {
         assert o instanceof PodFormatterX;
         if (!((PodFormatterX)o).isMeaningful()) {
@@ -199,7 +205,7 @@ public class PodLinkCompletionProvider implements CompletionProvider {
           targetPresentableText = cleanItemText(podFile.getPodLinkText());
         }
         else if (indexTarget instanceof PodCompositeElement podCompositeElement) {
-          targetPresentableText = cleanItemText(podCompositeElement.getPresentableText());
+          targetPresentableText = cleanItemText(podCompositeElement.getPresentableText().getNullIfEmpty());
         }
         else {
           LOG.warn("Unhandled index target: " + indexTarget);

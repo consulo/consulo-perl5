@@ -16,19 +16,18 @@
 
 package com.perl5.lang.pod.parser.psi.mixin;
 
-import consulo.language.ast.ASTNode;
-import consulo.util.lang.StringUtil;
-import consulo.language.psi.PsiElement;
-import consulo.language.ast.IElementType;
 import com.perl5.lang.pod.parser.psi.PodRenderingContext;
 import com.perl5.lang.pod.parser.psi.stubs.PodSectionStub;
 import com.perl5.lang.pod.parser.psi.util.PodRenderUtil;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.IElementType;
+import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
 import org.jetbrains.annotations.NotNull;
 
 public class PodSectionParagraph extends PodStubBasedSection {
-
-  public PodSectionParagraph(@NotNull PodSectionStub stub,
-                             @NotNull IElementType nodeType) {
+  public PodSectionParagraph(@NotNull PodSectionStub stub, @NotNull IElementType nodeType) {
     super(stub, nodeType);
   }
 
@@ -37,15 +36,16 @@ public class PodSectionParagraph extends PodStubBasedSection {
   }
 
   @Override
-  public @NotNull String getPresentableText() {
+  public LocalizeValue getPresentableText() {
     PodSectionStub stub = getGreenStub();
     if (stub != null) {
-      return stub.getContent();
+      return LocalizeValue.of(stub.getContent());
     }
-    return StringUtil.notNullize(PodRenderUtil.trimItemText(PodRenderUtil.renderPsiElementAsText(this)));
+    return LocalizeValue.of(PodRenderUtil.renderPsiElementAsText(this)).truncateWithEllipsis(140);
   }
 
   @Override
+  @RequiredReadAction
   public void renderElementContentAsHTML(StringBuilder builder, PodRenderingContext context) {
     PsiElement firstChild = getFirstChild();
 
@@ -57,6 +57,7 @@ public class PodSectionParagraph extends PodStubBasedSection {
   }
 
   @Override
+  @RequiredReadAction
   public void renderElementContentAsText(StringBuilder builder, PodRenderingContext context) {
     PsiElement firstChild = getFirstChild();
 

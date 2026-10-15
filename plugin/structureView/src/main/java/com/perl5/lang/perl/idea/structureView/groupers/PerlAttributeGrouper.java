@@ -16,39 +16,43 @@
 
 package com.perl5.lang.perl.idea.structureView.groupers;
 
-import consulo.project.ui.view.tree.AbstractTreeNode;
-
-import consulo.navigation.ItemPresentation;
-import consulo.language.psi.PsiElementNavigationItem;
-import consulo.util.lang.StringUtil;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
-import consulo.language.psi.SmartPointerManager;
-import consulo.language.psi.SmartPsiElementPointer;
-import consulo.util.collection.FactoryMap;
 import com.perl5.PerlBundle;
 import com.perl5.PerlIcons;
 import com.perl5.lang.perl.idea.structureView.elements.PerlStructureViewElement;
 import com.perl5.lang.perl.parser.moose.psi.impl.PerlMooseAttributeHandler;
 import com.perl5.lang.perl.psi.impl.PerlSubCallElement;
 import com.perl5.lang.perl.psi.light.PerlLightMethodDefinitionElement;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.fileEditor.structureView.tree.ActionPresentation;
+import consulo.fileEditor.structureView.tree.Group;
+import consulo.fileEditor.structureView.tree.Grouper;
+import consulo.fileEditor.structureView.tree.TreeElement;
+import consulo.ide.impl.idea.ide.util.treeView.smartTree.GroupWrapper;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiElementNavigationItem;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.SmartPointerManager;
+import consulo.language.psi.SmartPsiElementPointer;
+import consulo.localize.LocalizeValue;
+import consulo.navigation.ItemPresentation;
+import consulo.ui.image.Image;
+import consulo.util.collection.FactoryMap;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import consulo.localize.LocalizeValue;
-import consulo.ui.image.Image;
-import java.util.*;
-import consulo.fileEditor.structureView.tree.ActionPresentation;
-import consulo.fileEditor.structureView.tree.Group;
-import consulo.ide.impl.idea.ide.util.treeView.smartTree.GroupWrapper;
-import consulo.fileEditor.structureView.tree.Grouper;
-import consulo.fileEditor.structureView.tree.TreeElement;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 public class PerlAttributeGrouper implements Grouper, ActionPresentation {
   private static final String GROUPER_ID = "perl.structure.group.attributes";
 
   @Override
   // consulo: parent is passed as Object (it is an AbstractTreeNode)
+  @RequiredReadAction
   public @NotNull Collection<Group> group(@NotNull Object parent, @NotNull Collection<TreeElement> children) {
     if (children.isEmpty() || parent instanceof GroupWrapper groupWrapper && groupWrapper.getValue() instanceof AttributeGroup) {
       return Collections.emptyList();
@@ -123,17 +127,20 @@ public class PerlAttributeGrouper implements Grouper, ActionPresentation {
     }
 
     @Override
-    public @Nullable String getPresentableText() {
+    @RequiredReadAction
+    public LocalizeValue getPresentableText() {
       PerlSubCallElement element = mySubCallElementPointer.getElement();
       if (element == null) {
-        return PerlBundle.message("perl.presentation.invalid");
+        return LocalizeValue.localizeTODO(PerlBundle.message("perl.presentation.invalid"));
       }
       List<String> namesList = PerlMooseAttributeHandler.notNullFrom(element).getAttributesNames(element);
-      String names = namesList.isEmpty() ? PerlBundle.message("perl.structure.attributes.unknown") : StringUtil.join(namesList, ", ");
-      return StringUtil.shortenPathWithEllipsis(names, 30);
+      return namesList.isEmpty()
+        ? LocalizeValue.localizeTODO(PerlBundle.message("perl.structure.attributes.unknown"))
+        : LocalizeValue.of(StringUtil.join(namesList, ", ")).truncateWithEllipsis(30);
     }
 
     @Override
+    @RequiredReadAction
     public @Nullable String getLocationString() {
       PsiFile containingFile = mySubCallElementPointer.getContainingFile();
       return containingFile == null ? PerlBundle.message("perl.presentation.invalid") : containingFile.getName();
@@ -145,6 +152,7 @@ public class PerlAttributeGrouper implements Grouper, ActionPresentation {
     }
 
     @Override
+    @RequiredReadAction
     public @Nullable PsiElement getTargetElement() {
       return mySubCallElementPointer.getElement();
     }
@@ -155,6 +163,7 @@ public class PerlAttributeGrouper implements Grouper, ActionPresentation {
     }
 
     @Override
+    @RequiredReadAction
     public void navigate(boolean requestFocus) {
       PerlSubCallElement element = mySubCallElementPointer.getElement();
       if (element != null) {
@@ -163,12 +172,14 @@ public class PerlAttributeGrouper implements Grouper, ActionPresentation {
     }
 
     @Override
+    @RequiredReadAction
     public boolean canNavigate() {
       PerlSubCallElement element = mySubCallElementPointer.getElement();
       return element != null && element.canNavigate();
     }
 
     @Override
+    @RequiredReadAction
     public boolean canNavigateToSource() {
       PerlSubCallElement element = mySubCallElementPointer.getElement();
       return element != null && element.canNavigateToSource();

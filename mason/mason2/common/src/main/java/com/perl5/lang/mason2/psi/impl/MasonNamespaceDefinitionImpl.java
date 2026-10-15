@@ -16,6 +16,7 @@
 
 package com.perl5.lang.mason2.psi.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.IElementType;
 import com.perl5.lang.htmlmason.MasonCoreUtilCore;
@@ -25,6 +26,7 @@ import com.perl5.lang.perl.psi.PerlNamespaceElement;
 import com.perl5.lang.perl.psi.PerlVariableDeclarationElement;
 import com.perl5.lang.perl.psi.impl.PsiPerlNamespaceDefinitionImpl;
 import com.perl5.lang.perl.psi.stubs.namespaces.PerlNamespaceDefinitionStub;
+import consulo.localize.LocalizeValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,6 +48,7 @@ public class MasonNamespaceDefinitionImpl extends PsiPerlNamespaceDefinitionImpl
     super(stub, nodeType);
   }
 
+  @RequiredReadAction
   protected @NotNull List<PerlVariableDeclarationElement> buildImplicitVariables(MasonSettings masonSettings) {
     List<PerlVariableDeclarationElement> newImplicitVariables = new ArrayList<>();
 
@@ -56,22 +59,26 @@ public class MasonNamespaceDefinitionImpl extends PsiPerlNamespaceDefinitionImpl
   }
 
   @Override
+  @RequiredReadAction
   public PerlNamespaceElement getNamespaceElement() {
     return null;
   }
 
   @Override
+  @RequiredReadAction
   public @Nullable String getNamespaceName() {
     return MasonNamespaceDefinitionService.getInstance().getNamespaceName(this);
   }
 
   @Override
+  @RequiredReadAction
   protected @Nullable String computeNamespaceName() {
     return MasonNamespaceDefinitionService.getInstance().computeNamespaceName(this);
   }
 
   @Override
-  public @Nullable String getPresentableName() {
+  @RequiredReadAction
+  public LocalizeValue getPresentableName() {
     return MasonNamespaceDefinitionService.getInstance().getPresentableName(this);
   }
 
@@ -81,6 +88,7 @@ public class MasonNamespaceDefinitionImpl extends PsiPerlNamespaceDefinitionImpl
   }
 
   @Override
+  @RequiredReadAction
   public @NotNull List<PerlVariableDeclarationElement> getImplicitVariables() {
     MasonSettings settings = MasonSettings.forPsiElement(this);
     if (myImplicitVariables == null || myImplicitVariablesSettings != settings) {

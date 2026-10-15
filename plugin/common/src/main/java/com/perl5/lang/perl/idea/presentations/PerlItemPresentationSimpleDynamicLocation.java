@@ -17,11 +17,11 @@
 package com.perl5.lang.perl.idea.presentations;
 
 import consulo.language.psi.PsiElement;
+import consulo.localize.LocalizeValue;
 import org.jetbrains.annotations.Nullable;
 
 public class PerlItemPresentationSimpleDynamicLocation extends PerlItemPresentationSimple {
-
-  public PerlItemPresentationSimpleDynamicLocation(PsiElement element, String presentableText) {
+  public PerlItemPresentationSimpleDynamicLocation(PsiElement element, LocalizeValue presentableText) {
     super(element, presentableText);
   }
 

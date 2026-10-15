@@ -16,10 +16,12 @@
 
 package com.perl5.lang.perl.idea.structureView.elements;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.fileEditor.structureView.StructureViewTreeElement;
 import consulo.language.editor.structureView.PsiTreeElementBase;
 import consulo.fileEditor.structureView.tree.SortableTreeElement;
 import consulo.language.Language;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.ItemPresentation;
 import consulo.navigation.NavigationItem;
 import consulo.codeEditor.CodeInsightColors;
@@ -78,6 +80,7 @@ public abstract class PerlStructureViewElement extends PsiTreeElementBase<PsiEle
   }
 
   @Override
+  @RequiredReadAction
   public @NotNull String getAlphaSortKey() {
     PsiElement element = getElement();
     if (!(element instanceof PsiNamedElement psiNamedElement)) {
@@ -95,11 +98,12 @@ public abstract class PerlStructureViewElement extends PsiTreeElementBase<PsiEle
   }
 
   @Override
-  public @Nullable String getPresentableText() {
+  public LocalizeValue getPresentableText() {
     throw new RuntimeException("Should not be invoked or should be overrode");
   }
 
   @Override
+  @RequiredReadAction
   public @NotNull ItemPresentation getPresentation() {
 
     ItemPresentation itemPresentation = createPresentation();
@@ -116,12 +120,13 @@ public abstract class PerlStructureViewElement extends PsiTreeElementBase<PsiEle
     if (isImported() && itemPresentation instanceof PerlItemPresentationSimple presentationSimple) {
       PerlExportDescriptor exportDescriptor = getExportDescriptor();
       assert exportDescriptor != null;
-      presentationSimple.setPresentableText(exportDescriptor.getImportedName());
+      presentationSimple.setPresentableText(LocalizeValue.of(exportDescriptor.getImportedName()));
     }
 
     return itemPresentation;
   }
 
+  @RequiredReadAction
   protected @NotNull ItemPresentation createPresentation() {
     ItemPresentation result = null;
     PsiElement element = getElement();
@@ -129,10 +134,11 @@ public abstract class PerlStructureViewElement extends PsiTreeElementBase<PsiEle
       result = navigationItem.getPresentation();
     }
 
-    return result == null ? new PerlItemPresentationSimple(element, "FIXME") : result;
+    return result == null ? new PerlItemPresentationSimple(element, LocalizeValue.localizeTODO("FIXME")) : result;
   }
 
   @Override
+  @RequiredReadAction
   public @NotNull Collection<StructureViewTreeElement> getChildrenBase() {
 
     PsiElement psiElement = getElement();

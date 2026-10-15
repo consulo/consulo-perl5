@@ -16,6 +16,8 @@
 
 package com.perl5.lang.perl.profiler.parser.frames;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.localize.LocalizeValue;
 import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.project.Project;
 import consulo.content.bundle.Sdk;
@@ -94,6 +96,7 @@ class PerlAnonStubStackElement extends PerlCallStackElement {
   }
 
   @Override
+  @RequiredReadAction
   protected @NotNull List<NavigatablePsiElement> computeNavigatables(@NotNull Project project, @NotNull Sdk perlSdk) {
     PerlHostData<?, ?> hostData = PerlHostData.notNullFrom(perlSdk);
     var localPath = hostData.getLocalPath(myFilePath);
@@ -108,8 +111,8 @@ class PerlAnonStubStackElement extends PerlCallStackElement {
     var psiFile = PsiUtilCore.getPsiFile(project, virtualFile);
     return Collections.singletonList(new PerlDelegatingFakeElement(psiFile) {
       @Override
-      public String getPresentableText() {
-        return "sub {...}";
+      public LocalizeValue getPresentableText() {
+        return LocalizeValue.localizeTODO("sub {...}");
       }
 
       @Override
@@ -119,6 +122,7 @@ class PerlAnonStubStackElement extends PerlCallStackElement {
       }
 
       @Override
+      @RequiredReadAction
       public void navigate(boolean requestFocus) {
         var documentManager = PsiDocumentManager.getInstance(project);
         var document = documentManager.getDocument(psiFile);
