@@ -21,9 +21,10 @@ import consulo.annotation.component.ServiceAPI;
 import consulo.annotation.component.ServiceImpl;
 import jakarta.inject.Singleton;
 import jakarta.inject.Inject;
+import consulo.localize.LocalizeValue;
 import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.notification.NotificationType;
-import consulo.project.ui.notification.Notifications;
 import consulo.disposer.Disposable;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
@@ -385,12 +386,11 @@ public class PerlProjectManager implements Disposable {
   }
 
   public static void showUnconfiguredInterpreterNotification(@NotNull Project project) {
-    Notification notification = new Notification(
-      PerlSdkNotificationGroups.SELECT_SDK,
-      PerlBundle.message("perl.select.sdk.notification.title"),
-      PerlBundle.message("perl.select.sdk.notification.message"),
-      NotificationType.ERROR
-    );
+    Notification notification = NotificationService.getInstance()
+      .newOfType(PerlSdkNotificationGroups.SELECT_SDK, NotificationType.ERROR)
+      .title(LocalizeValue.of(PerlBundle.message("perl.select.sdk.notification.title")))
+      .content(LocalizeValue.of(PerlBundle.message("perl.select.sdk.notification.message")))
+      .create();
     notification.addAction(new PerlDumbAwareAction(PerlBundle.message("perl.configure.interpreter.action")) {
       @Override
       public void actionPerformed(@NotNull AnActionEvent e) {
@@ -399,7 +399,7 @@ public class PerlProjectManager implements Disposable {
         notification.expire();
       }
     });
-    Notifications.Bus.notify(notification, project);
+    NotificationService.getInstance().notify(notification, project);
   }
 
   @Contract("null->null")

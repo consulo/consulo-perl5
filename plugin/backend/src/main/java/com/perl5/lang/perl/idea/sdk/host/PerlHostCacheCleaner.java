@@ -16,9 +16,9 @@
 
 package com.perl5.lang.perl.idea.sdk.host;
 
-import consulo.project.ui.notification.Notification;
+import consulo.localize.LocalizeValue;
+import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.notification.NotificationType;
-import consulo.project.ui.notification.Notifications;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.ApplicationManager;
 import consulo.application.WriteAction;
@@ -77,17 +77,16 @@ public final class PerlHostCacheCleaner implements BackgroundStartupActivity {
     if (existingCaches.isEmpty()) {
       return;
     }
-    var notification = new Notification(
-      PerlSdkNotificationGroups.CACHE_CLEANER,
-      PerlBundle.message("perl.cache.cleaner.notification.title"),
-      PerlBundle.message(
+    var notification = NotificationService.getInstance()
+      .newOfType(PerlSdkNotificationGroups.CACHE_CLEANER, NotificationType.WARNING)
+      .title(LocalizeValue.of(PerlBundle.message("perl.cache.cleaner.notification.title")))
+      .content(LocalizeValue.of(PerlBundle.message(
         "perl.cache.cleaner.notification.message",
         existingCaches.stream()
           .map(it -> "<li>" + it.getName() + "</li>")
           .sorted()
-          .collect(Collectors.joining(""))),
-      NotificationType.WARNING
-    );
+          .collect(Collectors.joining("")))))
+      .create();
 
     notification.addAction(new PerlDumbAwareAction(PerlBundle.message("perl.cache.cleaner.action.clean")) {
       @Override
@@ -128,6 +127,6 @@ public final class PerlHostCacheCleaner implements BackgroundStartupActivity {
       }
     });
 
-    Notifications.Bus.notify(notification, project);
+    NotificationService.getInstance().notify(notification, project);
   }
 }

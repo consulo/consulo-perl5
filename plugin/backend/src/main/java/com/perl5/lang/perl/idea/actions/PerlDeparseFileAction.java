@@ -16,13 +16,13 @@
 
 package com.perl5.lang.perl.idea.actions;
 
+import consulo.localize.LocalizeValue;
 import consulo.process.ExecutionException;
 import consulo.process.util.ProcessOutput;
 import consulo.ide.impl.idea.ide.actions.OpenFileAction;
-import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationGroup;
+import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.notification.NotificationType;
-import consulo.project.ui.notification.Notifications;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.ApplicationManager;
 import consulo.application.WriteAction;
@@ -105,20 +105,18 @@ public class PerlDeparseFileAction extends PurePerlActionBase {
 
           if (StringUtil.isNotEmpty(error) && !StringUtil.contains(error, "syntax OK")) {
             if (StringUtil.isEmpty(deparsed)) {
-              Notifications.Bus.notify(new Notification(
-                PERL_DEPARSE_GROUP,
-                PerlBundle.message("perl.action.error.notification.title"),
-                error.replace("\n", "<br/>"),
-                NotificationType.ERROR
-              ));
+              NotificationService.getInstance()
+                .newOfType(PERL_DEPARSE_GROUP, NotificationType.ERROR)
+                .title(LocalizeValue.of(PerlBundle.message("perl.action.error.notification.title")))
+                .content(LocalizeValue.of(error.replace("\n", "<br/>")))
+                .notify(null);
             }
             else {
-              Notifications.Bus.notify(new Notification(
-                PERL_DEPARSE_GROUP,
-                PerlBundle.message("perl.action.success.notification.title"),
-                PerlBundle.message("perl.action.success.notification.message", error.replace("\n", "<br/>")),
-                NotificationType.INFORMATION
-              ));
+              NotificationService.getInstance()
+                .newOfType(PERL_DEPARSE_GROUP, NotificationType.INFORMATION)
+                .title(LocalizeValue.of(PerlBundle.message("perl.action.success.notification.title")))
+                .content(LocalizeValue.of(PerlBundle.message("perl.action.success.notification.message", error.replace("\n", "<br/>"))))
+                .notify(null);
             }
           }
 
@@ -130,12 +128,11 @@ public class PerlDeparseFileAction extends PurePerlActionBase {
           }
         }
         catch (ExecutionException e) {
-          Notifications.Bus.notify(new Notification(
-            PERL_DEPARSE_GROUP,
-            PerlBundle.message("perl.execution.error.notification.title"),
-            e.getMessage().replace("\n", "<br/>"),
-            NotificationType.ERROR
-          ));
+          NotificationService.getInstance()
+            .newOfType(PERL_DEPARSE_GROUP, NotificationType.ERROR)
+            .title(LocalizeValue.of(PerlBundle.message("perl.execution.error.notification.title")))
+            .content(LocalizeValue.of(e.getMessage().replace("\n", "<br/>")))
+            .notify(null);
         }
       }
     }.queue();

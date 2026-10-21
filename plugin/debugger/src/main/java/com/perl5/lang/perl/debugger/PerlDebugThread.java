@@ -17,14 +17,15 @@
 package com.perl5.lang.perl.debugger;
 
 import com.google.gson.*;
+import consulo.localize.LocalizeValue;
 import consulo.process.ExecutionException;
 import consulo.execution.ExecutionResult;
 import consulo.process.ProcessHandlerStopper;
 import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.notification.NotificationType;
-import consulo.project.ui.notification.Notifications;
 import consulo.application.ReadAction;
 import consulo.application.WriteAction;
 import consulo.logging.Logger;
@@ -260,15 +261,14 @@ public class PerlDebugThread extends Thread {
               "perl.debugger.incorrect.version.message", DEBUG_PACKAGE, MODULE_VERSION_PREFIX,
               debuggingEventReady.version);
             // consulo: Consulo requires a registered NotificationGroup instead of the group id, see PerlDebuggerNotificationGroupContributor
-            Notification notification = new Notification(
-              PerlDebuggerNotificationGroupContributor.PERL_DEBUGGER,
-              PerlDebuggerBundle.message("perl.debugger.incorrect.version.title", DEBUG_PACKAGE),
-              errorMessage,
-              NotificationType.ERROR
-            );
+            Notification notification = NotificationService.getInstance()
+              .newOfType(PerlDebuggerNotificationGroupContributor.PERL_DEBUGGER, NotificationType.ERROR)
+              .title(LocalizeValue.of(PerlDebuggerBundle.message("perl.debugger.incorrect.version.title", DEBUG_PACKAGE)))
+              .content(LocalizeValue.of(errorMessage))
+              .create();
             Project project = myDebugProfileState.getEnvironment().getProject();
             if (myPerlDebugOptions instanceof PerlRemoteDebuggingConfiguration) {
-              Notifications.Bus.notify(notification, project);
+              NotificationService.getInstance().notify(notification, project);
             }
             else {
               PerlRunUtil.addInstallActionsAndShow(

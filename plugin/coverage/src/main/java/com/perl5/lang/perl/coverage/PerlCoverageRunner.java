@@ -19,11 +19,11 @@ package com.perl5.lang.perl.coverage;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 
+import consulo.localize.LocalizeValue;
 import consulo.process.ExecutionException;
 import consulo.process.util.ProcessOutput;
-import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.notification.NotificationType;
-import consulo.project.ui.notification.Notifications;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.logging.Logger;
@@ -238,16 +238,11 @@ public class PerlCoverageRunner extends CoverageRunner {
     ReadAction.run(() -> {
       if (!project.isDisposed()) {
         LOG.warn("Error loading coverage: " + message);
-        Notifications.Bus.notify(
-          // consulo: Consulo requires a registered NotificationGroup instead of the group id, see PerlCoverageNotificationGroupContributor
-          new Notification(
-            PerlCoverageNotificationGroupContributor.COVERAGE_LOADING_ERROR,
-            PerlBundle.message("perl.coverage.loading.error"),
-            message,
-            NotificationType.ERROR
-          ),
-          project
-        );
+        NotificationService.getInstance()
+          .newOfType(PerlCoverageNotificationGroupContributor.COVERAGE_LOADING_ERROR, NotificationType.ERROR)
+          .title(LocalizeValue.of(PerlBundle.message("perl.coverage.loading.error")))
+          .content(LocalizeValue.of(message))
+          .notify(project);
       }
     });
   }

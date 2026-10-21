@@ -16,9 +16,8 @@
 
 package com.perl5.lang.perl.idea.sdk.versionManager;
 
-import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.notification.NotificationType;
-import consulo.project.ui.notification.Notifications;
 import consulo.disposer.Disposable;
 import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
@@ -224,12 +223,11 @@ public abstract class PerlRealVersionManagerHandler<Data extends PerlRealVersion
     if (perlPath == null || perlPath.size() != 1) {
       LOG.warn("Error getting perl location from interpreter. One line with path expected, got:\n" +
                (perlPath == null ? "nothing" : StringUtil.join(perlPath, "\n")));
-      Notifications.Bus.notify(new Notification(
-        PerlSdkNotificationGroups.VERSION_MANAGERS,
-        PerlBundle.message("perl.vm.error.getting.interpreter.path.title"),
-        PerlBundle.message("perl.vm.error.getting.interpreter.path.message"),
-        NotificationType.ERROR
-      ));
+      NotificationService.getInstance()
+        .newOfType(PerlSdkNotificationGroups.VERSION_MANAGERS, NotificationType.ERROR)
+        .title(LocalizeValue.of(PerlBundle.message("perl.vm.error.getting.interpreter.path.title")))
+        .content(LocalizeValue.of(PerlBundle.message("perl.vm.error.getting.interpreter.path.message")))
+        .notify(null);
       return;
     }
     PerlRealVersionManagerData<?, ?> versionManagerData = createData(vmAdapter, distributionId);

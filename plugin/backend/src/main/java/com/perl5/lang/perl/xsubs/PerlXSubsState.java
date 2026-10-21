@@ -24,8 +24,8 @@ import jakarta.inject.Inject;
 import consulo.process.ExecutionException;
 import consulo.process.util.ProcessOutput;
 import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.notification.NotificationType;
-import consulo.project.ui.notification.Notifications;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.Application;
@@ -387,8 +387,11 @@ public class PerlXSubsState implements PersistentStateComponent<PerlXSubsState> 
                                 @NotNull String message,
                                 @NotNull NotificationType type,
                                 @Nullable Function<? super Notification, ? extends List<AnAction>> actionsProvider) {
-    // consulo: Consulo requires a registered NotificationGroup instead of the group display id
-    Notification notification = new Notification(PerlXSubsNotificationGroupContributor.DEPARSING, title, message, type);
+    Notification notification = NotificationService.getInstance()
+      .newOfType(PerlXSubsNotificationGroupContributor.DEPARSING, type)
+      .title(LocalizeValue.of(title))
+      .content(LocalizeValue.of(message))
+      .create();
 
     if (actionsProvider != null) {
       List<AnAction> actions = actionsProvider.apply(notification);
@@ -396,7 +399,7 @@ public class PerlXSubsState implements PersistentStateComponent<PerlXSubsState> 
         actions.forEach(notification::addAction);
       }
     }
-    Notifications.Bus.notify(notification, myProject);
+    NotificationService.getInstance().notify(notification, myProject);
   }
 
   public static PerlXSubsState getInstance(@NotNull Project project) {

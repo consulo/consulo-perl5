@@ -20,9 +20,8 @@ import consulo.process.ExecutionException;
 import consulo.process.event.ProcessEvent;
 import consulo.process.event.ProcessListener;
 import consulo.process.util.ProcessOutput;
-import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.notification.NotificationType;
-import consulo.project.ui.notification.Notifications;
 import consulo.application.ApplicationManager;
 import consulo.ui.ModalityState;
 import consulo.project.ui.notification.NotificationGroup;
@@ -188,12 +187,11 @@ public abstract class PerlVersionManagerAdapter {
         MessageBoxes.okError(LocalizeValue.of(message)).title(LocalizeValue.of(dialogTitle)).showAsync();
       }
       else {
-        Notifications.Bus.notify(new Notification(
-          getNotificationGroup(),
-          dialogTitle,
-          message,
-          NotificationType.ERROR
-        ));
+        NotificationService.getInstance()
+          .newOfType(getNotificationGroup(), NotificationType.ERROR)
+          .title(LocalizeValue.of(dialogTitle))
+          .content(LocalizeValue.of(message))
+          .notify(null);
       }
     });
   }

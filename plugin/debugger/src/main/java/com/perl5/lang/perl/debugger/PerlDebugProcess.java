@@ -17,12 +17,12 @@
 package com.perl5.lang.perl.debugger;
 
 import consulo.execution.ExecutionResult;
+import consulo.localize.LocalizeValue;
 import consulo.process.ProcessHandler;
 import consulo.execution.ui.ExecutionConsole;
 import consulo.execution.ui.layout.RunnerLayoutUi;
-import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.notification.NotificationType;
-import consulo.project.ui.notification.Notifications;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
@@ -118,13 +118,11 @@ public class PerlDebugProcess extends XDebugProcess {
       myDebugThread.sendString("pause");
     }
     else {
-      // consulo: Consulo requires a registered NotificationGroup instead of the group id, see PerlDebuggerNotificationGroupContributor
-      Notifications.Bus.notify(new Notification(
-        PerlDebuggerNotificationGroupContributor.PERL_DEBUGGER,
-        PerlDebuggerBundle.message("perl.run.pause.unavailable.title"),
-        PerlDebuggerBundle.message("perl.run.pause.unavailable.content"),
-        NotificationType.INFORMATION
-      ));
+      NotificationService.getInstance()
+        .newOfType(PerlDebuggerNotificationGroupContributor.PERL_DEBUGGER, NotificationType.INFORMATION)
+        .title(LocalizeValue.of(PerlDebuggerBundle.message("perl.run.pause.unavailable.title")))
+        .content(LocalizeValue.of(PerlDebuggerBundle.message("perl.run.pause.unavailable.content")))
+        .notify(null);
     }
   }
 

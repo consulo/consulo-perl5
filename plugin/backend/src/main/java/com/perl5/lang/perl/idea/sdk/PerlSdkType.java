@@ -16,9 +16,8 @@
 
 package com.perl5.lang.perl.idea.sdk;
 
-import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.notification.NotificationType;
-import consulo.project.ui.notification.Notifications;
 import consulo.application.ApplicationManager;
 import consulo.application.WriteAction;
 import consulo.logging.Logger;
@@ -139,13 +138,13 @@ public class PerlSdkType extends SdkType {
       if (!exceptions.isEmpty()) {
         int copiedFiles = filesToRefresh.size();
         int errorsNumber = exceptions.size();
-        Notifications.Bus.notify(new Notification(
-          PerlSdkNotificationGroups.SYNC,
-          PerlBundle.message("perl.sync.notification.title"),
-          PerlBundle.message("perl.sync.notification.body",
+        NotificationService.getInstance()
+          .newOfType(PerlSdkNotificationGroups.SYNC, NotificationType.ERROR)
+          .title(LocalizeValue.of(PerlBundle.message("perl.sync.notification.title")))
+          .content(LocalizeValue.of(PerlBundle.message("perl.sync.notification.body",
                              copiedFiles, copiedFiles + errorsNumber, errorsNumber,
-                             StringUtil.pluralize(PerlBundle.message("perl.sync.notification.pluralize"), errorsNumber)),
-          NotificationType.ERROR));
+                             StringUtil.pluralize(PerlBundle.message("perl.sync.notification.pluralize"), errorsNumber))))
+          .notify(null);
         exceptions.forEach(LOG::warn);
       }
     }

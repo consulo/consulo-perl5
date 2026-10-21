@@ -22,9 +22,8 @@ import consulo.execution.BeforeRunTaskProvider;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.ui.RunContentDescriptor;
-import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.notification.NotificationType;
-import consulo.project.ui.notification.Notifications;
 import consulo.dataContext.DataContext;
 import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
@@ -161,12 +160,11 @@ class PerlModuleBuildTaskProvider extends BeforeRunTaskProvider<PerlModuleBuildT
 
   private static void showError(@NotNull Project project, @NotNull String message){
     LOG.warn(message);
-    Notifications.Bus.notify(new Notification(
-      PerlModuleBuildNotificationGroups.BUILD_ERROR,
-      ModuleBuildBundle.message("perl.module.build.notification.generating.error.title"),
-      message,
-      NotificationType.ERROR
-    ), project);
+    NotificationService.getInstance()
+      .newOfType(PerlModuleBuildNotificationGroups.BUILD_ERROR, NotificationType.ERROR)
+      .title(LocalizeValue.of(ModuleBuildBundle.message("perl.module.build.notification.generating.error.title")))
+      .content(LocalizeValue.of(message))
+      .notify(project);
   }
 
 

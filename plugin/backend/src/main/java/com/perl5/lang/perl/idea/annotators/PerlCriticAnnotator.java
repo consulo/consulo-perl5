@@ -16,6 +16,7 @@
 
 package com.perl5.lang.perl.idea.annotators;
 
+import consulo.localize.LocalizeValue;
 import consulo.process.BaseProcessHandler;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.language.Language;
@@ -23,9 +24,8 @@ import com.perl5.lang.perl.PerlLanguage;
 import consulo.language.editor.annotation.AnnotationHolder;
 import consulo.language.editor.annotation.ExternalAnnotator;
 import consulo.language.editor.annotation.HighlightSeverity;
-import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.notification.NotificationType;
-import consulo.project.ui.notification.Notifications;
 import consulo.application.ReadAction;
 import consulo.logging.Logger;
 import consulo.document.Document;
@@ -144,12 +144,11 @@ public class PerlCriticAnnotator extends ExternalAnnotator<PerlFile, List<PerlCr
     catch (Exception e) {
       LOG.warn("Error running perlcritic", e);
 
-      Notifications.Bus.notify(new Notification(
-        PerlCriticNotificationGroupContributor.PERL_CRITIC,
-        PerlBundle.message("perl.critic.execution.error.title"),
-        PerlBundle.message("perl.critic.execution.error.message", e.getMessage()),
-        NotificationType.ERROR
-      ));
+      NotificationService.getInstance()
+        .newOfType(PerlCriticNotificationGroupContributor.PERL_CRITIC, NotificationType.ERROR)
+        .title(LocalizeValue.of(PerlBundle.message("perl.critic.execution.error.title")))
+        .content(LocalizeValue.ofNullable(PerlBundle.message("perl.critic.execution.error.message", e.getMessage())))
+        .notify(null);
       PerlSharedSettings.getInstance(sourcePsiFile.getProject()).PERL_CRITIC_ENABLED = false;
     }
     return null;

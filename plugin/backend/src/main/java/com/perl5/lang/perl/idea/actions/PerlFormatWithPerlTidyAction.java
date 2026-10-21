@@ -16,13 +16,13 @@
 
 package com.perl5.lang.perl.idea.actions;
 
+import consulo.localize.LocalizeValue;
 import consulo.process.ExecutionException;
 import consulo.process.BaseProcessHandler;
 import consulo.process.util.ProcessOutput;
-import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationGroup;
+import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.notification.NotificationType;
-import consulo.project.ui.notification.Notifications;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.application.ReadAction;
@@ -144,12 +144,11 @@ public class PerlFormatWithPerlTidyAction extends PurePerlActionBase {
             }
             catch (IOException e) {
               LOG.error(e);
-              Notifications.Bus.notify(new Notification(
-                getGroup(),
-                PerlBundle.message("perl.action.perl.tidy.formatting.error.title"),
-                e.getMessage(),
-                NotificationType.ERROR
-              ));
+              NotificationService.getInstance()
+                .newOfType(getGroup(), NotificationType.ERROR)
+                .title(LocalizeValue.of(PerlBundle.message("perl.action.perl.tidy.formatting.error.title")))
+                .content(LocalizeValue.ofNullable(e.getMessage()))
+                .notify(null);
               return;
             }
 
@@ -165,22 +164,20 @@ public class PerlFormatWithPerlTidyAction extends PurePerlActionBase {
             }
             else {
               LOG.warn("Non-empty stderr: " + processOutput.getStderr());
-              Notifications.Bus.notify(new Notification(
-                getGroup(),
-                PerlBundle.message("perl.action.perl.tidy.formatting.error.title"),
-                StringUtil.join(stderrLines, "<br>"),
-                NotificationType.ERROR
-              ));
+              NotificationService.getInstance()
+                .newOfType(getGroup(), NotificationType.ERROR)
+                .title(LocalizeValue.of(PerlBundle.message("perl.action.perl.tidy.formatting.error.title")))
+                .content(LocalizeValue.of(StringUtil.join(stderrLines, "<br>")))
+                .notify(null);
             }
           }
           catch (ExecutionException e) {
             LOG.error(e);
-            Notifications.Bus.notify(new Notification(
-              getGroup(),
-              PerlBundle.message("perl.action.perl.tidy.running.error.title"),
-              e.getMessage(),
-              NotificationType.ERROR
-            ));
+            NotificationService.getInstance()
+              .newOfType(getGroup(), NotificationType.ERROR)
+              .title(LocalizeValue.of(PerlBundle.message("perl.action.perl.tidy.running.error.title")))
+              .content(LocalizeValue.ofNullable(e.getMessage()))
+              .notify(null);
           }
         }
       }.queue();

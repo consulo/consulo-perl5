@@ -17,6 +17,7 @@
 package com.perl5.lang.perl.util;
 
 import consulo.language.editor.DaemonCodeAnalyzer;
+import consulo.localize.LocalizeValue;
 import consulo.process.ExecutionException;
 import consulo.execution.executor.Executor;
 import consulo.execution.executor.DefaultRunExecutor;
@@ -30,11 +31,11 @@ import consulo.execution.ui.layout.RunnerLayoutUi;
 import consulo.execution.ui.layout.RunnerLayoutUiFactory;
 import consulo.execution.ui.RunContentManager;
 import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.notification.NotificationType;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import com.perl5.lang.perl.idea.sdk.PerlConfig;
 import com.perl5.lang.perl.idea.sdk.PerlSdkNotificationGroups;
-import consulo.project.ui.notification.Notifications;
 import consulo.disposer.Disposable;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -248,12 +249,11 @@ public final class PerlRunUtil {
       return;
     }
 
-    Notification notification = new Notification(
-      PerlSdkNotificationGroups.MISSING_LIBRARY,
-      PerlBundle.message("perl.missing.library.notification.title", packageNames.size()),
-      StringUtil.join(ContainerUtil.sorted(packageNames), ", "),
-      NotificationType.ERROR
-    );
+    Notification notification = NotificationService.getInstance()
+      .newOfType(PerlSdkNotificationGroups.MISSING_LIBRARY, NotificationType.ERROR)
+      .title(LocalizeValue.of(PerlBundle.message("perl.missing.library.notification.title", packageNames.size())))
+      .content(LocalizeValue.of(StringUtil.join(ContainerUtil.sorted(packageNames), ", ")))
+      .create();
     addInstallActionsAndShow(project, sdk, packageNames, notification);
   }
 
@@ -281,17 +281,16 @@ public final class PerlRunUtil {
     }
 
     actions.forEach(notification::addAction);
-    Notifications.Bus.notify(notification, project);
+    NotificationService.getInstance().notify(notification, project);
   }
 
 
   private static void showMissingLibraryNotification(@Nullable Project project, @NotNull Sdk sdk, @NotNull String libraryName) {
-    Notification notification = new Notification(
-      PerlSdkNotificationGroups.MISSING_LIBRARY,
-      PerlBundle.message("perl.missing.library.notification.title", libraryName),
-      PerlBundle.message("perl.missing.library.notification.message", libraryName),
-      NotificationType.ERROR
-    );
+    Notification notification = NotificationService.getInstance()
+      .newOfType(PerlSdkNotificationGroups.MISSING_LIBRARY, NotificationType.ERROR)
+      .title(LocalizeValue.of(PerlBundle.message("perl.missing.library.notification.title", libraryName)))
+      .content(LocalizeValue.of(PerlBundle.message("perl.missing.library.notification.message", libraryName)))
+      .create();
 
     addInstallActionsAndShow(project, sdk, Collections.singletonList(libraryName), notification);
   }
