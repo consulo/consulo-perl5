@@ -25,6 +25,13 @@ public final class PerlConfigurationUIUtil {
   }
 
   /**
+   * @return run configuration fragment name: the label text without mnemonics and a trailing colon
+   */
+  public static LocalizeValue fragmentName(String text) {
+    return LocalizeValue.of(StringUtil.trimEnd(text.replace("&", "").trim(), ":"));
+  }
+
+  /**
    * @return {@code keys} with {@code preferredOrder} items first (upstream option maps are created with {@code Map.of} which has no
    * stable iteration order) and remaining keys after them
    */

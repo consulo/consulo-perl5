@@ -18,48 +18,68 @@ package com.perl5.lang.perl.debugger.run.run.debugger.remote;
 
 import consulo.execution.executor.Executor;
 import consulo.execution.configuration.ConfigurationFactory;
-import consulo.execution.configuration.RunConfiguration;
+import consulo.execution.configuration.LegacyRunConfigurationConverter;
 import consulo.execution.configuration.RunConfigurationBase;
 import consulo.execution.debug.DefaultDebugExecutor;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.configuration.RunConfigurationWithSuppressedDefaultRunAction;
-import consulo.execution.configuration.ui.SettingsEditor;
+import consulo.execution.configuration.RunConfigurationOptions;
+import consulo.execution.configuration.fragment.RunConfigurationFragment;
+import consulo.util.lang.StringUtil;
 import consulo.project.Project;
-import consulo.util.xml.serializer.InvalidDataException;
-import consulo.util.xml.serializer.WriteExternalException;
-import consulo.util.xml.serializer.XmlSerializer;
-import consulo.util.xml.serializer.annotation.Tag;
 import com.perl5.lang.perl.idea.run.debugger.PerlDebugOptions;
-import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 
 // consulo: Consulo RunConfigurationBase is not parameterized with RunConfigurationOptions
 public class PerlRemoteDebuggingConfiguration extends RunConfigurationBase
   implements RunConfigurationWithSuppressedDefaultRunAction, PerlDebugOptions {
-  public String debugHost = LOCALHOST;
+  private static final String DEFAULT_REMOTE_PROJECT_ROOT = "/home/";
+  private static final String DEFAULT_SCRIPT_CHARSET = "utf8";
+  private static final String DEFAULT_START_MODE = "RUN";
 
-  public int debugPort = 12345;
-  public String remoteProjectRoot = "/home/";
-  public String localProjectRoot = "";
-  public String scriptCharset = "utf8";
-  public String perlRole = "client";
-  public String startMode = "RUN";
-  public boolean isNonInteractiveModeEnabled = false;
-  public boolean isCompileTimeBreakpointsEnabled = false;
-  public String initCode = "";
-  @Tag("auto-reconnect")
-  private boolean myIsReconnect;
+  // consulo: settings are kept in PerlRemoteDebuggingConfigurationOptions and edited with run configuration fragments
 
   public PerlRemoteDebuggingConfiguration(Project project, @NotNull ConfigurationFactory factory, String name) {
     super(project, factory, name);
   }
 
   @Override
-  public @NotNull SettingsEditor<? extends RunConfiguration> getConfigurationEditor() {
-    // consulo: unified UI editor, upstream Swing PerlRemoteDebuggingConfigurationEditor can't be shown in Consulo Web
-    return new PerlRemoteDebuggingConfigurationUIEditor(getProject());
+  protected Class<? extends RunConfigurationOptions> getOptionsClass() {
+    return PerlRemoteDebuggingConfigurationOptions.class;
+  }
+
+  @Override
+  public PerlRemoteDebuggingConfigurationOptions getOptions() {
+    return (PerlRemoteDebuggingConfigurationOptions)super.getOptions();
+  }
+
+  @Override
+  protected void convertLegacyState(LegacyRunConfigurationConverter converter) {
+    super.convertLegacyState(converter);
+
+    PerlRemoteDebuggingConfigurationLegacyState old = converter.readXml(PerlRemoteDebuggingConfigurationLegacyState.class);
+    PerlRemoteDebuggingConfigurationOptions options = new PerlRemoteDebuggingConfigurationOptions();
+    options.setDebugHost(LOCALHOST.equals(old.debugHost) ? null : old.debugHost);
+    options.setDebugPort(old.debugPort);
+    options.setRemoteProjectRoot(DEFAULT_REMOTE_PROJECT_ROOT.equals(old.remoteProjectRoot) ? null : old.remoteProjectRoot);
+    options.setLocalProjectRoot(old.localProjectRoot);
+    options.setScriptCharset(DEFAULT_SCRIPT_CHARSET.equals(old.scriptCharset) ? null : old.scriptCharset);
+    options.setPerlRole(ROLE_CLIENT.equals(old.perlRole) ? null : old.perlRole);
+    options.setStartMode(DEFAULT_START_MODE.equals(old.startMode) ? null : old.startMode);
+    options.setNonInteractiveModeEnabled(old.isNonInteractiveModeEnabled);
+    options.setCompileTimeBreakpointsEnabled(old.isCompileTimeBreakpointsEnabled);
+    options.setInitCode(old.initCode);
+    options.setReconnect(old.reconnect);
+    converter.setOptions(options);
+  }
+
+  @Override
+  public List<RunConfigurationFragment<?>> createFragments() {
+    return List.of(new PerlRemoteDebuggingFragment());
   }
 
   @Override
@@ -67,17 +87,7 @@ public class PerlRemoteDebuggingConfiguration extends RunConfigurationBase
 
   }
 
-  @Override
-  public void readExternal(@NotNull Element element) throws InvalidDataException {
-    super.readExternal(element);
-    XmlSerializer.deserializeInto(this, element);
-  }
 
-  @Override
-  public void writeExternal(@NotNull Element element) throws WriteExternalException {
-    super.writeExternal(element);
-    XmlSerializer.serializeInto(this, element);
-  }
 
   @Override
   public @Nullable PerlRemoteDebuggingRunProfileState getState(@NotNull Executor executor, @NotNull ExecutionEnvironment environment) {
@@ -89,104 +99,104 @@ public class PerlRemoteDebuggingConfiguration extends RunConfigurationBase
 
   @Override
   public String getHostToBind() {
-    return debugHost;
+    return StringUtil.notNullize(getOptions().getDebugHost(), LOCALHOST);
   }
 
   public void setDebugHost(String debugHost) {
-    this.debugHost = debugHost;
+    getOptions().setDebugHost(LOCALHOST.equals(debugHost) ? null : debugHost);
   }
 
   @Override
   public int getDebugPort() {
-    return debugPort;
+    return getOptions().getDebugPort();
   }
 
   public void setDebugPort(int debugPort) {
-    this.debugPort = debugPort;
+    getOptions().setDebugPort(debugPort);
   }
 
   @Override
   public String getRemoteProjectRoot() {
-    return remoteProjectRoot;
+    return StringUtil.notNullize(getOptions().getRemoteProjectRoot(), DEFAULT_REMOTE_PROJECT_ROOT);
   }
 
   public void setRemoteProjectRoot(String remoteWorkingDirectory) {
-    this.remoteProjectRoot = remoteWorkingDirectory;
+    getOptions().setRemoteProjectRoot(DEFAULT_REMOTE_PROJECT_ROOT.equals(remoteWorkingDirectory) ? null : remoteWorkingDirectory);
   }
 
   public @NotNull String getLocalProjectRoot() {
-    return localProjectRoot;
+    return StringUtil.notNullize(getOptions().getLocalProjectRoot());
   }
 
   public void setLocalProjectRoot(@NotNull String localProjectRoot) {
-    this.localProjectRoot = localProjectRoot;
+    getOptions().setLocalProjectRoot(localProjectRoot);
   }
 
   @Override
   public String getScriptCharset() {
-    return scriptCharset;
+    return StringUtil.notNullize(getOptions().getScriptCharset(), DEFAULT_SCRIPT_CHARSET);
   }
 
   @Override
   public void setScriptCharset(String scriptCharset) {
-    this.scriptCharset = scriptCharset;
+    getOptions().setScriptCharset(DEFAULT_SCRIPT_CHARSET.equals(scriptCharset) ? null : scriptCharset);
   }
 
   @Override
   public String getStartMode() {
-    return startMode;
+    return StringUtil.notNullize(getOptions().getStartMode(), DEFAULT_START_MODE);
   }
 
   @Override
   public void setStartMode(String startMode) {
-    this.startMode = startMode;
+    getOptions().setStartMode(DEFAULT_START_MODE.equals(startMode) ? null : startMode);
   }
 
   @Override
   public String getPerlRole() {
-    return perlRole;
+    return StringUtil.notNullize(getOptions().getPerlRole(), ROLE_CLIENT);
   }
 
   public void setPerlRole(String perlRole) {
-    this.perlRole = perlRole;
+    getOptions().setPerlRole(ROLE_CLIENT.equals(perlRole) ? null : perlRole);
   }
 
   @Override
   public boolean isNonInteractiveModeEnabled() {
-    return isNonInteractiveModeEnabled;
+    return getOptions().isNonInteractiveModeEnabled();
   }
 
   @Override
   public void setNonInteractiveModeEnabled(boolean nonInteractiveModeEnabled) {
-    isNonInteractiveModeEnabled = nonInteractiveModeEnabled;
+    getOptions().setNonInteractiveModeEnabled(nonInteractiveModeEnabled);
   }
 
   @Override
   public boolean isCompileTimeBreakpointsEnabled() {
-    return isCompileTimeBreakpointsEnabled;
+    return getOptions().isCompileTimeBreakpointsEnabled();
   }
 
   @Override
   public void setCompileTimeBreakpointsEnabled(boolean compileTimeBreakpointsEnabled) {
-    isCompileTimeBreakpointsEnabled = compileTimeBreakpointsEnabled;
+    getOptions().setCompileTimeBreakpointsEnabled(compileTimeBreakpointsEnabled);
   }
 
   @Override
   public String getInitCode() {
-    return initCode;
+    return StringUtil.notNullize(getOptions().getInitCode());
   }
 
   @Override
   public void setInitCode(String initCode) {
-    this.initCode = initCode;
+    getOptions().setInitCode(initCode);
   }
 
   @Override
   public boolean isReconnect() {
-    return myIsReconnect;
+    return getOptions().isReconnect();
   }
 
   public void setReconnect(boolean reconnect) {
-    myIsReconnect = reconnect;
+    getOptions().setReconnect(reconnect);
   }
 }

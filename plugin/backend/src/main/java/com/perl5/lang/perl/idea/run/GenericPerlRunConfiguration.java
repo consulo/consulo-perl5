@@ -26,13 +26,10 @@ import consulo.execution.configuration.RunConfigurationWithSuppressedDefaultRunA
 import consulo.execution.ui.console.ConsoleView;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
-import consulo.project.macro.ProjectPathMacroManager;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.content.bundle.Sdk;
 import com.intellij.openapi.projectRoots.impl.PerlSdkTable;
-import consulo.util.xml.serializer.InvalidDataException;
-import consulo.util.xml.serializer.WriteExternalException;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.VirtualFile;
@@ -41,7 +38,6 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.util.collection.ContainerUtil;
 import consulo.process.cmd.ParametersListUtil;
 import consulo.util.io.NetUtil;
-import consulo.util.xml.serializer.XmlSerializer;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.idea.execution.PerlCommandLine;
 import com.perl5.lang.perl.idea.execution.PerlTerminalExecutionConsole;
@@ -51,7 +47,6 @@ import com.perl5.lang.perl.idea.sdk.host.PerlConsoleView;
 import com.perl5.lang.perl.idea.sdk.host.PerlHostData;
 import com.perl5.lang.perl.util.PerlFileUtil;
 import com.perl5.lang.perl.util.PerlRunUtil;
-import org.jdom.Element;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -66,6 +61,11 @@ import java.util.stream.Collectors;
 import static consulo.process.cmd.GeneralCommandLine.ParentEnvironmentType.CONSOLE;
 import static consulo.process.cmd.GeneralCommandLine.ParentEnvironmentType.NONE;
 import consulo.execution.configuration.ConfigurationFactory;
+import consulo.execution.configuration.LegacyRunConfigurationConverter;
+import consulo.execution.configuration.fragment.EnvironmentFragmentState;
+import consulo.execution.configuration.fragment.ProgramParametersFragmentState;
+import consulo.execution.configuration.fragment.RunConfigurationFragment;
+import consulo.execution.configuration.fragment.WorkingDirectoryFragmentState;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.execution.configuration.LocatableConfigurationBase;
 import consulo.execution.configuration.RunProfile;
@@ -86,25 +86,6 @@ public abstract class GenericPerlRunConfiguration extends LocatableConfiguration
 
   private static final Logger LOG = Logger.getInstance(GenericPerlRunConfiguration.class);
 
-  private String myScriptPath;
-  private String myScriptArguments;
-
-  private String myPerlArguments = "";
-  private String myWorkingDirectory;
-  private Map<String, String> myEnvironments = new HashMap<>();
-  private boolean myPassParentEnvironments = true;
-  private String myConsoleCharset;
-  private boolean myUseAlternativeSdk;
-  private String myAlternativeSdkName;
-  private @NotNull String myRequiredModules = "";
-
-  // debugging-related options
-  private String myScriptCharset = "utf8";
-  private String myStartMode = "RUN";
-  private boolean myIsNonInteractiveModeEnabled = false;
-  private boolean myIsCompileTimeBreakpointsEnabled = false;
-  private String myInitCode = "";
-
   private transient Integer myDebugPort;
 
   public GenericPerlRunConfiguration(@NotNull Project project, @NotNull ConfigurationFactory factory, @Nullable String name) {
@@ -112,19 +93,44 @@ public abstract class GenericPerlRunConfiguration extends LocatableConfiguration
   }
 
   @Override
-  public void readExternal(@NotNull Element element) throws InvalidDataException {
-    // this is actually redundant thing. For some reason expanding done by the platform, but collapsing need to be done manually. But this
-    // feels really unreliable and bad for testing. So, we'll do it manually.
-    ProjectPathMacroManager.getInstance(getProject()).expandPaths(element);
-    super.readExternal(element);
-    XmlSerializer.deserializeInto(this, element);
+  public GenericPerlRunConfigurationOptions getOptions() {
+    return (GenericPerlRunConfigurationOptions)super.getOptions();
   }
 
-  @Override
-  public void writeExternal(@NotNull Element element) throws WriteExternalException {
-    super.writeExternal(element);
-    XmlSerializer.serializeInto(this, element);
-    ProjectPathMacroManager.getInstance(getProject()).collapsePathsRecursively(element);
+  /**
+   * consulo: converts the settings an old configuration element wrote with the bean serializer
+   */
+  protected static void convertLegacyCommonState(@NotNull LegacyRunConfigurationConverter converter,
+                                                 @NotNull GenericPerlRunConfigurationOptions options) {
+    GenericPerlRunConfigurationLegacyState old = converter.readXml(GenericPerlRunConfigurationLegacyState.class);
+    options.setScriptPath(old.scriptPath);
+    options.setPerlArguments(old.perlArguments);
+    options.setConsoleCharset(old.consoleCharset);
+    options.setUseAlternativeSdk(old.useAlternativeSdk);
+    options.setAlternativeSdkName(old.alternativeSdkName);
+    options.setRequiredModules(old.requiredModules);
+    options.setScriptCharset("utf8".equals(old.scriptCharset) ? null : old.scriptCharset);
+    options.setStartMode("RUN".equals(old.startMode) ? null : old.startMode);
+    options.setNonInteractiveModeEnabled(old.nonInteractiveModeEnabled);
+    options.setCompileTimeBreakpointsEnabled(old.compileTimeBreakpointsEnabled);
+    options.setInitCode(old.initCode);
+
+    converter.addFragment(new ProgramParametersFragmentState(old.programParameters));
+    converter.addFragment(new WorkingDirectoryFragmentState(old.workingDirectory));
+    converter.addFragment(new EnvironmentFragmentState(old.envs, old.passParentEnvs));
+  }
+
+  /**
+   * consulo: fragments shared by all perl configurations, after the script one of the subclass
+   */
+  protected @NotNull List<RunConfigurationFragment<?>> createCommonFragments() {
+    return List.of(
+      new PerlArgumentsFragment<>(),
+      new PerlConsoleCharsetFragment<>(),
+      new PerlRequiredModulesFragment<>(),
+      new PerlAlternativeSdkFragment<>(),
+      new PerlDebugOptionsFragment<GenericPerlRunConfiguration>()
+    );
   }
 
   @Override
@@ -195,62 +201,47 @@ public abstract class GenericPerlRunConfiguration extends LocatableConfiguration
   }
 
   public @NotNull String getRequiredModules() {
-    return myRequiredModules;
+    return StringUtil.notNullize(getOptions().getRequiredModules());
   }
 
   public @NotNull List<String> getRequiredModulesList() {
-    return PREREQUISITES_PARSER.apply(myRequiredModules);
+    return PREREQUISITES_PARSER.apply(getRequiredModules());
   }
 
   public void setRequiredModules(@NotNull String requiredModules) {
-    myRequiredModules = PREREQUISITES_JOINER.apply(PREREQUISITES_PARSER.apply(requiredModules));
+    getOptions().setRequiredModules(PREREQUISITES_JOINER.apply(PREREQUISITES_PARSER.apply(requiredModules)));
   }
 
   public String getConsoleCharset() {
-    return myConsoleCharset;
+    return getOptions().getConsoleCharset();
   }
 
   public void setConsoleCharset(String charset) {
-    myConsoleCharset = charset;
+    getOptions().setConsoleCharset(charset);
   }
 
   public String getScriptPath() {
-    return myScriptPath;
+    return getOptions().getScriptPath();
   }
 
   public void setScriptPath(String scriptPath) {
-    myScriptPath = scriptPath;
+    getOptions().setScriptPath(scriptPath);
   }
 
   public String getAlternativeSdkName() {
-    return myAlternativeSdkName;
+    return getOptions().getAlternativeSdkName();
   }
 
   public void setAlternativeSdkName(String name) {
-    myAlternativeSdkName = name;
+    getOptions().setAlternativeSdkName(name);
   }
 
   public boolean isUseAlternativeSdk() {
-    return myUseAlternativeSdk;
+    return getOptions().isUseAlternativeSdk();
   }
 
   public void setUseAlternativeSdk(boolean value) {
-    myUseAlternativeSdk = value;
-  }
-
-  @Override
-  public @Nullable String getProgramParameters() {
-    return myScriptArguments;
-  }
-
-  @Override
-  public void setProgramParameters(@Nullable String s) {
-    myScriptArguments = s;
-  }
-
-  @Override
-  public @Nullable String getWorkingDirectory() {
-    return myWorkingDirectory;
+    getOptions().setUseAlternativeSdk(value);
   }
 
   /**
@@ -264,33 +255,8 @@ public abstract class GenericPerlRunConfiguration extends LocatableConfiguration
     return VirtualFileUtil.findFileByIoFile(new File(workingDirectory), true);
   }
 
-  @Override
-  public void setWorkingDirectory(@Nullable String s) {
-    myWorkingDirectory = s;
-  }
-
-  @Override
-  public @NotNull Map<String, String> getEnvs() {
-    return myEnvironments;
-  }
-
-  @Override
-  public void setEnvs(@NotNull Map<String, String> map) {
-    myEnvironments = map;
-  }
-
-  @Override
-  public boolean isPassParentEnvs() {
-    return myPassParentEnvironments;
-  }
-
-  @Override
-  public void setPassParentEnvs(boolean b) {
-    myPassParentEnvironments = b;
-  }
-
   public String getPerlArguments() {
-    return myPerlArguments;
+    return StringUtil.notNullize(getOptions().getPerlArguments());
   }
 
   protected @NotNull List<String> getPerlArgumentsList() {
@@ -299,17 +265,17 @@ public abstract class GenericPerlRunConfiguration extends LocatableConfiguration
   }
 
   public void setPerlArguments(String perlArguments) {
-    this.myPerlArguments = perlArguments;
+    getOptions().setPerlArguments(perlArguments);
   }
 
   @Override
   public String getStartMode() {
-    return myStartMode;
+    return StringUtil.notNullize(getOptions().getStartMode(), "RUN");
   }
 
   @Override
   public void setStartMode(String startMode) {
-    this.myStartMode = startMode;
+    getOptions().setStartMode("RUN".equals(startMode) ? null : startMode);
   }
 
   @Override
@@ -341,32 +307,32 @@ public abstract class GenericPerlRunConfiguration extends LocatableConfiguration
 
   @Override
   public String getScriptCharset() {
-    return myScriptCharset;
+    return StringUtil.notNullize(getOptions().getScriptCharset(), "utf8");
   }
 
   @Override
   public void setScriptCharset(String scriptCharset) {
-    this.myScriptCharset = scriptCharset;
+    getOptions().setScriptCharset("utf8".equals(scriptCharset) ? null : scriptCharset);
   }
 
   @Override
   public boolean isNonInteractiveModeEnabled() {
-    return myIsNonInteractiveModeEnabled;
+    return getOptions().isNonInteractiveModeEnabled();
   }
 
   @Override
   public void setNonInteractiveModeEnabled(boolean nonInteractiveModeEnabled) {
-    myIsNonInteractiveModeEnabled = nonInteractiveModeEnabled;
+    getOptions().setNonInteractiveModeEnabled(nonInteractiveModeEnabled);
   }
 
   @Override
   public boolean isCompileTimeBreakpointsEnabled() {
-    return myIsCompileTimeBreakpointsEnabled;
+    return getOptions().isCompileTimeBreakpointsEnabled();
   }
 
   @Override
   public void setCompileTimeBreakpointsEnabled(boolean compileTimeBreakpointsEnabled) {
-    myIsCompileTimeBreakpointsEnabled = compileTimeBreakpointsEnabled;
+    getOptions().setCompileTimeBreakpointsEnabled(compileTimeBreakpointsEnabled);
   }
 
   public @NotNull PerlCommandLine createCommandLine(@NotNull PerlRunProfileState perlRunProfileState) throws ExecutionException {
@@ -444,12 +410,12 @@ public abstract class GenericPerlRunConfiguration extends LocatableConfiguration
 
   @Override
   public String getInitCode() {
-    return myInitCode;
+    return StringUtil.notNullize(getOptions().getInitCode());
   }
 
   @Override
   public void setInitCode(String initCode) {
-    this.myInitCode = initCode;
+    getOptions().setInitCode(initCode);
   }
 
   /**

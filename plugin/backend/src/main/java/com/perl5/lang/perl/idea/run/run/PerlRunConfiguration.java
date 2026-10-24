@@ -17,12 +17,18 @@
 package com.perl5.lang.perl.idea.run.run;
 
 import consulo.execution.configuration.ConfigurationFactory;
-import consulo.execution.configuration.RunConfiguration;
-import consulo.execution.configuration.ui.SettingsEditor;
+import consulo.execution.configuration.LegacyRunConfigurationConverter;
+import consulo.execution.configuration.RunConfigurationOptions;
+import consulo.execution.configuration.fragment.RunConfigurationFragment;
 import consulo.project.Project;
 import com.perl5.lang.perl.idea.run.GenericPerlRunConfiguration;
+import com.perl5.lang.perl.idea.run.GenericPerlRunConfigurationOptions;
+import com.perl5.lang.perl.idea.run.PerlScriptFragment;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.VisibleForTesting;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @VisibleForTesting
 public class PerlRunConfiguration extends GenericPerlRunConfiguration {
@@ -32,9 +38,26 @@ public class PerlRunConfiguration extends GenericPerlRunConfiguration {
     super(project, factory, name);
   }
 
+  // consulo: settings are edited with run configuration fragments
   @Override
-  public @NotNull SettingsEditor<? extends RunConfiguration> getConfigurationEditor() {
-    // consulo: unified UI editor, upstream Swing PerlRunConfigurationEditor can't be shown in Consulo Web
-    return new PerlRunConfigurationUIEditor(getProject());
+  protected Class<? extends RunConfigurationOptions> getOptionsClass() {
+    return GenericPerlRunConfigurationOptions.class;
+  }
+
+  @Override
+  protected void convertLegacyState(LegacyRunConfigurationConverter converter) {
+    super.convertLegacyState(converter);
+
+    GenericPerlRunConfigurationOptions options = new GenericPerlRunConfigurationOptions();
+    convertLegacyCommonState(converter, options);
+    converter.setOptions(options);
+  }
+
+  @Override
+  public List<RunConfigurationFragment<?>> createFragments() {
+    List<RunConfigurationFragment<?>> fragments = new ArrayList<>();
+    fragments.add(new PerlScriptFragment<PerlRunConfiguration>(PerlRunConfigurationProducer.getInstance()));
+    fragments.addAll(createCommonFragments());
+    return fragments;
   }
 }

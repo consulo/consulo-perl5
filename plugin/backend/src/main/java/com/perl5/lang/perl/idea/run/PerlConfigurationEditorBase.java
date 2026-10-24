@@ -124,9 +124,8 @@ public abstract class PerlConfigurationEditorBase<Settings extends PerlDebugOpti
 
     return panel;
   }
-
-  // consulo: the Swing editor wrapped into uni UI component, not used by Consulo run configurations which use unified UI editors
-  //  (GenericPerlRunConfigurationUIEditor, PerlRemoteDebuggingConfigurationUIEditor), kept for easier upstream merges
+  // consulo: the Swing editor wrapped into uni UI component, not used by Consulo run configurations which are edited with
+  //  run configuration fragments, kept for easier upstream merges
   @RequiredUIAccess
   @Override
   protected consulo.ui.Component createUIComponent() {

@@ -19,19 +19,19 @@ package com.perl5.lang.perl.idea.run.prove;
 import com.google.common.annotations.VisibleForTesting;
 import consulo.process.ExecutionException;
 import consulo.execution.configuration.ConfigurationFactory;
-import consulo.execution.configuration.RunConfiguration;
+import consulo.execution.configuration.LegacyRunConfigurationConverter;
+import consulo.execution.configuration.RunConfigurationOptions;
+import consulo.execution.configuration.fragment.RunConfigurationFragment;
 import consulo.execution.test.sm.SMTestRunnerConnectionUtil;
 import consulo.execution.test.sm.ui.SMTRunnerConsoleView;
 import consulo.execution.ui.console.ConsoleView;
 import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
-import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.project.Project;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.xml.serializer.annotation.Tag;
 import com.perl5.PerlBundle;
 import com.perl5.lang.perl.idea.execution.PerlCommandLine;
 import com.perl5.lang.perl.idea.execution.PerlTerminalExecutionConsole;
@@ -53,10 +53,6 @@ import static com.perl5.lang.perl.util.PerlRunUtil.getPerlRunIncludeArguments;
 public abstract class PerlAbstractTestRunConfiguration extends GenericPerlRunConfiguration {
   private static final Logger LOG = Logger.getInstance(PerlAbstractTestRunConfiguration.class);
   static final int DEFAULT_JOBS_NUMBER = 1;
-  @Tag("JOBS_NUMBER")
-  private int myJobsNumber = DEFAULT_JOBS_NUMBER;
-  @Tag("TEST_SCRIPT_PARAMETERS")
-  private String myTestScriptParameters = "";
   private static final String HARNESS_OPTIONS = "HARNESS_OPTIONS";
   private static final String HARNESS_OPTIONS_SEPARATOR = ":";
   private static final String HARNESS_OPTIONS_JOBS = "j";
@@ -70,34 +66,62 @@ public abstract class PerlAbstractTestRunConfiguration extends GenericPerlRunCon
     super(project, factory, name);
   }
 
+  // consulo: settings are kept in PerlAbstractTestRunConfigurationOptions and edited with run configuration fragments
+  @Override
+  protected Class<? extends RunConfigurationOptions> getOptionsClass() {
+    return PerlAbstractTestRunConfigurationOptions.class;
+  }
+
+  @Override
+  public PerlAbstractTestRunConfigurationOptions getOptions() {
+    return (PerlAbstractTestRunConfigurationOptions)super.getOptions();
+  }
+
+  @Override
+  protected void convertLegacyState(LegacyRunConfigurationConverter converter) {
+    super.convertLegacyState(converter);
+
+    PerlAbstractTestRunConfigurationOptions options = new PerlAbstractTestRunConfigurationOptions();
+    convertLegacyCommonState(converter, options);
+
+    PerlAbstractTestRunConfigurationLegacyState old = converter.readXml(PerlAbstractTestRunConfigurationLegacyState.class);
+    options.setJobsNumber(old.jobsNumber);
+    options.setTestScriptParameters(old.testScriptParameters);
+    converter.setOptions(options);
+  }
+
+  @Override
+  public List<RunConfigurationFragment<?>> createFragments() {
+    List<RunConfigurationFragment<?>> fragments = new ArrayList<>();
+    fragments.add(new PerlTestScriptFragment(getRunConfigurationProducer()));
+    fragments.add(new PerlTestJobsFragment());
+    fragments.add(new PerlTestScriptArgumentsFragment());
+    fragments.addAll(createCommonFragments());
+    return fragments;
+  }
+
   int getJobsNumber() {
-    return myJobsNumber;
+    return getOptions().getJobsNumber();
   }
 
   @VisibleForTesting
   public void setJobsNumber(int jobsNumber) {
-    myJobsNumber = jobsNumber;
+    getOptions().setJobsNumber(jobsNumber);
   }
 
   @Nullable
   String getTestScriptParameters() {
-    return myTestScriptParameters;
+    return getOptions().getTestScriptParameters();
   }
 
   void setTestScriptParameters(@Nullable String testScriptParameters) {
-    myTestScriptParameters = testScriptParameters;
+    getOptions().setTestScriptParameters(testScriptParameters);
   }
 
   @NotNull
   List<String> getTestScriptParametersList() {
     String testScriptParameters = getTestScriptParameters();
     return StringUtil.isEmpty(testScriptParameters) ? Collections.emptyList() : StringUtil.split(testScriptParameters, " ");
-  }
-
-  @Override
-  public @NotNull SettingsEditor<? extends RunConfiguration> getConfigurationEditor() {
-    // consulo: unified UI editor, upstream Swing PerlTestRunConfigurationEditor can't be shown in Consulo Web
-    return new PerlTestRunConfigurationUIEditor(getProject(), getRunConfigurationProducer());
   }
 
   protected abstract @NotNull PerlAbstractTestRunConfigurationProducer<? extends PerlAbstractTestRunConfiguration> getRunConfigurationProducer();

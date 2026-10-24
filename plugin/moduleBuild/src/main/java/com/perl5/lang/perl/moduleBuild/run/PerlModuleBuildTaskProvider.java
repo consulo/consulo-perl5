@@ -18,7 +18,7 @@ package com.perl5.lang.perl.moduleBuild.run;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.execution.BeforeRunTask;
-import consulo.execution.BeforeRunTaskProvider;
+import consulo.execution.BeforeRunFragment;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.ui.RunContentDescriptor;
@@ -26,11 +26,12 @@ import consulo.project.ui.notification.NotificationService;
 import consulo.project.ui.notification.NotificationType;
 import consulo.dataContext.DataContext;
 import consulo.application.ApplicationManager;
+import consulo.application.util.concurrent.AppExecutorUtil;
+import com.dslplatform.json.CompiledJson;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.util.dataholder.Key;
 import consulo.localize.LocalizeValue;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.UIAccess;
 import consulo.ui.image.Image;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
@@ -46,17 +47,14 @@ import org.jetbrains.annotations.Nullable;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 
+// consulo: before run tasks are run configuration fragments in Consulo
 @ExtensionImpl
-class PerlModuleBuildTaskProvider extends BeforeRunTaskProvider<PerlModuleBuildTaskProvider.PerlModuleBuildTask> {
+public class PerlModuleBuildTaskProvider implements BeforeRunFragment<PerlModuleBuildTaskProvider.PerlModuleBuildTask> {
   private static final Logger LOG = Logger.getInstance(PerlModuleBuildTaskProvider.class);
-  private static final Key<PerlModuleBuildTask> ID = Key.create("Module::Builder Before Run Task");
-
-  // consulo: @ExtensionImpl requires a public constructor
-  public PerlModuleBuildTaskProvider() {
-  }
+  private static final String ID = "Module::Builder Before Run Task";
 
   @Override
-  public Key<PerlModuleBuildTask> getId() {
+  public @NotNull String getId() {
     return ID;
   }
 
@@ -66,21 +64,18 @@ class PerlModuleBuildTaskProvider extends BeforeRunTaskProvider<PerlModuleBuildT
   }
 
   @Override
-  public @Nullable PerlModuleBuildTask createTask(@NotNull RunConfiguration runConfiguration) {
-    return runConfiguration instanceof PerlModuleBuildTestRunConfiguration ? PerlModuleBuildTask.INSTANCE : null;
+  public @NotNull Class<PerlModuleBuildTask> getStateClass() {
+    return PerlModuleBuildTask.class;
   }
 
-  // consulo: getIcon() takes a run configuration
+  @Override
+  public @Nullable PerlModuleBuildTask createTask(@NotNull RunConfiguration runConfiguration) {
+    return runConfiguration instanceof PerlModuleBuildTestRunConfiguration ? new PerlModuleBuildTask() : null;
+  }
+
   @Override
   public @Nullable Image getIcon(@NotNull RunConfiguration runConfiguration) {
     return PerlIcons.PERL_LANGUAGE_ICON;
-  }
-
-  // consulo: abstract in Consulo, upstream relies on the default implementation which is not configurable
-  @RequiredUIAccess
-  @Override
-  public @NotNull CompletableFuture<?> configureTask(@NotNull RunConfiguration runConfiguration, @NotNull PerlModuleBuildTask task) {
-    return CompletableFuture.failedFuture(new CancellationException());
   }
 
   @Override
@@ -90,7 +85,7 @@ class PerlModuleBuildTaskProvider extends BeforeRunTaskProvider<PerlModuleBuildT
 
   @Override
   public boolean canExecuteTask(@NotNull RunConfiguration configuration, @NotNull PerlModuleBuildTask task) {
-    return super.canExecuteTask(configuration, task) && configuration instanceof PerlModuleBuildTestRunConfiguration;
+    return configuration instanceof PerlModuleBuildTestRunConfiguration;
   }
 
   @Override
@@ -99,21 +94,28 @@ class PerlModuleBuildTaskProvider extends BeforeRunTaskProvider<PerlModuleBuildT
   }
 
   @Override
-  public boolean executeTask(@NotNull DataContext context,
-                             @NotNull RunConfiguration configuration,
-                             @NotNull ExecutionEnvironment environment,
-                             @NotNull PerlModuleBuildTask task) {
+  public @NotNull CompletableFuture<?> executeAsync(@NotNull UIAccess uiAccess,
+                                                    @NotNull DataContext context,
+                                                    @NotNull RunConfiguration configuration,
+                                                    @NotNull ExecutionEnvironment environment,
+                                                    @NotNull PerlModuleBuildTask task) {
+    return CompletableFuture.runAsync(() -> {
+      if (!executeTask(configuration, environment)) {
+        throw new CancellationException();
+      }
+    }, AppExecutorUtil.getAppExecutorService());
+  }
+
+  private static boolean executeTask(@NotNull RunConfiguration configuration, @NotNull ExecutionEnvironment environment) {
     if (!(configuration instanceof PerlModuleBuildTestRunConfiguration moduleBuildTestRunConfiguration)) {
       LOG.warn("Trying to run task in wrong configuration: " + configuration);
       return false;
     }
-
     var contentRoot = moduleBuildTestRunConfiguration.getEffectiveContentRootSafe();
     if (contentRoot == null) {
       showError(configuration.getProject(), ModuleBuildBundle.message("notification.content.no.effective.content.root.for", configuration));
       return false;
     }
-
     return updateBuildfile(environment.getProject(), contentRoot);
   }
 
@@ -168,11 +170,9 @@ class PerlModuleBuildTaskProvider extends BeforeRunTaskProvider<PerlModuleBuildT
   }
 
 
-  static final class PerlModuleBuildTask extends BeforeRunTask<PerlModuleBuildTask> {
-    static final PerlModuleBuildTask INSTANCE = new PerlModuleBuildTask();
-
+  @CompiledJson
+  public static final class PerlModuleBuildTask extends BeforeRunTask {
     public PerlModuleBuildTask() {
-      super(ID);
       // consulo: before run tasks are disabled by default in Consulo (enabled in IntelliJ)
       setEnabled(true);
     }
