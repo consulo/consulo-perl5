@@ -17,20 +17,19 @@
 package com.perl5.lang.perl.idea.run.prove;
 
 import consulo.fileChooser.FileChooserDescriptor;
-import consulo.fileChooser.FileChooserDialog;
 import consulo.fileChooser.FileChooserFactory;
 import consulo.project.Project;
 import consulo.ui.ex.awt.LabeledComponent;
 import consulo.ui.ex.awt.TextFieldWithBrowseButton;
-import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.execution.ui.awt.RawCommandLineEditor;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.TextBoxWithExpandAction;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.io.FileUtil;
+import consulo.util.io.NioFiles;
 import com.perl5.PerlBundle;
-import com.perl5.lang.perl.idea.run.GenericPerlRunConfiguration;
 import com.perl5.lang.perl.idea.run.GenericPerlRunConfigurationEditor;
 import com.perl5.lang.perl.idea.run.GenericPerlRunConfigurationEditorPanel;
 import org.jetbrains.annotations.NotNull;
@@ -39,6 +38,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.nio.file.Path;
 
 import static com.perl5.lang.perl.idea.run.GenericPerlRunConfiguration.FILES_JOINER;
 import static com.perl5.lang.perl.idea.run.GenericPerlRunConfiguration.FILES_PARSER;
@@ -129,11 +129,22 @@ class PerlTestRunConfigurationEditor extends GenericPerlRunConfigurationEditor<P
       fieldWithBrowseButton.addActionListener(e -> {
         var fileChooserDescriptor = createFileChooserDescriptor();
 
-        List<VirtualFile> filesToSelect = GenericPerlRunConfiguration.computeVirtualFilesFromPaths(fieldWithBrowseButton.getText());
-        final FileChooserDialog chooser =
-          FileChooserFactory.getInstance().createFileChooser(fileChooserDescriptor, myProject, fieldWithBrowseButton);
-        VirtualFile[] choosenFiles = chooser.choose(myProject, filesToSelect.toArray(VirtualFile.EMPTY_ARRAY));
-        fieldWithBrowseButton.setText(StringUtil.join(ContainerUtil.map(choosenFiles, VirtualFile::getPath), " "));
+        // the first typed path is preselected - without the virtual file system
+        List<String> pathsToSelect = FILES_PARSER.apply(fieldWithBrowseButton.getText());
+        Path toSelect = pathsToSelect.isEmpty() ? null : NioFiles.toPath(pathsToSelect.getFirst());
+        FileChooserFactory.getInstance()
+          .newBuilder(fileChooserDescriptor)
+          .project(myProject)
+          .parent(fieldWithBrowseButton)
+          .toSelect(toSelect)
+          .showMultiple()
+          .whenComplete((chosenPaths, error) -> {
+            if (chosenPaths != null) {
+              fieldWithBrowseButton.setText(
+                FILES_JOINER.apply(ContainerUtil.map(chosenPaths, path -> FileUtil.toSystemIndependentName(path.toString())))
+              );
+            }
+          });
       });
       return fieldWithBrowseButton;
     }

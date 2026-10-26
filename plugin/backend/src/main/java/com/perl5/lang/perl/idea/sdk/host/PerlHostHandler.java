@@ -48,6 +48,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
+import java.nio.file.Path;
 
 /**
  * Know how to work with different types of hosts
@@ -167,9 +168,9 @@ public abstract class PerlHostHandler<Data extends PerlHostData<Data, Handler>, 
       }
 
       @Override
-      public void validateSelectedFiles(VirtualFile[] files) throws Exception {
-        if (files.length != 0) {
-          String errorMessage = pathValidator.apply(files[0].getPath());
+      public void validateSelectedPaths(List<Path> paths) throws Exception {
+        if (!paths.isEmpty()) {
+          String errorMessage = pathValidator.apply(FileUtil.toSystemIndependentName(paths.getFirst().toString()));
           if (StringUtil.isNotEmpty(errorMessage)) {
             throw new Exception(errorMessage);
           }

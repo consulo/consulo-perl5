@@ -270,14 +270,21 @@ public class Perl5ProjectConfigurable implements Configurable, Perl5SdkManipulat
   }
 
   private void doAddExternalLibrary() {
-    FileChooserFactory.getInstance().createPathChooser(
-      FileChooserDescriptorFactory.
-        createMultipleFoldersDescriptor().
-        withTreeRootVisible(true).
-        withTitle(PerlBundle.message("perl.settings.select.libs")),
-      myProject,
-      myLibsList
-    ).chooseAsync(null).thenAccept(files -> processChosenFiles(Arrays.asList(files)));
+    FileChooserFactory.getInstance()
+      .newBuilder(
+        FileChooserDescriptorFactory.
+          createMultipleFoldersDescriptor().
+          withTreeRootVisible(true).
+          withTitle(PerlBundle.message("perl.settings.select.libs"))
+      )
+      .project(myProject)
+      .parent(myLibsList)
+      .showMultipleAsVirtualFiles()
+      .whenComplete((files, error) -> {
+        if (error == null) {
+          processChosenFiles(files);
+        }
+      });
   }
 
   private void processChosenFiles(@NotNull List<? extends VirtualFile> virtualFiles) {
