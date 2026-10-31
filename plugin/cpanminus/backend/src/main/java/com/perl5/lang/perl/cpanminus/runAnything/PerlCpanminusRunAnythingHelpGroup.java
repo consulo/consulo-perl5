@@ -18,9 +18,9 @@ package com.perl5.lang.perl.cpanminus.runAnything;
 
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
-import consulo.ide.runAnything.RunAnythingProvider;
-import consulo.ide.runAnything.RunAnythingHelpGroup;
-import consulo.ide.runAnything.RunAnythingItem;
+import consulo.execution.runAnything.RunAnythingProvider;
+import consulo.execution.runAnything.RunAnythingHelpGroup;
+import consulo.execution.runAnything.RunAnythingItem;
 import consulo.dataContext.DataContext;
 import consulo.util.collection.ContainerUtil;
 import org.jetbrains.annotations.NotNull;

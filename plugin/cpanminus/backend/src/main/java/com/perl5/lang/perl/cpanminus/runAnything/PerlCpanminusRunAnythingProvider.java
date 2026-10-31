@@ -17,11 +17,11 @@
 package com.perl5.lang.perl.cpanminus.runAnything;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.ide.runAnything.RunAnythingCompletionGroup;
-import consulo.ide.runAnything.RunAnythingGroup;
-import consulo.ide.runAnything.RunAnythingProviderBase;
-import consulo.ide.runAnything.RunAnythingHelpItem;
-import consulo.ide.runAnything.RunAnythingItem;
+import consulo.execution.runAnything.RunAnythingCompletionGroup;
+import consulo.execution.runAnything.RunAnythingGroup;
+import consulo.execution.runAnything.RunAnythingProviderBase;
+import consulo.execution.runAnything.RunAnythingHelpItem;
+import consulo.execution.runAnything.RunAnythingItem;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 import consulo.dataContext.DataContext;
