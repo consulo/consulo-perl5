@@ -27,7 +27,7 @@ import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.xml.psi.formatter.xml.XmlFormattingPolicy;
 import consulo.language.codeStyle.template.SimpleTemplateLanguageFormattingModelBuilder;
 import consulo.language.template.TemplateLanguageFileViewProvider;
-import consulo.perl5.xml.template.formatter.AbstractXmlTemplateFormattingModelBuilder;
+import consulo.xml.template.formatter.AbstractXmlTemplateFormattingModelBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import consulo.language.codeStyle.Alignment;

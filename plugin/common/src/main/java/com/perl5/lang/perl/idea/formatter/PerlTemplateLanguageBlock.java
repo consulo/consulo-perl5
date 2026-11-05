@@ -20,7 +20,7 @@ package com.perl5.lang.perl.idea.formatter;
 import consulo.language.ast.ASTNode;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.xml.psi.formatter.xml.XmlFormattingPolicy;
-import consulo.perl5.xml.template.formatter.TemplateLanguageBlock;
+import consulo.xml.template.formatter.TemplateLanguageBlock;
 import com.perl5.lang.perl.idea.formatter.blocks.PerlAstBlock;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
