@@ -76,9 +76,9 @@ public class PerlRenameSubProcessor extends RenamePsiElementProcessor {
   }
 
   /**
-   * consulo: in-place rename takes the element through the callback, so the SUPER method question is asked with the unified
-   * (asynchronous) message box there, Messages are Swing dialogs (not available in web). The synchronous variant above is
-   * left for the dialog rename, whose rename dialog is Swing anyway.
+   * consulo: in-place and dialog rename take the element through the callback, so the SUPER method question is asked with the
+   * unified (asynchronous) message box there, Messages are Swing dialogs (not available in web). The synchronous variant above
+   * is left for callers which need the answer right away.
    */
   @Override
   @RequiredUIAccess
