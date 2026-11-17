@@ -36,6 +36,7 @@ import consulo.execution.debug.XBreakpointManager;
 import consulo.execution.debug.breakpoint.XLineBreakpoint;
 import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
 import consulo.execution.debug.frame.XSuspendContext;
+import consulo.execution.debug.step.HasRunToPosition;
 import consulo.execution.debug.ui.XDebugTabLayouter;
 import com.perl5.PerlIcons;
 import com.perl5.lang.perl.debugger.breakpoints.PerlLineBreakPointDescriptor;
@@ -52,7 +53,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 
 
-public class PerlDebugProcess extends XDebugProcess {
+public class PerlDebugProcess extends XDebugProcess implements HasRunToPosition {
   private static final Logger LOG = Logger.getInstance(PerlDebugProcess.class);
   private final ExecutionResult myExecutionResult;
   private final PerlDebugThread myDebugThread;
